@@ -31,5 +31,6 @@
                 <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
             </div>
         </div>
+        <?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>
     </body>
 </html>
