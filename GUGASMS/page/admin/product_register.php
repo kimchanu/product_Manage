@@ -27,10 +27,6 @@
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
 
-
-	<script>
-		var session_receiver = <?php echo $receiver?>;
-	</script>
 </head>
 <body>
     <div class="loading"><img class="loading_img" src ="GUGASMS/page/admin/images/Spinner.gif"></div>
