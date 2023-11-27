@@ -1,0 +1,54 @@
+*** for Agent v1.6.4 Oracle DB users ***
+
+ALTER TABLE MSG_QUEUE ADD(
+k_button_type  char(2),
+k_button_url2  varchar2(256),
+k_button2_type char(2),
+k_button2_name varchar2(56),
+k_button2_url  varchar2(256),
+k_button2_url2 varchar2(256),
+k_button3_type char(2),
+k_button3_name varchar2(56),
+k_button3_url  varchar2(256),
+k_button3_url2 varchar2(256),
+k_button4_type char(2),
+k_button4_name varchar2(56),
+k_button4_url  varchar2(256),
+k_button4_url2 varchar2(256),
+k_button5_type char(2),
+k_button5_name varchar2(56),
+k_button5_url  varchar2(256),
+k_button5_url2 varchar2(256),
+k_at_send_type char(1) default '0',
+k_ad_flag char(1) default 'N',
+k_attach   varchar2(4000),
+k_attach2  varchar2(2000)
+);
+ALTER TABLE MSG_QUEUE MODIFY(k_button_name varchar(56));
+
+
+ALTER TABLE MSG_RESULT_yyyymm ADD(
+k_button_type  char(2),
+k_button_url2  varchar2(256),
+k_button2_type char(2),
+k_button2_name varchar2(56),
+k_button2_url  varchar2(256),
+k_button2_url2 varchar2(256),
+k_button3_type char(2),
+k_button3_name varchar2(56),
+k_button3_url  varchar2(256),
+k_button3_url2 varchar2(256),
+k_button4_type char(2),
+k_button4_name varchar2(56),
+k_button4_url  varchar2(256),
+k_button4_url2 varchar2(256),
+k_button5_type char(2),
+k_button5_name varchar2(56),
+k_button5_url  varchar2(256),
+k_button5_url2 varchar2(256),
+k_at_send_type char(1),
+k_ad_flag char(1),
+k_attach   varchar2(4000),
+k_attach2  varchar2(2000)
+);
+ALTER TABLE MSG_RESULT_yyyymm MODIFY(k_button_name varchar(56));

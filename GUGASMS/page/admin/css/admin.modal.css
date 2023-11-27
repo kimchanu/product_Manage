@@ -1,0 +1,126 @@
+/* 모달 검은색 배경 */
+.modal { display:none;  position: fixed; z-index: 9999; left: 0; top: 0; bottom:0;
+  max-width:100%; width:100%;  height: 100%;  background-color: hsla(0,0%,0%,0.4);}
+
+/* 관리자 페이지 내 모달 */
+.popup_wrap {position: relative; width: auto; margin:0 auto; top:50%; transform: translateY(-50%); pointer-events: none;}
+
+.modal-xl{max-width:1440px;}
+.modal-md{max-width:768px;}
+.modal-sm{max-width:576px;}
+
+
+.adm_popup_container{padding:24px; max-width:1024px; width: 100%; margin:auto;
+  position: relative; background-color: #f5f5f5;
+  display: -ms-flexbox; display: flex; -ms-flex-direction: column;  flex-direction: column;  pointer-events: auto;
+    background-clip: padding-box;border-radius: .3rem;
+  outline: 0;
+  height:auto;
+  max-height:calc(100vh - 120px);
+}
+
+.adm_popup_container h4{padding-bottom:16px;  font-weight:700; font-size:20px;}
+
+
+.adm_form_container{margin-bottom:0;}
+.adm_form_container .wi_board_input_control, 
+.adm_form_container .wi_board_select_control{height:42px; padding:6px 12px;}
+.adm_form_container .wi_board_form_title, 
+.adm_form_container .wi_board_form_content{padding:14px 0; font-weight: 700; font-size:14px;}
+.adm_form_container textarea.wi_borad_input_w100{height:200px;}
+
+.wi_board_form_container{display:table; width:100%;}
+.wi_board_form_row {display: table-row;}
+.wi_board_form_title, .wi_board_form_content{display:table-cell; padding:12px 0;}
+.wi_board_form_title{min-width:100px; vertical-align:top;}
+.wi_board_form_content {font-size: 0; width:100%;}
+
+
+/* 글쓰기 인풋, 셀렉트 */
+.adm_popup_container .wi_board_input_control, .adm_popup_container .wi_board_select_control{width:100%; height:40px; padding:8px; background-color:#fff; border:1px solid #e1e1e1;}
+.adm_popup_container .wi_board_select_control{background-position:97% 50%;}
+.adm_popup_container  .wi_select_100{width:100%;}
+.adm_popup_container textarea.wi_borad_input_w100{width:100%; height:200px; overflow:auto; resize:none;} /* textarea 넓이 및 높이 */
+.adm_popup_container  textarea.wi_board_textarea_reply{height:420px;} /* 답변 달 때 textarea 높이 */
+.adm_popup_container .wi_borad_input_w100{width:100%} /* 넓이 */
+.adm_popup_container .adm_section_container{padding:24px;  overflow: auto;
+  margin-bottom: 32px; background: #fff; border-radius: 4px; box-shadow: 0 1px 6px 0 hsla(0,0%,0%,0.1);}
+  .adm_popup_container .bd-xs{max-width:640px; margin:0 auto; width:100%;}
+
+
+
+.popup_container{padding:36px 0;}
+.popup_container .wrap{padding:36px 0; }
+.popup_container .example .img{padding-bottom:6px;}
+.popup_container .example .text{line-height: 1.5; padding-bottom:12px;}
+.popup_container .example .text .content{word-break: break-all;
+    white-space: normal;}
+.adm_boundary{padding:0px 24px; margin:0 auto; max-width:100%;}
+
+.adm_board_content{padding-bottom:24px;}
+.adm_board_content label{display: block; padding-bottom:8px;}
+.file_update{width:100%; border:1px solid #dedede; background:#fff; height:32px; vertical-align: middle;}
+textarea{ border:1px solid #dedede; height:200px; }
+
+.adm_popup_container input[type=button]{padding-left:16px; padding-right:16px; cursor: pointer;}
+
+
+
+/* adm btn */
+.adm_popup_container .adm_table_btn{text-align:center; padding-top:0;}
+.adm_popup_container .adm_table_btn ul li{text-align:center;display:inline-block; margin:0 3px;}
+
+.guide_text{font-size:13px; padding-top:12px;}
+
+.fileBox ul{margin:0 -8px;}
+.fileBox ul li{float:left; padding:0 8px; width:65%;}
+.fileBox ul li:last-child{width:35%;}
+.fileBox {width:100%;}
+.fileBox .fileName {width:100%; height:30px;line-height:30px; border:none; background:rgba(255,255,255,0); border-bottom:1px solid #ccc; vertical-align:middle}
+.fileBox .btn_file {border:1px solid #ccc; border-radius: 4px; background:#fff; height:30px;font-size:0.8em;line-height:30px;text-align:center;vertical-align:middle}
+.fileBox input[type="file"] {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+.modal_table{display: table; margin:0 auto;} 
+
+.modal_img_container{text-align: center;}
+.modal_img_container img{width:100%;}
+.wi_select_common {
+  width: 123px;
+  height: 45px;
+  padding: 0 18px;
+  vertical-align: middle;
+  background: url(https://s3.ap-northeast-2.amazonaws.com/lbplatform/images/timing/152711839681325.png) no-repeat 87% 50%;
+  background-color: #fff;
+  -webkit-appearance: none;
+}
+
+
+.adm_simple_input{ text-align: center; padding-top:12px;}
+.adm_simple_input:first-child{padding-top:0;}
+.adm_simple_input ul li{display:inline-block;}
+.wi_btn_common{height: 45px; background: #888889; color: #fff; padding:0 16px;}
+
+.check_label {font-size:15px; width:33.33%; margin-right:-4px;}
+.check_label .checkmark{left:0; transform: translateY(-50%);}
+
+
+/* 추가 수정 css */
+.adm_msg_text_wrap{padding-top: 20px;}
+.adm_msg_text_wrap li{width: 33.333%; float: left; margin-bottom: 20px; padding: 10px 0; text-align: center;}
+.adm_inner_text textarea{width: 90%; padding: 15px;}
+.adm_msg_title{padding-top: 10px; width: 90%; margin: 0 auto; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;}
+.adm_msg_select{display: block; width: 90%; margin: 10px auto 0 auto; padding: 6px !important; height: auto !important; text-align: center; background-color: #299cff; color: #fff; border-radius: 3px; font-size: 14px;}
+.adm_inner_title h1{font-size: 21px; padding: 10px 0 8px 0;}
+.admin_search_btn{display: inline-block; background-color: #18d39e; border-radius: 3px; color: #fff; padding: 7px 10px; margin-left: 5px; cursor: pointer;}
+.admin_modal_search input {width: 50%; padding: 7px 10px;}
+.admin_modal_search{padding-top: 24px;}
+
+.admin_modal_addr_search input {width: 50%; padding: 7px 10px;}
+.admin_modal_addr_search {padding-bottom: 24px;}
+
+.modal_phone{margin: 0 auto !important;}
+.modal_phone .phone-screen{height: 520px;}
+.modal_phone .phone-screen .inner > textarea{height: 280px;}
+.msg_name_wrap{padding-bottom: 20px;}
+.msg_name_wrap>h1{padding-bottom: 10px;}
+.modal-md-other{max-width: 450px;}

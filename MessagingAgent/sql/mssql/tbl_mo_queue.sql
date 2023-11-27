@@ -1,0 +1,31 @@
+create table {TABLENAME}
+(
+mseq int identity(1,1) not null,
+serverkey varchar(20) null,
+type char(1) not null default '1',
+oaaddr varchar(32) null,
+daaddr varchar(32) null,
+callback varchar(32) null,
+stat char(1) not null default '0',
+insert_time datetime not null default getdate(),
+subject varchar(120) null,
+text varchar(4000) null,
+filecnt int not null default 0,
+fileloc1 varchar(512) null,
+fileloc2 varchar(512) null,
+fileloc3 varchar(512) null,
+fileloc4 varchar(512) null,
+fileloc5 varchar(512) null,
+fileloc6 varchar(512) null,
+fileloc7 varchar(512) null,
+fileloc8 varchar(512) null,
+fileloc9 varchar(512) null,
+fileloc10 varchar(512) null,
+telecom varchar(10) null,
+ext_col0 int null,
+ext_col1 varchar(64) null,
+ext_col2 varchar(32) null,
+ext_col3 varchar(32) null,
+primary key(mseq)
+);
+

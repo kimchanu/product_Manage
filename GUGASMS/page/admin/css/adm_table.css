@@ -1,0 +1,130 @@
+.adm_table_long_responsive{overflow: auto; height:250px;}
+
+.adm_table_total { font-size: 13px; margin-bottom:8px;}
+.adm_table_total i{margin-right:4px;}
+
+.adm_fixed_table {table-layout: fixed;}
+.adm_table{border:1px solid #e1e1e1; font-size:14px; width: 100%; border-top: 1px solid #e4e5e7;line-height: 1.4;}
+
+.adm_table thead > tr { cursor: auto;}
+
+
+.adm_table th, .adm_table td {padding:12px 8px; vertical-align: middle; border-right:1px solid #e5e5e5;}
+.adm_table th { border-bottom: 3px solid #e5e5e5; font-weight:500;}
+.adm_table td {border-bottom: 1px solid #e5e5e5; text-align: center;}
+.adm_table td.tit{text-align: left;}
+.adm_table .check{width: 40px; padding:12px 0; text-align: center;} .adm_table .number {width:144px;} .adm_table .etc { width: 96px;} .adm_table .tit{width:280px;}
+
+tr td.tit span i.fas:before{color:#777 !important;}
+tr td.tit span i.fas{display: inline-block; margin-right:6px;}
+tr.in td.tit span i.fas{margin-left:16px;}
+tr.in2 td.tit span i.fas{margin-left:32px;}
+tr.in3 td.tit span i.fas{margin-left:48px;}
+tr.in3 td.tit span i.fas{margin-left:64px;}
+
+
+
+/* 티매쓰 테이블 수정 버튼 */
+.adm_table .more{width:120px;}
+.adm_table td .more_btn{font-size:13px; color:#fff; border-radius: 50px; height:24px; font-weight:700; line-height:25px; width:100%; padding:0; background-color:#18d39e;
+    border:1px solid transparent;}
+
+.adm_table td.title{text-align: left;}
+.adm_table td.title.reply{padding-left:24px; font-weight: 500;}
+.adm_table td.title.reply b{font-weight:700; padding-right:8px;}
+
+.adm_table td.title:hover{text-decoration: underline; cursor: pointer; color:#909090;}
+
+.adm_search_container {background: #fff;text-align: center; padding: 0; padding-bottom: 24px; margin: 0;}
+.adm_search_container .category{width:123px;}
+.adm_search_container .category > select{height:40px; background-position: 87% 50%;}
+.adm_search_container > div { display: inline-block; }
+
+.search_container input{height:40px; width:353px; margin:0 4px; border:1px solid #ddd; background:#fff;}
+.search_btn {width:108px;background: #98A7B3; height: 40px; font-size: 14px; border:0; color:#fff;}
+.search_btn:hover{background:#77838c;}
+
+
+/* pagination */
+.pagination_container{padding-top:30px;}
+.pagination_ul{text-align: center;}
+.page_item:hover{color:#222;}
+
+
+
+/* 작성완료, 취소 버튼 */
+/* .adm_btn_common {padding: 10px 0px; border: 1px solid #bbb; font-size:16px; background: #fff; transition:background .3s linear;} */
+.wi_board_write_btn_all{text-align:center; position: relative;}
+.wi_board_write_btn_all button{margin:0 2px;}
+.wi_board_write_btn{padding-left: 36px; padding-right:36px;}
+.wi_board_upload_btn{padding-left: 36px; padding-right:36px;}
+.wi_board_delete_btn{position: absolute; padding-left: 20px; padding-right: 20px; left:0;}
+
+
+
+
+/* 2019-11-22 이전 과거 테이블 css */
+
+/* table */
+tr.adm_no_posts{height:180px;}
+.adm_table > tbody > tr.adm_no_posts > td{text-align:center; vertical-align:middle;}
+.adm_table_check_box{text-align:center;}
+
+
+
+/* 테이블 공통 글 삭제
+.table_list_delete{padding:4px 16px;} */
+
+/* 공지사항 테이블 */
+
+.adm_pd_img{width:10%;}
+.adm_pd_price{width:12%;}
+.adm_pd_promotion{width:20%;}
+
+
+/* ********************************************* *
+ * 900px
+ * ********************************************* */
+ @media screen and (max-width: 900px){
+    .adm_table{font-size:15px;}
+    .adm_table .date{width:120px;}
+    .adm_table .category, .adm_table .name{width:80px;}
+    .adm_table .title{width:240px;}
+    
+    .adm_table_long_responsive {overflow-x: scroll;}
+}
+
+/* ********************************************* *
+ * 768px
+ * ********************************************* */
+@media screen and (max-width: 768px){
+
+    .adm_search_container .category{width:95px;}
+
+    .adm_search_container{text-align: unset;}
+    
+    .search_container{position: relative; width: calc(100% - 100px); margin-right:-1px;}
+    .search_container input{width:100%; margin:0;}
+    .search_btn{font-size:0; background-color: transparent; position: absolute; width:40px; top:0; right:0; }
+    .search_btn:after { content: ""; position: absolute; top: 0; right: 0; width: 100%; height: 100%;
+        background-image: url(https://s3.ap-northeast-2.amazonaws.com/lbplatform/images/jiktong/152892362249405.png);
+        background-repeat: no-repeat; background-position: center center; background-size:50%;}
+}
+
+/* ********************************************* *
+ * 540px
+ * ********************************************* */
+ @media screen and (max-width: 540px) {
+
+    .adm_table_check_box, .adm_table_number{width:15%;}
+    .adm_table_writer, .adm_table_date{width:15%;}
+  }
+
+
+
+
+  /* 2020-03-16 선택색상 */
+
+.table_select{
+    background: #f1f1f1;
+}

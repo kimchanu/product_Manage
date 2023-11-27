@@ -1,0 +1,171 @@
+::-webkit-scrollbar {width: 8px; height:8px;}
+::-webkit-scrollbar-track {background: #e1e1e1; }
+::-webkit-scrollbar-thumb { background: #bbb; border-radius: 5px;}
+::-webkit-scrollbar-thumb:hover {background: #bbb; }
+
+.small{font-size:0.85em;}
+
+.d-inline-block{display:inline-block !important;}
+.input_control input{width:100%; padding:0 8px; height:46px;}
+
+
+.overflow-y{overflow-y: auto !important;}
+.hidden{visibility: hidden; opacity: 0;}
+.d-none{display:none;}
+
+button{height:46px; padding-left:16px; padding-right:16px;}
+input[type=button]{background-color:#fff;}
+
+.btn-sm{height:40px !important; font-size:14px; border-radius: 3px !important;}
+.btn-primary{background-color:#299cff !important;  color:#fff;}
+.btn-secondary{background-color:#18d39e !important;  color:#fff;}
+.btn-clear{background-color:transparent; border:1px solid transparent;}
+.btn-defalut{background-color:#fafafa; border:1px solid #e5e5e5;}
+
+
+/* margin */
+.m-auto{margin-left:auto; margin-right:auto;}
+.mt-1{margin-top:16px;} .mt-2{margin-top:32px;}
+.mb-1{margin-bottom:16px;}
+.mb-2{margin-bottom:32px;}
+
+/* padding */
+.p-1{padding:16px;}
+.pt-1{padding-top:16px;} .pt-2{padding-top:32px;}
+.pb-0{padding-bottom:0;} .pb-1{padding-bottom:16px;}
+.pl-1{padding-left:16px;}
+.pr-2{padding-right:32px;}
+
+/* align */
+.align-left{text-align: left;}
+.align-right{text-align: right;}
+.align-center{text-align: center;}
+
+/* border */
+.border-t{border-top:1px solid #e5e5e5;}
+.border-bt{border-bottom:1px solid #e5e5e5;}
+
+/* color */
+.c-white{color:#fff;}
+.c-red{color:#ff2931;}
+
+/* bg */
+.bg-light-gray{background-color:#fafafa;}
+
+/* flex */
+.d-flex{display:flex; display: -ms-flexbox; display: -webkit-flex;}
+.align-items-center{-ms-flex-align: center; align-items: center;}
+.justify-content-center{-ms-flex-pack: center; justify-content: center;}
+
+.ellipsis{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* pagination */
+.pagination {padding:30px 0;margin:0 auto;text-align:center;}
+.pagination .pageArrow {margin:0 3px;}
+.pagination li{display:inline-block; width:35px;height:35px; margin:0 4px;}
+.pagination li a{display:inline-block; width:35px;height:35px; font-weight:bold;
+    font-size:14px;line-height:32px; color:#888;}
+    .pagination li a:hover{color:#299cff;}
+.pagination li b {border:1px solid #444; display:inline-block; width:35px;height:35px; line-height:35px;
+    border-radius:50%;-webkit-border-radius:50%; color:#fff !important; background-color:#2e3c56;}
+
+.adm_search_container{border-radius:50px; height:46px; border:2px solid #e5e5e5; padding:0 8px;}
+.adm_search_container input{border:0;  background-color:transparent; height:46px;}
+.text-search{background-color:transparent; color:#299cff; font-weight:700; border:1px solid transparent;   height:46px;}
+
+
+/* 상단 탭 */
+.con-list-tab{width:100%; color:#bbb; border-bottom:1px solid #e5e5e5;}
+.con-list-tab > p{display:inline-block; padding:16px 24px;  cursor: pointer; text-align: center;}
+.con-list-tab > p.current{border-top:3px solid #18d39e; color:#18d39e; font-weight: 700;}
+
+/* btn 묶음 */
+.btn-list-con > p{display: inline-block;}
+
+
+.adm_table thead tr{background-color:#fafafa;}
+
+
+/* folder 위 아이콘 정렬 */
+.folder-icon{text-align: center;}
+.folder-icon img{height:20px;}
+
+/* folder 위 뱃지 정렬 */
+.folder-badge {text-align: center;}
+.folder-badge span{font-size:11px; border-radius:50px; cursor:pointer; color:#fff; background-color:#1acfea; padding:2px 6px; font-weight:700;}
+.folder-badge span:hover{background-color:#299cff;}
+
+
+/* check */
+.check{position: relative;}
+.check_label { display: inline-block; position: relative; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; text-align: left;}
+.check_label input {position: absolute;opacity: 0;cursor: pointer;}
+.checkmark {position: absolute; top:50%; transform:translate(-50%, -50%); left: 50%; height: 20px; width: 20px; background-color: #fff; border:1px solid #ddd; border-radius: 2px;}
+.check_label:hover input ~ .checkmark {background-color: #efefef;}
+.check_label input:checked ~ .checkmark {border:1px solid transparent; background-color: #1bc9e4;}
+.checkmark:after { content: ""; position: absolute; display: none;}
+.check_label input:checked ~ .checkmark:after {display: block;}
+
+
+ /* On mouse-over, add a grey background color */
+ .wi_board_check_control > .check_control:hover input ~ .checkmark {background-color:#ccc;}
+ .wi_board_check_control > .check_control input:checked ~ .checkmark {background-color:#888889; border-color:#888889;}
+ .checkmark:after {content: ""; position:absolute; display:none;}
+ .wi_board_check_control > .check_control input:checked ~ .checkmark:after {display:block;}
+ 
+ /* Style the checkmark/indicator */
+ .checkmark:after {left:6px; top:3px; width:6px; height:10px; border:solid white; border-width: 0 3px 3px 0;
+     -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg);}
+
+/* img border */
+img.border{border:1px solid #ddd;}
+
+.row{margin-left:-16px; margin-right:-16px;}
+
+.content-input-control-xs{width:calc(100% - 66px) !important;}
+
+[class|=col]{float:left; padding-left:16px; padding-right:16px;}
+
+.col-md-12 {width: 100%;}
+.col-md-11 {width: 91.66666667%;}
+.col-md-10 {width: 83.33333333%;}
+.col-md-9 {width: 75%;}
+.col-md-8 {width: 66.66666667%;}
+.col-md-7 {width: 58.33333333%;}
+.col-md-6 {width: 50%;}
+.col-md-5 {width: 41.66666667%;}
+.col-md-4 {width: 33.33333333%;}
+.col-md-3 {width: 25%;}
+.col-md-2 {width: 16.66666667%;}
+.col-md-1 {width: 8.33333333%;}
+
+
+/* flex */
+.flex-between{display: flex; display: -ms-flexbox; display: -webkit-box; justify-content: space-between; -ms-flex-pack:justify; -webkit-box-pack: justify;}
+.flex-between h2{position: relative; top:8px;}
+
+
+/* 2020-02-13 미디어쿼리(한국인프라만 적용) */
+@media (max-width: 1600px) {
+    .col-sm-7{width:58.333333%;}
+    .col-sm-5{width:41.666666%;}
+}
+
+
+@media (max-width : 1080px){
+    .adm_main_container .col-lg-12{width:100%;}
+    .sm-img-phone{margin : 0 auto;}
+}
+
+@media (max-width : 770px){
+    .adm_main_container .col-sm-12{width:100%;}
+    .adm_main_container .msg-display-right{max-width: none;};
+}
+
+
+@font-face {
+    font-family: fontello;
+    src: url(fontello.eot) format('embedded-opentype'), /* 세번째 */
+         url(fontello.woff) format('woff'), /* 네번째 */
+         url(fontello.ttf) format('truetype');/* 다섯번째 */
+  }

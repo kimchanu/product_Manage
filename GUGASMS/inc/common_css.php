@@ -1,0 +1,1 @@
+<link rel="stylesheet" type="text/css" href="page/admin/css/reset.css<?php echo $this->version;?>"/>

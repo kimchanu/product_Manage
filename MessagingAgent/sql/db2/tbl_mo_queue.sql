@@ -1,0 +1,31 @@
+create table {TABLENAME}
+(
+mseq integer not null generated always as identity(start with 1, increment by 1, no cache), 
+serverkey varchar(20) null,
+type char(1) not null default '1', 
+oaaddr varchar(32) null,
+daaddr varchar(32) null,
+callback varchar(32) null,
+stat char(1) not null default '0',
+insert_time timestamp not null default sysdate,
+subject varchar(120) null,
+text varchar(4000) null,
+filecnt decimal(2) not null default 0,
+fileloc1 varchar(512) null,
+fileloc2 varchar(512) null,
+fileloc3 varchar(512) null,
+fileloc4 varchar(512) null,
+fileloc5 varchar(512) null,
+fileloc6 varchar(512) null,
+fileloc7 varchar(512) null,
+fileloc8 varchar(512) null,
+fileloc9 varchar(512) null,
+fileloc10 varchar(512) null,
+telecom varchar(10) null,
+ext_col0 decimal(11) null,
+ext_col1 varchar(64) null,
+ext_col2 varchar(32) null,
+ext_col3 varchar(32) null,
+primary key(mseq)
+) int tsp_sms;
+
