@@ -8,7 +8,8 @@
 
 /* adm aside */
 .adm_aside{position:fixed; top:0; left:0; width:240px; height:100vh; background:#2e3c56; box-shadow:0 2px 6px 0 hsla(0,0%,0%,0.15); z-index:100;}
-  .adm_aside.on{left:-240px;}
+  .adm_aside.on{left:40px;}
+/* .adm_aside.on{left:-240px;} */
 .adm_aside_title{height:60px; padding:0 24px; display: flex;display: -ms-flexbox; -ms-flex-align: center; align-items: center; background-color:#222e44; } 
 .adm_aside_title h3 a{color:#fff; font-size:24px;}
 .side_main_menu,
@@ -191,7 +192,7 @@
 /* 2020-02-19 */
 .header-menu{height:60px;}
 .header-menu .depth1:nth-child(3)>ul{width: 120%;}
-.header-menu .depth1{color:#fff; position: relative;}
+.header-menu .depth1{float:left; color:#fff; position: relative;}
 .header-menu .depth1 > a{padding:19px 40px; display: block;  color:#fff !important; }
 .header-menu .depth2-con{position: absolute; z-index: 999; width:100%;}
 .header-menu .depth2-con .depth2{background-color:#2e3c56; padding:12px 16px;}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html lang="kr">f
 <head>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +32,7 @@
 				<section class="adm_section_container">
 					<div class="pt-2 align-center"><img src="GUGASMS/page/admin/images/ci-origin.png" alt="" style="height:48px;"/></div>
 					<div class="adm_section_container_head">
-						<h2>관리자 로그인</h2>
+						<h2>로그인</h2>
 					</div>
 					<div class="adm_section_container_body p-1">
 						<div class="login_container">
