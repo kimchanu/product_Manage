@@ -6,10 +6,10 @@
 	<div id="cssmenu" class="side_main_menu">
 		<ul class="depth1-con">
 			<li class="depth1" data-side="">
-				<a id ="msg_side" href="#" onclick = "side_bar(this); return false;">메시지보내기</a>
+				<a id ="msg_side" href="#" onclick = "side_bar(this); return false;">입고현황</a>
 				<ul class="depth2-con" style ="display:none;">
-					<li class="depth2"><a href="?ctl=Move&param1=msg_main">메시지전송</a></li>
-					<li class="depth2"><a href="?ctl=Move&param1=msg_reserve">예약메시지</a></li>
+					<li class="depth2"><a href="?ctl=Move&param1=msg_main">자재등록</a></li>
+					<li class="depth2"><a href="?ctl=Move&param1=msg_reserve">자재현황</a></li>
 					<li class="depth2 admin_none" <?php echo $this->side_bar();?>><a href="?ctl=Move&param1=msg_result">전송결과</a></li>
 					<li class="depth2"><a href="?ctl=Move&param1=msg_box">메시지폼관리</a></li>
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=msg_box_set">메시지함관리</a></li> -->
