@@ -191,7 +191,7 @@
 /* 2020-02-19 */
 .header-menu{height:60px;}
 .header-menu .depth1:nth-child(3)>ul{width: 120%;}
-.header-menu .depth1{float:left; color:#fff; position: relative;}
+.header-menu .depth1{color:#fff; position: relative;}
 .header-menu .depth1 > a{padding:19px 40px; display: block;  color:#fff !important; }
 .header-menu .depth2-con{position: absolute; z-index: 999; width:100%;}
 .header-menu .depth2-con .depth2{background-color:#2e3c56; padding:12px 16px;}
