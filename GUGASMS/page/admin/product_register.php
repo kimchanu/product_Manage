@@ -27,6 +27,7 @@
 	<script src="GUGASMS/page/admin/js/timepicki.js"></script>
 	
 	<!-- sript시작 -->
+    <script src="GUGASMS/page/admin/js/jquery/jquery-3.3.1.min.js"></script>
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
 
