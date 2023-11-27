@@ -32,7 +32,14 @@
 					<li class="depth2 admin_none"><a href="?ctl=Move&param1=add_set">주소록그룹관리</a></li>
 				</ul>
 			</li>
-			
+			<li class="depth1"  <?php echo $this->side_bar();?> data-side="">
+						<a class="depth2-a" id ="user_side" href="#" onclick = "side_bar(this); return false;">관리자</a>
+						<ul class="depth2-con" style ="display:none;">
+							<li class="depth2"><a href="?ctl=Move&param1=user_set">사용자관리</a></li>
+							<li class="depth2"><a href="?ctl=Move&param1=state_day">일별통계</a></li>
+							<li class="depth2"><a href="?ctl=Move&param1=state_month">월별통계</a></li>
+						</ul>
+					</li>
 		</ul>
 	</div>		
 </aside>
