@@ -35,6 +35,7 @@
 		var session_receiver = <?php echo $receiver?>;
 	</script>
 </head>
+<body>
 <div class="loading"><img class="loading_img" src ="GUGASMS/page/admin/images/Spinner.gif"></div>
 	<div class="wrap">
         <?php include_once $this->dir."page/admin/include/admin_sidebar.php";?>
