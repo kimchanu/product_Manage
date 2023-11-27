@@ -1,5 +1,5 @@
 
-<aside class="adm_aside on">
+<aside class="adm_aside">
 	<div class="adm_aside_title adm_lang_en">
 		<h3 class="logo"><a href="?"><img src="GUGASMS/page/admin/images/ci-gray.png" alt="" style="height:40px;"/></a></h3>
 	</div>
