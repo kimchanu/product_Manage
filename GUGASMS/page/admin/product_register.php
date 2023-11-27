@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	
-	<title>메시지전송</title>
+	<title>abcdfad</title>
 	<!-- FONT -->
 	<link href="https://fonts.googleapis.com/css?family=Gothic+A1:100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/reset.css<?php echo $this->version;?>"/>
@@ -27,7 +27,6 @@
 
     <body>
         <div class="wrap">
-            <h1>hi</h1>
             <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
             <div class="adm_container">
                 <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
