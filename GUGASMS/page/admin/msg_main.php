@@ -122,12 +122,12 @@
 									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
 							  </div>
 							</div>
-              <span class="wi_board_form_row">
-								<span class="wi_board_form_title"><label for="" class="wi_board_label_control">자재코드</label></div>
-								<span class="wi_board_form_content">
+              <div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재코드</label></div>
+								<div class="wi_board_form_content">
 									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
-								</span>
-						</span>
+								</div>
+						</div>
 					</div>
 				</section>
 				<div class="adm_table_btn">
