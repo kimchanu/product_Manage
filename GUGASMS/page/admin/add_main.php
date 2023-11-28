@@ -122,7 +122,7 @@
                                     <p><button type="button" id ="all_del_btn" onclick ="all_del_receiver()" class="btn-sm btn-defalut">전체삭제</button></p>
                                     <p><button type="button" id ="select_del_btn" onclick ="select_del_receiver()" class="btn-sm btn-defalut">선택삭제</button></p>
 									<p><button type="button" onclick="exportExcel();"  class="btn-sm btn-primary">엑셀다운</button></p>
-									<p><button type="button" onclick ="open_add_modal();" class="btn-sm btn-secondary">번호추가</button></p>
+									<p><button type="button" onclick ="open_add_modal();" class="btn-sm btn-secondary">자재추가</button></p>
 								</div>
 								<div class="adm_table_container">
 									<p class="adm_table_total" id ="receiver_total"><i>Total</i>0</p>
@@ -137,8 +137,18 @@
 														</label>
 													</th>
 													<th class="check">번호</th>
-													<th class="tit">이름</th>
-													<th class="number">휴대폰번호</th>
+													<th class="tit">이미지</th>
+													<th class="number">자재코드</th>
+													<th class="number">위치</th>
+													<th class="number">대분류</th>
+													<th class="number">소분류</th>
+													<th class="number">품명</th>
+													<th class="number">규격</th>
+													<th class="number">제조사</th>
+													<th class="number">거래처</th>
+													<th class="number">단위</th>
+													<th class="number">단가</th>
+													<th class="number">재고수량</th>
 												</tr>
 											</thead>
 											<tbody data-wrap = "receiver_wrap" id = "receiver_wrap">
@@ -176,36 +186,43 @@
 	<div class="modal admin_modal" id="addr_modal" style= "display:none;">
 		<div class="popup_wrap modal-md">
 			<div class="adm_popup_container">
-				<h4>번호 추가</h4>
+				<h4>자재 추가</h4>
 				<section class="adm_section_container">
 					<div class="adm_modal_input_container">
 						<div class="modal_table">
 							<div class="wi_board_form_row">
-								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">그룹선택</label></div>
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재선택</label></div>
 								<div class="wi_board_form_content">
 									<select id ="addr_group_list" class="wi_board_input_control">
-										<option value="0">주소록</option>
+										<option value="0">자재목록</option>
 									</select>
 								</div>
 							</div>
 							<div class="wi_board_form_row">
-								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">이름</label></div>
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">번호</label></div>
 								<div class="wi_board_form_content">
 									<input type="text" id="addr_name" class="wi_board_input_control" autocomplete="off">
 								</div>
 							</div>
 							<div class="wi_board_form_row">
-								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">휴대전화</label></div>
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">이미지</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+
+							</div>
+							<div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재코드</label></div>
 								<div class="wi_board_form_content">
 									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
 								</div>
+
 							</div>
 						</div>
 					</div>
 				</section>
 				<div class="adm_table_btn">
 					<ul>
-						<li><input class="btn-sm btn-default" type="button" value="번호추가" id="btnClose" onclick="request_add_addr();"/></li>
+						<li><input class="btn-sm btn-default" type="button" value="자재추가" id="btnClose" onclick="request_add_addr();"/></li>
 						<li><input class="btn-sm btn-default" type="button" value="닫기" id="btnClose" onclick="close_add_modal();"/></li>
 					</ul>
 				</div>
