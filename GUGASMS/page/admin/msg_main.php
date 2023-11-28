@@ -94,6 +94,52 @@
 						</section>
 						<!-- adm_section_container // -->
         </div>
+        <!-- 모달화면 -->
+	<div class="modal admin_modal" id="addr_modal" style= "display:none;">
+		<div class="popup_wrap modal-md">
+			<div class="adm_popup_container">
+				<h4>자재 추가</h4>
+				<section class="adm_section_container">
+					<div class="adm_modal_input_container">
+						<div class="modal_table">
+							<div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재선택</label></div>
+								<div class="wi_board_form_content">
+									<select id ="addr_group_list" class="wi_board_input_control">
+										<option value="0">자재목록</option>
+									</select>
+								</div>
+							</div>
+							<div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">번호</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_name" class="wi_board_input_control" autocomplete="off">
+								</div>
+							</div>
+							<div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">이미지</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+
+							</div>
+							<div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재코드</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</section>
+				<div class="adm_table_btn">
+					<ul>
+						<li><input class="btn-sm btn-default" type="button" value="자재추가" id="btnClose" onclick="request_add_addr();"/></li>
+						<li><input class="btn-sm btn-default" type="button" value="닫기" id="btnClose" onclick="close_add_modal();"/></li>
+					</ul>
+				</div>
+			</div>
+		</div>
       </div>
         <?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>
     </body>
