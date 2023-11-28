@@ -24,43 +24,44 @@
 	<!-- script끝 -->
 </head>
 
+
     <body>
         <div class="wrap">
-            <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
-           <div class="adm_container">
-                <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
-            </div>
-			<table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Role</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td>
-        <td>John Doe</td>
-        <td>john@example.com</td>
-        <td>Admin</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Jane Smith</td>
-        <td>jane@example.com</td>
-        <td>User</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>Bob Johnson</td>
-        <td>bob@example.com</td>
-        <td>User</td>
-      </tr>
-    </tbody>
-  </table>
+          <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
+          <div class="adm_container">
+            <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
+            <table class="custom_table">
+              <thead>
+                <tr>
+                  <th class = custom_th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>John Doe</td>
+                  <td>john@example.com</td>
+                  <td>Admin</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Jane Smith</td>
+                  <td>jane@example.com</td>
+                  <td>User</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Bob Johnson</td>
+                  <td>bob@example.com</td>
+                  <td>User</td>
+                </tr>
+              </tbody>
+        </table>
         </div>
+      </div>
         <?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>
     </body>
 </html>
