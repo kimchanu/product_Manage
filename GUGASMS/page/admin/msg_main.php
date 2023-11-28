@@ -120,15 +120,13 @@
 								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">이미지</label></div>
 								<div class="wi_board_form_content">
 									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
-
+							  </div>
 							</div>
-							<div class="wi_board_form_row">
+              <div class="wi_board_form_row">
 								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재코드</label></div>
 								<div class="wi_board_form_content">
 									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
 								</div>
-
-							</div>
 						</div>
 					</div>
 				</section>
