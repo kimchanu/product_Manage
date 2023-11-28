@@ -30,46 +30,65 @@
           <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
           <div class="adm_container">
             <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
-            <table class="custom_table">
-              <thead>
-                <tr>
-                  <th >No</th>
-                  <th>이미지</th>
-                  <th>자재코드</th>
-                  <th>위치</th>
-                  <th>대분류</th>
-                  <th>소분류</th>
-                  <th>품명</th>
-                  <th>규격</th>
-                  <th>제조사</th>
-                  <th>거래처</th>
-                  <th>단위</th>
-                  <th>단가</th>
-                  <th>재고수량</th>
-                  <th>날짜</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>John Doe</td>
-                  <td>john@example.com</td>
-                  <td>Admin</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jane Smith</td>
-                  <td>jane@example.com</td>
-                  <td>User</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Bob Johnson</td>
-                  <td>bob@example.com</td>
-                  <td>User</td>
-                </tr>
-              </tbody>
-        </table>
+            <section class="adm_section_container">
+							<div class="adm_section_container_body p-1">
+								<div class="btn-list-con align-right mb-1">
+                                    <p><button type="button" id ="all_del_btn" onclick ="all_del_receiver()" class="btn-sm btn-defalut">전체삭제</button></p>
+                                    <p><button type="button" id ="select_del_btn" onclick ="select_del_receiver()" class="btn-sm btn-defalut">선택삭제</button></p>
+									<p><button type="button" onclick="exportExcel();"  class="btn-sm btn-primary">엑셀다운</button></p>
+									<p><button type="button" onclick ="open_add_modal();" class="btn-sm btn-secondary">자재추가</button></p>
+								</div>
+								<div class="adm_table_container">
+									<p class="adm_table_total" id ="receiver_total"><i>Total</i>0</p>
+									<div class="adm_table_long_responsive">
+										<table class="adm_table adm_fixed_table mb-1">
+											<thead>
+												<tr>
+													<th class="check">
+														<label class="check_label m-auto" value="yes">
+															<input type="checkbox" id = "all_check_receiver" onchange = "all_check('receiver', this);">
+															<span class="checkmark"></span>
+														</label>
+													</th>
+													<th class="check">번호</th>
+													<th class="tit">이미지</th>
+													<th class="number">자재코드</th>
+													<th class="number">위치</th>
+													<th class="number">대분류</th>
+													<th class="number">소분류</th>
+													<th class="number">품명</th>
+													<th class="number">규격</th>
+													<th class="number">제조사</th>
+													<th class="number">거래처</th>
+													<th class="number">단위</th>
+													<th class="number">단가</th>
+													<th class="number">재고수량</th>
+												</tr>
+											</thead>
+											<tbody data-wrap = "receiver_wrap" id = "receiver_wrap">
+												<!-- <tr>
+													<td class="check">
+														<label class="check_label m-auto" value="yes">
+															<input type="checkbox">
+															<span class="checkmark"></span>
+														</label>
+													</td>
+													<td>홍길동</td>
+													<td class="number">010-3021-1125</td>
+												</tr>
+												<tr>
+													<td colspan = "3" class="align-center" height="185">내용이 없습니다.</td>
+												</tr> -->
+												<!-- 내용이 비었을 경우 // -->
+											</tbody>
+										</table>
+									</div>
+									<!-- adm_table_responsive // -->
+								</div>
+							</div>
+							<!-- adm_section_container_body // -->
+						</section>
+						<!-- adm_section_container // -->
         </div>
       </div>
         <?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>

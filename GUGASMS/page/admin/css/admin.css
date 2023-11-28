@@ -247,13 +247,13 @@
 }
 
 .custom_table th, td {
-  padding: 15px;
+  padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
 .custom_table th {
-  background-color: #4CAF50;
+  background-color: #4c7faf;
   color: white;
 }
 
