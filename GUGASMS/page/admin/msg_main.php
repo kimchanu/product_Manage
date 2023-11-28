@@ -37,8 +37,8 @@
             <section class="adm_section_container">
 							<div class="adm_section_container_body p-1">
 								<div class="btn-list-con align-right mb-1">
-                                    <p><button type="button" id ="all_del_btn" onclick ="all_del_receiver()" class="btn-sm btn-defalut">전체삭제</button></p>
-                                    <p><button type="button" id ="select_del_btn" onclick ="select_del_receiver()" class="btn-sm btn-defalut">선택삭제</button></p>
+                  <p><button type="button" id ="all_del_btn" onclick ="all_del_receiver()" class="btn-sm btn-defalut">전체삭제</button></p>
+                  <p><button type="button" id ="select_del_btn" onclick ="select_del_receiver()" class="btn-sm btn-defalut">선택삭제</button></p>
 									<p><button type="button" onclick="exportExcel();"  class="btn-sm btn-primary">엑셀다운</button></p>
 									<p><button type="button" onclick ="open_add_modal();" class="btn-sm btn-secondary">자재추가</button></p>
 								</div>
@@ -127,7 +127,7 @@
 								<div class="wi_board_form_content">
 									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
 								</div>
-						</div>
+						  </div>
 					</div>
 				</section>
 				<div class="adm_table_btn">
