@@ -33,10 +33,20 @@
             <table class="custom_table">
               <thead>
                 <tr>
-                  <th class = custom_th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
+                  <th >No</th>
+                  <th>이미지</th>
+                  <th>자재코드</th>
+                  <th>위치</th>
+                  <th>대분류</th>
+                  <th>소분류</th>
+                  <th>품명</th>
+                  <th>규격</th>
+                  <th>제조사</th>
+                  <th>거래처</th>
+                  <th>단위</th>
+                  <th>단가</th>
+                  <th>재고수량</th>
+                  <th>날짜</th>
                 </tr>
               </thead>
               <tbody>
