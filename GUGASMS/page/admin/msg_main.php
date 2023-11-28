@@ -94,9 +94,9 @@
 						</section>
 						<!-- adm_section_container // -->
         </div>
-        <!-- 모달화면 -->
+  <!-- 모달화면 -->
 	<div class="modal admin_modal" id="addr_modal" style= "display:none;">
-		<div class="popup_wrap modal-md">
+		<div class="popup_wrap modal-xl">
 			<div class="adm_popup_container">
 				<h4>자재 추가</h4>
 				<section class="adm_section_container">

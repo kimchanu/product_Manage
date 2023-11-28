@@ -16,7 +16,7 @@
     background-clip: padding-box;border-radius: .3rem;
   outline: 0;
   height:auto;
-  max-height:calc(100vh - 120px);
+  max-height:calc(100vh - 40px);
 }
 
 .adm_popup_container h4{padding-bottom:16px;  font-weight:700; font-size:20px;}
