@@ -107,8 +107,8 @@
 								<div class="wi_board_form_content">
                   					<input type="text" id="product_name" class="wi_board_input_control" autocomplete="off">
 								</div>
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재이름</label></div>
 								<div class="wi_board_form_content">
-									<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재이름</label></div>
                   					<input type="text" id="product_name" class="wi_board_input_control" autocomplete="off">
 								</div>
 							</div>
