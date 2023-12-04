@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>주소록</title>
+	<title>자재등록</title>
 	<!-- FONT -->
 	<link href="https://fonts.googleapis.com/css?family=Gothic+A1:100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/common.css<?php echo $this->version; ?>" />
@@ -103,11 +103,10 @@
 					<div class="adm_modal_input_container">
 						<div class="modal_table">
 							<div class="wi_board_form_row">
-								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재선택</label></div>
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재이름</label></div>
 								<div class="wi_board_form_content">
-									<select id ="addr_group_list" class="wi_board_input_control">
-										<option value="0">자재목록</option>
-									</select>
+                  <input type="text" id="product_name" class="wi_board_input_control" autocomplete="off">
+                  <div class="wi_board_form_title"><label for="" class="wi_board_label_control">번호</label></div>
 								</div>
 							</div>
 							<div class="wi_board_form_row">
