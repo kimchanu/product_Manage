@@ -175,7 +175,7 @@ function request_addr_list(target){
         alert("리스트 호출중입니다.");
     }
 }
-
+ 
 function init_addr_list(data){
 	var num = 1;
     $('.loading').fadeIn();
@@ -226,20 +226,20 @@ function close_add_modal(){
 
 //번호 추가
 function request_add_addr(){
-    var addr_group_list = document.getElementById('addr_group_list');
-    var addr_name = document.getElementById('addr_name');
-    var addr_phone_number = document.getElementById('addr_phone_number');
+    var product_name = document.getElementById('addr_group_list');
+    var product_number = document.getElementById('addr_name');
+    var image_file = document.getElementById('addr_phone_number');
     
 
     if(double_click){
         double_click = false;
-        if(addr_group_list.value == "0"){
+        if(product_name.value == ""){
             alert('번호를 추가할 주소록을 선택해주세요');
             double_click = true;
-        }else if(addr_name.value == ""){
+        }else if(product_number.value == ""){
             alert('이름을 입력해주세요');
             double_click = true;
-        }else if(addr_phone_number.value == ""){
+        }else if(image_file.value == ""){
             alert('휴대전화를 입력해주세요');
             double_click = true;
         }else{
