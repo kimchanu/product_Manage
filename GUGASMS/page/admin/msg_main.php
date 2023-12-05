@@ -125,12 +125,72 @@
 									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
 							  </div>
 							</div>
-              <div class="wi_board_form_row">
+             				<div class="wi_board_form_row">
 								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">자재코드</label></div>
 								<div class="wi_board_form_content">
 									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
 								</div>
-						  </div>
+						  	</div>
+							<div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">위치</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+								</div>
+						  	</div>
+							<div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">대분류</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+								</div>
+						  	</div>
+							  <div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">소분류</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+								</div>
+						  	</div>
+							  <div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">품명</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+								</div>
+						  	</div>
+							  <div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">규격</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+								</div>
+						  	</div>
+							  <div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">제조사</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+								</div>
+						  	</div>
+							  <div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">거래처</label></div>
+								<div class="wi_board_form_content">
+									<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+								</div>
+						  	</div>
+							<div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">단위</label></div>
+								<div class="wi_board_form_content">
+								<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+							</div>
+						  	</div>
+							  <div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">단가</label></div>
+								<div class="wi_board_form_content">
+								<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+							</div>
+						  	</div>
+							  <div class="wi_board_form_row">
+								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">재고수량</label></div>
+								<div class="wi_board_form_content">
+								<input type="text" id="addr_phone_number" class="wi_board_input_control" autocomplete="off">
+							</div>
+						  	</div>
 					</div>
 				</section>
 				<div class="adm_table_btn">
