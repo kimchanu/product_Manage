@@ -244,6 +244,17 @@
             echo $this->jsonEncode($this->result);
         }
 
+        function add_product(){
+            $param = $this->param;
+            $sql = "insert into mat_list (mat_number, mat_code, mat_image, regdate) values (";
+            $sql = $sql . $param["mat_number"]. ", ";
+            $sql = $sql . $this->null_check($param["mat_code"]) . " , ";
+            $sql = $sql . $this->null_check($param["mat_image"]) . " , now() ";
+            $sql = $sql . ")";
+            $result = $this->conn->db_insert($sql);
+
+            echo $this->jsonEncode($this->result);
+        }
 
         /********************************************************************* 
         // 함 수 : addr_add_excel()

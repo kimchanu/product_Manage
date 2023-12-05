@@ -299,7 +299,7 @@ function request_add_product(){
                 type : "JsonAjaxPost",
                 list : {
                     ctl : "Addr",
-                    param1 : "add_addr",
+                    param1 : "add_product",
                     mat_number : product_name.value,
                     mat_code : product_number.value,
                     mat_image : image_file.value,
