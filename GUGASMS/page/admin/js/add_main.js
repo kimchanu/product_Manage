@@ -233,13 +233,13 @@ function request_add_addr(){
 
     if(double_click){
         double_click = false;
-        if(product_name.value == ""){
+        if(addr_group_list.value == ""){
             alert('번호를 추가할 주소록을 선택해주세요');
             double_click = true;
-        }else if(product_number.value == ""){
+        }else if(addr_name.value == ""){
             alert('이름을 입력해주세요');
             double_click = true;
-        }else if(image_file.value == ""){
+        }else if(addr_phone_number.value == ""){
             alert('휴대전화를 입력해주세요');
             double_click = true;
         }else{
