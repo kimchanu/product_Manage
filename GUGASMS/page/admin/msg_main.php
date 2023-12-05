@@ -191,7 +191,7 @@
 				</section>
 				<div class="adm_table_btn">
 					<ul>
-						<li><input class="btn-sm btn-default" type="button" value="자재추가" id="btnClose" onclick="request_add_addr();"/></li>
+						<li><input class="btn-sm btn-default" type="button" value="자재추가" id="btnClose" onclick="request_add_product();"/></li>
 						<li><input class="btn-sm btn-default" type="button" value="닫기" id="btnClose" onclick="close_add_modal();"/></li>
 					</ul>
 				</div>
