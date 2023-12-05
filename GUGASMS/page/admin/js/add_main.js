@@ -226,9 +226,9 @@ function close_add_modal(){
 
 //번호 추가
 function request_add_addr(){
-    var product_name = document.getElementById('addr_group_list');
-    var product_number = document.getElementById('addr_name');
-    var image_file = document.getElementById('addr_phone_number');
+    var addr_group_list = document.getElementById('addr_group_list');
+    var addr_name = document.getElementById('addr_name');
+    var addr_phone_number = document.getElementById('addr_phone_number');
     
 
     if(double_click){
