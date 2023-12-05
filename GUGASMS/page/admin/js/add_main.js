@@ -300,9 +300,9 @@ function request_add_product(){
                 list : {
                     ctl : "Addr",
                     param1 : "add_addr",
-                    group_idx : product_name.value,
-                    name : product_number.value,
-                    phone_number : image_file.value,
+                    mat_number : product_name.value,
+                    mat_code : product_number.value,
+                    mat_image : image_file.value,
                 },
                 action : "index.php",
                 havior : function(result){
