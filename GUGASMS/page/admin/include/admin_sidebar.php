@@ -1,4 +1,3 @@
-
 <aside class="adm_aside">
 	<div class="adm_aside_title adm_lang_en">
 		<h3 class="logo"><a href="?"><img src="GUGASMS/page/admin/images/ci-gray.png" alt="" style="height:40px;"/></a></h3>
@@ -13,6 +12,7 @@
 					<li class="depth2"><a href="?ctl=Move&param1=msg_reserve">자재현황</a></li>
 					<li class="depth2 admin_none" <?php echo $this->side_bar();?>><a href="?ctl=Move&param1=msg_result">전송결과</a></li>
 					<li class="depth2"><a href="?ctl=Move&param1=msg_box">메시지폼관리</a></li>
+					<li class="depth2"><a href="?ctl=Move&param1=product_register">메시지함관리</a></li>
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=msg_box_set">메시지함관리</a></li> -->
 				</ul>
 			</li>

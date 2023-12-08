@@ -42,6 +42,7 @@
             }else{
                 $user_idx = 0;
                 $user_role = 0;
+                $user_role = 0;
                 include_once $this->dir."page/admin/adm_login.php";
             }
         }

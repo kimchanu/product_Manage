@@ -52,7 +52,7 @@
 						obj.havior(xmlhttp.responseText);
 					}
 				}
-				
+				 
 				if(typeof(obj.sync)=="undefined"){
 					obj["sync"]=true;
 				}

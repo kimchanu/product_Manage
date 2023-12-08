@@ -329,7 +329,42 @@ function request_add_product(){
     }
 }
 
+function request_product_list(target){
+    if(double_click){
+        double_click = false;
+        $('#receiver_wrap').empty();
+        addr_click_flag = true;
+        receiver_count = 0;
+        var total_elem = document.getElementById('receiver_total');
+        total_elem.innerHTML ="<i>Total</i>"+receiver_count;
 
+        lb.ajax({
+            type : "JsonAjaxPost",
+            list : {
+                ctl : "Addr",
+                param1 : "addr_list",
+                group_idx : target,
+                search_name : document.getElementById('search_addr_name').value,
+                search_phone_number : document.getElementById('search_addr_phone_number').value,
+            },
+            action : "index.php",
+            havior : function(result){
+                double_click = true;
+                console.log(result);
+                result = JSON.parse(result);
+                if(result.result == 1){
+                    if(result.value.length == 0){
+                        alert('해당 주소록이 비어있습니다.');
+                    }else{
+                        init_addr_list(result.value);
+                    }
+                }
+            }
+        })
+    }else{
+        alert("리스트 호출중입니다.");
+    }
+}
 
 
 //전체 체크
