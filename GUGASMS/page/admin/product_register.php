@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>자재등록</title>
+	<title>입고등록</title>
 	<!-- FONT -->
 	<link href="https://fonts.googleapis.com/css?family=Gothic+A1:100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/common.css<?php echo $this->version; ?>" />
@@ -37,13 +37,15 @@
 			<div class="adm_section_container_head pb-0">
 				<h2>입고등록</h2>
 			</div>
+		<div class="adm_main_container">
             <section class="adm_section_container">
-							<div class="adm_section_container_body p-1">
-								<div class="btn-list-con align-right mb-1">
-                  <p><button type="button" id ="all_del_btn" onclick ="all_del_receiver()" class="btn-sm btn-defalut">전체삭제</button></p>
-                  <p><button type="button" id ="select_del_btn" onclick ="select_del_receiver()" class="btn-sm btn-defalut">선택삭제</button></p>
-									<p><button type="button" onclick="exportExcel();"  class="btn-sm btn-primary">엑셀다운</button></p>
-									<p><button type="button" onclick ="open_add_modal();" class="btn-sm btn-secondary">자재추가</button></p>
+				<div class="adm_section_container_body p-1">
+					<div class="btn-list-con align-right mb-1">
+						<div class="insert"><input placeholder="yyyy-mm-dd" type="text" id="start_date"></div>
+                  		<p><button type="button" id ="all_del_btn" onclick ="all_del_receiver()" class="btn-sm btn-defalut">전체삭제</button></p>
+                  		<p><button type="button" id ="select_del_btn" onclick ="select_del_receiver()" class="btn-sm btn-defalut">선택삭제</button></p>
+						<p><button type="button" onclick="exportExcel();"  class="btn-sm btn-primary">엑셀다운</button></p>
+						<p><button type="button" onclick ="open_add_modal();" class="btn-sm btn-secondary">자재추가</button></p>
 								</div>
 								<div class="adm_table_container">
 									<p class="adm_table_total" id ="receiver_total"><i>Total</i>0</p>
@@ -97,6 +99,7 @@
 						</section>
 						<!-- adm_section_container // -->
         </div>
+</div>
   <!-- 모달화면 -->
 	<div class="modal admin_modal" id="addr_modal" style= "display:none;">
 		<div class="popup_wrap modal-xl">
