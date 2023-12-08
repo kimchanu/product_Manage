@@ -34,6 +34,9 @@
           <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
           <div class="adm_container">
             <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
+			<div class="adm_section_container_head pb-0">
+				<h2>입고등록</h2>
+			</div>
             <section class="adm_section_container">
 							<div class="adm_section_container_body p-1">
 								<div class="btn-list-con align-right mb-1">
