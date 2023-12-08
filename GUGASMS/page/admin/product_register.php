@@ -26,6 +26,7 @@
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
 	<script src="GUGASMS/page/admin/js/add_main.js<?php echo $this->version;?>"></script>
+	<script src="GUGASMS/page/admin/js/state_day.js<?php echo $this->version; ?>"></script>
 </head>
 
 
