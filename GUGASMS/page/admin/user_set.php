@@ -36,26 +36,70 @@
 					<div class="col-md-7 col-lg-12">
                         <section class="adm_section_container">
 							<div class="adm_section_container_head bg-light-gray other_head">
-								<h2>사용자검색</h2>
+								<h2>자재추가</h2>
 							</div>
 							<div class="adm_section_container_body p-1">
 								<ul class="clearfix row input-list-container">
                                     <li class="col-md-12">
-                                        <p class="input-tit">권한그룹</p>
+                                        <p class="input-tit">자재목록</p>
 										<div class="insert">
                                             <select id ="search_role">
-												<option value = "0">권한그룹을 선택해주세요</option>
-												<option value = "1">관리자</option>
-												<option value = "2">사용자</option>
+												<option value = "0">자재목록을 선택해주세요</option>
+												<option value = "1">공유기</option>
+												<option value = "2">스위치</option>
                                             </select>
                                         </div>
                                     </li>
                                     <li class="col-md-12 mt-1">
-                                        <p class="input-tit">사용자ID</p>
+                                        <p class="input-tit">NO</p>
 										<div class="insert"><input type="text" id ="search_id"></div>
                                     </li>
                                     <li class="col-md-12 mt-1">
-                                        <p class="input-tit">사용자명</p>
+                                        <p class="input-tit">이미지</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">자재코드</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">위치</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">대분류</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">소분류</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">품명</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">규격</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">제조사</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">거래처</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">단위</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">단가</p>
+										<div class="insert"><input type="text" id ="search_name"></div>
+                                    </li>
+									<li class="col-md-12 mt-1">
+                                        <p class="input-tit">재고수량</p>
 										<div class="insert"><input type="text" id ="search_name"></div>
                                     </li>
                                 </ul>
