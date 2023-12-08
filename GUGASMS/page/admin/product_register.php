@@ -19,6 +19,10 @@
 	<!-- FONTAWESOME -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
 
+	<link rel="stylesheet" href="GUGASMS/page/admin/css/jquery-ui.min.css">
+	<script src="GUGASMS/page/admin/js/jquery-ui.min.js"></script>
+
+
 	<!-- sript시작 -->
 	<script src="GUGASMS/page/admin/js/xlsx.full.min.js"></script>
 	<script src="GUGASMS/page/admin/js/FileSaver.min.js"></script>
