@@ -32,9 +32,7 @@
 	<script src="GUGASMS/page/admin/js/add_main.js<?php echo $this->version;?>"></script>
 	<script src="GUGASMS/page/admin/js/state_day.js<?php echo $this->version; ?>"></script>
 </head>
-
-
-    <body>
+	<body>
         <div class="wrap">
           <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
           <div class="adm_container">
@@ -105,7 +103,7 @@
 						</section>
 						<!-- adm_section_container // -->
         </div>
-</div>
+	</div>
   <!-- 모달화면 -->
 	<div class="modal admin_modal" id="addr_modal" style= "display:none;">
 		<div class="popup_wrap modal-xl">
@@ -209,7 +207,7 @@
 				</div>
 			</div>
 		</div>
-      </div>
+    </div>
         <?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>
     </body>
 </html>
