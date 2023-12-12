@@ -27,7 +27,7 @@
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
 	<script src="GUGASMS/page/admin/js/state_day.js<?php echo $this->version; ?>"></script>
 </head>
-<body>
+<body> 
 	<div class="loading"><img class="loading_img" src ="GUGASMS/page/admin/images/Spinner.gif"></div>
 	<div class="wrap">
         <?php include_once $this->dir."page/admin/include/admin_sidebar.php";?>
