@@ -46,7 +46,8 @@
             <section class="adm_section_container">
 				<div class="adm_section_container_body p-1">
 					<div class="btn-list-con align-right mb-1">
-						<p><input type="date" id="start_date"></p>
+						<p>검색 월 <input type="date" id="start_date"></p>
+						<p>검색어 <input type="text" id = "search_product"></p>
                   		<p><button type="button" id ="all_del_btn" onclick ="all_del_receiver()" class="btn-sm btn-defalut">전체삭제</button></p>
                   		<p><button type="button" id ="select_del_btn" onclick ="select_del_receiver()" class="btn-sm btn-defalut">선택삭제</button></p>
 						<p><button type="button" onclick="exportExcel();"  class="btn-sm btn-primary">엑셀다운</button></p>
