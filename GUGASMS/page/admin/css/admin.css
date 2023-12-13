@@ -217,11 +217,16 @@
 .s-box{border:1px solid #ddd;}
 .s-box .con-list-tab > .w50{width:50%; margin-right:-4px;}
 .s-box .s-box-inner{padding:16px;}
+@media (max-width: 1800px){
+  .adm_aside{width: 200px;}
+  .adm_container{padding-left:200px;}
+
+}
 @media (max-width: 1400px){
   .header-menu .depth1 > a{padding: 19px 20px;}  
   .header-menu .depth1:nth-child(3)>ul{width: 150%;}
   .header-menu .depth1:nth-child(4)>ul{width: 150%;}
-  .adm_aside{width: 200px;}
+  
 }
 
 @media (max-width: 1080px){
