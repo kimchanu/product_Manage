@@ -221,6 +221,7 @@
   .header-menu .depth1 > a{padding: 19px 20px;}  
   .header-menu .depth1:nth-child(3)>ul{width: 150%;}
   .header-menu .depth1:nth-child(4)>ul{width: 150%;}
+  .adm_aside{width: 200px;}
 }
 
 @media (max-width: 1080px){
