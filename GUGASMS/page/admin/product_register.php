@@ -21,8 +21,6 @@
 
 	<link rel="stylesheet" href="GUGASMS/page/admin/css/jquery-ui.min.css">
 	<script src="GUGASMS/page/admin/js/jquery/jquery-3.3.1.min.js"></script>
-	<script src="GUGASMS/page/admin/js/jquery-ui.min.js"></script>
-
 
 	<!-- sript시작 -->
 	
@@ -31,7 +29,6 @@
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
 	<script src="GUGASMS/page/admin/js/add_main.js<?php echo $this->version;?>"></script>
-	<script src="GUGASMS/page/admin/js/state_day.js<?php echo $this->version; ?>"></script>
 </head>
 	<body>
         <div class="wrap">
