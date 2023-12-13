@@ -45,24 +45,24 @@
 							<div class="adm_section_container_body p-1">
                                 <ul class="clearfix row input-list-container">
                                     <li class="col-md-6">
-                                        <p class="input-tit">검색시작일</p>
+                                        <p class="input-tit">검색일</p>
                                         <div class="insert"><input placeholder="yyyy-mm-dd" id ="start_date" type="text"></div>
                                     </li>
-                                    <li class="col-md-6">
+                                    <!-- <li class="col-md-6">
                                         <p class="input-tit">검색종료일</p>
                                         <div class="insert"><input placeholder="yyyy-mm-dd" id ="end_date" type="text"></div>
-                                    </li>
-                                    <!-- <li class="col-md-6 mt-1">
-                                        <p class="input-tit">전송분류</p>
+                                    </li> -->
+                                    <li class="col-md-6 mt-1">
+                                        <p class="input-tit">부서</p>
                                         <div class="insert">
                                             <select id ="send_kind">
-                                                <option value = "0">전체</option>
-                                                <option value = "1">SMS</option>
-												<option value = "2">LMS</option>
-                                                <option value = "3">MMS</option>
+                                                <option value = "0">ITS</option>
+                                                <option value = "1">기전</option>
+												<option value = "2">장비</option>
+                                                <option value = "3">시설</option>
                                             </select>
                                         </div>
-                                    </li> -->
+                                    </li>
                                     <!-- <li class="col-md-6 mt-1">
                                         <p class="input-tit">발신번호</p>
                                         <div class="insert"><input placeholder="-는 제외하고 번호만 입력해주세요" id ="send_number" type="text"></div>
@@ -71,10 +71,10 @@
                                         <p class="input-tit">수신자번호</p>
                                         <div class="insert"><input placeholder="-는 제외하고 번호만 입력해주세요" id ="receiver_number" type="text"></div>
                                     </li> -->
-                                    <li class="col-md-6 mt-1">
+                                    <!-- <li class="col-md-6 mt-1">
                                         <p class="input-tit">내용</p>
                                         <div class="insert"><input id ="msg_content" type="text"></div>
-                                    </li>
+                                    </li> -->
                                 </ul>
                                 <div class="btn-list-con align-right mt-1 border-t">
                                     <p class="mt-1"><button type="button" onclick = "init_search_elem();" class="btn-sm btn-clear">초기화</button></p>
