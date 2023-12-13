@@ -180,7 +180,7 @@
 							<div class="wi_board_form_row">
 								<div class="wi_board_form_title"><label for="" class="wi_board_label_control">금액</label></div>
 								<div class="wi_board_form_content">
-								<input type="text" id="product_sum" class="wi_board_input_control" autocomplete="off">
+								<input type="text" id="g" class="wi_board_input_control" autocomplete="off">
 							</div>
 						  	</div>
 							<div class="wi_board_form_row">
