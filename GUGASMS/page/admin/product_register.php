@@ -61,10 +61,8 @@
 															<span class="checkmark"></span>
 														</label>
 													</th>
-													<th class="check">번호</th>
-													<th class="tit">이미지</th>
 													<th class="number">자재코드</th>
-													<th class="number">위치</th>
+													<th class="tit">위치</th>
 													<th class="number">대분류</th>
 													<th class="number">소분류</th>
 													<th class="number">품명</th>
@@ -73,7 +71,10 @@
 													<th class="number">거래처</th>
 													<th class="number">단위</th>
 													<th class="number">단가</th>
-													<th class="number">재고수량</th>
+													<th class="number">수량</th>
+													<th class="number">금액</th>
+													<th class="number">도입일자</th>
+													<th class="number">이미지</th>
 												</tr>
 											</thead>
 											<tbody data-wrap = "receiver_wrap" id = "receiver_wrap">
