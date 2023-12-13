@@ -62,7 +62,7 @@
 														</label>
 													</th>
 													<th class="number">자재코드</th>
-													<th class="tit">위치</th>
+													<th class="number">위치</th>
 													<th class="number">대분류</th>
 													<th class="number">소분류</th>
 													<th class="number">품명</th>
