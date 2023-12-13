@@ -7,7 +7,7 @@
 .logout_on{right:20px;}
 
 /* adm aside */
-.adm_aside{position:fixed; display: inline-block; top:0; left: 220px; width:240px; height:100vh;  background:#2e3c56; box-shadow:0 2px 6px 0 hsla(0,0%,0%,0.15); z-index:100;}
+.adm_aside{position:fixed; display: inline-block; top:50; left: 0px; width:240px; height:100vh;  background:#2e3c56; box-shadow:0 2px 6px 0 hsla(0,0%,0%,0.15); z-index:100;}
 /* .adm_aside.on{left:-240px;} */
 .adm_aside_title{height:60px; padding:0 24px; display: flex;display: -ms-flexbox; -ms-flex-align: center; align-items: center; background-color:#222e44; } 
 .adm_aside_title h3 a{color:#fff; font-size:24px;}
@@ -30,7 +30,7 @@
 
 /* adm container*/
 /* 수정 최진혁 화면을 덮기위해 padding-left없앰 */
-.adm_container{min-height: 100vh;/* padding-left:240px;*/padding-left:240px; position:relative;}
+.adm_container{min-height: 100vh;/* padding-left:240px;*/padding-left:0px; position:relative;}
   .adm_container.on{padding-left:0px;}
 
 .adm_form{display:grid;}
