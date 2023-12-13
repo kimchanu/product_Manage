@@ -30,7 +30,7 @@
 
 /* adm container*/
 /* 수정 최진혁 화면을 덮기위해 padding-left없앰 */
-.adm_container{min-height: 100vh;/* padding-left:240px;*/padding-left:240px; position:relative;}
+.adm_container{min-height: 100vh;/* padding-left:240px;*/padding-left:220px; position:relative;}
   .adm_container.on{padding-left:0px;}
 
 .adm_form{display:grid;}
