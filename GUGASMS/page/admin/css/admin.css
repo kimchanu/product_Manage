@@ -217,7 +217,7 @@
 .s-box{border:1px solid #ddd;}
 .s-box .con-list-tab > .w50{width:50%; margin-right:-4px;}
 .s-box .s-box-inner{padding:16px;}
-@media (max-width: 1950px){
+@media (max-width: 2150px){
   .adm_aside{width: 200px;}
   .adm_container{padding-left:200px;}
 
