@@ -52,11 +52,7 @@
                                         <p class="input-tit">검색종료일</p>
                                         <div class="insert"><input placeholder="yyyy-mm-dd" id ="end_date" type="text"></div>
                                     </li>
-									<li class="col-md-6">
-                                        <p class="input-tit">검색종료일</p>
-                                        <div class="insert"><input placeholder="yyyy-mm-dd" id ="end_date" type="text"></div>
-                                    </li>
-                                    <li class="col-md-6 mt-1">
+                                    <!-- <li class="col-md-6 mt-1">
                                         <p class="input-tit">전송분류</p>
                                         <div class="insert">
                                             <select id ="send_kind">
@@ -66,15 +62,15 @@
                                                 <option value = "3">MMS</option>
                                             </select>
                                         </div>
-                                    </li>
-                                    <li class="col-md-6 mt-1">
+                                    </li> -->
+                                    <!-- <li class="col-md-6 mt-1">
                                         <p class="input-tit">발신번호</p>
                                         <div class="insert"><input placeholder="-는 제외하고 번호만 입력해주세요" id ="send_number" type="text"></div>
                                     </li>
                                     <li class="col-md-6 mt-1">
                                         <p class="input-tit">수신자번호</p>
                                         <div class="insert"><input placeholder="-는 제외하고 번호만 입력해주세요" id ="receiver_number" type="text"></div>
-                                    </li>
+                                    </li> -->
                                     <li class="col-md-6 mt-1">
                                         <p class="input-tit">내용</p>
                                         <div class="insert"><input id ="msg_content" type="text"></div>
