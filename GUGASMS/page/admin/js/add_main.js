@@ -1083,57 +1083,57 @@ function request_add_addr(){
     }
 }
 
-function request_add_product(){
-    var product_name = document.getElementById('product_name');
-    var product_number = document.getElementById('product_number');
-    var image_file = document.getElementById('image_file');
+// function request_add_product(){
+//     var product_name = document.getElementById('product_name');
+//     var product_number = document.getElementById('product_number');
+//     var image_file = document.getElementById('image_file');
     
 
-    if(double_click){
-        double_click = false;
-        if(product_name.value == ""){
-            alert('번호를 추가할 주소록을 선택해주세요');
-            double_click = true;
-        }else if(product_number.value == ""){
-            alert('이름을 입력해주세요');
-            double_click = true;
-        }else if(image_file.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else{
-            lb.ajax({
-                type : "JsonAjaxPost",
-                list : {
-                    ctl : "Addr",
-                    param1 : "add_product",
-                    mat_number : product_name.value,
-                    mat_code : product_number.value,
-                    mat_image : image_file.value,
-                },
-                action : "index.php",
-                havior : function(result){
-                    double_click = true;
-                    console.log(result);
-                    result = JSON.parse(result);
-                    if(result.result == 1){
-                        alert('번호를 추가하였습니다.');
-                        request_addr_list(addr_group_list.value);
-                        close_add_modal();
-                    }else{
-                        if(result.error_code == 601){
-                            alert(result.message);
+//     if(double_click){
+//         double_click = false;
+//         if(product_name.value == ""){
+//             alert('번호를 추가할 주소록을 선택해주세요');
+//             double_click = true;
+//         }else if(product_number.value == ""){
+//             alert('이름을 입력해주세요');
+//             double_click = true;
+//         }else if(image_file.value == ""){
+//             alert('휴대전화를 입력해주세요');
+//             double_click = true;
+//         }else{
+//             lb.ajax({
+//                 type : "JsonAjaxPost",
+//                 list : {
+//                     ctl : "Addr",
+//                     param1 : "add_product",
+//                     mat_number : product_name.value,
+//                     mat_code : product_number.value,
+//                     mat_image : image_file.value,
+//                 },
+//                 action : "index.php",
+//                 havior : function(result){
+//                     double_click = true;
+//                     console.log(result);
+//                     result = JSON.parse(result);
+//                     if(result.result == 1){
+//                         alert('번호를 추가하였습니다.');
+//                         request_addr_list(addr_group_list.value);
+//                         close_add_modal();
+//                     }else{
+//                         if(result.error_code == 601){
+//                             alert(result.message);
                             
-                        }else{
-                            alert('번호 추가를 실패하였습니다.');
-                        }
-                    }
-                }
-            })
-        }
-    }else{
-        alert('번호를 추가 중입니다.')
-    }
-}
+//                         }else{
+//                             alert('번호 추가를 실패하였습니다.');
+//                         }
+//                     }
+//                 }
+//             })
+//         }
+//     }else{
+//         alert('번호를 추가 중입니다.')
+//     }
+// }
 
 
 
