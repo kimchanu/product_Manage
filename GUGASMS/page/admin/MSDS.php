@@ -60,6 +60,27 @@
 								</tr>
 								</tbody></table>
 						</form>
+						<div id="content">
+							<h1 class="">화학물질정보</h1>
+							<table class="">
+								<tbody><tr>
+									<th>CAS No.</th>
+									<th>화학물질명</th>
+									<th>EN No.</th>
+									<th>KE No.</th>
+									<th>UN No.</th>
+								</tr>
+												<tr>
+									<td colspan="8"><center>화학물질명, CAS NO. 등 찾고자 하는 화학물질의 검색어를 입력해주세요</center></td>
+								</tr>
+											</tbody></table>
+						
+							<ul class="">
+								<li><a onclick="history.back()">목록</a></li>
+							</ul>
+							<ul class="">
+								<li><a>이전</a></li><li class=""><a>1</a></li><li><a>다음</a></li>			</ul>
+						</div>
 					</section>
 				</div>
 			</div>
