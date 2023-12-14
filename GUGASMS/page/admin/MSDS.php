@@ -60,7 +60,7 @@
 								</tr>
 								</tbody></table>
 						</form>
-						<div id="content">
+						<div id="content" class = "display_msds">
 							<h1 class="">화학물질정보</h1>
 							<table class="">
 								<tbody><tr>
