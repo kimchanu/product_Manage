@@ -60,7 +60,7 @@
 								</tr>
 								</tbody></table>
 						</form>
-						<div id="content" class = "display_msds">
+						<div class = "display_msds">
 							<h1 class="">화학물질정보</h1>
 							<table class="">
 								<tbody><tr>
@@ -75,7 +75,7 @@
 								</tr>
 											</tbody></table>
 						
-							<ul class="">
+							<ul class="" style="float : left">
 								<li><a onclick="history.back()">목록</a></li>
 							</ul>
 							<ul class="">
