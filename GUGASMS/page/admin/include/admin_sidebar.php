@@ -23,9 +23,9 @@
 				<a id ="kakao_side" href="#" onclick = "side_bar(this); return false;">출고관리</a>
 				<ul class="depth2-con" style ="display:none;">
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=kakao_main">알림톡전송</a></li> -->
-					<li class="depth2 admin_none" <?php echo $this->side_bar();?>><a href="?ctl=Move&param1=kakao_result">출고등록</a></li>
-					<li class="depth2 admin_none" <?php echo $this->side_bar();?>><a href="?ctl=Move&param1=kakao_num_set">출고현황</a></li>
-					<li class="depth2 admin_none" <?php echo $this->side_bar();?>><a href="?ctl=Move&param1=kakao_pf_set">월 집계</a></li>
+					<li class="depth2 admin_none" <?php echo $this->side_bar();?>><a href="?ctl=Move&param1=output">출고등록</a></li>
+					<li class="depth2 admin_none" <?php echo $this->side_bar();?>><a href="?ctl=Move&param1=output_list">출고현황</a></li>
+					<li class="depth2 admin_none" <?php echo $this->side_bar();?>><a href="?ctl=Move&param1=output_month">월 집계</a></li>
 					<!-- <li class="depth2 admin_none"<a href="?ctl=Move&param1=kakao_tpl_set">알림톡템플릿관리</a></li> -->
 				</ul>
 			</li>

@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>월집계</title>
+	<title>출고현황</title>
 	<!-- FONT -->
 	<link href="https://fonts.googleapis.com/css?family=Gothic+A1:100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/common.css<?php echo $this->version; ?>" />
@@ -33,7 +33,7 @@
 		<div class="adm_container">
 			<?php include_once $this->dir . "page/admin/include/admin_header.php"; ?>
 			<div class="adm_section_container_head pb-0">
-				<h2>입고 월집계</h2>
+				<h2>출고현황</h2>
 			</div>
 			<div class="adm_main_container">
 				<div class="clearfix row">
@@ -104,14 +104,20 @@
 															<span class="checkmark"></span>
 														</label>
                                                     </th> -->
-													<th class="tit">구매번호</th>
-													<th class="etc">번호</th>
+													<th class="number">자재코드</th>
+													<th class="number">위치</th>
+													<th class="number">대분류</th>
+													<th class="number">소분류</th>
 													<th class="number">품명</th>
 													<th class="number">규격</th>
-													<th class="etc">수량</th>
+													<th class="number">제조사</th>
+													<th class="number">거래처</th>
+													<th class="number">단위</th>
 													<th class="number">단가</th>
+													<th class="number">수량</th>
 													<th class="number">금액</th>
-													<th class="number">용도</th>
+													<th class="number">도입일자</th>
+													<th class="number">이미지</th>
                                                     <!-- <th class="etc">등록자</th> -->
 												</tr>
 											</thead>
