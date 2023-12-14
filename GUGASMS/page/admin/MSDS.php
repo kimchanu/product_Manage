@@ -39,7 +39,7 @@
 					<div class="col-md-7 col-lg-12">
 						<section class="adm_section_container">
 						<form action="">
-							<table id="sch_box">
+							<table id="sch_box" class = "utill">
 								<colgroup>
 									<col style="width:auto">
 									<col style="width:80px">
