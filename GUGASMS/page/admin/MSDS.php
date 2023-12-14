@@ -31,7 +31,7 @@
           <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
           <div class="adm_container">
             <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
-			<div class="adm_section_container_head pb-0">
+			<div class="adm_section_container_head pb-0 align-center">
 				<h2>MSDS 화학물질정보검색</h2>
 			</div>
 			<div class="adm_main_container">
