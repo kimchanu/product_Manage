@@ -31,7 +31,7 @@
                             include_once $this->dir."page/admin/msg_main.php";
                         }
                     }else if($param1 == "adm_login"){
-                        include_once $this->dir."page/admin/msg_main.php";
+                        include_once $this->dir."page/admin/adm_login.php";
                     }else{
                         include_once $this->dir.$this->create_page($param1);
                     }
