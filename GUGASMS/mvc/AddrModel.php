@@ -244,18 +244,43 @@
             echo $this->jsonEncode($this->result);
         }
 
-        function add_product(){
-            $param = $this->param;
-            $sql = "insert into mat_list (mat_number, mat_code, mat_image) values (";
-            $sql = $sql . $param["mat_number"]. ", ";
-            $sql = $sql . $this->null_check($param["mat_code"]) . " , ";
-            $sql = $sql . $this->null_check($param["mat_image"]);
-            $sql = $sql . ")";
-            $result = $this->conn->db_insert($sql);
+	function add_product() {
+		   	$param = $this->param;
+	    // SQL statement to insert data into the mat_register table
+		    	$sql = "insert into mat_register (
+        	        mat_code, mat_position, b_class, s_class, mat_name, mat_stand, 
+                	mat_maker, mat_custom, mat_union, mat_price, mat_amount, mat_sum, 
+	                into_date, mat_image
+		        	) values (";
 
-            echo $this->jsonEncode($this->result);
-        }
+            // Append values from $param, using null_check for optional fields
+                    $sql .= $this->null_check($param["mat_code"]) . ", ";
+                    $sql .= $this->null_check($param["mat_position"]) . ", ";
+                    $sql .= $this->null_check($param["b_class"]) . ", ";
+                    $sql .= $this->null_check($param["s_class"]) . ", ";
+                    $sql .= $this->null_check($param["mat_name"]) . ", ";
+                    $sql .= $this->null_check($param["mat_stand"]) . ", ";
+                    $sql .= $this->null_check($param["mat_maker"]) . ", ";
+                    $sql .= $this->null_check($param["mat_custom"]) . ", ";
+                    $sql .= $this->null_check($param["mat_union"]) . ", ";
+                    $sql .= $this->null_check($param["mat_price"]) . ", ";
+                    $sql .= $this->null_check($param["mat_amount"]) . ", ";
+                    $sql .= $this->null_check($param["mat_sum"]) . ", ";
+                    $sql .= $this->null_check($param["into_date"]) . ", ";
+                    $sql .= $this->null_check($param["mat_image"]);
+                    $sql .= ")";
 
+                // Execute the query
+                        $result = $this->conn->db_insert($sql);
+                        if($result["result"] == 1){
+                            $this->result = $result;
+                        }else{
+                            $this->result = $result;
+                        }
+                    
+           
+                echo $this->jsonEncode($this->result);
+}
 
         /********************************************************************* 
         // 함 수 : addr_add_excel()
