@@ -36,31 +36,9 @@
 			</div>
 			<div class="adm_main_container">
 				<div class="clearfix row adm_section_container_mid">
-						<section class="adm_section_container container_mid">
-						<form action="">
-							<table id="sch_box" class = "utill">
-								<colgroup>
-									<col style="width:auto">
-									<col style="width:80px">
-								</colgroup>
-								<tbody><tr>
-									<td colspan="2">
-										<select name="type" id="type" class="selectCSS" style="width:200px">
-											<option value="0">물질명(관용명/동의어)</option>
-											<option value="1">CAS NO</option>
-											<option value="2">UN NO</option>
-											<option value="3">KE NO</option>
-											<option value="4">EN NO</option>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><input type="text" name="keyword" value="" placeholder="화학물질명, CAS NO. 등 찾고자 하는 화학물질의 검색어를 입력해주세요"></td>
-									<td><button>검색</button></td>
-								</tr>
-								</tbody></table>
-						</form>
-						</section>
+					<section class="adm_section_container container_mid">
+						
+					</section>
 				</div>
 			</div>
 		   </div>
