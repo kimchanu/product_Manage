@@ -72,7 +72,7 @@
 										<th>UN No.</th>
 									</tr>
 													<tr>
-										<td colspan="8"><center>화학물질명, CAS NO. 등 찾고자 하는 화학물질의 검색어를 입력해주세요</center></td>
+										<td colspan="8">화학물질명, CAS NO. 등 찾고자 하는 화학물질의 검색어를 입력해주세요</td>
 									</tr>
 												</tbody></table>
 							
