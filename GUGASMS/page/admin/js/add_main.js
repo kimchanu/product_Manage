@@ -373,8 +373,8 @@ function request_add_product(){
 
 
 function request_add_product(){
-    var product_code = document.getElementById('product_code').value;
-    var product_position = document.getElementById('product_position').value;
+    var product_code = document.getElementById('product_code');
+    var product_position = document.getElementById('product_position');
     var product_b_class = document.getElementById('product_b_class').value;
     var product_s_class = document.getElementById('product_s_class').value;
     var product_name = document.getElementById('product_name').value;
