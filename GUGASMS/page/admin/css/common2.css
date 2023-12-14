@@ -146,7 +146,7 @@ img.border{border:1px solid #ddd;}
 
 
 /* 가운데정렬 */
-.container_mid{display:inline-block;}
+.container_mid{display:inline-block; width: 900px; height: 600px;}
 
 
 
