@@ -38,7 +38,7 @@
 				<div class="clearfix row adm_section_container_mid">
 					<section class="adm_section_container container_mid">
 						<form action="">
-							<table id="sch_box">
+							<table id="sch_box" class="display_msds">
 								<colgroup>
 									<col style="width:auto">
 									<col style="width:80px">
