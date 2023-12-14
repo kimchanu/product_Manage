@@ -145,6 +145,12 @@ img.border{border:1px solid #ddd;}
 .flex-between h2{position: relative; top:8px;}
 
 
+/* 가운데정렬 */
+.container_mid{display:inline-block;}
+
+
+
+
 /* 2020-02-13 미디어쿼리(한국인프라만 적용) */
 @media (max-width: 1600px) {
     .col-sm-7{width:58.333333%;}
