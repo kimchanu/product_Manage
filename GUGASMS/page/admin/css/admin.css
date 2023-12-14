@@ -60,7 +60,7 @@
 /* adm section container */
 .adm_section_container{margin-bottom:32px; background:#fff; border-radius:4px; box-shadow:0 1px 6px 0 hsla(0,0%,0%,0.2); border-radius: 6px; overflow: hidden;}
 .adm_section_container .adm_section_container_body{height:100%; background:#fff;}
-.adm_section_container_mid{text-align: center;}
+.adm_section_container_mid{text-align: center; background-color: yellow;}
 .adm_main_footer{padding-bottom:24px; position:relative;}
 .adm_main_footer input{padding-left:16px; padding-right:16px; cursor: pointer; margin-right:6px;}
 .adm_main_footer input:last-child{margin-right:0;}
