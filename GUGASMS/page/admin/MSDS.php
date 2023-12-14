@@ -26,8 +26,6 @@
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
 </head>
-
-
     <body>
         <div class="wrap">
           <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
@@ -61,8 +59,29 @@
 									<td><input type="text" name="keyword" value="" placeholder="화학물질명, CAS NO. 등 찾고자 하는 화학물질의 검색어를 입력해주세요"></td>
 									<td><button>검색</button></td>
 								</tr>
-			</tbody></table>
-			</form>
+								</tbody></table>
+						</form>
+						<div id="content">
+							<h1 class="sub_title">화학물질정보</h1>
+								<table class="msds_list">
+									<tbody><tr>
+										<th>CAS No.</th>
+										<th>화학물질명</th>
+										<th>EN No.</th>
+										<th>KE No.</th>
+										<th>UN No.</th>
+									</tr>
+													<tr>
+										<td colspan="8"><center>화학물질명, CAS NO. 등 찾고자 하는 화학물질의 검색어를 입력해주세요</center></td>
+									</tr>
+												</tbody></table>
+							
+								<ul class="dw_bar">
+									<li><a onclick="history.back()">목록</a></li>
+								</ul>
+								<ul class="page_bar">
+									<li><a>이전</a></li><li class="on"><a>1</a></li><li><a>다음</a></li>			</ul>
+						</div>
 						</section>
 					</div>
 				</div>
