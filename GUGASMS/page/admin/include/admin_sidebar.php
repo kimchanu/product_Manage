@@ -10,11 +10,11 @@
 			<li class="depth1" data-side="">
 				<a id ="msg_side" href="#" onclick = "side_bar(this); return false;">입고관리</a>
 				<ul class="depth2-con" style ="display:none;">
-					<li class="depth2"><a href="?ctl=Move&param1=product_register">입고등록</a></li>
+					<li class="depth2"><a href="?ctl=Move&param1=input">입고등록</a></li>
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=msg_main">자재등록</a></li> -->
-					<li class="depth2"><a href="?ctl=Move&param1=msg_reserve">입고현황</a></li>
+					<li class="depth2"><a href="?ctl=Move&param1=input_list">입고현황</a></li>
 					<!-- <li class="depth2 admin_none"><a href="?ctl=Move&param1=msg_result">전송결과</a></li> -->
-					<li class="depth2"><a href="?ctl=Move&param1=msg_box">월집계</a></li>
+					<li class="depth2"><a href="?ctl=Move&param1=input_month">월집계</a></li>
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=product_register">메시지함관리</a></li> -->
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=msg_box_set">메시지함관리</a></li> -->
 				</ul>

@@ -28,7 +28,7 @@
                         if($user_role != 2){
                             include_once $this->dir.$this->create_page($param1);
                         }else{
-                            include_once $this->dir."page/admin/msg_main.php";
+                            include_once $this->dir."page/admin/main.php";
                         }
                     }else if($param1 == "adm_login"){
                         include_once $this->dir."page/admin/adm_login.php";
@@ -36,8 +36,8 @@
                         include_once $this->dir.$this->create_page($param1);
                     }
                 }else{
-                    $param1 = "msg_main";
-                    include_once $this->dir."page/admin/msg_main.php";
+                    $param1 = "main";
+                    include_once $this->dir."page/admin/main.php";
                 }
             }else{
                 $user_idx = 0;
