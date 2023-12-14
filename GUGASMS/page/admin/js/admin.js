@@ -78,7 +78,7 @@ function login(){
                 result = JSON.parse(result);
                 double_click = true;
                 if(result["result"]==1){
-                    location.href = "?ctl=Move&param1=msg_main";
+                    location.href = "?ctl=Move&param1=main";
                 }else{
                     alert('계정정보가 잘못되었습니다.');
                 }
