@@ -36,7 +36,7 @@
 			</div>
 			<div class="adm_main_container">
 				<div class="clearfix row adm_section_container_mid">
-					<section class="adm_section_container">
+					<section class="adm_section_container container_mid">
 						<form action="">
 							<table id="sch_box">
 								<colgroup>
