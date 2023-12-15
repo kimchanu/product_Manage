@@ -75,8 +75,8 @@
 								</tr>
 											</tbody></table>
 						
-							<ul class="" style="float : left; display : block;">
-								<li><a onclick="history.back()">목록</a></li>
+							<ul class="">
+								<li style="float : left; display : block;"><a onclick="history.back()">목록</a></li>
 							</ul>
 							<ul class="">
 								<li><a>이전</a></li><li class=""><a>1</a></li><li><a>다음</a></li></ul>
