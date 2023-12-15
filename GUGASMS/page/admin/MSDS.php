@@ -75,11 +75,11 @@
 								</tr>
 											</tbody></table>
 						
-							<ul class="" style="float : left">
+							<ul class="" style="float : left; display : block;">
 								<li><a onclick="history.back()">목록</a></li>
 							</ul>
 							<ul class="">
-								<li><a>이전</a></li><li class=""><a>1</a></li><li><a>다음</a></li>			</ul>
+								<li><a>이전</a></li><li class=""><a>1</a></li><li><a>다음</a></li></ul>
 						</div>
 					</section>
 				</div>
