@@ -375,18 +375,18 @@ function request_add_product(){
 function request_add_product(){
     var product_code = document.getElementById('product_code');
     var product_position = document.getElementById('product_position');
-    var product_b_class = document.getElementById('product_b_class').value;
-    var product_s_class = document.getElementById('product_s_class').value;
-    var product_name = document.getElementById('product_name').value;
-    var product_stand = document.getElementById('product_stand').value;
-    var product_maker = document.getElementById('product_maker').value;
-    var product_custom = document.getElementById('product_custom').value;
-    var product_union = document.getElementById('product_union').value;
-    var product_price = document.getElementById('product_price').value;
-    var product_amount = document.getElementById('product_amount').value;
-    var product_sum = document.getElementById('product_sum').value;
-    var product_in_date = document.getElementById('product_in_date').value;
-    var product_image = document.getElementById('product_image').value;
+    var product_b_class = document.getElementById('product_b_class');
+    var product_s_class = document.getElementById('product_s_class');
+    var product_name = document.getElementById('product_name');
+    var product_stand = document.getElementById('product_stand');
+    var product_maker = document.getElementById('product_maker');
+    var product_custom = document.getElementById('product_custom');
+    var product_union = document.getElementById('product_union');
+    var product_price = document.getElementById('product_price');
+    var product_amount = document.getElementById('product_amount');
+    var product_sum = document.getElementById('product_sum');
+    var product_in_date = document.getElementById('product_in_date');
+    var product_image = document.getElementById('product_image');
     
 
     if(double_click){
@@ -439,7 +439,7 @@ function request_add_product(){
                 type : "JsonAjaxPost",
                 list : {
                     ctl : "Addr",
-                    param1 : "add_addr",
+                    param1 : "add_product",
                     mat_code : product_code.value,
                     mat_position : product_position.value,
                     b_class : product_b_class.value,
