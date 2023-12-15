@@ -76,7 +76,7 @@
 											</tbody></table>
 						
 							<ul class="">
-								<li style="display : block; background-color : yellow"><a onclick="history.back()">목록</a></li>
+								<li style="float : left; display : block; background-color : yellow"><a onclick="history.back()">목록</a></li>
 							</ul>
 							<ul>
 								<li><a>이전</a></li><li class=""><a>1</a></li><li><a>다음</a></li></ul>
