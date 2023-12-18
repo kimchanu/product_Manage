@@ -25,6 +25,7 @@
 	<script src="GUGASMS/page/admin/js/FileSaver.min.js"></script>
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
+	<script src="GUGASMS/page/admin/js/kakao_f_main.js"></script>
 </head>
     <body>
         <div class="wrap">
