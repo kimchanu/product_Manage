@@ -97,33 +97,44 @@
                                         </colgroup>
                                         <tbody>
                                             <tr>
+                                                <td colspan="2">
+                                                    <select name="type" id="type" class="selectCSS" style="width:200px">
+                                                        <option value="0">물질명(관용명/동의어)</option>
+                                                        <option value="1">CAS NO</option>
+                                                        <option value="2">UN NO</option>
+                                                        <option value="3">KE NO</option>
+                                                        <option value="4">EN NO</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <th><!-- 아이디 -->아이디</th>
                                                 <td><input
                                                     type="text"
                                                     name="reg_id"
                                                     class="form-control"
-													placeholder = "ex) abc123"
+                                                    placeholder="ex) abc123"
                                                     value=""
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
                                                 <th><!-- 비밀번호 -->비밀번호
                                                 </th>
-                                               <td><input
+                                                <td><input
                                                     type="password"
-                                                    name="reg_password"
+                                                    name="reg_pw"
                                                     class="form-control"
                                                     value=""
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
-                                                <th><!-- 회원명 -->이메일</th>
+                                                <th><!-- 회원명 -->이름</th>
                                                 <td><input
                                                     type="text"
                                                     name="reg_name"
                                                     class="form-control"
                                                     value=""
-													placeholder = "ex) abc123@koinfra.com"
+                                                    placeholder="ex) 홍길동"
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
@@ -133,7 +144,7 @@
                                                     name="reg_grade"
                                                     class="form-control"
                                                     value=""
-													placeholder = "ex) 사원"
+                                                    placeholder="ex) 사원"
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
@@ -143,7 +154,7 @@
                                                     type="text"
                                                     name="reg_number"
                                                     class="form-control"
-													placeholder = "ex) 01012345678"
+                                                    placeholder="ex) 01012345678"
                                                     maxlength="11"></td>
                                             </tr>
                                         </tbody>
@@ -158,7 +169,7 @@
                                     type="button"
                                     value="회원가입"
                                     id="btnClose"
-                                    onclick="sign_up();"/></li>
+                                    onclick="signup();"/></li>
                                 <li><input
                                     class="btn-sm btn-default"
                                     type="button"
