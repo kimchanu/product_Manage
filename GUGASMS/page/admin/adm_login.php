@@ -106,7 +106,7 @@
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
-                                                <th><!-- 비밀번호 -->비밀번호<em>*</em>
+                                                <th><!-- 비밀번호 -->비밀번호
                                                 </th>
                                                <td><input
                                                     type="password"
@@ -133,24 +133,13 @@
                                                     value=""
                                                     maxlength="11"></td>
                                             </tr>
-                                            </tr>
                                             <tr>
-                                                <th><!-- 전화번호 -->전화번호</th>
-                                                <td><input
-                                                    type="text"
-                                                    name="reg_number"
-                                                    class="form-control"
-                                                    value=""
-                                                    maxlength="11"></td>
-                                            </tr>
-                                            <tr>
-                                                <th><!-- 휴대폰번호 -->휴대폰번호<em>*</em>
+                                                <th><!-- 휴대폰번호 -->휴대폰번호
                                                 </th>
                                                 <td><input
                                                     type="text"
                                                     name="reg_number"
                                                     class="form-control"
-                                                    value="ex) 01065112651"
                                                     maxlength="11"></td>
                                             </tr>
                                         </tbody>
