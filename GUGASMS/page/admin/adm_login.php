@@ -97,6 +97,7 @@
                                         </colgroup>
                                         <tbody>
                                             <tr>
+											<th><!-- 아이디 -->부서명</th>
                                                 <td colspan="2">
                                                     <select name="type" id="type" class="selectCSS" style="width:200px">
                                                         <option value="0">ITS</option>
