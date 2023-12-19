@@ -102,6 +102,7 @@
                                                     type="text"
                                                     name="reg_id"
                                                     class="form-control"
+													placeholder = "ex) abc123"
                                                     value=""
                                                     maxlength="11"></td>
                                             </tr>
@@ -116,12 +117,13 @@
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
-                                                <th><!-- 회원명 -->회원명</th>
+                                                <th><!-- 회원명 -->이메일</th>
                                                 <td><input
                                                     type="text"
                                                     name="reg_name"
                                                     class="form-control"
                                                     value=""
+													placeholder = "ex) abc123@koinfra.com"
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
@@ -131,6 +133,7 @@
                                                     name="reg_grade"
                                                     class="form-control"
                                                     value=""
+													placeholder = "ex) 사원"
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
@@ -140,6 +143,7 @@
                                                     type="text"
                                                     name="reg_number"
                                                     class="form-control"
+													placeholder = "ex) 01012345678"
                                                     maxlength="11"></td>
                                             </tr>
                                         </tbody>
