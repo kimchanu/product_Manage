@@ -68,7 +68,7 @@
                                 <div class="input_control"><input type="text" id="id" placeholder="아이디입력" onkeydown="Enter_Check()"></div>
                                 <div class="input_control"><input type="password" id="pw" placeholder="비밀번호입력" onkeydown="Enter_Check()"></div>
                                 <div class="btn_control">
-                                    <button type="button" class="btn-primary" onclick="login()">로그인</button>
+                                    <button type="button" class="btn-primary" onclick="login()" style = "bottom-margin : 10px;">로그인</button>
                                 </div>
                                 <div class="btn_control">
                                     <button type="button" class="btn-primary" onclick="open_add_modal()">회원가입</button>
@@ -83,22 +83,11 @@
             <div class="modal admin_modal" id="addr_modal" style="display:none;">
                 <div class="popup_wrap modal-xl">
                     <div class="adm_popup_container">
-                        <h4>자재 추가</h4>
+                        <h4>회원가입</h4>
                         <section class="adm_section_container">
                             <div class="adm_modal_input_container">
                                 <div class="modal_table">
-                                    <div class="wi_board_form_row">
-                                        <div class="wi_board_form_title">
-                                            <label for="" class="wi_board_label_control">자재코드</label>
-                                        </div>
-                                        <div class="wi_board_form_content">
-                                            <input
-                                                type="text"
-                                                id="product_code"
-                                                class="wi_board_input_control"
-                                                autocomplete="off">
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </section>
