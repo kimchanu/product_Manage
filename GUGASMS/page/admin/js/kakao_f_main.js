@@ -17,5 +17,10 @@ $(document).ready(function(){
 
       })
 
+
+    function msdnlist(){
+      var msdn_name = document.getElementsByClassName('selectCSS');
+      
+    }
 });
 

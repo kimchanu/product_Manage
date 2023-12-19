@@ -39,11 +39,29 @@
 							<div class="input_control"><input type="text" id="id" placeholder="아이디입력" onkeydown="Enter_Check()"></div>
 							<div class="input_control"><input type="password" id="pw" placeholder="비밀번호입력" onkeydown="Enter_Check()"></div>
 							<div class="btn_control"><button type="button" class="btn-primary" onclick="login()">로그인</button></div>
+							<div class="btn_control"><button type="button" class="btn-primary" onclick="login()">회원가입</button></div>
 						<div>
 					</div>
 				</section>
 			</div>
 		</div>
+		  <!-- 모달화면 -->
+	<div class="modal admin_modal" id="addr_modal" style= "display:none;">
+		<div class="popup_wrap modal-xl">
+			<div class="adm_popup_container">
+				<h4>자재 추가</h4>
+				<section class="adm_section_container">
+			
+				</section>
+				<div class="adm_table_btn">
+					<ul>
+						<li><input class="btn-sm btn-default" type="button" value="회원가입" id="btnClose" onclick="sign_up();"/></li>
+						<li><input class="btn-sm btn-default" type="button" value="닫기" id="btnClose" onclick="close_add_modal();"/></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+    </div>
 		<?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>
 	</div>
 </body>

@@ -87,6 +87,20 @@ function login(){
     }
 }
 
+function open_add_modal(){
+    var addr_modal = document.getElementById('addr_modal');
+    addr_modal.style.display = "block";
+}
+
+function close_add_modal(){
+    var addr_modal = document.getElementById('addr_modal');
+    addr_modal.style.display = "none";
+}
+
+function sing_up(){
+    
+}
+
 function Enter_Check() {
     if (event.keyCode == 13) {
         login();
