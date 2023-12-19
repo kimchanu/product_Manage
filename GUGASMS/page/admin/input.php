@@ -37,7 +37,7 @@
 			<div class="adm_section_container_head pb-0">
 				<h2>입고등록</h2>
 			</div>
-		<div class="adm_main_container">
+			<div class="adm_main_container">
             <section class="adm_section_container">
 				<div class="adm_section_container_body p-1">
 					<div class="btn-list-con align-right mb-1">
@@ -100,8 +100,8 @@
 							<!-- adm_section_container_body // -->
 						</section>
 						<!-- adm_section_container // -->
-        </div>
-	</div>
+        	</div>
+		</div>
   <!-- 모달화면 -->
 	<div class="modal admin_modal" id="addr_modal" style= "display:none;">
 		<div class="popup_wrap modal-xl">
