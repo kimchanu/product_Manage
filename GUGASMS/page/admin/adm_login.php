@@ -99,11 +99,10 @@
                                             <tr>
                                                 <td colspan="2">
                                                     <select name="type" id="type" class="selectCSS" style="width:200px">
-                                                        <option value="0">물질명(관용명/동의어)</option>
-                                                        <option value="1">CAS NO</option>
-                                                        <option value="2">UN NO</option>
-                                                        <option value="3">KE NO</option>
-                                                        <option value="4">EN NO</option>
+                                                        <option value="0">ITS</option>
+                                                        <option value="1">기전</option>
+                                                        <option value="2">장비</option>
+                                                        <option value="3">시설</option>
                                                     </select>
                                                 </td>
                                             </tr>
