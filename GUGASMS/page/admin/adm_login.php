@@ -47,6 +47,10 @@
             rel="stylesheet"
             type="text/css"
             href="GUGASMS/page/admin/css/common2.css<?php echo $this->version;?>"/>
+        <!-- FONTAWESOME -->
+        <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
 
         <!-- sript시작 -->
         <script src="GUGASMS/page/admin/js/jquery/jquery-3.3.1.min.js"></script>
