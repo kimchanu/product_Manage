@@ -17,15 +17,15 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="GUGASMS/page/admin/css/admin.modal.css<?php echo $this->version;?>"/>
-        <link
-            rel="stylesheet"
-            type="text/css"
             href="GUGASMS/page/admin/css/reset.css<?php echo $this->version;?>"/>
         <link
             rel="stylesheet"
             type="text/css"
             href="GUGASMS/page/admin/css/common.css<?php echo $this->version;?>"/>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="GUGASMS/page/admin/css/admin.modal.css<?php echo $this->version;?>"/>
         <link
             rel="stylesheet"
             type="text/css"

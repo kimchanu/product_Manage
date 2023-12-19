@@ -215,10 +215,7 @@ function init_addr_list(data){
     })
 }
 
-function open_add_modal(){
-    var addr_modal = document.getElementById('addr_modal');
-    addr_modal.style.display = "block";
-}
+
 
 function close_add_modal(){
     var addr_modal = document.getElementById('addr_modal');
