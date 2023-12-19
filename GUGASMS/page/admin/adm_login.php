@@ -33,20 +33,12 @@
         <link
             rel="stylesheet"
             type="text/css"
-            href="GUGASMS/page/admin/css/admin_sub.css<?php echo $this->version;?>"/>
-        <link
-            rel="stylesheet"
-            type="text/css"
             href="GUGASMS/page/admin/css/adm_table.css<?php echo $this->version; ?>"/>
         <link
             rel="stylesheet"
             type="text/css"
             href="GUGASMS/page/admin/css/common2.css<?php echo $this->version; ?>"/>
-        <!-- 2019-11-21 추가 -->
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="GUGASMS/page/admin/css/common2.css<?php echo $this->version;?>"/>
+
         <!-- FONTAWESOME -->
         <link
             rel="stylesheet"
