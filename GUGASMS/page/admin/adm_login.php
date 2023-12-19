@@ -49,7 +49,6 @@
         <script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version;?>"></script>
         <script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
         <!-- script끝 -->
-
     </head>
     <body>
         <div class="wrap">
@@ -98,46 +97,48 @@
                                         </colgroup>
                                         <tbody>
                                             <tr>
-                                                <th><!-- 조직 -->조직</th>
-                                                <td>한국인프라관리 – 한국인프라관리 주식회사 - GK사업소
-
-                                                </td>
-                                            </tr>
-
-                                            <tr>
                                                 <th><!-- 아이디 -->아이디</th>
-                                                <td>KI2230202</td>
-                                            </tr>
-                                            <tr>
-                                                <th><!-- 비밀번호 -->비밀번호<em>*</em>
-                                                </th>
-
-                                                <td>
-                                                    <a href="#myModal" onclick="openPasswordLayerPop(); return false;">비밀번호 변경</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th><!-- 회원명 -->회원명</th>
-                                                <td>김찬우</td>
-                                            </tr>
-                                            <tr>
-                                                <th><!-- 직책 -->직책</th>
-                                                <td>사원</td>
-                                            </tr>
-                                            <tr>
-                                                <th><!-- 전화번호 -->전화번호</th>
                                                 <td><input
                                                     type="text"
-                                                    name="m_mbtel_m"
+                                                    name="reg_id"
                                                     class="form-control"
                                                     value=""
                                                     maxlength="11"></td>
                                             </tr>
                                             <tr>
-                                                <th><!-- 팩스 -->팩스</th>
+                                                <th><!-- 비밀번호 -->비밀번호<em>*</em>
+                                                </th>
+                                               <td><input
+                                                    type="password"
+                                                    name="reg_password"
+                                                    class="form-control"
+                                                    value=""
+                                                    maxlength="11"></td>
+                                            </tr>
+                                            <tr>
+                                                <th><!-- 회원명 -->회원명</th>
                                                 <td><input
                                                     type="text"
-                                                    name="m_mbfax_m"
+                                                    name="reg_name"
+                                                    class="form-control"
+                                                    value=""
+                                                    maxlength="11"></td>
+                                            </tr>
+                                            <tr>
+                                                <th><!-- 직책 -->직책</th>
+                                                <td><input
+                                                    type="text"
+                                                    name="reg_grade"
+                                                    class="form-control"
+                                                    value=""
+                                                    maxlength="11"></td>
+                                            </tr>
+                                            </tr>
+                                            <tr>
+                                                <th><!-- 전화번호 -->전화번호</th>
+                                                <td><input
+                                                    type="text"
+                                                    name="reg_number"
                                                     class="form-control"
                                                     value=""
                                                     maxlength="11"></td>
@@ -147,53 +148,10 @@
                                                 </th>
                                                 <td><input
                                                     type="text"
-                                                    name="m_mbphone_m"
+                                                    name="reg_number"
                                                     class="form-control"
-                                                    value="01065112651"
+                                                    value="ex) 01065112651"
                                                     maxlength="11"></td>
-                                            </tr>
-                                            <tr>
-                                                <th><!-- 이메일 -->이메일<em>*</em>
-                                                </th>
-                                                <td><input
-                                                    type="text"
-                                                    maxlength="50"
-                                                    name="m_mbemail_m"
-                                                    class="form-control"
-                                                    value="chanwoo.kim@koinfra.com"></td>
-                                            </tr>
-                                            <tr>
-                                                <th rowspan="2"><!-- 배송지 주소 -->배송지 주소</th>
-                                                <td class="address no-b no-b-p">
-                                                    <input
-                                                        type="text"
-                                                        name="m_mbzip_m"
-                                                        value="46770"
-                                                        class="form-control"
-                                                        placeholder="우편번호">
-                                                    <!-- 우편번호 -->
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-success btn-other"
-                                                        onclick="openDaumPostcode('mobile');"><!-- 검색 -->검색</button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input
-                                                        type="text"
-                                                        name="m_mbaddr1_m"
-                                                        value="부산 강서구 거가대로 2571 (천성동)"
-                                                        placeholder=""
-                                                        class="form-control">
-                                                    <input
-                                                        type="text"
-                                                        name="m_mbaddr2_m"
-                                                        maxlength="60"
-                                                        value="한국인프라관리"
-                                                        placeholder=""
-                                                        class="form-control m-t-xxs">
-                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
