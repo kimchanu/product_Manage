@@ -82,31 +82,33 @@
                         </div>
                     </div>
                 </div>
-                <!-- 모달화면 -->
-                <div class="modal admin_modal" id="addr_modal" style="display:none;">
-                    <div class="popup_wrap modal-xl">
-                        <div class="adm_popup_container">
-                            <h4>자재 추가</h4>
-                            <section class="adm_section_container"></section>
-                            <div class="adm_table_btn">
-                                <ul>
-                                    <li><input
-                                        class="btn-sm btn-default"
-                                        type="button"
-                                        value="회원가입"
-                                        id="btnClose"
-                                        onclick="sign_up();"/></li>
-                                    <li><input
-                                        class="btn-sm btn-default"
-                                        type="button"
-                                        value="닫기"
-                                        id="btnClose"
-                                        onclick="close_add_modal();"/></li>
-                                </ul>
-                            </div>
+            </div>
+            <!-- 모달화면 -->
+            <div class="modal admin_modal" id="addr_modal" style="display:none;">
+                <div class="popup_wrap modal-xl">
+                    <div class="adm_popup_container">
+                        <h4>자재 추가</h4>
+                        <section class="adm_section_container"></section>
+                        <div class="adm_table_btn">
+                            <ul>
+                                <li><input
+                                    class="btn-sm btn-default"
+                                    type="button"
+                                    value="회원가입"
+                                    id="btnClose"
+                                    onclick="sign_up();"/></li>
+                                <li><input
+                                    class="btn-sm btn-default"
+                                    type="button"
+                                    value="닫기"
+                                    id="btnClose"
+                                    onclick="close_add_modal();"/></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>
-            </body>
-        </html>
+            </div>
+            <?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>
+        </div>
+    </body>
+</html>
