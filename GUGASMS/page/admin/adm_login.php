@@ -39,7 +39,7 @@
 							<div class="input_control"><input type="text" id="id" placeholder="아이디입력" onkeydown="Enter_Check()"></div>
 							<div class="input_control"><input type="password" id="pw" placeholder="비밀번호입력" onkeydown="Enter_Check()"></div>
 							<div class="btn_control"><button type="button" class="btn-primary" onclick="login()">로그인</button></div>
-							<div class="btn_control"><button type="button" class="btn-primary" onclick="login()">회원가입</button></div>
+							<div class="btn_control"><button type="button" class="btn-primary" onclick="open_add_modal()">회원가입</button></div>
 						<div>
 					</div>
 				</section>
