@@ -92,7 +92,24 @@
                 <div class="popup_wrap modal-xl">
                     <div class="adm_popup_container">
                         <h4>자재 추가</h4>
-                        <section class="adm_section_container"></section>
+                        <section class="adm_section_container">
+                            <div class="adm_modal_input_container">
+                                <div class="modal_table">
+                                    <div class="wi_board_form_row">
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">자재코드</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_code"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                         <div class="adm_table_btn">
                             <ul>
                                 <li><input
