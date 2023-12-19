@@ -100,6 +100,7 @@ function close_add_modal(){
 function signup(){
     if(double_click){
         double_click = false;
+        var depart = document.getElementById('type');
         var id = $('input[name=reg_id]');
         var pw = $('input[name=reg_pw]');
         var name = $('input[name=reg_name]');
@@ -124,6 +125,7 @@ function signup(){
                 list : {
                     ctl : "Admin",
                     param1 : "signup",
+                    depart : depart.value,
                     id : id.val(),
                     pw : pw.val(),
                     name : name.val(),

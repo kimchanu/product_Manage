@@ -145,6 +145,60 @@
             echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
         }
 
+        function sign_up2(){
+            $param = $this->json;
+            if($this->value_check(array("id","pw","name", "role"))){
+
+                $sql = "select id from admin where id = ".$this->null_check($param["id"])."";
+
+                $result = $this->conn->db_select($sql);
+                if($result["result"] == 0){
+                    $this->result = $result;
+                }else{
+                    if(count($result["value"]) != 0){
+                        $this->result["result"] = 0;
+                        $this->result["error_code"]="533";
+                        $this->result["message"] = "중복된 아이디입니다.";
+                    }else{
+                        $sql = "insert into admin(id, pw, name, role, send_number, sms, mms, comment, regdate) values(";
+                        $sql = $sql . $this->null_check($param["id"]) . " , ";
+                        $sql = $sql . $this->null_check($param["pw"]) . " , ";
+                        $sql = $sql . $this->null_check($param["name"]) . " , ";
+                        $sql = $sql . $param["role"] . " , ";
+                        if($param["send_number"] == ""){
+                            $sql = $sql . " null , ";
+                        }else{
+                            $sql = $sql . $this->null_check($param["send_number"]) . " , ";
+                        }
+                        if($param["sms"] == ""){
+                            $sql = $sql . " 0 , ";
+                        }else{
+                            $sql = $sql . $param["sms"] . " , ";
+                        }
+                        if($param["mms"] == ""){
+                            $sql = $sql . " 0 , ";
+                        }else{
+                            $sql = $sql . $param["mms"] . " , ";
+                        }
+                        if($param["comment"] == ""){
+                            $sql = $sql . " null , now() ";
+                        }else{
+                            $sql = $sql . $this->null_check($param["comment"]) . " , now() ";
+                        }
+                        $sql = $sql . ")";
+
+                        $result = $this->conn->db_insert($sql);
+                        if($result["result"] == 0){
+                            $this->result = $result;
+                        }else{
+                            $this->result = $result;
+                        }
+                    }
+                }
+            }
+            echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
+        }
+
         
         /********************************************************************* 
         // 함 수 : user_modify()
