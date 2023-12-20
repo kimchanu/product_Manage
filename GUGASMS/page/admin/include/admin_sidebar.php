@@ -18,7 +18,7 @@
                             <a href="?ctl=Move&param1=input_list">관리</a>
                         </li>
                     </ul>
-                    <a href="#" onclick="side_bar(this); return false;">관리동-창고</a>
+                    <a id="kakao_side" href="#" onclick="side_bar(this); return false;">관리동-창고</a>
                     <ul class="depth2-con" style="display:none;">
                         <li class="depth2">
                             <a href="?ctl=Move&param1=msg_main">시설</a>
@@ -30,8 +30,8 @@
                             <a href="?ctl=Move&param1=input_list">ITS</a>
                         </li>
                     </ul>
-            	</ul>	
-   		     </li>
+           		</ul>
+        	</li>
 
         <li class="depth1" data-side="">
             <a id="msg_side" href="#" onclick="side_bar(this); return false;">입고관리</a>
