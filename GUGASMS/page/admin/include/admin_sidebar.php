@@ -13,10 +13,10 @@
                     <a href="#" onclick="side_bar(this); return false;">관리동-2F</a>
                     <ul class="depth2-con" style="display:none;">
                         <li class="depth3">
-                            <a href="?ctl=Move&param1=msg_main">ITS</a>
+                            <a href="?ctl=Move&param1=its">ITS</a>
                         </li>
                         <li class="depth3">
-                            <a href="?ctl=Move&param1=input_list">관리</a>
+                            <a href="?ctl=Move&param1=manage_gk">관리</a>
                         </li>
                     </ul>
 				</li>
@@ -24,13 +24,13 @@
                     <a href="#" onclick="side_bar(this); return false;">관리동-창고</a>
                     <ul class="depth2-con" style="display:none;">
                         <li class="depth3">
-                            <a href="?ctl=Move&param1=msg_main">시설</a>
+                            <a href="?ctl=Move&param1=civil">시설</a>
                         </li>
                         <li class="depth3">
-                            <a href="?ctl=Move&param1=input_list">전기/기계</a>
+                            <a href="?ctl=Move&param1=electric_engine">전기/기계</a>
                         </li>
                         <li class="depth3">
-                            <a href="?ctl=Move&param1=input_list">ITS</a>
+                            <a href="?ctl=Move&param1=its_outside">ITS</a>
                         </li>
                     </ul>
 				</li>
