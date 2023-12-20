@@ -108,51 +108,51 @@ function signup(){
         var phone_number = $('input[name=reg_number]');
         console.log(depart, id, pw);
 
-    //     if(id.value == ""){
-    //         alert('사용자ID를 입력해주세요');
-    //         double_click = true;
-    //     }else if(pw.value == ""){
-    //         alert('비밀번호를 입력해주세요');
-    //         double_click = true;
-    //     }else if(name.value == ""){
-    //         alert('사용자명을 입력해주세요');
-    //         double_click = true;
-    //     }else if(role.value == "0"){
-    //         alert('권한그룹을 입력해주세요');
-    //         double_click = true;
-    //     }else{
-    //         lb.ajax({
-    //             type : "JsonAjaxPost",
-    //             list : {
-    //                 ctl : "Admin",
-    //                 param1 : "signup",
-    //                 depart : depart.value,
-    //                 id : id.val(),
-    //                 pw : pw.val(),
-    //                 name : name.val(),
-    //                 grade : grade.val(),
-    //                 phone_number : phone_number.val(),
-    //             },
-    //             action : "index.php",
-    //             havior : function(result){
-    //                 double_click = true;
-    //                 console.log(result);
-    //                 result = JSON.parse(result);
-    //                 if(result.result == 1){
-    //                     alert('사용자가 등록되었습니다.');
-    //                     user_list();
-    //                 }else{
-    //                     if(result.error_code == "533"){
-    //                         alert(result.message);
-    //                     }else{
-    //                         alert('사용자 등록 실패');
-    //                     }
-    //                 }
-    //             }
-    //         })
-    //     }
-    // }else{
-    //     alert('사용자 등록중입니다.');
+        if(id.value == ""){
+            alert('사용자ID를 입력해주세요');
+            double_click = true;
+        }else if(pw.value == ""){
+            alert('비밀번호를 입력해주세요');
+            double_click = true;
+        }else if(name.value == ""){
+            alert('사용자명을 입력해주세요');
+            double_click = true;
+        }else if(role.value == "0"){
+            alert('권한그룹을 입력해주세요');
+            double_click = true;
+        }else{
+            lb.ajax({
+                type : "JsonAjaxPost",
+                list : {
+                    ctl : "Admin",
+                    param1 : "signup",
+                    depart : depart.value,
+                    id : id.val(),
+                    pw : pw.val(),
+                    name : name.val(),
+                    grade : grade.val(),
+                    phone_number : phone_number.val(),
+                },
+                action : "index.php",
+                havior : function(result){
+                    double_click = true;
+                    console.log(result);
+                    result = JSON.parse(result);
+                    if(result.result == 1){
+                        alert('사용자가 등록되었습니다.');
+                        user_list();
+                    }else{
+                        if(result.error_code == "533"){
+                            alert(result.message);
+                        }else{
+                            alert('사용자 등록 실패');
+                        }
+                    }
+                }
+            })
+        }
+    }else{
+        alert('사용자 등록중입니다.');
     }
 }
 
