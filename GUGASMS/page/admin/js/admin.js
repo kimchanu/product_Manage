@@ -106,6 +106,7 @@ function signup(){
         var name = $('input[name=reg_name]');
         var grade = $('input[name=reg_grade]');
         var phone_number = $('input[name=reg_number]');
+        console.log(depart, id, pw);
 
         if(id.value == ""){
             alert('사용자ID를 입력해주세요');
