@@ -18,8 +18,9 @@
                             <a href="?ctl=Move&param1=input_list">관리</a>
                         </li>
                     </ul>
-                    <a id="kakao_side" href="#" onclick="side_bar(this); return false;">관리동-창고</a>
+                    
                     <ul class="depth2-con" style="display:none;">
+					<a href="#" onclick="side_bar(this); return false;">관리동-창고</a>
                         <li class="depth2">
                             <a href="?ctl=Move&param1=msg_main">시설</a>
                         </li>
