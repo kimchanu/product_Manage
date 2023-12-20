@@ -100,12 +100,13 @@ function close_add_modal(){
 function signup(){
     if(double_click){
         double_click = false;
-        var depart = document.getElementById('type');
-        var id = $('input[name=reg_id]');
-        var pw = $('input[name=reg_pw]');
-        var name = $('input[name=reg_name]');
-        var grade = $('input[name=reg_grade]');
+        var depart = document.getElementById('type').value;
+        var id = $('input[name=reg_id]').val();
+        var pw = $('input[name=reg_pw]').val();
+        var name = $('input[name=reg_name]').val();
+        var grade = $('input[name=reg_grade]').val();
         var phone_number = $('input[name=reg_number]');
+        console.log(depart, id, pw);
 
         if(id.value == ""){
             alert('사용자ID를 입력해주세요');
