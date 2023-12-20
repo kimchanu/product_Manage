@@ -8,37 +8,31 @@
         <ul class="depth1-con">
             <li class="depth1" data-side="">
                 <a id="kakao_side" href="#" onclick="side_bar(this); return false;">자재관리</a>
-
                 <ul class="depth2-con" style="display:none;">
-                    <li class="depth2">
-                        <a href="#" onclick="side_bar(this); return false;">관리동-2F</a>
-                        <ul class="depth2-con" style="display:none;">
-                            <li class="depth2">
-                                <a href="?ctl=Move&param1=msg_main">ITS</a>
-                            </li>
-                            <li class="depth2">
-                                <a href="?ctl=Move&param1=input_list">관리</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <a href="#" onclick="side_bar(this); return false;">관리동-2F</a>
+                    <ul class="depth2-con" style="display:none;">
+                        <li class="depth2">
+                            <a href="?ctl=Move&param1=msg_main">ITS</a>
+                        </li>
+                        <li class="depth2">
+                            <a href="?ctl=Move&param1=input_list">관리</a>
+                        </li>
+                    </ul>
+                    <a href="#" onclick="side_bar(this); return false;">관리동-창고</a>
+                    <ul class="depth2-con" style="display:none;">
+                        <li class="depth2">
+                            <a href="?ctl=Move&param1=msg_main">시설</a>
+                        </li>
+                        <li class="depth2">
+                            <a href="?ctl=Move&param1=input_list">전기/기계</a>
+                        </li>
+                        <li class="depth2">
+                            <a href="?ctl=Move&param1=input_list">ITS</a>
+                        </li>
+                    </ul>
+            	</ul>	
+   		     </li>
 
-                    <li >
-                        <a href="#" onclick="side_bar(this); return false;">관리동-창고</a>
-                        <ul class="depth2-con" style="display:none;">
-                            <li class="depth2">
-                                <a href="?ctl=Move&param1=msg_main">시설</a>
-                            </li>
-                            <li class="depth2">
-                                <a href="?ctl=Move&param1=input_list">전기/기계</a>
-                            </li>
-                            <li class="depth2">
-                                <a href="?ctl=Move&param1=input_list">ITS</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                </li>
-            </ul>
         <li class="depth1" data-side="">
             <a id="msg_side" href="#" onclick="side_bar(this); return false;">입고관리</a>
             <ul class="depth2-con" style="display:none;">
