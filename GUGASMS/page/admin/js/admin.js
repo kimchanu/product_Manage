@@ -100,7 +100,7 @@ function close_add_modal(){
 function signup(){
     if(double_click){
         double_click = false;
-        var depart = document.getElementById('type');
+        var depart = document.getElementById('type').value;
         var id = $('input[name=reg_id]').val();
         var pw = $('input[name=reg_pw]').val();
         var name = $('input[name=reg_name]').val();
