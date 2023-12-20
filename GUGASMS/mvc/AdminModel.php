@@ -147,9 +147,9 @@
 
         function sign_up2(){
             $param = $this->json;
-            if($this->value_check(array("id","pw","name", "role"))){
+            if($this->value_check(array("idx","group_idx","user_id","user_name","user_pw","user_duty","user_phone","reg_time"))){
 
-                $sql = "select id from admin where id = ".$this->null_check($param["id"])."";
+                $sql = "select id from mat_manage where id = ".$this->null_check($param["id"])."";
 
                 $result = $this->conn->db_select($sql);
                 if($result["result"] == 0){
@@ -160,7 +160,7 @@
                         $this->result["error_code"]="533";
                         $this->result["message"] = "중복된 아이디입니다.";
                     }else{
-                        $sql = "insert into admin(id, pw, name, role, send_number, sms, mms, comment, regdate) values(";
+                        $sql = "insert into mat_manage(idx,group_idx,user_id,user_name,user_pw,user_duty,user_phone,reg_time) values(";
                         $sql = $sql . $this->null_check($param["id"]) . " , ";
                         $sql = $sql . $this->null_check($param["pw"]) . " , ";
                         $sql = $sql . $this->null_check($param["name"]) . " , ";
