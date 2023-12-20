@@ -100,32 +100,28 @@ function close_add_modal(){
 function signup(){
     if(double_click){
         double_click = false;
-        var depart = document.getElementById('type').value;
-        var id = $('input[name=reg_id]').val();
-        var pw = $('input[name=reg_pw]').val();
-        var name = $('input[name=reg_name]').val();
-        var grade = $('input[name=reg_grade]').val();
+        var depart = document.getElementById('type');
+        var id = $('input[name=reg_id]');
+        var pw = $('input[name=reg_pw]');
+        var name = $('input[name=reg_name]');
+        var grade = $('input[name=reg_grade]');
         var phone_number = $('input[name=reg_number]');
-        console.log(depart, id, pw);
 
-        if(id.value == ""){
+        if(id.val() == ""){
             alert('사용자ID를 입력해주세요');
             double_click = true;
-        }else if(pw.value == ""){
+        }else if(pw.val() == ""){
             alert('비밀번호를 입력해주세요');
             double_click = true;
-        }else if(name.value == ""){
+        }else if(name.val() == ""){
             alert('사용자명을 입력해주세요');
-            double_click = true;
-        }else if(role.value == "0"){
-            alert('권한그룹을 입력해주세요');
             double_click = true;
         }else{
             lb.ajax({
                 type : "JsonAjaxPost",
                 list : {
                     ctl : "Admin",
-                    param1 : "signup",
+                    param1 : "sign_up2",
                     depart : depart.value,
                     id : id.val(),
                     pw : pw.val(),
@@ -140,7 +136,6 @@ function signup(){
                     result = JSON.parse(result);
                     if(result.result == 1){
                         alert('사용자가 등록되었습니다.');
-                        user_list();
                     }else{
                         if(result.error_code == "533"){
                             alert(result.message);

@@ -147,7 +147,7 @@
 
         function sign_up2(){
             $param = $this->json;
-            if($this->value_check(array("idx","group_idx","user_id","user_name","user_pw","user_duty","user_phone","reg_time"))){
+            if($this->value_check(array("group_idx","user_id","user_name","user_pw","user_duty","user_phone"))){
 
                 $sql = "select id from mat_admin where id = ".$this->null_check($param["id"])."";
 
@@ -160,32 +160,13 @@
                         $this->result["error_code"]="533";
                         $this->result["message"] = "중복된 아이디입니다.";
                     }else{
-                        $sql = "insert into mat_admin(idx,group_idx,user_id,user_name,user_pw,user_duty,user_phone,reg_time) values(";
+                        $sql = "insert into mat_admin(group_idx,user_id,user_name,user_pw,user_duty,user_phone) values(";
+                        $sql = $sql . $this->null_check($param["depart"]) . " , ";
                         $sql = $sql . $this->null_check($param["id"]) . " , ";
-                        $sql = $sql . $this->null_check($param["pw"]) . " , ";
                         $sql = $sql . $this->null_check($param["name"]) . " , ";
-                        $sql = $sql . $param["role"] . " , ";
-                        if($param["send_number"] == ""){
-                            $sql = $sql . " null , ";
-                        }else{
-                            $sql = $sql . $this->null_check($param["send_number"]) . " , ";
-                        }
-                        if($param["sms"] == ""){
-                            $sql = $sql . " 0 , ";
-                        }else{
-                            $sql = $sql . $param["sms"] . " , ";
-                        }
-                        if($param["mms"] == ""){
-                            $sql = $sql . " 0 , ";
-                        }else{
-                            $sql = $sql . $param["mms"] . " , ";
-                        }
-                        if($param["comment"] == ""){
-                            $sql = $sql . " null , now() ";
-                        }else{
-                            $sql = $sql . $this->null_check($param["comment"]) . " , now() ";
-                        }
-                        $sql = $sql . ")";
+                        $sql = $sql . $this->null_check($param["pw"]) . " , ";
+                        $sql = $sql . $this->null_check($param["grade"]) . " , ";
+                        $sql = $sql . $this->null_check($param["phone_number"]) . " , ";
 
                         $result = $this->conn->db_insert($sql);
                         if($result["result"] == 0){
