@@ -8,34 +8,37 @@
         <ul class="depth1-con">
             <li class="depth1" data-side="">
                 <a id="kakao_side" href="#" onclick="side_bar(this); return false;">자재관리</a>
+
                 <ul class="depth2-con" style="display:none;">
                     <li class="depth2">
                         <a href="#" onclick="side_bar(this); return false;">관리동-2F</a>
+                        <ul class="depth2-con" style="display:none;">
+                            <li class="depth2">
+                                <a href="?ctl=Move&param1=msg_main">ITS</a>
+                            </li>
+                            <li class="depth2">
+                                <a href="?ctl=Move&param1=input_list">관리</a>
+                            </li>
+                        </ul>
                     </li>
-                    <ul class="depth2-con" style="display:none;">
-                        <li class="depth2">
-                            <a href="?ctl=Move&param1=msg_main">ITS</a>
-                        </li>
-                        <li class="depth2">
-                            <a href="?ctl=Move&param1=input_list">관리</a>
-                        </li>
-                    </ul>
-                <li >
-                    <a href="#" onclick="side_bar(this); return false;">관리동-창고</a>
+
+                    <li >
+                        <a href="#" onclick="side_bar(this); return false;">관리동-창고</a>
+                        <ul class="depth2-con" style="display:none;">
+                            <li class="depth2">
+                                <a href="?ctl=Move&param1=msg_main">시설</a>
+                            </li>
+                            <li class="depth2">
+                                <a href="?ctl=Move&param1=input_list">전기/기계</a>
+                            </li>
+                            <li class="depth2">
+                                <a href="?ctl=Move&param1=input_list">ITS</a>
+                            </li>
+                        </ul>
+                    </li>
+
                 </li>
-				<ul class="depth2-con" style="display:none;">
-                        <li class="depth2">
-                            <a href="?ctl=Move&param1=msg_main">시설</a>
-                        </li>
-                        <li class="depth2">
-                            <a href="?ctl=Move&param1=input_list">전기/기계</a>
-                        </li>
-						<li class="depth2">
-                            <a href="?ctl=Move&param1=input_list">ITS</a>
-                        </li>
-                    </ul>
-            </li>
-        </ul>
+            </ul>
         <li class="depth1" data-side="">
             <a id="msg_side" href="#" onclick="side_bar(this); return false;">입고관리</a>
             <ul class="depth2-con" style="display:none;">
@@ -61,11 +64,14 @@
             <a id="kakao_side" href="#" onclick="side_bar(this); return false;">출고관리</a>
             <ul class="depth2-con" style="display:none;">
                 <!-- <li class="depth2"><a href="?ctl=Move&param1=kakao_main">알림톡전송</a></li> -->
-                <li side_bar();="side_bar();" class="depth2 admin_none" ><a href="?ctl=Move&param1=output">출고등록</a>
+                <li side_bar();="side_bar();" class="depth2 admin_none">
+                    <a href="?ctl=Move&param1=output">출고등록</a>
                 </li>
-                <li side_bar();="side_bar();" class="depth2 admin_none" ><a href="?ctl=Move&param1=output_list">출고현황</a>
+                <li side_bar();="side_bar();" class="depth2 admin_none">
+                    <a href="?ctl=Move&param1=output_list">출고현황</a>
                 </li>
-                <li side_bar();="side_bar();" class="depth2 admin_none" ><a href="?ctl=Move&param1=output_month">월 집계</a>
+                <li side_bar();="side_bar();" class="depth2 admin_none">
+                    <a href="?ctl=Move&param1=output_month">월 집계</a>
                 </li>
                 <!-- <li class="depth2 admin_none"<a
                 href="?ctl=Move&param1=kakao_tpl_set">알림톡템플릿관리</a></li> -->
@@ -85,8 +91,7 @@
         class="depth2-con" style ="display:none;"> <li class="depth2"><a
         href="?ctl=Move&param1=add_main">주소록</a></li> <li class="depth2 admin_none"><a
         href="?ctl=Move&param1=add_set">주소록그룹관리</a></li> </ul> </li> -->
-        <li side_bar();="side_bar();" class="depth1" 
-            data-side="">
+        <li side_bar();="side_bar();" class="depth1" data-side="">
             <a
                 class="depth2-a"
                 id="user_side"
