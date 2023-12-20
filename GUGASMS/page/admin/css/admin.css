@@ -91,7 +91,7 @@
 
 .depth2-con .depth2{font-size:0.9em;}
 .depth2-con .depth2 a:before{content:'·'; display:inline-block; margin-right:6px;}
-.depth3 a:before{content:'-'; display:inline-block; margin-left:6px; display:inline-block;}
+.depth3 a{content:'-'; display:inline-block; margin-left:6px; display:inline-block;}
 /* input form */
 .input-list-container li{padding:0 16px;}
 .input-list-container .input-tit, .input-list-container .insert{display: inline-block; vertical-align: middle; margin-right:-4px;}
