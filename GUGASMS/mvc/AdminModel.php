@@ -96,7 +96,7 @@
             if($this->value_check(array("id","pw","name", "role"))){
 
                 $sql = "select id from admin where id = ".$this->null_check($param["id"])."";
-
+                console.log('hihihi');
                 $result = $this->conn->db_select($sql);
                 if($result["result"] == 0){
                     $this->result = $result;

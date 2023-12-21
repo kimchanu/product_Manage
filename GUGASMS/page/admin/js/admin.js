@@ -131,6 +131,7 @@ function signup(){
                 },
                 action : "index.php",
                 havior : function(result){
+                    console.log(id, phone_number);
                     double_click = true;
                     console.log(result);
                     result = JSON.parse(result);
