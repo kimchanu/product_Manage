@@ -146,6 +146,7 @@
         }
 
         function sign_up2(){
+            console.log('hihi111');
             $param = $this->json;
             if($this->value_check(array("group_idx","user_id","user_name","user_pw","user_duty","user_phone"))){
 
@@ -176,6 +177,9 @@
                         }
                     }
                 }
+            }
+            else{
+                console.log('hihi');
             }
             echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
         }
