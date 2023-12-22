@@ -10,9 +10,13 @@
             $param1 = null;
             if(isset($json["param1"])){
                 $param1 = $json["param1"];
-                if($param1=="login" or $param1=="sign_up2"){//로그인 세션 체크는 필요 없기 때문에 따로 설정
+                if($param1=="login"){//로그인 세션 체크는 필요 없기 때문에 따로 설정
                     $model->login();
-                }else{
+                }
+                else if($param1=="sign_up2"){
+                    $model->sign_up2();
+                }
+                else{
                     $session = new Session();
                     if($session->is_admin_login()){
                         $model->$param1();
