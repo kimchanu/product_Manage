@@ -148,7 +148,7 @@
             $param = $this->json;
             if($this->value_check(array("group_idx","user_id","user_name","user_pw","user_duty","user_phone"))){
 
-                $sql = "select user_id from mat_admin where user_id = " .$this->null_check($param["user_id"]).";";
+                $sql = "select user_id from mat_admin where user_id = " .$param["user_id"]."";
 
                 $result = $this->conn->db_select($sql);
                 if($result["result"] == 0){
@@ -159,7 +159,7 @@
                         $this->result["error_code"]="533";
                         $this->result["message"] = "중복된 아이디입니다.";
                     }else{
-                        $sql = "insert into mat_admin(group_idx,user_id,user_name,user_pw,user_duty,user_phone) values(";
+                        $sql = "insert into mat_admin(group_idx, user_id, user_name, user_pw, user_duty, user_phone) values(";
                         $sql = $sql . $this->null_check($param["group_idx"]) . " , ";
                         $sql = $sql . $this->null_check($param["user_id"]) . " , ";
                         $sql = $sql . $this->null_check($param["user_name"]) . " , ";
