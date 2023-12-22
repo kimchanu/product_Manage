@@ -165,7 +165,7 @@
                         $sql = $sql . $this->null_check($param["user_name"]) . " , ";
                         $sql = $sql . $this->null_check($param["user_pw"]) . " , ";
                         $sql = $sql . $this->null_check($param["user_duty"]) . " , ";
-                        $sql = $sql . $this->null_check($param["user_phone"]) . " , ";
+                        $sql = $sql . $this->null_check($param["user_phone"]) . "";
                         $sql = $sql . ")";
 
                         $result = $this->conn->db_insert($sql);
