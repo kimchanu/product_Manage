@@ -107,13 +107,13 @@ function signup(){
         var user_duty = $('input[name=reg_grade]');
         var user_phone = $('input[name=reg_number]');
 
-        if(id.val() == ""){
+        if(user_id.val() == ""){
             alert('사용자ID를 입력해주세요');
             double_click = true;
-        }else if(pw.val() == ""){
+        }else if(user_pw.val() == ""){
             alert('비밀번호를 입력해주세요');
             double_click = true;
-        }else if(name.val() == ""){
+        }else if(user_name.val() == ""){
             alert('사용자명을 입력해주세요');
             double_click = true;
         }else{
