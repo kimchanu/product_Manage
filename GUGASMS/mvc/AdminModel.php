@@ -148,7 +148,7 @@
             $param = $this->json;
             if($this->value_check(array("group_idx","user_id","user_name","user_pw","user_duty","user_phone"))){
 
-                $sql = "select id from mat_admin where id = ".$this->null_check($param["id"])."";
+                $sql = "select id from mat_admin where id = ".$this->null_check($param["user_id"])."";
 
                 $result = $this->conn->db_select($sql);
                 if($result["result"] == 0){
