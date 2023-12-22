@@ -100,12 +100,12 @@ function close_add_modal(){
 function signup(){
     if(double_click){
         double_click = false;
-        var depart = document.getElementById('type');
-        var id = $('input[name=reg_id]');
-        var pw = $('input[name=reg_pw]');
-        var name = $('input[name=reg_name]');
-        var grade = $('input[name=reg_grade]');
-        var phone_number = $('input[name=reg_number]');
+        var group_idx = document.getElementById('type');
+        var user_id = $('input[name=reg_id]');
+        var user_pw = $('input[name=reg_pw]');
+        var user_name = $('input[name=reg_name]');
+        var user_duty = $('input[name=reg_grade]');
+        var user_phone = $('input[name=reg_number]');
 
         if(id.val() == ""){
             alert('사용자ID를 입력해주세요');
@@ -122,12 +122,12 @@ function signup(){
                 list : {
                     ctl : "Admin",
                     param1 : "sign_up2",
-                    depart : depart.value,
-                    id : id.val(),
-                    pw : pw.val(),
-                    name : name.val(),
-                    grade : grade.val(),
-                    phone_number : phone_number.val(),
+                    group_idx : group_idx.value,
+                    user_id : user_id.val(),
+                    user_pw : user_pw.val(),
+                    user_name : user_name.val(),
+                    user_duty : user_duty.val(),
+                    user_phone : user_phone.val(),
                 },
                 action : "index.php",
                 havior : function(result){

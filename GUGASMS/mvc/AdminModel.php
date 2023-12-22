@@ -96,7 +96,6 @@
             if($this->value_check(array("id","pw","name", "role"))){
 
                 $sql = "select id from admin where id = ".$this->null_check($param["id"])."";
-                console.log('hihihi');
                 $result = $this->conn->db_select($sql);
                 if($result["result"] == 0){
                     $this->result = $result;
@@ -146,7 +145,6 @@
         }
 
         function sign_up2(){
-            console.log('hihi111');
             $param = $this->json;
             if($this->value_check(array("group_idx","user_id","user_name","user_pw","user_duty","user_phone"))){
 
@@ -162,12 +160,12 @@
                         $this->result["message"] = "중복된 아이디입니다.";
                     }else{
                         $sql = "insert into mat_admin(group_idx,user_id,user_name,user_pw,user_duty,user_phone) values(";
-                        $sql = $sql . $this->null_check($param["depart"]) . " , ";
-                        $sql = $sql . $this->null_check($param["id"]) . " , ";
-                        $sql = $sql . $this->null_check($param["name"]) . " , ";
-                        $sql = $sql . $this->null_check($param["pw"]) . " , ";
-                        $sql = $sql . $this->null_check($param["grade"]) . " , ";
-                        $sql = $sql . $this->null_check($param["phone_number"]) . " , ";
+                        $sql = $sql . $this->null_check($param["group_idx"]) . " , ";
+                        $sql = $sql . $this->null_check($param["user_id"]) . " , ";
+                        $sql = $sql . $this->null_check($param["user_name"]) . " , ";
+                        $sql = $sql . $this->null_check($param["user_pw"]) . " , ";
+                        $sql = $sql . $this->null_check($param["user_duty"]) . " , ";
+                        $sql = $sql . $this->null_check($param["user_phone"]) . " , ";
 
                         $result = $this->conn->db_insert($sql);
                         if($result["result"] == 0){
@@ -177,9 +175,6 @@
                         }
                     }
                 }
-            }
-            else{
-                console.log('hihi');
             }
             echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
         }
