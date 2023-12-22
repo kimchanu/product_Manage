@@ -166,6 +166,7 @@
                         $sql = $sql . $this->null_check($param["user_pw"]) . " , ";
                         $sql = $sql . $this->null_check($param["user_duty"]) . " , ";
                         $sql = $sql . $this->null_check($param["user_phone"]) . " , ";
+                        $sql = $sql . ")";
 
                         $result = $this->conn->db_insert($sql);
                         if($result["result"] == 0){
