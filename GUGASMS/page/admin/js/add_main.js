@@ -460,7 +460,7 @@ function request_add_product(){
                     result = JSON.parse(result);
                     if(result.result == 1){
                         alert('번호를 추가하였습니다.');
-                        request_addr_list(mat_name.value);
+                        // request_addr_list(mat_name.value);
                         close_add_modal();
                     }else{
                         if(result.error_code == 601){
