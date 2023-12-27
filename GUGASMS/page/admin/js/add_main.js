@@ -941,7 +941,7 @@ function number_check(elem){
 }
 
 $(document).ready(function(){
-    request_addr_group();
+    // request_addr_group();
     input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
     number_check(lb.getElem('addr_phone_number'));
 })
@@ -952,35 +952,6 @@ var recevier_index  = 0;
 
 //주소록 선택 플래그
 var addr_click_flag = false;
-
-function request_addr_group(){
-    if(double_click){
-        double_click =false;
-        $('#address_wrap').empty();
-        lb.ajax({
-            type : "JsonAjaxPost",
-            list : {
-                ctl : "Addr",
-                param1 : "addr_group_list",
-            },
-            action : "index.php",
-            havior : function(result){
-                double_click = true;
-                console.log(result);
-                result = JSON.parse(result);
-                if(result.result == 1){
-                    if(result.value.length == 0){
-                        alert('주소록 그룹이 비어있습니다.');
-                    }else{
-                        init_addr_group(result.value);
-                    }
-                }
-            }
-        });
-    }
-}
-
-
 
 function init_addr_group(data){
 
