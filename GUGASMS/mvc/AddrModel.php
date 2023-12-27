@@ -250,7 +250,7 @@
 		    	$sql = "insert into mat_register (
         	        mat_code, mat_position, b_class, s_class, mat_name, mat_stand, 
                 	mat_maker, mat_custom, mat_union, mat_price, mat_amount, mat_sum, 
-	                into_date, mat_image
+	                into_time, mat_image
 		        	) values (";
 
             // Append values from $param, using null_check for optional fields
