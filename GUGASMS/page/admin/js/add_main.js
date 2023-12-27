@@ -1,6 +1,6 @@
 
 $(document).ready(function(){
-    request_addr_group();
+    // request_addr_group();
     input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
     number_check(lb.getElem('addr_phone_number'));
 })
