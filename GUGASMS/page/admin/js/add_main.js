@@ -385,7 +385,9 @@ function request_add_product(){
     var product_in_date = document.getElementById('product_in_date');
     var product_image = document.getElementById('product_image');
     
-
+    sessionStorage.setItem("product_code", product_code.value)
+    var abc = sessionStorage.getItem("product_code");
+    alert(abc);
     if(double_click){
         double_click = false;
         if(product_code.value == ""){
