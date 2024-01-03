@@ -304,7 +304,7 @@ function createTable(data) {
      // 파싱된 요소를 기존 테이블에 추가
      var element = document.getElementById('receiver_wrap');
      element.appendChild(tempElem.firstChild);
-     console.log(tempElem.firstChild);
+     console.log(tempElem);
 }
 
 function request_add_product(){
