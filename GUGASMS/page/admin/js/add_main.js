@@ -459,6 +459,7 @@ function request_add_product(){
             // sessionStorage.setItem("product_code", product_code.value);
 
             table_value = {"code": code, "position": position};
+            console.log(table_value);
             var element = document.getElementById('receiver_wrap');
             element.innerHTML = createTable(table_value);
             
