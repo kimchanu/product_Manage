@@ -303,7 +303,8 @@ function createTable(data) {
  
      // 파싱된 요소를 기존 테이블에 추가
      var element = document.getElementById('receiver_wrap');
-     element.appendChild(tempElem.innerHTML);
+     element.innerHTML += tempElem.innerHTML;
+    //  element.appendChild(tempElem.innerHTML);
      console.log(tempElem.innerHTML);
 }
 
