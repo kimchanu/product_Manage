@@ -369,6 +369,22 @@ function request_add_product(){
 */
 
 
+function createTable(data) {
+  var tableHtml = '<tr> <td class="check"> <label class="check_label m-auto" value="yes"><input t' +
+        'ype="checkbox"> <span class="checkmark"></span> </label> </td>';
+
+    for (var i = 0; i < data.length; i++) {
+        tableHtml += '<td>';
+        tableHtml += data[i].code + '</td>';
+        tableHtml += '<td>' + data[i].position + '</td>';
+        // tableHtml += '<td>' + data[i].country + '</td>';
+        tableHtml += '</tr>';
+    }
+
+    tableHtml += '</table>';
+    return tableHtml;
+}
+
 function request_add_product(){
     var product_code = document.getElementById('product_code');
     var product_position = document.getElementById('product_position');
@@ -436,14 +452,15 @@ function request_add_product(){
         
         else{
             var code = sessionStorage.setItem("product_code", product_code.value);
-            // sessionStorage.setItem("product_code", product_code.value);
+            var position = sessionStorage.setItem("product_position", product_position.value);
             // sessionStorage.setItem("product_code", product_code.value);
             // sessionStorage.setItem("product_code", product_code.value);
             // sessionStorage.setItem("product_code", product_code.value);
             // sessionStorage.setItem("product_code", product_code.value);
 
+            table_value = {"code": code, "position": position};
             var element = document.getElementById('receiver_wrap');
-            element.innerHTML = code;
+            element.innerHTML = createTable(table_value);
             
 
         }
