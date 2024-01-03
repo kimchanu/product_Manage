@@ -281,14 +281,19 @@ function createTable(data) {
   var tableHtml = '<tr> <td class="check"> <label class="check_label m-auto" value="yes"><input t' +
         'ype="checkbox"> <span class="checkmark"></span> </label> </td>';
 
-    for (var i = 0; i < Object.keys(data).length; i++) {
+    // for (var i = 0; i < Object.keys(data).length; i++) {
+    //     tableHtml += '<td>';
+    //     tableHtml += data[i].code + '</td>';
+    //     tableHtml += '<td>' + data[i].position + '</td>';
+    //     // tableHtml += '<td>' + data[i].country + '</td>';
+    //     tableHtml += '</tr>';
+    // }
+    Object.keys(data).forEach(function(key) {
         tableHtml += '<td>';
-        tableHtml += data[i].code + '</td>';
-        tableHtml += '<td>' + data[i].position + '</td>';
-        // tableHtml += '<td>' + data[i].country + '</td>';
-        tableHtml += '</tr>';
-    }
-
+        tableHtml += data[key] + '</td>';
+    });
+    
+    tableHtml += '</tr>';
     tableHtml += '</table>';
     return tableHtml;
 }
@@ -309,8 +314,6 @@ function request_add_product(){
     var product_in_date = document.getElementById('product_in_date');
     var product_image = document.getElementById('product_image');
     
-    
-
     if(double_click){
         double_click = false;
         if(product_code.value == ""){
@@ -361,13 +364,46 @@ function request_add_product(){
         else{
             sessionStorage.setItem("product_code", product_code.value);
             sessionStorage.setItem("product_position", product_position.value);
-            // sessionStorage.setItem("product_code", product_code.value);
-            // sessionStorage.setItem("product_code", product_code.value);
-            // sessionStorage.setItem("product_code", product_code.value);
-            // sessionStorage.setItem("product_code", product_code.value);
-            var code = sessionStorage.getItem('product_code');
-            var position = sessionStorage.getItem('product_position');
-            var table_value = {"code": code, "position": position};
+            sessionStorage.setItem("product_b_class", product_b_class.value);
+            sessionStorage.setItem("product_s_class", product_s_class.value);
+            sessionStorage.setItem("product_name", product_name.value);
+            sessionStorage.setItem("product_stand", product_stand.value);
+            sessionStorage.setItem("product_maker", product_maker.value);
+            sessionStorage.setItem("product_custom", product_custom.value);
+            sessionStorage.setItem("product_union", product_union.value);
+            sessionStorage.setItem("product_price", product_price.value);
+            sessionStorage.setItem("product_amount", product_amount.value);
+            sessionStorage.setItem("product_sum", product_sum.value);
+
+            var a = sessionStorage.getItem('product_code');
+            var b = sessionStorage.getItem('product_position');
+            var c = sessionStorage.getItem('product_b_class');
+            var d = sessionStorage.getItem('product_s_class');
+            var e = sessionStorage.getItem('product_name');
+            var f = sessionStorage.getItem('product_stand');
+            var g = sessionStorage.getItem('product_maker');
+            var h = sessionStorage.getItem('product_custom');
+            var i = sessionStorage.getItem('product_union');
+            var j = sessionStorage.getItem('product_price');
+            var k = sessionStorage.getItem('product_amount');
+            var l = sessionStorage.getItem('product_sum');
+
+
+
+var table_value = {
+    "code": a,
+    "position": b,
+    'product_b_class': c,
+    'product_s_class': d,
+    'product_name': e,
+    'product_stand': f,
+    'product_maker': g,
+    'product_custom':h,
+    'product_union':i,
+    'product_price':j,
+    'product_amount':k,
+    'sessionStorage':l
+};
             console.log(table_value);
             console.log(Object.keys(table_value).length);
             var element = document.getElementById('receiver_wrap');
