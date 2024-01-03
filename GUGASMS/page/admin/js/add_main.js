@@ -451,13 +451,14 @@ function request_add_product(){
         }
         
         else{
-            var code = sessionStorage.setItem("product_code", product_code.value);
-            var position = sessionStorage.setItem("product_position", product_position.value);
+            sessionStorage.setItem("product_code", product_code.value);
+            sessionStorage.setItem("product_position", product_position.value);
             // sessionStorage.setItem("product_code", product_code.value);
             // sessionStorage.setItem("product_code", product_code.value);
             // sessionStorage.setItem("product_code", product_code.value);
             // sessionStorage.setItem("product_code", product_code.value);
-
+            var code = sessionStorage.getItem('product_code');
+            var position = sessionStorage.getItem('product_position');
             table_value = {"code": code, "position": position};
             console.log(table_value);
             var element = document.getElementById('receiver_wrap');
