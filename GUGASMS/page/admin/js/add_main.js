@@ -281,7 +281,7 @@ function createTable(data) {
   var tableHtml = '<tr> <td class="check"> <label class="check_label m-auto" value="yes"><input t' +
         'ype="checkbox"> <span class="checkmark"></span> </label> </td>';
 
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < Object.keys(table_value).length; i++) {
         tableHtml += '<td>';
         tableHtml += data[i].code + '</td>';
         tableHtml += '<td>' + data[i].position + '</td>';
@@ -369,7 +369,7 @@ function request_add_product(){
             var position = sessionStorage.getItem('product_position');
             var table_value = {"code": code, "position": position};
             console.log(table_value);
-            console.log(table_value.length);
+            console.log(Object.keys(table_value).length);
             var element = document.getElementById('receiver_wrap');
             element.innerHTML = createTable(table_value);
             
