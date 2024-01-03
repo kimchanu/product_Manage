@@ -276,98 +276,6 @@ function request_add_addr(){
 }
 
 
-/*
-function request_add_product(){
-    var product_code = document.getElementById('product_code').value;
-    var product_position = document.getElementById('product_position').value;
-    var product_b_class = document.getElementById('product_b_class').value;
-    var product_s_class = document.getElementById('product_s_class').value;
-    var product_name = document.getElementById('product_name').value;
-    var product_stand = document.getElementById('product_stand').value;
-    var product_maker = document.getElementById('product_maker').value;
-    var product_custom = document.getElementById('product_custom').value;
-    var product_union = document.getElementById('product_union').value;
-    var product_price = document.getElementById('product_price').value;
-    var product_amount = document.getElementById('product_amount').value;
-    var product_sum = document.getElementById('product_sum').value;
-    var product_in_date = document.getElementById('product_in_date').value;
-    var product_image = document.getElementById('product_image').value;
-	//var image_file = document.getElementById('image_file').files[0];
-
-    if(double_click){
-        double_click = false;
-        // 필드 검증 로직 수정
-        if(!product_code || !product_position || !product_b_class || !product_s_class || !product_name ||
-            !product_stand || !product_maker || !product_custom || !product_union || !product_price || !product_amount || !product_sum || !product_in_date || !product_image ) {
-            alert('모든 필드를 채워주세요');
-            double_click = true;
-        } else {
-           // var formData = new FormData();
-           // formData.append('mat_code', product_code);
-           // formData.append('mat_position', product_position);
-           // formData.append('b_class', product_b_class);
-           // formData.append('s_class', product_s_class);
-           // formData.append('mat_name', product_name );
-           // formData.append('mat_stand', product_stand);
-           // formData.append('mat_maker', product_maker );
-           // formData.append('mat_custom', product_custom);
-           // formData.append('mat_union', product_union);
-           // formData.append('mat_price', product_price);
-           // formData.append('mat_amount', product_amount);
-           // formData.append('mat_sum', product_sum);
-           // formData.append('into_date', product_in_date);
-           // formData.append('mat_image', product_image);
-
-            // formData.append('mat_image', image_file);
-
-            // AJAX 요청
-            lb.ajax({
-                type : "JsonAjaxPost",
-                list : {
-                    ctl : "Addr",
-                    param1 : "add_product",
-                    mat_code : product_code.value,
-                    mat_position : product_position.value,
-                    b_class : product_b_class.value,
-                    s_class : product_s_class.value,
-                    mat_name : product_name.value,
-                    mat_stand : product_stand.value,
-                    mat_maker : product_maker.value,
-                    mat_custom : product_custom.value,
-                    mat_union : product_union.value,
-                    mat_price : product_price.value,
-                    mat_amount : product_amount.value,
-                    mat_sum : product_sum.value,
-                    into_date : product_in_date.value,
-                    mat_image : product_image.value,
-
-                },
-                action : "index.php",
-                havior : function(result){
-                    double_click = true;
-                    console.log(result);
-                    result = JSON.parse(result);
-                    if(result.result == 1){
-                        alert('자재를 추가하였습니다.');
-                        close_add_modal();
-                    }else{
-                        if(result.error_code == 601){
-                            alert(result.message);
-                            
-                        }else{
-                            alert('자재추가를 실패하였습니다.');
-                        }
-                    }
-                }
-            })
-        }
-    } else {
-        alert('처리 중입니다.');
-    }
-}
-
-*/
-
 
 function createTable(data) {
   var tableHtml = '<tr> <td class="check"> <label class="check_label m-auto" value="yes"><input t' +
@@ -461,6 +369,7 @@ function request_add_product(){
             var position = sessionStorage.getItem('product_position');
             table_value = {"code": code, "position": position};
             console.log(table_value);
+            console.log(table_value.length);
             var element = document.getElementById('receiver_wrap');
             element.innerHTML = createTable(table_value);
             
@@ -1193,59 +1102,6 @@ function request_add_addr(){
         alert('번호를 추가 중입니다.')
     }
 }
-
-// function request_add_product(){
-//     var product_name = document.getElementById('product_name');
-//     var product_number = document.getElementById('product_number');
-//     var image_file = document.getElementById('image_file');
-    
-
-//     if(double_click){
-//         double_click = false;
-//         if(product_name.value == ""){
-//             alert('번호를 추가할 주소록을 선택해주세요');
-//             double_click = true;
-//         }else if(product_number.value == ""){
-//             alert('이름을 입력해주세요');
-//             double_click = true;
-//         }else if(image_file.value == ""){
-//             alert('휴대전화를 입력해주세요');
-//             double_click = true;
-//         }else{
-//             lb.ajax({
-//                 type : "JsonAjaxPost",
-//                 list : {
-//                     ctl : "Addr",
-//                     param1 : "add_product",
-//                     mat_number : product_name.value,
-//                     mat_code : product_number.value,
-//                     mat_image : image_file.value,
-//                 },
-//                 action : "index.php",
-//                 havior : function(result){
-//                     double_click = true;
-//                     console.log(result);
-//                     result = JSON.parse(result);
-//                     if(result.result == 1){
-//                         alert('번호를 추가하였습니다.');
-//                         request_addr_list(addr_group_list.value);
-//                         close_add_modal();
-//                     }else{
-//                         if(result.error_code == 601){
-//                             alert(result.message);
-                            
-//                         }else{
-//                             alert('번호 추가를 실패하였습니다.');
-//                         }
-//                     }
-//                 }
-//             })
-//         }
-//     }else{
-//         alert('번호를 추가 중입니다.')
-//     }
-// }
-
 
 
 
