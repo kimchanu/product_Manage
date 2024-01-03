@@ -409,7 +409,7 @@ function request_add_product(){
             console.log(table_value);
             console.log(Object.keys(table_value).length);
             var element = document.getElementById('receiver_wrap');
-            element.innerHTML = createTable(table_value);
+            element.appendChild(reateTable(table_value));
             double_click = true;
         }
     }
