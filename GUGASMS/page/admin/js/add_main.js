@@ -368,7 +368,7 @@ function request_add_product(){
             var code = sessionStorage.getItem('product_code');
             var position = sessionStorage.getItem('product_position');
             table_value = {"code": code, "position": position};
-            console.log(table_value);
+            // console.log(table_value);
             console.log(table_value.length);
             var element = document.getElementById('receiver_wrap');
             element.innerHTML = createTable(table_value);
