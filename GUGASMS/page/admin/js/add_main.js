@@ -295,6 +295,7 @@ function createTable(data) {
 
     tableHtml += '</tr>';
     tableHtml += '</table>';
+    console.log(tableHtml);
     return tableHtml;
 }
 
