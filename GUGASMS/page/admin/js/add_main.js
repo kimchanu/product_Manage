@@ -304,7 +304,6 @@ function createTable(data) {
      var element = document.getElementById('receiver_wrap');
      element.appendChild(tempElem.firstChild);
  
-    return tableHtml;
 }
 
 function request_add_product(){
