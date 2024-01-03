@@ -281,7 +281,7 @@ function createTable(data) {
   var tableHtml = '<tr> <td class="check"> <label class="check_label m-auto" value="yes"><input t' +
         'ype="checkbox"> <span class="checkmark"></span> </label> </td>';
 
-    for (var i = 0; i < Object.keys(table_value).length; i++) {
+    for (var i = 0; i < Object.keys(data).length; i++) {
         tableHtml += '<td>';
         tableHtml += data[i].code + '</td>';
         tableHtml += '<td>' + data[i].position + '</td>';
