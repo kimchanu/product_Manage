@@ -295,15 +295,16 @@ function createTable(data) {
 
     tableHtml += '</tr>';
     tableHtml += '</table>';
-    console.log(tableHtml);
+    
      // 생성된 HTML을 파싱하여 요소로 변환
      var tempElem = document.createElement('div');
      tempElem.innerHTML = tableHtml;
+    //  console.log(tableHtml);
  
      // 파싱된 요소를 기존 테이블에 추가
      var element = document.getElementById('receiver_wrap');
      element.appendChild(tempElem.firstChild);
- 
+     console.log(tempElem.firstChild);
 }
 
 function request_add_product(){
