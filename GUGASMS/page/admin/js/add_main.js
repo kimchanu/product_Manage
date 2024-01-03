@@ -292,7 +292,7 @@ function createTable(data) {
         tableHtml += '<td>';
         tableHtml += data[key] + '</td>';
     });
-    
+
     tableHtml += '</tr>';
     tableHtml += '</table>';
     return tableHtml;
@@ -390,26 +390,26 @@ function request_add_product(){
 
 
 
-var table_value = {
-    "code": a,
-    "position": b,
-    'product_b_class': c,
-    'product_s_class': d,
-    'product_name': e,
-    'product_stand': f,
-    'product_maker': g,
-    'product_custom':h,
-    'product_union':i,
-    'product_price':j,
-    'product_amount':k,
-    'sessionStorage':l
-};
+            var table_value = {
+                "code": a,
+                "position": b,
+                'product_b_class': c,
+                'product_s_class': d,
+                'product_name': e,
+                'product_stand': f,
+                'product_maker': g,
+                'product_custom':h,
+                'product_union':i,
+                'product_price':j,
+                'product_amount':k,
+                'sessionStorage':l
+            };
+
             console.log(table_value);
             console.log(Object.keys(table_value).length);
             var element = document.getElementById('receiver_wrap');
             element.innerHTML = createTable(table_value);
-            
-
+            double_click = true;
         }
     }
            
