@@ -265,16 +265,16 @@ function init_mat_users(data){
                     elem.innerHTML = data[name];
                 }
             }
-            if(name != "check_box"){
-                var single_del_elem = document.getElementById('single_del');
-                elem.style.cursor = "pointer";
-                elem.onclick = function(){
-                    user_detail(data);
-                    single_del_elem.onclick = function(){
-                        select_del("single",data.idx);
-                    }
-                }
-            }
+            // if(name != "check_box"){
+            //     var single_del_elem = document.getElementById('single_del');
+            //     elem.style.cursor = "pointer";
+            //     elem.onclick = function(){
+            //         user_detail(data);
+            //         single_del_elem.onclick = function(){
+            //             select_del("single",data.idx);
+            //         }
+            //     }
+            // }
         },
         end : function(){
             $(".loading").fadeOut();
