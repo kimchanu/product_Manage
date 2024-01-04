@@ -1,5 +1,6 @@
 $(document).ready(function(){
     user_list();
+    mat_users();
     number_check(lb.getElem('send_number'));
     number_check(lb.getElem('sms'));
     number_check(lb.getElem('lms'));
@@ -132,7 +133,7 @@ function total_view(count){
     var total_elem =document.getElementById('total_elem');
     total_elem.innerHTML = "<i>Total</i>" + count;
 }
-
+ 
 function user_list(){
     $('.loading').fadeIn();
     $('#user_wrap').empty();
@@ -157,6 +158,35 @@ function user_list(){
                 }else{
                     init_user(result.value);
                     total_view(result.total);
+                }
+            }
+        }
+    })
+}
+
+function mat_users(){
+    $('#user_wrap2').empty();
+    lb.ajax({
+        type : "JsonAjaxPost",
+        list : {
+            ctl : "Admin",
+            param1 : "mat_users",
+            // search_id : document.getElementById('search_id').value,
+            // search_name : document.getElementById('search_name').value,
+            // search_role : document.getElementById('search_role').value,
+        },
+        action : "index.php",
+        havior : function(result){
+            // console.log(result);
+            result = JSON.parse(result);
+            if(result.result == 1){
+                if(result.value.length == 0){
+                    nothing_elem();
+                    $('.loading').fadeOut();
+                    // total_view(result.total);
+                }else{
+                    init_mat_users(result.value);
+                    // total_view(result.total);
                 }
             }
         }
@@ -208,6 +238,50 @@ function init_user(data){
     })
 }
 
+function init_mat_users(data){
+    lb.auto_view({
+        wrap : "user_wrap2",
+        copy : "user_copy2",
+        attr: '["data-attr"]',
+        json: data,
+        havior: function (elem, data, name, copy_elem) { 
+            if (copy_elem.getAttribute('data-copy') == "user_copy2") {
+                copy_elem.setAttribute('data-copy', '');
+            }
+
+            if(name == "check_box"){
+                elem.value = data.idx;
+                elem.setAttribute('class','user_check');
+            }else if(name == "id"){
+                elem.innerHTML = data.id;
+            }else if(name == "role"){
+                if(data.role == 1){
+                    elem.innerHTML = "관리자";
+                }else{
+                    elem.innerHTML = "사용자";
+                }
+            }else{
+                if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
+                    elem.innerHTML = data[name];
+                }
+            }
+            if(name != "check_box"){
+                var single_del_elem = document.getElementById('single_del');
+                elem.style.cursor = "pointer";
+                elem.onclick = function(){
+                    user_detail(data);
+                    single_del_elem.onclick = function(){
+                        select_del("single",data.idx);
+                    }
+                }
+            }
+        },
+        end : function(){
+            $(".loading").fadeOut();
+            
+        }
+    })
+}
 
 function user_detail(data){
     var id = document.getElementById('id');

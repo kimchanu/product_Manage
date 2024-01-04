@@ -265,6 +265,41 @@
         }
 
 
+        function mat_users(){
+            $param = $this->json;
+            $sql = "select * from mat_users ";
+            // if($param["search_role"] != 0){
+            //     $sql = $sql . " and role = ".$param["search_role"]." ";
+            // }
+            // if($param["search_id"] != ""){
+            //     $sql = $sql . " and id like '%".$param["search_id"]."%' ";
+            // }
+            // if($param["search_name"] != ""){
+            //     $sql = $sql . " and name like '%".$param["search_name"]."%' ";
+            // }
+
+            $result = $this->conn->db_select($sql);
+            if($result["result"] == 0){
+                $this->result = $result;
+            }else{
+                $total_sql ="select count(idx) as total from mat_users";
+                // if($param["search_role"] != 0){
+                //     $total_sql = $total_sql . " and role = ".$param["search_role"]." ";
+                // }
+                // if($param["search_id"] != ""){
+                //     $total_sql = $total_sql . " and id like '%".$param["search_id"]."%' ";
+                // }
+                // if($param["search_name"] != ""){
+                //     $total_sql = $total_sql . " and name like '%".$param["search_name"]."%' ";
+                // }
+                $total_result = $this->conn->db_select($total_sql);
+                $this->result = $result;
+                $this->result["total"] = $total_result["value"][0]["total"];
+            }
+            echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
+        }
+
+
         /********************************************************************* 
         // 함 수 : select_del_user()
         // 설 명 : 사용자 선택삭제

@@ -129,6 +129,62 @@
 							<!-- adm_section_container_body // -->
 						</section>
 						<!-- adm_section_container // -->
+						<section class="adm_section_container">
+							<div class="adm_section_container_body p-1">
+								<div class="btn-list-con align-right mb-1">
+                                    <!-- <p><button type="button" class="btn-sm btn-defalut">전체삭제</button></p> -->
+                                    <p><button type="button" onclick = "select_del('list');" class="btn-sm btn-defalut">선택삭제</button></p>
+									<!-- <p><button type="button" class="btn-sm btn-primary">엑셀다운</button></p> -->
+								</div>
+								<div class="adm_table_container">
+									<p class="adm_table_total" id = "total_elem"><i>Total</i>0</p>
+									<div class="adm_table_long_responsive" style="height:396px;">
+										<table class="adm_table adm_fixed_table mb-1">
+											<thead>
+												<tr>
+													<th class="check">
+														<label class="check_label m-auto" value="yes">
+															<input type="checkbox"onchange ="all_check(this);">
+															<span class="checkmark"></span>
+														</label>
+													</th>
+                                                    <th class="etc">부서</th>
+                                                    <th class="etc">ID</th>
+                                                    <th class="number">이름</th>
+                                                    <th class="number">직책</th>
+                                                    <th class="etc">휴대전화</th>
+													<!-- <th class="etc">SMS 사용량</th>
+													<th class="etc">SMS 사용량</th> -->
+												</tr>
+											</thead>
+											<tbody data-wrap="user_wrap2" id ="user_wrap2">
+												<!-- <tr>
+													<td class="check">
+														<label class="check_label m-auto" value="yes">
+															<input type="checkbox" >
+															<span class="checkmark"></span>
+														</label>
+													</td>
+                                                    <td class="etc">홍길동</td>
+                                                    <td class="etc">아이디</td>
+                                                    <td class="number">내용</td>
+                                                    <td class="number">내용</td>
+                                                    <td class="etc">내용</td>
+                                                    <td class="number">내용</td>
+                                                    <td class="etc">내용</td>
+												</tr>
+												<tr>
+													<td colspan = "8" class="align-center" height="321">내용이 없습니다.</td>
+												</tr> -->
+												<!-- 내용이 비었을 경우 // -->
+											</tbody>
+										</table>
+									</div>
+									<!-- adm_table_responsive // -->
+								</div>
+							</div>
+							<!-- adm_section_container_body // -->
+						</section>
 					</div>
 					<div class="col-md-5 col-lg-12">
 						<section class="adm_section_container">
@@ -245,6 +301,24 @@
 				<td class="etc" data-attr="use_t_kakao">내용</td>
 				<td class="number" data-attr="f_kakao">내용</td>
 				<td class="etc" data-attr="use_f_kakao">내용</td>
+			</tr>
+		</table>
+	</div>
+	<!-- wrap끝 -->
+	<div style="display:none;">
+		<table>
+			<tr data-copy ="user_copy2">
+				<td class="check">
+					<label class="check_label m-auto" value="yes">
+						<input type="checkbox" data-attr="check_box">
+						<span class="checkmark"></span>
+					</label>
+				</td>
+				<td class="etc" data-attr="depart">부서</td>
+				<td class="etc" data-attr="id">ID</td>
+				<td class="number" data-attr="name">이름</td>
+				<td class="number" data-attr="duty">직책</td>
+				<td class="etc" data-attr="phone">휴대전화</td>
 			</tr>
 		</table>
 	</div>
