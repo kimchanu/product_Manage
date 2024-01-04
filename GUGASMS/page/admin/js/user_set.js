@@ -179,6 +179,7 @@ function mat_users(){
         havior : function(result){
             // console.log(result);
             result = JSON.parse(result);
+            console(result);
             if(result.result == 1){
                 if(result.value.length == 0){
                     nothing_elem();
