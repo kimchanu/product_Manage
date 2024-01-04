@@ -242,7 +242,7 @@ function init_mat_users(data){
     lb.auto_view({
         wrap : "user_wrap2",
         copy : "user_copy2",
-        attr: '["data-attr"]',
+        attr: '["data-attr2"]',
         json: data,
         havior: function (elem, data, name, copy_elem) { 
             if (copy_elem.getAttribute('data-copy') == "user_copy2") {

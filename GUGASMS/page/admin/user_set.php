@@ -310,15 +310,15 @@
 			<tr data-copy ="user_copy2">
 				<td class="check">
 					<label class="check_label m-auto" value="yes">
-						<input type="checkbox" data-attr="check_box">
+						<input type="checkbox" data-attr2="check_box">
 						<span class="checkmark"></span>
 					</label>
 				</td>
-				<td class="etc" data-attr="depart">부서</td>
-				<td class="etc" data-attr="id">ID</td>
-				<td class="number" data-attr="name">이름</td>
-				<td class="number" data-attr="duty">직책</td>
-				<td class="etc" data-attr="phone">휴대전화</td>
+				<td class="etc" data-attr2="depart">부서</td>
+				<td class="etc" data-attr2="id">ID</td>
+				<td class="number" data-attr2="name">이름</td>
+				<td class="number" data-attr2="duty">직책</td>
+				<td class="etc" data-attr2="phone">휴대전화</td>
 			</tr>
 		</table>
 	</div>
