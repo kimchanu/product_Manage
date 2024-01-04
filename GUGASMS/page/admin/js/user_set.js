@@ -263,6 +263,7 @@ function init_mat_users(data){
                 }
             }else{
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
+                    console.log(data[name]);
                     elem.innerHTML = data[name];
                 }
             }
