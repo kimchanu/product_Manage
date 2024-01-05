@@ -314,11 +314,11 @@
 						<span class="checkmark"></span>
 					</label>
 				</td>
-				<td class="etc" data-attr2="depart">부서</td>
-				<td class="etc" data-attr2="id">ID</td>
-				<td class="number" data-attr2="name">이름</td>
-				<td class="number" data-attr2="duty">직책</td>
-				<td class="etc" data-attr2="phone">휴대전화</td>
+				<td class="etc" data-attr2="group_id">부서</td>
+				<td class="etc" data-attr2="user_id">ID</td>
+				<td class="number" data-attr2="user_name">이름</td>
+				<td class="number" data-attr2="user_duty">직책</td>
+				<td class="etc" data-attr2="user_phone">휴대전화</td>
 			</tr>
 		</table>
 	</div>
