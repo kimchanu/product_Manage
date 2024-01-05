@@ -254,13 +254,9 @@ function init_mat_users(data){
                 elem.value = data.idx;
                 elem.setAttribute('class','user_check');
             }else if(name == "id"){
-                elem.innerHTML = data.id;
-            }else if(name == "role"){
-                if(data.role == 1){
-                    elem.innerHTML = "관리자";
-                }else{
-                    elem.innerHTML = "사용자";
-                }
+                elem.innerHTML = data.user_id;
+            }else if(name == "name"){
+                elem.innerHTML = data.user_name;
             }else{
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
                     console.log(data[name]);
