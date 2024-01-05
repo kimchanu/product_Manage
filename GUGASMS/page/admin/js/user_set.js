@@ -249,15 +249,25 @@ function init_mat_users(data){
             if (copy_elem.getAttribute('data-copy') == "user_copy2") {
                 copy_elem.setAttribute('data-copy', '');
             }
-            console.log(data, name);
-            console.log(data[name]);
             if(name == "check_box"){
                 elem.value = data.idx;
                 elem.setAttribute('class','user_check');
             }else if(name == "id"){
                 elem.innerHTML = data.user_id;
-            }else if(name == "name"){
-                elem.innerHTML = data.user_name;
+            }else if(name == "group_id"){
+                if(data.group_id == 0){
+                    data.group_id = "ITS";
+                }
+                else if(data.group_id == 1){
+                    data.group_id = "기전";
+                }
+                else if(data.group_id == 2){
+                    data.group_id = "장비";
+                }
+                else if(data.group_id == 3){
+                    data.group_id = "시설";
+                }
+                elem.innerHTML = data.group_id;
             }else{
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
                     console.log(data[name]);
