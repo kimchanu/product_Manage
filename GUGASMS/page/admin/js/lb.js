@@ -563,6 +563,7 @@
 				this.all_copy_elem.push(copy_elem);
 				
 				var attr_array = JSON.parse(this.attr);
+				console.log(attr_array);
 				for(var k=0;k<attr_array.length;k++){
 					var list = copy_elem.querySelectorAll("["+attr_array[k]+"]");
 					this["data"] = data;
