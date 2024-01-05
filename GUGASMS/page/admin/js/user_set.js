@@ -249,7 +249,7 @@ function init_mat_users(data){
             if (copy_elem.getAttribute('data-copy') == "user_copy2") {
                 copy_elem.setAttribute('data-copy', '');
             }
-
+            console.log(data[name]);
             if(name == "check_box"){
                 elem.value = data.idx;
                 elem.setAttribute('class','user_check');
