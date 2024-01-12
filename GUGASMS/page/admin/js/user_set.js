@@ -132,8 +132,8 @@ function nothing_elem(){
 function total_view(count){
     var total_elem =document.getElementById('total_elem');
     total_elem.innerHTML = "<i>Total</i>" + count;
-    var total_elem =document.getElementById('total_elem2');
-    total_elem.innerHTML = "<i>Total</i>" + count;
+    var total_elem2 =document.getElementById('total_elem2');
+    total_elem2.innerHTML = "<i>Total</i>" + count;
 }
 
 function user_list(){
