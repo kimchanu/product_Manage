@@ -132,9 +132,13 @@ function nothing_elem(){
 function total_view(count){
     var total_elem =document.getElementById('total_elem');
     total_elem.innerHTML = "<i>Total</i>" + count;
-    var total_elem2 =document.getElementById('total_elem2');
-    total_elem2.innerHTML = "<i>Total</i>" + count;
 }
+
+function total_view2(count){
+    var total_elem =document.getElementById('total_elem2');
+    total_elem.innerHTML = "<i>Total</i>" + count;
+}
+
 
 function user_list(){
     $('.loading').fadeIn();
@@ -185,10 +189,10 @@ function mat_users(){
                 if(result.value.length == 0){
                     nothing_elem();
                     $('.loading').fadeOut();
-                    total_view(result.total);
+                    total_view2(result.total);
                 }else{
                     init_mat_users(result.value);
-                    total_view(result.total);
+                    total_view2(result.total);
                 }
             }
         }
