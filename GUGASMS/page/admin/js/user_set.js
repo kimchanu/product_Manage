@@ -132,8 +132,10 @@ function nothing_elem(){
 function total_view(count){
     var total_elem =document.getElementById('total_elem');
     total_elem.innerHTML = "<i>Total</i>" + count;
+    var total_elem =document.getElementById('total_elem2');
+    total_elem.innerHTML = "<i>Total</i>" + count;
 }
- 
+
 function user_list(){
     $('.loading').fadeIn();
     $('#user_wrap').empty();
@@ -179,15 +181,14 @@ function mat_users(){
         havior : function(result){
             // console.log(result);
             result = JSON.parse(result);
-            console.log(result);
             if(result.result == 1){
                 if(result.value.length == 0){
                     nothing_elem();
                     $('.loading').fadeOut();
-                    // total_view(result.total);
+                    total_view(result.total);
                 }else{
                     init_mat_users(result.value);
-                    // total_view(result.total);
+                    total_view(result.total);
                 }
             }
         }
@@ -208,6 +209,9 @@ function init_user(data){
             if(name == "check_box"){
                 elem.value = data.idx;
                 elem.setAttribute('class','user_check');
+                // if(name == "check_box2"){
+                //     elem.setAttribute('class','user_check2');
+                // }
             }else if(name == "id"){
                 elem.innerHTML = data.id;
             }else if(name == "role"){
@@ -249,9 +253,9 @@ function init_mat_users(data){
             if (copy_elem.getAttribute('data-copy') == "user_copy2") {
                 copy_elem.setAttribute('data-copy', '');
             }
-            if(name == "check_box"){
+            if(name == "check_box2"){
                 elem.value = data.idx;
-                elem.setAttribute('class','user_check');
+                elem.setAttribute('class','user_check2');
             }else if(name == "id"){
                 elem.innerHTML = data.user_id;
             }else if(name == "group_id"){
@@ -274,16 +278,16 @@ function init_mat_users(data){
                     elem.innerHTML = data[name];
                 }
             }
-            // if(name != "check_box"){
-            //     var single_del_elem = document.getElementById('single_del');
-            //     elem.style.cursor = "pointer";
-            //     elem.onclick = function(){
-            //         user_detail(data);
-            //         single_del_elem.onclick = function(){
-            //             select_del("single",data.idx);
-            //         }
-            //     }
-            // }
+            if(name != "check_box2"){
+                var single_del_elem = document.getElementById('single_del');
+                elem.style.cursor = "pointer";
+                elem.onclick = function(){
+                    user_detail(data);
+                    single_del_elem.onclick = function(){
+                        select_del("single",data.idx);
+                    }
+                }
+            }
         },
         end : function(){
             $(".loading").fadeOut();
@@ -439,6 +443,14 @@ function all_check(elem){
             check_elems[i].checked = false;
         }
     }
+    var check_elems2 = document.getElementsByClassName('user_check2');
+    for(var i=0; i<check_elems2.length; i++){
+        if(elem.checked == true){
+            check_elems2[i].checked = true;
+        }else{
+            check_elems2[i].checked = false;
+        }
+    }
 }
 
 // 유저 선택 삭제
@@ -499,6 +511,69 @@ function select_del(type, value){
         alert('사용자를 삭제중입니다.');
     }
 }
+
+function select_del2(type, value){
+    if(double_click){
+        
+        var target = [];
+        if(type == "list"){
+            var check_elems = document.getElementsByClassName('user_check2');
+            for(var i = 0; i<check_elems.length; i++){
+                if(check_elems[i].checked == true){
+                    target.push(check_elems[i].value);
+                }
+            }
+        }else{
+            target.push(value);
+        }
+
+        console.log(target);
+        if(target.length == 0 || (typeof target[0] == "undefind" ||  target[0] == null || target[0] =="null")){
+            alert('삭제할 유저를 선택해주세요');
+        }else{
+            confirm_result = confirm("선택한 사용자를 삭제 하시겠습니까?");
+            if(confirm_result){
+                double_click = false;
+                $('.loading').fadeIn();
+                $('#user_wrap').empty();
+                lb.ajax({
+                    type : "JsonAjaxPost",
+                    list : {
+                        ctl : "Admin",
+                        param1 : "select_del_user",
+                        target_idx : JSON.stringify(target),
+                    },
+                    action : "index.php",
+                    havior : function(result){
+                        double_click = true;
+                        console.log(result);
+                        result = JSON.parse(result);
+                        if(result.result == 1){
+                            if(result.value.length == 0){
+                                nothing_elem();
+                                $('.loading').fadeOut();
+                                total_view(result.total);
+                            }else{
+                                alert('유저를 삭제했습니다.');
+                                init_user(result.value);
+                                total_view(result.total);
+                            }
+                        }else{
+                            $('.loading').fadeOut();
+                        }
+                    }
+                })    
+            }
+        }
+    }else{
+        alert('사용자를 삭제중입니다.');
+    }
+
+
+}
+
+
+
 
 // function all_del(){
 //     if(double_click){

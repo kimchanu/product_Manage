@@ -88,16 +88,16 @@
                                                     <th class="etc">사용자명</th>
                                                     <th class="etc">사용자ID</th>
                                                     <th class="number">권한그룹</th>
-                                                    <th class="number">SMS 월별발송량</th>
-                                                    <th class="etc">SMS 사용량</th>
-                                                    <th class="number">LMS 월별발송량</th>
-                                                    <th class="etc">LMS 사용량</th>
+                                                    <th class="etc">부서</th>
+                                                    <th class="etc">직책</th>
+                                                    <th class="etc">휴대전화</th>
+                                                    <!-- <th class="etc">LMS 사용량</th>
 													<th class="number">MMS 월별발송량</th>
                                                     <th class="etc">MMS 사용량</th>
 													<th class="number">알림톡 월별발송량</th>
                                                     <th class="etc">알림톡 사용량</th>
 													<th class="number">친구톡 월별발송량</th>
-                                                    <th class="etc">친구톡 사용량</th>
+                                                    <th class="etc">친구톡 사용량</th> -->
 												</tr>
 											</thead>
 											<tbody data-wrap="user_wrap" id ="user_wrap">
@@ -133,11 +133,12 @@
 							<div class="adm_section_container_body p-1">
 								<div class="btn-list-con align-right mb-1">
                                     <!-- <p><button type="button" class="btn-sm btn-defalut">전체삭제</button></p> -->
-                                    <p><button type="button" onclick = "select_del('list');" class="btn-sm btn-defalut">선택삭제</button></p>
+                                    <p><button type="button" onclick = "select_del2('list');" class="btn-sm btn-defalut">선택삭제</button></p>
+									<p><button type="button" onclick = "select_del('list');" class="btn-sm btn-defalut">사용자등록</button></p>
 									<!-- <p><button type="button" class="btn-sm btn-primary">엑셀다운</button></p> -->
 								</div>
 								<div class="adm_table_container">
-									<p class="adm_table_total" id = "total_elem"><i>Total</i>0</p>
+									<p class="adm_table_total" id = "total_elem2"><i>Total</i>0</p>
 									<div class="adm_table_long_responsive" style="height:396px;">
 										<table class="adm_table adm_fixed_table mb-1">
 											<thead>
@@ -237,7 +238,7 @@
                                         <p class="input-tit">LMS 사용량</p>
 										<div class="insert"><input placeholder="0" type="text" readonly id ="use_lms"></div>
                                     </li>
-                                    <li class="col-md-12 mt-1">
+                                    <!-- <li class="col-md-12 mt-1">
                                         <p class="input-tit">MMS 월별 발송량</p>
 										<div class="insert"><input value = "100" type="text"  id ="mms"></div>
                                     </li>
@@ -260,7 +261,7 @@
                                     <li class="col-md-12 mt-1">
                                         <p class="input-tit">친구톡 사용량</p>
 										<div class="insert"><input placeholder="0" type="text" readonly id ="use_f_kakao"></div>
-                                    </li>
+                                    </li> -->
                                     <li class="col-md-12 mt-1">
                                         <p class="input-tit">비고</p>
 										<div class="insert">
@@ -310,7 +311,7 @@
 			<tr data-copy ="user_copy2">
 				<td class="check">
 					<label class="check_label m-auto" value="yes">
-						<input type="checkbox" data-attr2="check_box">
+						<input type="checkbox" data-attr2="check_box2">
 						<span class="checkmark"></span>
 					</label>
 				</td>
