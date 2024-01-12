@@ -85,8 +85,8 @@
 															<span class="checkmark"></span>
 														</label>
 													</th>
-                                                    <th class="etc">사용자명</th>
-                                                    <th class="etc">사용자ID</th>
+                                                    <th class="etc">이름</th>
+                                                    <th class="etc">ID</th>
                                                     <th class="number">권한그룹</th>
                                                     <th class="etc">부서</th>
                                                     <th class="etc">직책</th>
@@ -294,7 +294,7 @@
 				<td class="number" data-attr="role">내용</td>
 				<td class="number" data-attr="sms">내용</td>
 				<td class="etc" data-attr="use_sms">내용</td>
-				<td class="number" data-attr="lms">내용</td>
+				<!-- <td class="number" data-attr="lms">내용</td>
 				<td class="etc" data-attr="use_lms">내용</td>
 				<td class="number" data-attr="mms">내용</td>
 				<td class="etc" data-attr="use_mms">내용</td>
@@ -302,7 +302,7 @@
 				<td class="etc" data-attr="use_t_kakao">내용</td>
 				<td class="number" data-attr="f_kakao">내용</td>
 				<td class="etc" data-attr="use_f_kakao">내용</td>
-			</tr>
+			</tr> -->
 		</table>
 	</div>
 	<!-- wrap끝 -->
