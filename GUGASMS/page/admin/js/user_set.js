@@ -286,20 +286,20 @@ function init_mat_users(data){
                 elem.innerHTML = data.group_id;
             }else{
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
-                    console.log(data[name]);
+                    // console.log(data[name]);
                     elem.innerHTML = data[name];
                 }
             }
-            if(name != "check_box2"){
-                var single_del_elem = document.getElementById('single_del');
-                elem.style.cursor = "pointer";
-                elem.onclick = function(){
-                    user_detail(data);
-                    single_del_elem.onclick = function(){
-                        select_del("single",data.idx);
-                    }
-                }
-            }
+            // if(name != "check_box2"){
+            //     var single_del_elem = document.getElementById('single_del');
+            //     elem.style.cursor = "pointer";
+            //     elem.onclick = function(){
+            //         user_detail(data);
+            //         single_del_elem.onclick = function(){
+            //             select_del("single",data.idx);
+            //         }
+            //     }
+            // }
         },
         end : function(){
             $(".loading").fadeOut();
@@ -599,8 +599,6 @@ function mat_to_real_user(type, value){
         }else{
             target.push(value);
         }
-
-        console.log(target);
         if(target.length == 0 || (typeof target[0] == "undefind" ||  target[0] == null || target[0] =="null")){
             alert('유저를 선택해주세요');
         }else{
@@ -619,7 +617,7 @@ function mat_to_real_user(type, value){
                     action : "index.php",
                     havior : function(result){
                         double_click = true;
-                        console.log(result['value']);
+                        console.log(result);
                         result = JSON.parse(result);
                         if(result.result == 1){
                             if(result.value.length == 0){
