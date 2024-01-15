@@ -74,6 +74,7 @@ function login(){
             },
             action: "index.php",
             havior: function (result) {
+                console.log(id, pw);
                 console.log(result);
                 result = JSON.parse(result);
                 double_click = true;
