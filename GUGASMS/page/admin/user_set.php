@@ -134,7 +134,7 @@
 								<div class="btn-list-con align-right mb-1">
                                     <!-- <p><button type="button" class="btn-sm btn-defalut">전체삭제</button></p> -->
                                     <p><button type="button" onclick = "select_del2('list');" class="btn-sm btn-defalut">선택삭제</button></p>
-									<p><button type="button" onclick = "select_del('list');" class="btn-sm btn-defalut">사용자등록</button></p>
+									<p><button type="button" onclick = "mat_to_real_user('list');" class="btn-sm btn-defalut">사용자등록</button></p>
 									<!-- <p><button type="button" class="btn-sm btn-primary">엑셀다운</button></p> -->
 								</div>
 								<div class="adm_table_container">
