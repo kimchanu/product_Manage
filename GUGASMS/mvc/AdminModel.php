@@ -192,7 +192,7 @@
                     $this->result["error_code"] == "200";
                     $this->result["message"] == "선택된 사용자가 없습니다.";
                 }else{
-                    $sql = "select from mat_users ";
+                    $sql = "select * from mat_users ";
                     // $sql = "update mat_users set ";
                     // $sql = $sql . "role = 4 ";
                     for($i = 0; $i<count($target); $i++){
@@ -208,7 +208,7 @@
                             }
                         }
                     }
-                    $result = $this->conn->db_delete($sql);
+                    $result = $this->conn->db_select($sql);
                     if($result["result"] == 0){
                         $this->result = $result;
                     }else{
