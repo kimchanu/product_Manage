@@ -181,7 +181,51 @@
             echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
         }
 
-        
+        function mat_to_real_user(){
+            $param = $this->json;
+            if($this->value_check(array("target_idx"))){
+                $param["target_idx"] = json_decode($param["target_idx"], true);
+                $target = $param["target_idx"];
+
+                if(count($target) == 0){
+                    $this->result["result"] == 0;
+                    $this->result["error_code"] == "200";
+                    $this->result["message"] == "선택된 사용자가 없습니다.";
+                }else{
+                    $sql = "select from mat_users ";
+                    // $sql = "update mat_users set ";
+                    // $sql = $sql . "role = 4 ";
+                    for($i = 0; $i<count($target); $i++){
+                        if(count($target) == 1){
+                            $sql = $sql . "where idx = ".$target[$i]."";
+                        }else{
+                            if($i == 0){
+                                $sql = $sql . "where idx in ( ".$target[$i]." , ";
+                            }else if ($i == (count($target) -1)){
+                                $sql = $sql . " ".$target[$i]."  ) ";
+                            }else{
+                                $sql = $sql . " , ".$target[$i]." ";
+                            }
+                        }
+                    }
+                    $result = $this->conn->db_delete($sql);
+                    if($result["result"] == 0){
+                        $this->result = $result;
+                    }else{
+                        $select_sql = "select * from mat_users ";
+
+                        $select_result = $this->conn->db_select($select_sql);
+                        if($select_result["result"] == 0){
+                            $this->result = $select_result;
+                        }else{
+                            $this->result = $select_result;
+                            $this->result["total"] = count($select_result["value"]);
+                        }
+                    }
+                }
+            }
+            echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
+        }
         /********************************************************************* 
         // 함 수 : user_modify()
         // 설 명 : 수정

@@ -585,7 +585,65 @@ function select_del2(type, value){
 }
 
 
+function mat_to_real_user(type, value){
+    if(double_click){
+        
+        var target = [];
+        if(type == "list"){
+            var check_elems = document.getElementsByClassName('user_check2');
+            for(var i = 0; i<check_elems.length; i++){
+                if(check_elems[i].checked == true){
+                    target.push(check_elems[i].value);
+                }
+            }
+        }else{
+            target.push(value);
+        }
 
+        console.log(target);
+        if(target.length == 0 || (typeof target[0] == "undefind" ||  target[0] == null || target[0] =="null")){
+            alert('유저를 선택해주세요');
+        }else{
+            confirm_result = confirm("선택한 사용자를 추가 하시겠습니까?");
+            if(confirm_result){
+                double_click = false;
+                $('.loading').fadeIn();
+                $('#user_wrap2').empty();
+                lb.ajax({
+                    type : "JsonAjaxPost",
+                    list : {
+                        ctl : "Admin",
+                        param1 : "mat_to_real_user",
+                        target_idx : JSON.stringify(target),
+                    },
+                    action : "index.php",
+                    havior : function(result){
+                        double_click = true;
+                        console.log(result);
+                        result = JSON.parse(result);
+                        if(result.result == 1){
+                            if(result.value.length == 0){
+                                nothing_elem2();
+                                $('.loading').fadeOut();
+                                total_view2(result.total);
+                            }else{
+                                alert('유저를 추가했습니다.');
+                                init_mat_users(result.value);
+                                total_view2(result.total);
+                            }
+                        }else{
+                            $('.loading').fadeOut();
+                        }
+                    }
+                })    
+            }
+        }
+    }else{
+        alert('사용자를 삭제중입니다.');
+    }
+
+
+}
 
 // function all_del(){
 //     if(double_click){
