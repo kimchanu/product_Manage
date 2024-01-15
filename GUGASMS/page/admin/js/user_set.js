@@ -621,14 +621,43 @@ function mat_to_real_user(type, value){
                         console.log(result);
                         console.log(result.value[0].idx);
                         if(result.result == 1){
-                            if(result.value.length == 0){
-                                nothing_elem2();
-                                $('.loading').fadeOut();
-                                total_view2(result.total);
+                            if(result.value[0].idx == null){
+                                alert('사용자 등록 실패');
                             }else{
-                                alert('유저를 추가했습니다.');
-                                init_mat_users(result.value);
-                                total_view2(result.total);
+                                lb.ajax({
+                                    type : "JsonAjaxPost",
+                                    list : {
+                                        ctl : "Admin",
+                                        param1 : "signup",
+                                        id : result.value[0].user_id,
+                                        pw : result.value[0].user_pw,
+                                        name : result.value[0].user_name,
+                                        role : 2,
+                                        send_number : 0,
+                                        sms : 0,
+                                        lms : 0,
+                                        mms : 0,
+                                        t_kakao : 0,
+                                        f_kakao : 0,
+                                        comment : 0,
+                                    },
+                                    action : "index.php",
+                                    havior : function(result){
+                                        double_click = true;
+                                        console.log(result);
+                                        result = JSON.parse(result);
+                                        if(result.result == 1){
+                                            alert('사용자가 등록되었습니다.');
+                                            user_list();
+                                        }else{
+                                            if(result.error_code == "533"){
+                                                alert(result.message);
+                                            }else{
+                                                alert('사용자 등록 실패');
+                                            }
+                                        }
+                                    }
+                                })
                             }
                         }else{
                             $('.loading').fadeOut();
