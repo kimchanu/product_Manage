@@ -619,6 +619,7 @@ function mat_to_real_user(type, value){
                         double_click = true;
                         result = JSON.parse(result);
                         console.log(result);
+                        console.log(result.value[0].idx);
                         if(result.result == 1){
                             if(result.value.length == 0){
                                 nothing_elem2();
