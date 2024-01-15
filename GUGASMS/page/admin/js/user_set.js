@@ -617,8 +617,8 @@ function mat_to_real_user(type, value){
                     action : "index.php",
                     havior : function(result){
                         double_click = true;
-                        result = JSON.parse(result);
                         console.log(result);
+                        result = JSON.parse(result);
                         // console.log(result.value[0].idx);
                         if(result.result == 1){
                             // if(result.value[0].idx == null){
@@ -667,7 +667,7 @@ function mat_to_real_user(type, value){
             }
         }
     }else{
-        alert('사용자를 삭제중입니다.');
+        alert('기다려주세요');
     }
 }
 
