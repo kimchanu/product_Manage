@@ -564,11 +564,11 @@ function select_del2(type, value){
                             if(result.value.length == 0){
                                 nothing_elem2();
                                 $('.loading').fadeOut();
-                                total_view(result.total);
+                                total_view2(result.total);
                             }else{
                                 alert('유저를 삭제했습니다.');
-                                init_user(result.value);
-                                total_view(result.total);
+                                init_mat_users(result.value);
+                                total_view2(result.total);
                             }
                         }else{
                             $('.loading').fadeOut();
