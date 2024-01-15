@@ -129,6 +129,14 @@ function nothing_elem(){
     user_wrap.innerHTML = nothing_elem;
 }
 
+function nothing_elem2(){
+    var user_wrap = document.getElementById('user_wrap2');
+    var nothing_elem = "<tr id = 'nothing'>" +
+                            "<td colspan = '14' class='align-center' height='321'>내용이 없습니다.</td>"+
+                        "</tr>";
+    user_wrap.innerHTML = nothing_elem;
+}
+
 function total_view(count){
     var total_elem =document.getElementById('total_elem');
     total_elem.innerHTML = "<i>Total</i>" + count;
@@ -539,12 +547,12 @@ function select_del2(type, value){
             if(confirm_result){
                 double_click = false;
                 $('.loading').fadeIn();
-                $('#user_wrap').empty();
+                $('#user_wrap2').empty();
                 lb.ajax({
                     type : "JsonAjaxPost",
                     list : {
                         ctl : "Admin",
-                        param1 : "select_del_user",
+                        param1 : "select_del_user2",
                         target_idx : JSON.stringify(target),
                     },
                     action : "index.php",
@@ -554,7 +562,7 @@ function select_del2(type, value){
                         result = JSON.parse(result);
                         if(result.result == 1){
                             if(result.value.length == 0){
-                                nothing_elem();
+                                nothing_elem2();
                                 $('.loading').fadeOut();
                                 total_view(result.total);
                             }else{
