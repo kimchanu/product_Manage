@@ -209,6 +209,8 @@
                         }
                     }
                     $result = $this->conn->db_select($sql);
+                    $this->result = $select_result;
+                    $this->result["total"] = count($select_result["value"]);
                     // if($result["result"] == 0){
                     //     $this->result = $result;
                     // }else{
