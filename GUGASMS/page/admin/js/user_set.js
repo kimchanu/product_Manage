@@ -619,7 +619,7 @@ function mat_to_real_user(type, value){
                     action : "index.php",
                     havior : function(result){
                         double_click = true;
-                        console.log(result['value']['idx']);
+                        console.log(result['value']);
                         result = JSON.parse(result);
                         if(result.result == 1){
                             if(result.value.length == 0){
