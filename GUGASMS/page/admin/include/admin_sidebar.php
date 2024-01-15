@@ -82,7 +82,7 @@
 				<a id="kakao_side" href="?ctl=Move&param1=dashboard">월별집계 대시보드</a>
 			</li>
 			<li class="depth1" data-side="">
-				<a id="kakao_side" href="?ctl=Move&param1=MSDS">MSDS(위험물질)</a>
+				<a id="kakao_side" href="http://msds.safeinfo.co.kr/">MSDS(위험물질)</a>
 			</li>
 			<!-- <li class="depth1" <?php echo $this->side_bar();?> data-side=""> <a id
 			="addr_side" href="#" onclick = "side_bar(this); return false;">주소록</a> <ul
