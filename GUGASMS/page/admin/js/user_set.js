@@ -617,8 +617,8 @@ function mat_to_real_user(type, value){
                     action : "index.php",
                     havior : function(result){
                         double_click = true;
-                        console.log(result);
                         result = JSON.parse(result);
+                        console.log(result);
                         if(result.result == 1){
                             if(result.value.length == 0){
                                 nothing_elem2();
