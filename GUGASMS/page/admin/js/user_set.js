@@ -599,6 +599,7 @@ function mat_to_real_user(type, value){
         }else{
             target.push(value);
         }
+        console.log(target);
         if(target.length == 0 || (typeof target[0] == "undefind" ||  target[0] == null || target[0] =="null")){
             alert('유저를 선택해주세요');
         }else{
