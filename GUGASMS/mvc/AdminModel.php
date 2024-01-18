@@ -208,22 +208,18 @@
                             }
                         }
                     }
-                    $result = $this->conn->db_select($sql);
-                    $this->result = $select_result;
-                    $this->result["total"] = count($select_result["value"]);
-                    // if($result["result"] == 0){
-                    //     $this->result = $result;
-                    // }else{
-                    //     $select_sql = "select * from mat_users ";
-
-                    //     $select_result = $this->conn->db_select($select_sql);
-                    //     if($select_result["result"] == 0){
-                    //         $this->result = $select_result;
-                    //     }else{
-                    //         $this->result = $select_result;
-                    //         $this->result["total"] = count($select_result["value"]);
-                    //     }
-                    // }
+                    
+                    if($sql == ""){
+                        $this->result = $result;
+                    }else{
+                        $select_result = $this->conn->db_select($sql);
+                        if($select_result["result"] == 0){
+                            $this->result = $select_result;
+                        }else{
+                            $this->result = $select_result;
+                            $this->result["total"] = count($select_result["value"]);
+                        }
+                    }
                 }
             }
             echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
