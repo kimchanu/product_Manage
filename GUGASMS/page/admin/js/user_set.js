@@ -652,7 +652,7 @@ function mat_to_real_user(type, value){
                                         console.log(result);
                                         result = JSON.parse(result);
                                         if(result.result == 1){
-                                            mat_users();
+                                            user_list();
                                         }else{
                                             if(result.error_code == "533"){
                                                 alert(result.message);

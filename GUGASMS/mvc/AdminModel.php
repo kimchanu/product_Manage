@@ -371,7 +371,7 @@
                             }else if ($i == (count($target) -1)){
                                 $sql = $sql . " ".$target[$i]."  ) ";
                             }else{
-                                $sql = $sql . " , ".$target[$i]." ";
+                                $sql = $sql . " ".$target[$i].", ";
                             }
                         }
                     }
@@ -417,7 +417,7 @@
                             }else if ($i == (count($target) -1)){
                                 $sql = $sql . " ".$target[$i]."  ) ";
                             }else{
-                                $sql = $sql . " , ".$target[$i]." ";
+                                $sql = $sql . " ".$target[$i].", ";
                             }
                         }
                     }
