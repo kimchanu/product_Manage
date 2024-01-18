@@ -620,8 +620,8 @@ function mat_to_real_user(type, value){
                         double_click = true;
                         console.log(result);
                         result = JSON.parse(result);
-                        // console.log(result.value[0].idx);
-                        if(result.result == 1){
+                        console.log(result.total);
+                        if(result.total == 0){
                             if(result.value[0].idx == null){
                                 alert('사용자 등록 실패');
                             }else{
