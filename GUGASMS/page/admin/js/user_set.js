@@ -620,7 +620,7 @@ function mat_to_real_user(type, value){
                         double_click = true;
                         console.log(result);
                         console.log(result["result"]);
-                        if(result["result"] == 0){
+                        if(result["result"] == undefined){
                             alert('사용자 등록 실패');
                             $('.loading').fadeOut();
                         }
