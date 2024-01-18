@@ -649,7 +649,7 @@ function mat_to_real_user(type, value){
                                         result = JSON.parse(result);
                                         if(result.result == 1){
                                             alert('사용자가 등록되었습니다.');
-                                            user_list();
+                                            mat_users();
                                         }else{
                                             if(result.error_code == "533"){
                                                 alert(result.message);
