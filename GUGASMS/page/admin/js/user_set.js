@@ -619,9 +619,13 @@ function mat_to_real_user(type, value){
                     havior : function(result){
                         double_click = true;
                         console.log(result);
-                        result = JSON.parse(result);
-                        console.log(result.total);
-                        if(result.total != 0){
+                        if(result == undefined){
+                            alert('사용자 등록 실패');
+                            $('.loading').fadeOut();
+                        }
+                        else if (result.total != 0){
+                            result = JSON.parse(result);
+                            console.log(result.total);
                             i_count = result.total;
                             for(i=0;i<i_count;i++){
                                 lb.ajax({
@@ -647,7 +651,6 @@ function mat_to_real_user(type, value){
                                         console.log(result);
                                         result = JSON.parse(result);
                                         if(result.result == 1){
-                                            alert('사용자가 등록되었습니다.');
                                             mat_users();
                                         }else{
                                             if(result.error_code == "533"){
