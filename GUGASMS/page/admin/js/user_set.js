@@ -621,18 +621,17 @@ function mat_to_real_user(type, value){
                         console.log(result);
                         result = JSON.parse(result);
                         console.log(result.total);
-                        if(result.total == 0){
-                            if(result.value[0].idx == null){
-                                alert('사용자 등록 실패');
-                            }else{
+                        if(result.total != 0){
+                            i_count = result.total;
+                            for(i=0;i<i_count;i++){
                                 lb.ajax({
                                     type : "JsonAjaxPost",
                                     list : {
                                         ctl : "Admin",
                                         param1 : "signup",
-                                        id : result.value[0].user_id,
-                                        pw : result.value[0].user_pw,
-                                        name : result.value[0].user_name,
+                                        id : result.value[i].user_id,
+                                        pw : result.value[i].user_pw,
+                                        name : result.value[i].user_name,
                                         role : 2,
                                         send_number : 0,
                                         sms : 0,
@@ -659,8 +658,9 @@ function mat_to_real_user(type, value){
                                         }
                                     }
                                 })
-                            }
+                        }
                         }else{
+                            alert('사용자 등록 실패');
                             $('.loading').fadeOut();
                         }
                     }
