@@ -619,8 +619,8 @@ function mat_to_real_user(type, value){
                     havior : function(result){
                         double_click = true;
                         console.log(result);
-                        console.log(result.result);
-                        if(result.result == 0){
+                        console.log(result["result"]);
+                        if(result["result"] == 0){
                             alert('사용자 등록 실패');
                             $('.loading').fadeOut();
                         }
