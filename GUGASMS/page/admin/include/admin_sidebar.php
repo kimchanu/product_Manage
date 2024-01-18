@@ -76,7 +76,7 @@
 				</ul>
 			</li>
 			<li class="depth1" data-side="">
-				<a id="kakao_side" href="?ctl=Move&param1=finance">갑지</a>
+				<a id="kakao_side" href="?ctl=Move&param1=finance">자재수불명세서대장(갑지)</a>
 			</li>
 			<li class="depth1" data-side="">
 				<a id="kakao_side" href="?ctl=Move&param1=dashboard">월별집계 대시보드</a>
