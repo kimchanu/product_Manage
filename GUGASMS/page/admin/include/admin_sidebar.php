@@ -7,7 +7,7 @@
     <div id="cssmenu" class="side_main_menu">
         <ul class="depth1-con">
             <li class="depth1" data-side="">
-                <a id="kakao_side" href="#" onclick="side_bar(this); return false;">자재관리</a>
+                <a id="kakao_side" href="#" onclick="side_bar(this); return false;">자재찾기</a>
                 <ul class="depth2-con" style="display:none;">
 				<li class="depth2">
                     <a href="#" onclick="side_bar(this); return false;">관리동-2F</a>
@@ -38,19 +38,19 @@
        		</li>
 
 			<li class="depth1" data-side="">
-				<a id="msg_side" href="#" onclick="side_bar(this); return false;">입고관리</a>
+				<a id="msg_side" href="#" onclick="side_bar(this); return false;">내부관리(수불대장)</a>
 				<ul class="depth2-con" style="display:none;">
 					<li class="depth2">
-						<a href="?ctl=Move&param1=input">입고등록</a>
+						<a href="?ctl=Move&param1=input">자재등록</a>
 					</li>
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=msg_main">자재등록</a></li> -->
 					<li class="depth2">
-						<a href="?ctl=Move&param1=input_list">입고현황</a>
+						<a href="?ctl=Move&param1=input_list">자재현황</a>
 					</li>
 					<!-- <li class="depth2 admin_none"><a
 					href="?ctl=Move&param1=msg_result">전송결과</a></li> -->
 					<li class="depth2">
-						<a href="?ctl=Move&param1=input_month">월집계</a>
+						<a href="?ctl=Move&param1=input_month">월 집계</a>
 					</li>
 					<!-- <li class="depth2"><a
 					href="?ctl=Move&param1=product_register">메시지함관리</a></li> -->
@@ -59,14 +59,14 @@
 				</ul>
 			</li>
 			<li class="depth1" data-side="">
-				<a id="kakao_side" href="#" onclick="side_bar(this); return false;">출고관리</a>
+				<a id="kakao_side" href="#" onclick="side_bar(this); return false;">을지</a>
 				<ul class="depth2-con" style="display:none;">
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=kakao_main">알림톡전송</a></li> -->
 					<li side_bar();="side_bar();" class="depth2 admin_none">
-						<a href="?ctl=Move&param1=output">출고등록</a>
+						<a href="?ctl=Move&param1=output">자재출고등록</a>
 					</li>
 					<li side_bar();="side_bar();" class="depth2 admin_none">
-						<a href="?ctl=Move&param1=output_list">출고현황</a>
+						<a href="?ctl=Move&param1=output_list">자재출고현황</a>
 					</li>
 					<li side_bar();="side_bar();" class="depth2 admin_none">
 						<a href="?ctl=Move&param1=output_month">월 집계</a>
@@ -76,13 +76,13 @@
 				</ul>
 			</li>
 			<li class="depth1" data-side="">
-				<a id="kakao_side" href="?ctl=Move&param1=finance">자재수불명세서</a>
+				<a id="kakao_side" href="?ctl=Move&param1=finance">갑지</a>
 			</li>
 			<li class="depth1" data-side="">
 				<a id="kakao_side" href="?ctl=Move&param1=dashboard">월별집계 대시보드</a>
 			</li>
 			<li class="depth1" data-side="">
-				<a id="kakao_side" href="http://msds.safeinfo.co.kr/">MSDS(위험물질)</a>
+				<a id="kakao_side" href="http://msds.safeinfo.co.kr/" target='_blank'>MSDS(위험물질)</a>
 			</li>
 			<!-- <li class="depth1" <?php echo $this->side_bar();?> data-side=""> <a id
 			="addr_side" href="#" onclick = "side_bar(this); return false;">주소록</a> <ul
@@ -99,12 +99,12 @@
 					<li class="depth2">
 						<a href="?ctl=Move&param1=user_set">사용자관리</a>
 					</li>
-					<li class="depth2">
+					<!-- <li class="depth2">
 						<a href="?ctl=Move&param1=state_day">일별통계</a>
 					</li>
 					<li class="depth2">
 						<a href="?ctl=Move&param1=state_month">월별통계</a>
-					</li>
+					</li> -->
 				</ul>
 			</li>
 		</ul>
