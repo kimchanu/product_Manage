@@ -359,9 +359,9 @@
                     $this->result["error_code"] == "200";
                     $this->result["message"] == "선택된 사용자가 없습니다.";
                 }else{
-                    // $sql = "delete from admin ";
-                    $sql = "update admin set ";
-                    $sql = $sql . "role = 4 ";
+                    $sql = "delete from admin ";
+                    // $sql = "update admin set ";
+                    // $sql = $sql . "role = 4 ";
                     for($i = 0; $i<count($target); $i++){
                         if(count($target) == 1){
                             $sql = $sql . "where idx = ".$target[$i]."";
