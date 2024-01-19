@@ -107,18 +107,18 @@
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </th>
-                                                <th class="number">자재코드</th>
-                                                <th class="number">위치</th>
-                                                <th class="number">대분류</th>
-                                                <th class="number">소분류</th>
+                                                <th class="tight1">자재코드</th>
+                                                <th class="tight1">위치</th>
+                                                <th class="tight1">대분류</th>
+                                                <th class="tight1">소분류</th>
                                                 <th class="number">품명</th>
                                                 <th class="number">규격</th>
                                                 <th class="number">제조사</th>
                                                 <th class="number">거래처</th>
-                                                <th class="number">단위</th>
-                                                <th class="number">단가</th>
-                                                <th class="number">수량</th>
-                                                <th class="number">금액</th>
+                                                <th class="tight2">단위</th>
+                                                <th class="tight1">단가</th>
+                                                <th class="tight2">수량</th>
+                                                <th class="tight1">금액</th>
                                                 <th class="number">도입일자</th>
                                                 <th class="number">이미지</th>
                                             </tr>
