@@ -117,10 +117,10 @@
                                                 <th class="number">거래처</th>
                                                 <th class="tight2">단위</th>
                                                 <th class="tight1">단가</th>
-                                                <th class="tight2">수량</th>
-                                                <th class="tight1">금액</th>
-                                                <th class="number">도입일자</th>
-                                                <th class="number">이미지</th>
+                                                <th class="tight2">재고수량</th>
+                                                <th class="tight1">재고금액</th>
+                                                <!-- <th class="number">도입일자</th>
+                                                <th class="number">이미지</th> -->
                                             </tr>
                                         </thead>
                                         <tbody data-wrap="receiver_wrap" id="receiver_wrap">
