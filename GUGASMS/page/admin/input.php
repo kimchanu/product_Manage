@@ -63,9 +63,9 @@
                     <h2>입고등록</h2>
                 </div>
                 <div class="adm_main_container">
-                    <section class="adm_section_container" style = "background-color: yellow">
-                        <div class="adm_section_container_body p-1">
-                            <div class="btn-list-con align-right mb-1">
+                    <section class="adm_section_container" style="background-color: yellow">
+                        <div class="adm_section_container_body p-1" style="background-color: yellow">
+                            <div class="btn-list-con align-right mb-1" style="background-color: green">
                                 <p>검색 월
                                     <input type="date" id="start_date"></p>
                                 <p>검색어
