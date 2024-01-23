@@ -63,7 +63,7 @@
                     <h2>입고등록</h2>
                 </div>
                 <div class="adm_main_container">
-                    <section class="adm_section_container">
+                    <section class="adm_section_container" style = "background-color: yellow">
                         <div class="adm_section_container_body p-1">
                             <div class="btn-list-con align-right mb-1">
                                 <p>검색 월
