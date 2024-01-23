@@ -148,11 +148,11 @@
                         <section class="adm_section_container">
                             <div class="adm_modal_input_container">
                                 <div class="modal_table">
-                                    <div class="wi_board_form_row">
-                                        <div class="wi_board_form_title">
-                                            <label for="" class="wi_board_label_control">자재코드</label>
+                                    <div class="wi_board_form_row" style="background-color: yellow">
+                                        <div class="wi_board_form_title" >
+                                            <label for="" class="wi_board_label_control" style="background-color: green">자재코드</label>
                                         </div>
-                                        <div class="wi_board_form_content">
+                                        <div class="wi_board_form_content" style="background-color: red">
                                             <input
                                                 type="text"
                                                 id="product_code"
