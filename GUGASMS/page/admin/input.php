@@ -151,14 +151,15 @@
                                     <div class="wi_board_form_row">
                                         <div class="wi_board_form_title" style="background-color: yellow">
                                             <label for="" class="wi_board_label_control" style="background-color: green">자재코드</label>
-                                        </div>
-                                        <div class="wi_board_form_content" style="background-color: red">
                                             <input
                                                 type="text"
                                                 id="product_code"
                                                 class="wi_board_input_control"
                                                 autocomplete="off">
                                         </div>
+                                        <!-- <div class="wi_board_form_content" style="background-color: red">
+                                            
+                                        </div> -->
                                     </div>
 
                                     <div class="wi_board_form_row">
