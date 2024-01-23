@@ -369,59 +369,50 @@ function request_add_product(){
             alert('휴대전화를 입력해주세요');
             double_click = true;
 
-        }
+        }else{
+            lb.ajax({
+               type : "JsonAjaxPost",
+               list : {
+                   ctl : "Addr",
+                   param1 : "add_product",
+                   mat_code : product_code.value,
+                   mat_position : product_position.value,
+                   b_class : product_b_class.value,
+                   s_class : product_s_class.value,
+                   mat_name : product_name.value,
+                   mat_stand : product_stand.value,
+                   mat_maker : product_maker.value,
+                   mat_custom : product_custom.value,
+                   mat_union : product_union.value,
+                   mat_price : product_price.value,
+                   mat_amount : product_amount.value,
+                   mat_sum : product_sum.value,
+                   into_date : product_in_date.value,
+                   mat_image : product_image.value,
+               },
+                   
+               action : "index.php",
+               havior : function(result){
+                   double_click = true;
+                   console.log(result);
+                   result = JSON.parse(result);
+                   if(result.result == 1){
+                       alert('번호를 추가하였습니다.');
+                       // request_addr_list(mat_name.value);
+                       close_add_modal();
+                   }else{
+                       if(result.error_code == 601){
+                           alert(result.message);
+                           
+                       }else{
+                           alert('번호 추가를 실패하였습니다.');
+                       }
+                   }
+               }
+           })
+       }
         
-        else{
-            sessionStorage.setItem("product_code", product_code.value);
-            sessionStorage.setItem("product_position", product_position.value);
-            sessionStorage.setItem("product_b_class", product_b_class.value);
-            sessionStorage.setItem("product_s_class", product_s_class.value);
-            sessionStorage.setItem("product_name", product_name.value);
-            sessionStorage.setItem("product_stand", product_stand.value);
-            sessionStorage.setItem("product_maker", product_maker.value);
-            sessionStorage.setItem("product_custom", product_custom.value);
-            sessionStorage.setItem("product_union", product_union.value);
-            sessionStorage.setItem("product_price", product_price.value);
-            sessionStorage.setItem("product_amount", product_amount.value);
-            sessionStorage.setItem("product_sum", product_sum.value);
-
-            var a = sessionStorage.getItem('product_code');
-            var b = sessionStorage.getItem('product_position');
-            var c = sessionStorage.getItem('product_b_class');
-            var d = sessionStorage.getItem('product_s_class');
-            var e = sessionStorage.getItem('product_name');
-            var f = sessionStorage.getItem('product_stand');
-            var g = sessionStorage.getItem('product_maker');
-            var h = sessionStorage.getItem('product_custom');
-            var i = sessionStorage.getItem('product_union');
-            var j = sessionStorage.getItem('product_price');
-            var k = sessionStorage.getItem('product_amount');
-            var l = sessionStorage.getItem('product_sum');
-
-
-
-            var table_value = {
-                "code": a,
-                "position": b,
-                'product_b_class': c,
-                'product_s_class': d,
-                'product_name': e,
-                'product_stand': f,
-                'product_maker': g,
-                'product_custom':h,
-                'product_union':i,
-                'product_price':j,
-                'product_amount':k,
-                'sessionStorage':l
-            };
-
-            console.log(table_value);
-            console.log(Object.keys(table_value).length);
-            // var element = document.getElementById('receiver_wrap');
-            // element.appendChild(createTable(table_value));
-            createTable(table_value);
-            double_click = true;
-        }
+        
     }
            
 }
@@ -490,6 +481,57 @@ function request_add_product(){
         alert('번호를 추가 중입니다.')
     }
 }
+else{
+            sessionStorage.setItem("product_code", product_code.value);
+            sessionStorage.setItem("product_position", product_position.value);
+            sessionStorage.setItem("product_b_class", product_b_class.value);
+            sessionStorage.setItem("product_s_class", product_s_class.value);
+            sessionStorage.setItem("product_name", product_name.value);
+            sessionStorage.setItem("product_stand", product_stand.value);
+            sessionStorage.setItem("product_maker", product_maker.value);
+            sessionStorage.setItem("product_custom", product_custom.value);
+            sessionStorage.setItem("product_union", product_union.value);
+            sessionStorage.setItem("product_price", product_price.value);
+            sessionStorage.setItem("product_amount", product_amount.value);
+            sessionStorage.setItem("product_sum", product_sum.value);
+
+            var a = sessionStorage.getItem('product_code');
+            var b = sessionStorage.getItem('product_position');
+            var c = sessionStorage.getItem('product_b_class');
+            var d = sessionStorage.getItem('product_s_class');
+            var e = sessionStorage.getItem('product_name');
+            var f = sessionStorage.getItem('product_stand');
+            var g = sessionStorage.getItem('product_maker');
+            var h = sessionStorage.getItem('product_custom');
+            var i = sessionStorage.getItem('product_union');
+            var j = sessionStorage.getItem('product_price');
+            var k = sessionStorage.getItem('product_amount');
+            var l = sessionStorage.getItem('product_sum');
+
+
+
+            var table_value = {
+                "code": a,
+                "position": b,
+                'product_b_class': c,
+                'product_s_class': d,
+                'product_name': e,
+                'product_stand': f,
+                'product_maker': g,
+                'product_custom':h,
+                'product_union':i,
+                'product_price':j,
+                'product_amount':k,
+                'sessionStorage':l
+            };
+
+            console.log(table_value);
+            console.log(Object.keys(table_value).length);
+            // var element = document.getElementById('receiver_wrap');
+            // element.appendChild(createTable(table_value));
+            createTable(table_value);
+            double_click = true;
+        }
 
 */
 

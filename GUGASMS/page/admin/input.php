@@ -63,7 +63,7 @@
                     <h2>입고등록</h2>
                 </div>
                 <div class="adm_main_container">
-                    <section class="adm_section_container" style="background-color: yellow">
+                    <section class="adm_section_container">
                         <div class="adm_section_container_body p-1" style="background-color: yellow">
                             <div class="btn-list-con align-right mb-1" style="background-color: green">
                                 <p>검색 월
@@ -107,7 +107,7 @@
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </th>
-                                                <th class="tight1">자재코드</th>
+                                                <th class="tight2">자재코드</th>
                                                 <th class="tight2">위치</th>
                                                 <th class="tight2">대분류</th>
                                                 <th class="tight2">소분류</th>
