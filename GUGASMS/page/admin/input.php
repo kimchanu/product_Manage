@@ -108,13 +108,13 @@
                                                     </label>
                                                 </th>
                                                 <th class="tight1">자재코드</th>
-                                                <th class="tight1">위치</th>
-                                                <th class="tight1">대분류</th>
-                                                <th class="tight1">소분류</th>
+                                                <th class="tight2">위치</th>
+                                                <th class="tight2">대분류</th>
+                                                <th class="tight2">소분류</th>
                                                 <th class="number">품명</th>
                                                 <th class="number">규격</th>
-                                                <th class="number">제조사</th>
-                                                <th class="number">거래처</th>
+                                                <th class="tight1">제조사</th>
+                                                <th class="tight1">거래처</th>
                                                 <th class="tight2">단위</th>
                                                 <th class="tight1">단가</th>
                                                 <th class="tight2">재고수량</th>
