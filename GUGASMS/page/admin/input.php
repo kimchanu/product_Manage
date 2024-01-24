@@ -156,7 +156,7 @@
                                             <input
                                                 type="text"
                                                 id="product_code"
-                                                class="wi_board_input_control"
+                                                class="wi_board_input_control2"
                                                 autocomplete="off">
                                         </div>
                                         <div class="wi_board_form_title" style="background-color: yellow">
@@ -166,7 +166,7 @@
                                             <input
                                                 type="text"
                                                 id="product_code"
-                                                class="wi_board_input_control"
+                                                class="wi_board_input_control2"
                                                 autocomplete="off">
                                         </div>
                                         <div class="wi_board_form_title" style="background-color: yellow">
@@ -176,7 +176,7 @@
                                             <input
                                                 type="text"
                                                 id="product_code"
-                                                class="wi_board_input_control"
+                                                class="wi_board_input_control2"
                                                 autocomplete="off">
                                         </div>
                                     </div>
