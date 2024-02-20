@@ -159,24 +159,24 @@
                                                 class="wi_board_input_control2"
                                                 autocomplete="off">
                                         </div>
-                                        <div class="wi_board_form_title" style="background-color: yellow">
-                                            <label for="" class="wi_board_label_control">자재코드</label>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">위치</label>
                                         </div>
-                                        <div class="wi_board_form_content" style="background-color: red">
+                                        <div class="wi_board_form_content">
                                             <input
                                                 type="text"
-                                                id="product_code"
-                                                class="wi_board_input_control2"
+                                                id="product_position"
+                                                class="wi_board_input_control"
                                                 autocomplete="off">
                                         </div>
-                                        <div class="wi_board_form_title" style="background-color: yellow">
-                                            <label for="" class="wi_board_label_control">자재코드</label>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">대분류</label>
                                         </div>
-                                        <div class="wi_board_form_content" style="background-color: red">
+                                        <div class="wi_board_form_content">
                                             <input
                                                 type="text"
-                                                id="product_code"
-                                                class="wi_board_input_control2"
+                                                id="product_b_class"
+                                                class="wi_board_input_control"
                                                 autocomplete="off">
                                         </div>
                                     </div>
