@@ -33,7 +33,7 @@
 .wi_board_form_row {display: table-row;}
 .wi_board_form_title, .wi_board_form_content, .wi_board_form_content2{display:table-cell; padding:12px 20px;}
 .wi_board_form_title{min-width:30px; vertical-align:top;}
-.wi_board_form_content{font-size: 0; width:40%;}
+.wi_board_form_content{font-size: 0; width:30%;}
 .wi_board_form_content2{font-size: 0; width:100px;}
 
 
