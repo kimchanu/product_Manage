@@ -291,11 +291,11 @@
                                     </div>
                                     <div class="wi_board_form_row">
                                         <div class="wi_board_form_title">
-                                            <label for="" class="wi_board_label_control">도입일자</label>
+                                            <label for="date" class="wi_board_label_control">도입일자</label>
                                         </div>
                                         <div class="wi_board_form_content">
                                             <input
-                                                type="text"
+                                                type="date"
                                                 id="product_in_date"
                                                 class="wi_board_input_control"
                                                 autocomplete="off">
@@ -304,14 +304,18 @@
                                             <label for="" class="wi_board_label_control">이미지</label>
                                         </div>
                                         <div class="wi_board_form_content">
+                                        <form action="/upload" method="post" enctype="multipart/form-data">
                                             <input
-                                                type="text"
+                                                type="file"
                                                 id="product_image"
+                                                name="attachment"
                                                 class="wi_board_input_control"
                                                 autocomplete="off">
+                                            <input type="submit" value="업로드">
+                                        </form>
                                         </div>
-                                    </div>
-        
+                                        
+                                    </div>                     
                                 </div>
                             </section>
                             <div class="adm_table_btn">
