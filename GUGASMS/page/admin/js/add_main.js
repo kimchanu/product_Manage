@@ -311,10 +311,9 @@ function calculate() {
     var num1 = parseInt(document.getElementById('product_price').value);
     var num2 = parseInt(document.getElementById('product_amount').value);
     var result1 = num1 * num2;
+    result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
     console.log(result1);
-    document.getElementById('product_sum').innerText = 'aa' + result1;
-
-
+    document.getElementById('product_sum').innerText = result1;
 }
 
 function request_add_product(){
