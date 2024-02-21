@@ -945,8 +945,8 @@ function number_check(elem){
 
 $(document).ready(function(){
     // request_addr_group();
-    input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
-    number_check(lb.getElem('addr_phone_number'));
+    // input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
+    // number_check(lb.getElem('addr_phone_number'));
 })
 
 var double_click = true;
