@@ -277,11 +277,7 @@
                                             <label for="" class="wi_board_label_control">금액</label>
                                         </div>
                                         <div class="wi_board_form_content">
-                                            <input
-                                                type="number"
-                                                id="product_sum"
-                                                class="wi_board_input_control"
-                                                autocomplete="off">
+                                            <p id = "product_sum"></p>
                                         </div>
                                         <div class="wi_board_form_title">
                                             <label for="" class="wi_board_label_control">도입일자</label>
