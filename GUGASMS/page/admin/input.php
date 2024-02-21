@@ -64,8 +64,8 @@
                 </div>
                 <div class="adm_main_container">
                     <section class="adm_section_container">
-                        <div class="adm_section_container_body p-1" style="background-color: yellow">
-                            <div class="btn-list-con align-right mb-1" style="background-color: green">
+                        <div class="adm_section_container_body p-1">
+                            <div class="btn-list-con align-right mb-1">
                                 <p>검색날짜
                                     <input type="date" id="search_date"></p>
                                 <p>검색어
