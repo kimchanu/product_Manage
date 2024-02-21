@@ -314,6 +314,8 @@ function calculate() {
     result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
     console.log(result1);
     document.getElementById('product_sum').innerText = result1;
+    num1 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    document.getElementById('product_price').innerText = num1;
 }
 
 function request_add_product(){
