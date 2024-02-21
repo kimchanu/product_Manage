@@ -309,9 +309,10 @@ function createTable(data) {
 }
 function calculate() {
     var num1 = parseInt(document.getElementById('product_price').value);
-            var num2 = parseInt(document.getElementById('product_amount').value);
-            var result = num1 * num2;
-            document.getElementById('product_sum').innerText = '결과: ' + result;
+    var num2 = parseInt(document.getElementById('product_amount').value);
+    var result1 = num1 * num2;
+    console.log(result1);
+    document.getElementById('product_sum').innerText = result1;
 
 
 }
