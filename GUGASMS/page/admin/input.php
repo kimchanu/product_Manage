@@ -256,7 +256,8 @@
                                                 type="text"
                                                 id="product_price"
                                                 class="wi_board_input_control"
-                                                autocomplete="off">
+                                                autocomplete="off"
+                                                oninput="calculate()">
                                         </div>
                                         <div class="wi_board_form_title">
                                             <label for="" class="wi_board_label_control">수량</label>
@@ -266,7 +267,8 @@
                                                 type="text"
                                                 id="product_amount"
                                                 class="wi_board_input_control"
-                                                autocomplete="off">
+                                                autocomplete="off"
+                                                oninput="calculate()">
                                         </div>
                                     </div>
                                     

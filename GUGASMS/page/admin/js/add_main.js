@@ -307,6 +307,14 @@ function createTable(data) {
     //  element.appendChild(tempElem.innerHTML);
      console.log(element.innerHTML);
 }
+function calculate() {
+    var num1 = parseInt(document.getElementById('product_price').value);
+            var num2 = parseInt(document.getElementById('product_amount').value);
+            var result = num1 * num2;
+            document.getElementById('product_sum').innerText = '결과: ' + result;
+
+
+}
 
 function request_add_product(){
     var product_code = document.getElementById('product_code');
@@ -332,19 +340,7 @@ function request_add_product(){
         }else if(product_position.value == ""){
             alert('이름을 입력해주세요');
             double_click = true;
-        }else if(product_b_class.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else if(product_s_class.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
         }else if(product_name.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else if(product_stand.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else if(product_maker.value == ""){
             alert('휴대전화를 입력해주세요');
             double_click = true;
         }else if(product_custom.value == ""){
@@ -365,10 +361,6 @@ function request_add_product(){
         }else if(product_in_date.value == ""){
             alert('휴대전화를 입력해주세요');
             double_click = true;
-        }else if(product_image.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-
         }else{
             lb.ajax({
                type : "JsonAjaxPost",
