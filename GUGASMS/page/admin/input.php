@@ -253,7 +253,7 @@
                                         </div>
                                         <div class="wi_board_form_content">
                                             <input
-                                                type="text"
+                                                type="number"
                                                 id="product_price"
                                                 class="wi_board_input_control"
                                                 autocomplete="off"
@@ -264,7 +264,7 @@
                                         </div>
                                         <div class="wi_board_form_content">
                                             <input
-                                                type="text"
+                                                type="number"
                                                 id="product_amount"
                                                 class="wi_board_input_control"
                                                 autocomplete="off"
