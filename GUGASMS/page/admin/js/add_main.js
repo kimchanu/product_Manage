@@ -7,7 +7,6 @@ $(document).ready(function(){
         let num1 = parseInt(document.getElementById('product_price').value);
         let num2 = parseInt(document.getElementById('product_amount').value);
         let result1 = num1 * num2;
-        let inputValue = num1.replace(/\,/g, '');
         result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         console.log(result1);
         let num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
