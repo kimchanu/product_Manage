@@ -339,38 +339,23 @@ function request_add_product(){
     var product_union = document.getElementById('product_union');
     var product_price = document.getElementById('product_price');
     var product_amount = document.getElementById('product_amount');
-    var product_sum = document.getElementById('product_sum');
+    var product_sum = parseInt(product_price) * parseInt(product_amount);
     var product_in_date = document.getElementById('product_in_date');
-    var product_image = document.getElementById('product_image');
+    // var product_image = document.getElementById('product_image');
     
     if(double_click){
         double_click = false;
-        if(product_code.value == ""){
-            alert('번호를 추가할 주소록을 선택해주세요');
-            double_click = true;
-        }else if(product_position.value == ""){
-            alert('이름을 입력해주세요');
-            double_click = true;
-        }else if(product_name.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else if(product_custom.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else if(product_union.value == ""){
-            alert('휴대전화를 입력해주세요');
+        if(product_name.value == ""){
+            alert('품명을 입력해주세요');
             double_click = true;
         }else if(product_price.value == ""){
-            alert('휴대전화를 입력해주세요');
+            alert('단가를 입력해주세요');
             double_click = true;
         }else if(product_amount.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else if(product_sum.value == ""){
-            alert('휴대전화를 입력해주세요');
+            alert('수량을 입력해주세요');
             double_click = true;
         }else if(product_in_date.value == ""){
-            alert('휴대전화를 입력해주세요');
+            alert('날짜를 입력해주세요');
             double_click = true;
         }else{
             lb.ajax({
@@ -391,7 +376,7 @@ function request_add_product(){
                    mat_amount : product_amount.value,
                    mat_sum : product_sum.value,
                    into_date : product_in_date.value,
-                   mat_image : product_image.value,
+                //    mat_image : product_image.value,
                },
                    
                action : "index.php",

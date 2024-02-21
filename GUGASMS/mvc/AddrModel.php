@@ -250,7 +250,7 @@
 		    	$sql = "insert into mat_register (
         	        mat_code, mat_position, b_class, s_class, mat_name, mat_stand, 
                 	mat_maker, mat_custom, mat_union, mat_price, mat_amount, mat_sum, 
-	                into_time, mat_image
+	                into_time
 		        	) values (";
 
             // Append values from $param, using null_check for optional fields
@@ -266,8 +266,8 @@
                     $sql .= $this->null_check($param["mat_price"]) . ", ";
                     $sql .= $this->null_check($param["mat_amount"]) . ", ";
                     $sql .= $this->null_check($param["mat_sum"]) . ", ";
-                    $sql .= $this->null_check($param["into_date"]) . ", ";
-                    $sql .= $this->null_check($param["mat_image"]);
+                    $sql .= $this->null_check($param["into_date"]);
+                    // $sql .= $this->null_check($param["mat_image"]);
                     $sql .= ")";
 
                 // Execute the query
@@ -275,10 +275,9 @@
                         if($result["result"] == 1){
                             $this->result = $result;
                         }else{
-                            $this->result = $result;
+                            $this->result["result"] = 0;
                         }
                     
-           
                 echo $this->jsonEncode($this->result);
 }
 
