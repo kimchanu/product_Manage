@@ -9,7 +9,13 @@ $(document).ready(function(){
         var result1 = num1 * num2;
         result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         console.log(result1);
-        // document.getElementById('product_sum').innerHTML = result1;
+        document.getElementById('product_price').addEventListener('input', function(event) {
+            // 입력된 숫자에서 콤마를 제거합니다.
+            let inputValue = event.target.value.replace(/\,/g, '');
+            
+            // 콤마를 추가하여 값을 다시 설정합니다.
+            event.target.value = addCommas(inputValue);
+        });
         num1 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         $( '#product_sum' ).text( result1 );
         // document.getElementById('product_price').innerText = num1;
@@ -18,8 +24,8 @@ $(document).ready(function(){
 
 });
 
-function calculate() {
-    
+function addCommas(value) {
+    return value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 var double_click = true;
 var receiver_count = 0;
