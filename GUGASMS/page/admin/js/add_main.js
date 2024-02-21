@@ -3,7 +3,7 @@ $(document).ready(function(){
     // input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
     // number_check(lb.getElem('addr_phone_number'));
     console.log('gggggaaaa');
-    $("#product_price, #product_sum").change( function(){
+    $("#product_price, #product_amount").change( function(){
         let aa = document.getElementById('product_price').value;
         aa = aa.replace(/,/g, "");
         let num1 = parseInt(aa);
