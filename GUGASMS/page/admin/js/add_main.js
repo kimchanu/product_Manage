@@ -1,8 +1,7 @@
-
 $(document).ready(function(){
     // request_addr_group();
     input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
-    number_check(lb.getElem('addr_phone_number'));
+    // number_check(lb.getElem('addr_phone_number'));
     console.log('gggggaaaa');
     $("#product_price, #product_amount").change( function(){
         var num1 = parseInt(document.getElementById('product_price').value);
