@@ -3,18 +3,25 @@ $(document).ready(function(){
     // input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
     // number_check(lb.getElem('addr_phone_number'));
     console.log('gggggaaaa');
-    $("#product_price, #product_amount").change( function(){
-        var num1 = parseInt(document.getElementById('product_price').value);
-        var num2 = parseInt(document.getElementById('product_amount').value);
-        var result1 = num1 * num2;
+    $("#product_price").change( function(){
+        let num1 = parseInt(document.getElementById('product_price').value);
+        let num2 = parseInt(document.getElementById('product_amount').value);
+        let result1 = num1 * num2;
+        let inputValue = num1.replace(/\,/g, '');
         result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         console.log(result1);
-        num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        let num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         $( '#product_sum' ).prop( 'value', result1);
         $( '#product_price' ).prop( 'value', num3);
         // document.getElementById('product_price').innerText = num1;
 
     });
+    // $("#product_price").change( function(){
+        
+
+
+
+    // });
 
 });
 
