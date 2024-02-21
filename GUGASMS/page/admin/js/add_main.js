@@ -3,8 +3,24 @@ $(document).ready(function(){
     // request_addr_group();
     input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
     number_check(lb.getElem('addr_phone_number'));
+
+    $("product_price").on("propertychange change paste input", function(){
+        var num1 = parseInt(document.getElementById('product_price').value);
+        var num2 = parseInt(document.getElementById('product_amount').value);
+        var result1 = num1 * num2;
+        result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        console.log(result1);
+        document.getElementById('product_sum').innerText = result1;
+        num1 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        document.getElementById('product_price').innerText = num1;
+
+    })
+
 })
 
+function calculate() {
+    
+}
 var double_click = true;
 var receiver_count = 0;
 var recevier_index  = 0;
@@ -307,16 +323,7 @@ function createTable(data) {
     //  element.appendChild(tempElem.innerHTML);
      console.log(element.innerHTML);
 }
-function calculate() {
-    var num1 = parseInt(document.getElementById('product_price').value);
-    var num2 = parseInt(document.getElementById('product_amount').value);
-    var result1 = num1 * num2;
-    result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    console.log(result1);
-    document.getElementById('product_sum').innerText = result1;
-    num1 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    document.getElementById('product_price').innerText = num1;
-}
+
 
 function request_add_product(){
     var product_code = document.getElementById('product_code');
