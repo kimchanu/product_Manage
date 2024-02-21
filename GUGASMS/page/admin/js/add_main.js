@@ -10,7 +10,7 @@ $(document).ready(function(){
         var result1 = num1 * num2;
         result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         console.log(result1);
-        document.getElementById('product_sum').innerText = result1;
+        document.getElementById('product_sum').innerHTML = result1;
         num1 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         document.getElementById('product_price').innerText = num1;
 
