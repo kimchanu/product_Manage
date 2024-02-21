@@ -66,8 +66,8 @@
                     <section class="adm_section_container">
                         <div class="adm_section_container_body p-1" style="background-color: yellow">
                             <div class="btn-list-con align-right mb-1" style="background-color: green">
-                                <p>검색 월
-                                    <input type="date" id="start_date"></p>
+                                <p>검색날짜
+                                    <input type="date" id="search_date"></p>
                                 <p>검색어
                                     <input type="text" id="search_product"></p>
                                 <p>
@@ -86,6 +86,9 @@
                                 </p>
                                 <p>
                                     <button type="button" onclick="exportExcel();" class="btn-sm btn-primary">엑셀다운</button>
+                                </p>
+                                <p>
+                                    <button type="button" onclick="" class="btn-sm btn-primary">엑셀입력</button>
                                 </p>
                                 <p>
                                     <button type="button" onclick="open_add_modal();" class="btn-sm btn-secondary">자재추가</button>
@@ -301,7 +304,6 @@
                                                 name="attachment"
                                                 class="wi_board_input_control"
                                                 style="border : none">
-                                            <input type="submit" value="업로드">
                                         </form>
                                         </div>
                                         
