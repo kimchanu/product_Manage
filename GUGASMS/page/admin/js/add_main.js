@@ -9,9 +9,9 @@ $(document).ready(function(){
         var result1 = num1 * num2;
         result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         console.log(result1);
-        num1 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         $( '#product_sum' ).prop( 'value', result1);
-        $( '#product_price' ).prop( 'value', num1);
+        $( '#product_price' ).prop( 'value', num3);
         // document.getElementById('product_price').innerText = num1;
 
     });
