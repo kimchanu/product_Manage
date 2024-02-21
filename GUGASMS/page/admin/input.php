@@ -277,7 +277,7 @@
                                             <label for="" class="wi_board_label_control">금액</label>
                                         </div>
                                         <div class="wi_board_form_content">
-                                            <p id = "product_sum"></p>
+                                            <p id="product_sum"></p>
                                         </div>
                                         <div class="wi_board_form_title">
                                             <label for="" class="wi_board_label_control">도입일자</label>

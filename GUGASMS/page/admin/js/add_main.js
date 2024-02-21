@@ -312,7 +312,7 @@ function calculate() {
     var num2 = parseInt(document.getElementById('product_amount').value);
     var result1 = num1 * num2;
     console.log(result1);
-    document.getElementById('product_sum').innerText = result1;
+    document.getElementById('product_sum').innerText = 'aa' + result1;
 
 
 }
