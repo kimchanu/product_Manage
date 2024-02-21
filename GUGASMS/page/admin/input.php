@@ -253,7 +253,7 @@
                                         </div>
                                         <div class="wi_board_form_content">
                                             <input
-                                                type="number"
+                                                type="text"
                                                 id="product_price"
                                                 value=""
                                                 class="wi_board_input_control"
