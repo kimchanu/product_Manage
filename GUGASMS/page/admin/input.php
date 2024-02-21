@@ -303,17 +303,16 @@
                                         <div class="wi_board_form_title">
                                             <label for="" class="wi_board_label_control">이미지</label>
                                         </div>
-                                        <div class="wi_board_form_content">
+                                        
                                         <form action="/upload" method="post" enctype="multipart/form-data">
                                             <input
                                                 type="file"
                                                 id="product_image"
                                                 name="attachment"
-                                                class="wi_board_input_control"
-                                                autocomplete="off">
+                                                class="wi_board_input_control">
                                             <input type="submit" value="업로드">
                                         </form>
-                                        </div>
+                                        
                                         
                                     </div>                     
                                 </div>
