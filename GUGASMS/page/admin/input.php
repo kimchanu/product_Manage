@@ -285,7 +285,8 @@
                                                 id="product_sum"
                                                 value=""
                                                 class="wi_board_input_control"
-                                                autocomplete="off">fdasfdasa
+                                                disabled
+                                                autocomplete="off">
                                         </div>
                                         <div class="wi_board_form_title">
                                             <label for="" class="wi_board_label_control">도입일자</label>

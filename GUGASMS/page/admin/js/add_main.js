@@ -11,6 +11,7 @@ $(document).ready(function(){
         console.log(result1);
         num1 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         $( '#product_sum' ).prop( 'value', result1);
+        $( '#product_price' ).prop( 'value', num1);
         // document.getElementById('product_price').innerText = num1;
 
     });
