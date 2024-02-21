@@ -3,8 +3,10 @@ $(document).ready(function(){
     // input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
     // number_check(lb.getElem('addr_phone_number'));
     console.log('gggggaaaa');
-    $("#product_price").change( function(){
-        let num1 = parseInt(document.getElementById('product_price').value);
+    $("#product_price, #product_sum").change( function(){
+        let aa = document.getElementById('product_price').value;
+        aa = aa.replace(/,/g, "");
+        let num1 = parseInt(aa);
         let num2 = parseInt(document.getElementById('product_amount').value);
         let result1 = num1 * num2;
         result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
@@ -15,12 +17,6 @@ $(document).ready(function(){
         // document.getElementById('product_price').innerText = num1;
 
     });
-    // $("#product_price").change( function(){
-        
-
-
-
-    // });
 
 });
 
