@@ -4,7 +4,7 @@ $(document).ready(function(){
     input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
     number_check(lb.getElem('addr_phone_number'));
 
-    $("product_price").on("propertychange change paste input", function(){
+    $("#product_price, #product_amount").on("propertychange change paste input", function(){
         var num1 = parseInt(document.getElementById('product_price').value);
         var num2 = parseInt(document.getElementById('product_amount').value);
         var result1 = num1 * num2;
