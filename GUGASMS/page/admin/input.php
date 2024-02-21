@@ -255,6 +255,7 @@
                                             <input
                                                 type="number"
                                                 id="product_price"
+                                                value=""
                                                 class="wi_board_input_control"
                                                 autocomplete="off"
                                                 >
@@ -266,6 +267,7 @@
                                             <input
                                                 type="number"
                                                 id="product_amount"
+                                                value=""
                                                 class="wi_board_input_control"
                                                 autocomplete="off"
                                                 >
@@ -281,6 +283,7 @@
                                             <input
                                                 type="text"
                                                 id="product_sum"
+                                                value=""
                                                 class="wi_board_input_control"
                                                 autocomplete="off">fdasfdasa
                                         </div>
