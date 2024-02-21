@@ -278,7 +278,7 @@
                                         </div>
                                         <div class="wi_board_form_content">
                                             <input
-                                                type="text"
+                                                type="number"
                                                 id="product_sum"
                                                 class="wi_board_input_control"
                                                 autocomplete="off">
