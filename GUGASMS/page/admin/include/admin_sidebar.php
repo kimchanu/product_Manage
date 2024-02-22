@@ -89,7 +89,7 @@
 			class="depth2-con" style ="display:none;"> <li class="depth2"><a
 			href="?ctl=Move&param1=add_main">주소록</a></li> <li class="depth2 admin_none"><a
 			href="?ctl=Move&param1=add_set">주소록그룹관리</a></li> </ul> </li> -->
-			<li side_bar();="side_bar();" class="depth1" data-side="">
+			<li side_bar();="side_bar();" class="depth1" data-side="" <?php echo $this->side_bar();?>>
 				<a
 					class="depth2-a"
 					id="user_side"
