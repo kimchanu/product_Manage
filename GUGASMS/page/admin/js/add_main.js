@@ -395,7 +395,7 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    let data1 = ss_user_detail(function(userDetails) {
+    let data1 = ss_user_detail(function(a) {
         return a; // 사용자 세부 정보를 출력하거나 다른 작업을 수행합니다.
     });
     console.log(data1);
