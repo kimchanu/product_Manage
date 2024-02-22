@@ -94,10 +94,10 @@
 					class="depth2-a"
 					id="user_side"
 					href="#"
-					onclick="side_bar(this); return false;">관리자</a>
+					onclick="side_bar(this); return false;" <?php echo $this->side_bar();?>>관리자</a>
 				<ul class="depth2-con" style="display:none;">
 					<li class="depth2">
-						<a href="?ctl=Move&param1=user_set">사용자관리</a>
+						<a href="?ctl=Move&param1=user_set" <?php echo $this->side_bar();?>>사용자관리</a>
 					</li>
 					<!-- <li class="depth2">
 						<a href="?ctl=Move&param1=state_day">일별통계</a>
