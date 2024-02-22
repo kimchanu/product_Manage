@@ -325,7 +325,7 @@ function createTable(data) {
      console.log(element.innerHTML);
 }
 
-function ss_user_detail(callback){
+function ss_user_detail(){
     lb.ajax({
         type : "JsonAjaxPost",
         list : {
@@ -337,46 +337,19 @@ function ss_user_detail(callback){
         havior : function(result){
             result = JSON.parse(result);
             var a = result.value[0];
+            ss_user_detail2(a);
             // if(result.result == 1){
             //     s_init_user_detail(result.value[0]);
             // }
             // console.log(result.value[0])
-            if(typeof callback === 'function'){
-                callback(a);
-            }
+            
         }
     })
 }
 
-function ss_init_user_detail(data){
-    
-    var login_name = document.getElementById('login_name');
-    var sms_elem = document.getElementById('sms_elem');
-    var lms_elem = document.getElementById('lms_elem');
-    var mms_elem = document.getElementById('mms_elem');
-    if(typeof data.name != "undefined" && typeof data.name != undefined && data.name != null && data.name != "null"){
-        login_name.innerHTML = '<em>로그인: </em>'+data.name;
-    }else{
-        login_name.innerHTML = '<em>로그인: </em>님';
-    }
-    if(typeof data.sms != "undefined" && typeof data.sms != undefined && data.sms != null && data.sms != "null"){
-        sms_elem.innerHTML = "<em>SMS: </em>"+data.use_sms+" / "+data.sms;
-        lms_elem.innerHTML = "<em>LMS: </em>"+data.use_lms+" / "+data.lms;
-        mms_elem.innerHTML = "<em>MMS: </em>"+data.use_mms+" / "+data.mms;
-    }
-    if(typeof param1 != "undefined" && typeof param1 != undefined && param1 != null && param1 != "null"){
-        if(param1 != "user_set"){
-            var send_number = document.getElementById('send_number');
-            if(typeof send_number != undefined && typeof send_number != "undefined" && send_number != null && send_number != "null"){
-                send_number.value = data.send_number;
-                if(data.role == 3 || data.role == 1){
-                    send_number.removeAttribute('readonly');
-                }
-            }
-        }
-    }
-    
-    
+function ss_user_detail2(a){
+    ss_user_detail();
+    return a;
 }
 
 
@@ -395,9 +368,7 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    let data1 = ss_user_detail(function(a) {
-        return a; // 사용자 세부 정보를 출력하거나 다른 작업을 수행합니다.
-    });
+    let data1 = ss_user_detail2(12);
     console.log(data1);
     let charrc = "";
     // let idx1 = data1.idx;
