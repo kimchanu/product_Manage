@@ -325,7 +325,7 @@ function createTable(data) {
      console.log(element.innerHTML);
 }
 
-function ss_user_detail(){
+function ss_user_detail(callback){
     lb.ajax({
         type : "JsonAjaxPost",
         list : {
@@ -336,11 +336,14 @@ function ss_user_detail(){
         action : "index.php",
         havior : function(result){
             result = JSON.parse(result);
+            var a = result.value[0];
             // if(result.result == 1){
             //     s_init_user_detail(result.value[0]);
             // }
             // console.log(result.value[0])
-            return result.value[0];
+            if(typeof callback === 'function'){
+                callback(a);
+            }
         }
     })
 }
@@ -392,7 +395,9 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    let data1 = ss_user_detail();
+    let data1 = ss_user_detail(function(userDetails) {
+        return a; // 사용자 세부 정보를 출력하거나 다른 작업을 수행합니다.
+    });
     console.log(data1);
     let charrc = "";
     // let idx1 = data1.idx;
