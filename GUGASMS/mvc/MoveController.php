@@ -55,7 +55,7 @@
             if($this->session->is_admin_login_php()){
                 $user_idx = $this->session->get_admin_idx();
                 $user_role = $this->session->get_admin_role();
-                if($user_role == "2"){
+                if($user_role == "2" || $user_role == "0"){
                     echo "style='display:none'";
                 }
             }
