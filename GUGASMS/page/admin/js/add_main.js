@@ -325,6 +325,56 @@ function createTable(data) {
      console.log(element.innerHTML);
 }
 
+function ss_user_detail(){
+    lb.ajax({
+        type : "JsonAjaxPost",
+        list : {
+            ctl : "Admin",
+            param1 : "admin_detail",
+            target : user_idx,
+        },
+        action : "index.php",
+        havior : function(result){
+            result = JSON.parse(result);
+            // if(result.result == 1){
+            //     s_init_user_detail(result.value[0]);
+            // }
+            return result.value[0];
+        }
+    })
+}
+
+function ss_init_user_detail(data){
+    
+    var login_name = document.getElementById('login_name');
+    var sms_elem = document.getElementById('sms_elem');
+    var lms_elem = document.getElementById('lms_elem');
+    var mms_elem = document.getElementById('mms_elem');
+    if(typeof data.name != "undefined" && typeof data.name != undefined && data.name != null && data.name != "null"){
+        login_name.innerHTML = '<em>로그인: </em>'+data.name;
+    }else{
+        login_name.innerHTML = '<em>로그인: </em>님';
+    }
+    if(typeof data.sms != "undefined" && typeof data.sms != undefined && data.sms != null && data.sms != "null"){
+        sms_elem.innerHTML = "<em>SMS: </em>"+data.use_sms+" / "+data.sms;
+        lms_elem.innerHTML = "<em>LMS: </em>"+data.use_lms+" / "+data.lms;
+        mms_elem.innerHTML = "<em>MMS: </em>"+data.use_mms+" / "+data.mms;
+    }
+    if(typeof param1 != "undefined" && typeof param1 != undefined && param1 != null && param1 != "null"){
+        if(param1 != "user_set"){
+            var send_number = document.getElementById('send_number');
+            if(typeof send_number != undefined && typeof send_number != "undefined" && send_number != null && send_number != "null"){
+                send_number.value = data.send_number;
+                if(data.role == 3 || data.role == 1){
+                    send_number.removeAttribute('readonly');
+                }
+            }
+        }
+    }
+    
+    
+}
+
 
 function request_add_product(){
     var product_code = document.getElementById('product_code');
@@ -339,9 +389,21 @@ function request_add_product(){
     var product_price = document.getElementById('product_price');
     var product_amount = document.getElementById('product_amount');
     var product_sum = parseInt(product_price) * parseInt(product_amount);
-    var product_in_date = document.getElementById('product_in_date');
+    // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    
+    let data1 = ss_user_detail();
+    let charrc = "";
+    let idx1 = data1.idx;
+    let group_id1 = data1.sms;
+    if(idx1 == 0){
+        charrc = "its"
+    }else if(idx1 == 1){
+        charrc = "eletech"
+    }
+
+
+
+
     if(double_click){
         double_click = false;
         if(product_name.value == ""){
@@ -361,20 +423,22 @@ function request_add_product(){
                type : "JsonAjaxPost",
                list : {
                    ctl : "Addr",
-                   param1 : "add_product",
-                   mat_code : product_code.value,
-                   mat_position : product_position.value,
-                   b_class : product_b_class.value,
-                   s_class : product_s_class.value,
-                   mat_name : product_name.value,
-                   mat_stand : product_stand.value,
-                   mat_maker : product_maker.value,
-                   mat_custom : product_custom.value,
-                   mat_union : product_union.value,
-                   mat_price : product_price.value,
-                   mat_amount : product_amount.value,
-                   mat_sum : product_sum.value,
-                   into_date : product_in_date.value,
+                   param1 : charrc + "_add_product",
+                   user_id : idx1,
+                   group_id : group_id1,
+                   mat_in_code : product_code.value,
+                   mat_in_place : product_position.value,
+                   bc_in_b_class : product_b_class.value,
+                   bc_in_s_class : product_s_class.value,
+                   mat_in_name : product_name.value,
+                   mat_in_stand : product_stand.value,
+                   mat_in_maker : product_maker.value,
+                   mat_in_custom : product_custom.value,
+                   mat_in_union : product_union.value,
+                   mat_in_price : product_price.value,
+                   mat_in_amount : product_amount.value,
+                   mat_in_sum : product_sum.value,
+                //    into_date : product_in_date.value,
                 //    mat_image : product_image.value,
                },
                    
@@ -384,7 +448,7 @@ function request_add_product(){
                    console.log(result);
                    result = JSON.parse(result);
                    if(result.result == 1){
-                       alert('번호를 추가하였습니다.');
+                       alert('자재를 추가하였습니다.');
                        // request_addr_list(mat_name.value);
                        close_add_modal();
                    }else{
@@ -392,7 +456,7 @@ function request_add_product(){
                            alert(result.message);
                            
                        }else{
-                           alert('번호 추가를 실패하였습니다.');
+                           alert('자재추가 오류');
                        }
                    }
                }

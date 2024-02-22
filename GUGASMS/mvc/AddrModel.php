@@ -244,29 +244,31 @@
             echo $this->jsonEncode($this->result);
         }
 
-	function add_product() {
+	function its_add_product() {
 		   	$param = $this->param;
 	    // SQL statement to insert data into the mat_register table
-		    	$sql = "insert into mat_register (
-        	        mat_code, mat_position, b_class, s_class, mat_name, mat_stand, 
-                	mat_maker, mat_custom, mat_union, mat_price, mat_amount, mat_sum, 
-	                into_time
+		    	$sql = "insert into its_mat_coming (
+        	        user_id, group_id, mat_in_code, mat_in_place, bc_in_b_class, bc_in_s_class, 
+                	mat_in_name, mat_in_stand, mat_in_maker, mat_in_custom, mat_in_union, mat_in_price, 
+	                mat_in_amount,mat_in_sum
 		        	) values (";
 
             // Append values from $param, using null_check for optional fields
-                    $sql .= $this->null_check($param["mat_code"]) . ", ";
-                    $sql .= $this->null_check($param["mat_position"]) . ", ";
-                    $sql .= $this->null_check($param["b_class"]) . ", ";
-                    $sql .= $this->null_check($param["s_class"]) . ", ";
-                    $sql .= $this->null_check($param["mat_name"]) . ", ";
-                    $sql .= $this->null_check($param["mat_stand"]) . ", ";
-                    $sql .= $this->null_check($param["mat_maker"]) . ", ";
-                    $sql .= $this->null_check($param["mat_custom"]) . ", ";
-                    $sql .= $this->null_check($param["mat_union"]) . ", ";
+                    $sql .= $this->null_check($param["user_id"]) . ", ";
+                    $sql .= $this->null_check($param["group_id"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_code"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_place"]) . ", ";
+                    $sql .= $this->null_check($param["bc_in_b_class"]) . ", ";
+                    $sql .= $this->null_check($param["bc_in_s_class"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_name"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_stand"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_maker"]) . ", ";
                     $sql .= $this->null_check($param["mat_price"]) . ", ";
-                    $sql .= $this->null_check($param["mat_amount"]) . ", ";
-                    $sql .= $this->null_check($param["mat_sum"]) . ", ";
-                    $sql .= $this->null_check($param["into_date"]);
+                    $sql .= $this->null_check($param["mat_in_custom"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_union"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_price"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_amount"]) . ", ";
+                    $sql .= $this->null_check($param["mat_in_sum"]);
                     // $sql .= $this->null_check($param["mat_image"]);
                     $sql .= ")";
 
