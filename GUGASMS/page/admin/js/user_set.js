@@ -627,6 +627,7 @@ function mat_to_real_user(type, value){
                             result = JSON.parse(result);
                             console.log(result.total);
                             i_count = result.total;
+                            console.log(parseInt(result.value[i].group_id), parseInt(result.value[i].user_phone.replace(/-/g, '')));
                             for(i=0;i<i_count;i++){
                                 lb.ajax({
                                     type : "JsonAjaxPost",
@@ -646,15 +647,15 @@ function mat_to_real_user(type, value){
                                         comment : 0,
                                     },
                                     action : "index.php",
-                                    havior : function(result){
+                                    havior : function(result2){
                                         double_click = true;
-                                        console.log(result);
-                                        result = JSON.parse(result);
-                                        if(result.result == 1){
+                                        console.log(result2);
+                                        result2 = JSON.parse(result2);
+                                        if(result2.result == 1){
                                             user_list();
                                         }else{
-                                            if(result.error_code == "533"){
-                                                alert(result.message);
+                                            if(result2.error_code == "533"){
+                                                alert(result2.message);
                                             }else{
                                                 alert('사용자 등록 실패');
                                             }
