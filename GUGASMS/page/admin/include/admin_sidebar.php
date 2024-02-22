@@ -84,11 +84,6 @@
 			<li class="depth1" data-side="">
 				<a id="kakao_side" href="http://msds.safeinfo.co.kr/" target='_blank'>MSDS(위험물질)</a>
 			</li>
-			<!-- <li class="depth1" <?php echo $this->side_bar();?> data-side=""> <a id
-			="addr_side" href="#" onclick = "side_bar(this); return false;">주소록</a> <ul
-			class="depth2-con" style ="display:none;"> <li class="depth2"><a
-			href="?ctl=Move&param1=add_main">주소록</a></li> <li class="depth2 admin_none"><a
-			href="?ctl=Move&param1=add_set">주소록그룹관리</a></li> </ul> </li> -->
 			<li side_bar();="side_bar();" class="depth1" data-side="" <?php echo $this->side_bar();?>>
 				<a
 					class="depth2-a"
