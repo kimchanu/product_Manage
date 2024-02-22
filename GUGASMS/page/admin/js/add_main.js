@@ -339,6 +339,7 @@ function ss_user_detail(){
             // if(result.result == 1){
             //     s_init_user_detail(result.value[0]);
             // }
+            console.log(result.value[0])
             return result.value[0];
         }
     })
