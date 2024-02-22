@@ -393,6 +393,7 @@ function request_add_product(){
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
     let data1 = ss_user_detail();
+    console.log(data1.sms);
     let charrc = "";
     // let idx1 = data1.idx;
     let idx1 = user_idx;
