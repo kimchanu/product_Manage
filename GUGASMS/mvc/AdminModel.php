@@ -394,7 +394,7 @@
             echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
         }
 
-        function (){
+        function select_del_user2(){
             $param = $this->json;
             if($this->value_check(array("target_idx"))){
                 $param["target_idx"] = json_decode($param["target_idx"], true);
