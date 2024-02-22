@@ -627,7 +627,7 @@ function mat_to_real_user(type, value){
                             result = JSON.parse(result);
                             console.log(result.total);
                             i_count = result.total;
-                            console.log(parseInt(result.value[i].group_id), parseInt(result.value[i].user_phone.replace(/-/g, '')));
+                            console.log(parseInt(result.value[i].user_id), parseInt(result.value[i].user_phone.replace(/-/g, '')));
                             for(i=0;i<i_count;i++){
                                 lb.ajax({
                                     type : "JsonAjaxPost",
