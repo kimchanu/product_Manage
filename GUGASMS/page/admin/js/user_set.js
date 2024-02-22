@@ -286,7 +286,6 @@ function init_mat_users(data){
                 elem.innerHTML = data.group_id;
             }else{
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
-                    // console.log(data[name]);
                     elem.innerHTML = data[name];
                 }
             }

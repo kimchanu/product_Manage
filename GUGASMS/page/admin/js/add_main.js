@@ -15,7 +15,7 @@ $(document).ready(function(){
         $( '#product_sum' ).prop( 'value', result1);
         $( '#product_price' ).prop( 'value', num3);
         // document.getElementById('product_price').innerText = num1;
-
+        console.log(user_idx);
     });
 
 });
