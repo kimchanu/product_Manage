@@ -393,7 +393,8 @@ function request_add_product(){
     // var product_image = document.getElementById('product_image');
     let data1 = ss_user_detail();
     let charrc = "";
-    let idx1 = data1.idx;
+    // let idx1 = data1.idx;
+    let idx1 = user_idx;
     let group_id1 = data1.sms;
     if(idx1 == 0){
         charrc = "its"
