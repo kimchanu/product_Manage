@@ -326,6 +326,7 @@ function createTable(data) {
 }
 
 function ss_user_detail(){
+    var result_return;
     lb.ajax({
         type : "JsonAjaxPost",
         list : {
@@ -336,8 +337,7 @@ function ss_user_detail(){
         action : "index.php",
         havior : function(result){
             result = JSON.parse(result);
-            var a = result.value[0];
-            ss_user_detail2(a);
+            result_return = result.value[0];
             // if(result.result == 1){
             //     s_init_user_detail(result.value[0]);
             // }
@@ -345,12 +345,10 @@ function ss_user_detail(){
             
         }
     })
+    return result_return;
 }
 
-function ss_user_detail2(a){
-    ss_user_detail();
-    return a;
-}
+
 
 
 function request_add_product(){
@@ -368,7 +366,7 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    let data1 = ss_user_detail2(12);
+    let data1 = ss_user_detail2();
     console.log(data1);
     let charrc = "";
     // let idx1 = data1.idx;
