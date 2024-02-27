@@ -337,11 +337,9 @@ function ss_user_detail(){
         action : "index.php",
         havior : function(result){
             result = JSON.parse(result);
-            result_return = result.value[0];
-            // if(result.result == 1){
-            //     s_init_user_detail(result.value[0]);
-            // }
-            // console.log(result.value[0])
+            result_return = result;
+
+            console.log(result.value[0])
             
         }
     })
