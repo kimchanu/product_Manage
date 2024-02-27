@@ -366,7 +366,7 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    let data1 = ss_user_detail2();
+    let data1 = ss_user_detail();
     console.log(data1);
     let charrc = "";
     // let idx1 = data1.idx;
