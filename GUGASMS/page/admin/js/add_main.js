@@ -329,6 +329,7 @@ function ss_user_detail(){
     var result_return;
     lb.ajax({
         type : "JsonAjaxPost",
+        async : false,
         list : {
             ctl : "Admin",
             param1 : "admin_detail",
