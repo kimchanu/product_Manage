@@ -371,6 +371,7 @@ async function request_add_product(){
         }
         data1 = result22;
         console.log(data1);
+        return result22;
     }).catch(function(error) {
         console.error(error); // 프로미스가 거부될 때 발생한 오류를 처리합니다.
     });
