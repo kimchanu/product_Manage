@@ -327,9 +327,9 @@ function createTable(data) {
 
 function ss_user_detail(){
     var result_return;
+    return new Promise(function(resolve, reject) {
     lb.ajax({
         type : "JsonAjaxPost",
-        async : false,
         list : {
             ctl : "Admin",
             param1 : "admin_detail",
@@ -339,12 +339,12 @@ function ss_user_detail(){
         havior : function(result){
             result = JSON.parse(result);
             result_return = result;
-
-            console.log(result.value[0])
+            resolve(result.value[0]);
+            console.log(result.value[0]);
             
         }
-    })
-    return result_return;
+        });
+    });
 }
 
 
@@ -365,7 +365,7 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    let data1 = ss_user_detail();
+    let data1 = ss_user_detail().then(function(tableData) {return tableData});
     console.log(data1);
     let charrc = "";
     // let idx1 = data1.idx;
