@@ -381,13 +381,13 @@ async function request_add_product(){
     let charrc = "";
     let idx1 = user_idx;
     let group_id1 = data1.idx;
-    if(idx1 == 0){
+    if(group_id1 == 0){
         charrc = "its"
-    }else if(idx1 == 1){
+    }else if(group_id1 == 1){
         charrc = "its"
-    }else if(idx1 == 2){
+    }else if(group_id1 == 2){
         charrc = "its"
-    }else if(idx1 == 3){
+    }else if(group_id1 == 3){
         charrc = "its"
     }
 
