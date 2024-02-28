@@ -372,7 +372,7 @@ function request_add_product(){
         return result22;
     });
 
-    console.log(data1);
+    console.log(data1.key);
     // console.log(result22)
     let charrc = "";
     let idx1 = user_idx;
