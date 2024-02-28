@@ -370,8 +370,9 @@ function request_add_product(){
             id: tableData.id
         }
         return result22});
-    console.log(data1);
-    console.log(result22)
+
+    console.log(data1.idx);
+    // console.log(result22)
     let charrc = "";
     let idx1 = user_idx;
     let group_id1 = data1.idx;
