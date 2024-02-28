@@ -374,7 +374,7 @@ function request_add_product(){
     if(idx1 == 0){
         charrc = "its"
     }else if(idx1 == 1){
-        charrc = "eletech"
+        charrc = "its"
     }
 
 
