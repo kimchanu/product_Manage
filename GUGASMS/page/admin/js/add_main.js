@@ -340,8 +340,6 @@ function ss_user_detail(){
             result = JSON.parse(result);
             result_return = result;
             resolve(result.value[0]);
-            console.log(result.value[0]);
-            
         }
         });
     });
@@ -366,7 +364,7 @@ function request_add_product(){
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
     let data1 = ss_user_detail().then(function(tableData) {return tableData});
-    console.log(data1);
+    console.log(data1.sms);
     let charrc = "";
     // let idx1 = data1.idx;
     let idx1 = user_idx;
