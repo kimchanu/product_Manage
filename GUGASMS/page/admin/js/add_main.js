@@ -371,11 +371,12 @@ function request_add_product(){
             id: tableData.id
         }
         data1 = result22;
+        console.log(data1);
     }).catch(function(error) {
         console.error(error); // 프로미스가 거부될 때 발생한 오류를 처리합니다.
     });
 
-    console.log(data1);
+    // console.log(data1);
     // console.log(result22)
     let charrc = "";
     let idx1 = user_idx;
