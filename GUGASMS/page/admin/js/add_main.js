@@ -385,6 +385,10 @@ async function request_add_product(){
         charrc = "its"
     }else if(idx1 == 1){
         charrc = "its"
+    }else if(idx1 == 2){
+        charrc = "its"
+    }else if(idx1 == 3){
+        charrc = "its"
     }
 
 
