@@ -10,7 +10,6 @@ $(document).ready(function(){
         let num2 = parseInt(document.getElementById('product_amount').value);
         let result1 = num1 * num2;
         result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-        console.log(result1);
         let num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         $( '#product_sum' ).prop( 'value', result1);
         $( '#product_price' ).prop( 'value', num3);
