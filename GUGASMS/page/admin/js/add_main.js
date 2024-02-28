@@ -362,17 +362,18 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    let data1 = ss_user_detail().then(function(tableData) {
+    var data1;
+    ss_user_detail().then(function(tableData) {
         var result22 = {
             idx: tableData.idx,
             name: tableData.name,
             group: tableData.sms,
             id: tableData.id
         }
-        return result22;
+        data1 = result22;
     });
 
-    console.log(data1.key);
+    console.log(data1);
     // console.log(result22)
     let charrc = "";
     let idx1 = user_idx;
