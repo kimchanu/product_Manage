@@ -263,7 +263,6 @@
                     $sql .= $this->null_check($param["mat_in_name"]) . ", ";
                     $sql .= $this->null_check($param["mat_in_stand"]) . ", ";
                     $sql .= $this->null_check($param["mat_in_maker"]) . ", ";
-                    $sql .= $this->null_check($param["mat_in_price"]) . ", ";
                     $sql .= $this->null_check($param["mat_in_custom"]) . ", ";
                     $sql .= $this->null_check($param["mat_in_union"]) . ", ";
                     $sql .= $this->null_check($param["mat_in_price"]) . ", ";
