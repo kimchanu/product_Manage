@@ -347,7 +347,7 @@ function ss_user_detail(){
 
 
 
-function request_add_product(){
+async function request_add_product(){
     var product_code = document.getElementById('product_code');
     var product_position = document.getElementById('product_position');
     var product_b_class = document.getElementById('product_b_class');
@@ -362,8 +362,7 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    var data1;
-    ss_user_detail().then(function(tableData) {
+    var data1 = await ss_user_detail().then(function(tableData) {
         var result22 = {
             idx: tableData.idx,
             name: tableData.name,
