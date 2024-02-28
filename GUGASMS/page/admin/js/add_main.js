@@ -362,12 +362,19 @@ function request_add_product(){
     var product_sum = parseInt(product_price) * parseInt(product_amount);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
-    let data1 = ss_user_detail().then(function(tableData) {return tableData});
+    let data1 = ss_user_detail().then(function(tableData) {
+        var result22 = {
+            idx: tableData.idx,
+            name: tableData.name,
+            group: tableData.sms,
+            id: tableData.id
+        }
+        return result22});
     console.log(data1);
     let charrc = "";
     // let idx1 = data1.idx;
     let idx1 = user_idx;
-    let group_id1 = data1.sms;
+    let group_id1 = data1.idx;
     if(idx1 == 0){
         charrc = "its"
     }else if(idx1 == 1){
