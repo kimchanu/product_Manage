@@ -247,7 +247,7 @@
 	function its_add_product() {
 		   	$param = $this->param;
 	    // SQL statement to insert data into the mat_register table
-		    	$sql = "insert into its_mat_coming (
+		    	$sql = "insert into its_mat_temp (
         	        user_id, group_id, mat_in_code, mat_in_place, bc_in_b_class, bc_in_s_class, 
                 	mat_in_name, mat_in_stand, mat_in_maker, mat_in_custom, mat_in_union, mat_in_price, 
 	                mat_in_amount,mat_in_sum
