@@ -137,7 +137,14 @@
                                     
                                 </div>
                                 <!-- adm_table_responsive // -->
-                                <div class="adm_section_container_head" style = "background-color:black"></div>
+                                <div class="adm_section_container_head" style = "background-color:black">
+                                    <div class="btn-list-con align-right mb-1">
+                                    <p>
+                                    <button type="button" onclick="open_add_modal();" class="btn-sm btn-secondary">자재추가</button>
+                                    </p>
+                                    </div>
+                                </div>     
+                                </div>
                             </div>
                         </div>
                         <!-- adm_section_container_body // -->
