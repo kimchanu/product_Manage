@@ -225,10 +225,20 @@ function s_init_user_detail(data){
     }else{
         login_name.innerHTML = '<em>로그인: </em>님';
     }
+    let charrc = "";
+    if(data.sms == 0){
+        charrc = "its"
+    }else if(data.sms == 1){
+        charrc = "its"
+    }else if(data.sms == 2){
+        charrc = "its"
+    }else if(data.sms == 3){
+        charrc = "its"
+    }
     if(typeof data.sms != "undefined" && typeof data.sms != undefined && data.sms != null && data.sms != "null"){
-        sms_elem.innerHTML = "<em>SMS: </em>"+data.use_sms+" / "+data.sms;
-        lms_elem.innerHTML = "<em>LMS: </em>"+data.use_lms+" / "+data.lms;
-        mms_elem.innerHTML = "<em>MMS: </em>"+data.use_mms+" / "+data.mms;
+        sms_elem.innerHTML = "<em>부서: </em>"+charrc;
+        // lms_elem.innerHTML = "<em>LMS: </em>"+data.use_lms+" / "+data.lms;
+        // mms_elem.innerHTML = "<em>MMS: </em>"+data.use_mms+" / "+data.mms;
     }
     if(typeof param1 != "undefined" && typeof param1 != undefined && param1 != null && param1 != "null"){
         if(param1 != "user_set"){
