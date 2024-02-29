@@ -134,9 +134,10 @@
                                             <!-- 내용이 비었을 경우 // -->
                                         </tbody>
                                     </table>
-                                    <div style = "background-color:black"></div>
+                                    
                                 </div>
                                 <!-- adm_table_responsive // -->
+                                <div style = "background-color:black"></div>
                             </div>
                         </div>
                         <!-- adm_section_container_body // -->
