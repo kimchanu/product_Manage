@@ -382,13 +382,13 @@ async function request_add_product(){
     let idx1 = user_idx;
     let group_id1 = data1.idx;
     if(group_id1 == 0){
-        charrc = "its"
+        charrc = "ITS"
     }else if(group_id1 == 1){
-        charrc = "its"
+        charrc = "기전"
     }else if(group_id1 == 2){
-        charrc = "its"
+        charrc = "시설"
     }else if(group_id1 == 3){
-        charrc = "its"
+        charrc = "관리"
     }
 
 
