@@ -22,7 +22,7 @@
 			<div class="adm_utill" id ="logout_elem" style = "display:none;">
 				
 				<span class="header-user-info" id = "login_name"><em></em></span>
-				<span class="header-user-info2" id ="sms_elem"></span>
+				<span class="header-user-info" id ="sms_elem"></span>
 					<!-- <span class="header-user-info2-con" id ="sms_elem"></span> -->
 					<!-- <span class="header-user-info2-con" id ="lms_elem"></span>
 					<span class="header-user-info2-con" id ="mms_elem"></span> -->
