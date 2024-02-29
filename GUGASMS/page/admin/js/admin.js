@@ -227,13 +227,13 @@ function s_init_user_detail(data){
     }
     let charrc = "";
     if(data.sms == 0){
-        charrc = "its"
+        charrc = "ITS"
     }else if(data.sms == 1){
-        charrc = "its"
+        charrc = "기전"
     }else if(data.sms == 2){
-        charrc = "its"
+        charrc = "시설"
     }else if(data.sms == 3){
-        charrc = "its"
+        charrc = "관리"
     }
     if(typeof data.sms != "undefined" && typeof data.sms != undefined && data.sms != null && data.sms != "null"){
         sms_elem.innerHTML = "<em>부서: </em>"+charrc;
