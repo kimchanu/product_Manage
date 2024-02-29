@@ -97,7 +97,7 @@
                             <div class="adm_table_container">
                                 <p class="adm_table_total" id="receiver_total">
                                     <i>Total</i>0</p>
-                                <div class="adm_table_long_responsive" style = "background-color:yellow">
+                                <div class="adm_table_long_responsive" >
                                     <table class="adm_table adm_fixed_table mb-1">
                                         <thead>
                                             <tr>
