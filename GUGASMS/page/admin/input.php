@@ -137,7 +137,7 @@
                                     
                                 </div>
                                 <!-- adm_table_responsive // -->
-                                <div style = "background-color:black"></div>
+                                <div class="adm_section_container_head" style = "background-color:black"></div>
                             </div>
                         </div>
                         <!-- adm_section_container_body // -->
