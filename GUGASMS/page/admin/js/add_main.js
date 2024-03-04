@@ -328,8 +328,7 @@ async function request_add_product(){
             alert('날짜를 입력해주세요');
             double_click = true;
         }else{
-            var product_sum = parseInt(product_price.value) * parseInt(product_amount.value);
-            console.log(parseInt(product_price.value) * parseInt(product_amount.value), parseInt(product_price.value), parseInt(product_amount.value));
+            var product_sum = parseInt(product_price.value.replace(/,/g , '')) * parseInt(product_amount.value.replace(/,/g , ''));
             lb.ajax({
                type : "JsonAjaxPost",
                list : {
