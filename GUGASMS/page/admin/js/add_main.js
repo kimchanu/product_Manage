@@ -328,6 +328,7 @@ async function request_add_product(){
             alert('날짜를 입력해주세요');
             double_click = true;
         }else{
+            console.log(mat_in_price, mat_in_amount)
             lb.ajax({
                type : "JsonAjaxPost",
                list : {
