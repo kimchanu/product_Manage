@@ -369,7 +369,7 @@
             <td class="tight2" data-attr="bc_in_s_class">-</td>
             <td class="number" data-attr="mat_in_name">품명</td>
             <td class="number" data-attr="mat_in_stand">-</td>
-            <td class="tight1" data-attr="mat_in_maker">제조사</td>
+            <td class="tight1" data-attr="mat_in_maker">-</td>
             <td class="tight1" data-attr="mat_in_custom">-</td>
             <td class="tight2" data-attr="mat_in_union">-</td>
             <td class="tight1" data-attr="mat_in_price">-</td>
