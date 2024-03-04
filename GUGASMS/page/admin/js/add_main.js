@@ -299,8 +299,7 @@ async function request_add_product(){
         console.error(error); // 프로미스가 거부될 때 발생한 오류를 처리합니다.
     });
 
-    console.log(data1);
-    // console.log(result22)
+    // console.log(data1);
     let charrc = "";
     let idx1 = user_idx;
     let group_id1 = data1.idx;
@@ -1018,6 +1017,7 @@ function request_add_addr(){
                         alert('번호를 추가하였습니다.');
                         request_addr_list(addr_group_list.value);
                         close_add_modal();
+                        request_product_list(user_idx);
                     }else{
                         if(result.error_code == 601){
                             alert(result.message);
