@@ -346,7 +346,7 @@ async function request_add_product(){
                    mat_in_union : product_union.value,
                    mat_in_price : product_price.value,
                    mat_in_amount : product_amount.value,
-                   mat_in_sum : product_sum.value,
+                   mat_in_sum : product_sum,
                 //    into_date : product_in_date.value,
                 //    mat_image : product_image.value,
                },
