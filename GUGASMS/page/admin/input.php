@@ -363,6 +363,18 @@
             <td class="check" data-attr="num"></td>
             <td class="etc" data-attr="name"></td>
             <td class="number" data-attr="phone_number"></td>
+            <td class="tight2" data-attr="code">자재코드</td>
+            <td class="tight2" data-attr="position">위치</td>
+            <td class="tight2" data-attr="b-class">대분류</td>
+            <td class="tight2" data-attr="s-class">소분류</td>
+            <td class="number" data-attr="product_name">품명</td>
+            <td class="number" data-attr="standard">규격</td>
+            <td class="tight1" data-attr="manufact">제조사</td>
+            <td class="tight1" data-attr="custom">거래처</td>
+            <td class="tight2" data-attr="unit">단위</td>
+            <td class="tight1" data-attr="price">단가</td>
+            <td class="tight2" data-attr="mount">재고수량</td>
+            <td class="tight1" data-attr="sum">재고금액</td>
         </tr>
     </tbody></table>
 	</div>

@@ -156,84 +156,6 @@ function init_search(){
     addr_phone_number.value = "";
 }
 
-//주소록 번호 리스트
-function request_addr_list(target){
-    if(double_click){
-        double_click = false;
-        $('#receiver_wrap').empty();
-        addr_click_flag = true;
-        receiver_count = 0;
-        var total_elem = document.getElementById('receiver_total');
-        total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-
-        lb.ajax({
-            type : "JsonAjaxPost",
-            list : {
-                ctl : "Addr",
-                param1 : "addr_list",
-                group_idx : target,
-                search_name : document.getElementById('search_addr_name').value,
-                search_phone_number : document.getElementById('search_addr_phone_number').value,
-            },
-            action : "index.php",
-            havior : function(result){
-                double_click = true;
-                console.log(result);
-                result = JSON.parse(result);
-                if(result.result == 1){
-                    if(result.value.length == 0){
-                        alert('해당 주소록이 비어있습니다.');
-                    }else{
-                        init_addr_list(result.value);
-                    }
-                }
-            }
-        })
-    }else{
-        alert("리스트 호출중입니다.");
-    }
-}
- 
-function init_addr_list(data){
-	var num = 1;
-    $('.loading').fadeIn();
-    lb.auto_view({
-        wrap : "receiver_wrap",
-        copy : "receiver_copy",
-        attr: '["data-attr"]',
-        json: data,
-        havior: function (elem, data, name, copy_elem) { 
-            if (copy_elem.getAttribute('data-copy') == "receiver_copy") {
-                copy_elem.setAttribute('data-copy', '');
-                copy_elem.id = "receiver_"+recevier_index ;
-            }
-			if(name == "num"){
-				elem.innerHTML = num++;
-			}else if(name == "name"){
-                elem.innerHTML = data.name;
-            }else if(name == "check_box"){
-                elem.id = "receiver_check_"+recevier_index ;
-                elem.classList.add('receiver_check');
-                elem.value = data.idx;
-            }else if(name == "phone_number"){
-                // var phone = data.phone_number.replace(/\-/g,'');
-                var phone = phoneFormatter(data.phone_number);
-                elem.innerHTML = phone;
-                elem.classList.add('receiver_pn');
-                receiver_count++;
-                recevier_index ++;
-            }
-        },
-        end : function(){
-            $('.loading').fadeOut();
-            var total_elem = document.getElementById('receiver_total');
-            total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-        }
-    })
-}
-
-
-
 function close_add_modal(){
     var addr_modal = document.getElementById('addr_modal');
     addr_modal.style.display = "none";
@@ -383,18 +305,14 @@ async function request_add_product(){
     let idx1 = user_idx;
     let group_id1 = data1.idx;
     if(group_id1 == 0){
-        charrc = "ITS"
+        charrc = "its"
     }else if(group_id1 == 1){
-        charrc = "기전"
+        charrc = "its"
     }else if(group_id1 == 2){
-        charrc = "시설"
+        charrc = "its"
     }else if(group_id1 == 3){
-        charrc = "관리"
+        charrc = "its"
     }
-
-
-
-
     if(double_click){
         double_click = false;
         if(product_name.value == ""){
@@ -977,7 +895,44 @@ function init_search(){
 }
 
 //주소록 번호 리스트
-function request_addr_list(target){
+// function request_addr_list(target){
+//     if(double_click){
+//         double_click = false;
+//         $('#receiver_wrap').empty();
+//         addr_click_flag = true;
+//         receiver_count = 0;
+//         var total_elem = document.getElementById('receiver_total');
+//         total_elem.innerHTML ="<i>Total</i>"+receiver_count;
+
+//         lb.ajax({
+//             type : "JsonAjaxPost",
+//             list : {
+//                 ctl : "Addr",
+//                 param1 : "addr_list",
+//                 group_idx : target,
+//                 search_name : document.getElementById('search_addr_name').value,
+//                 search_phone_number : document.getElementById('search_addr_phone_number').value,
+//             },
+//             action : "index.php",
+//             havior : function(result){
+//                 double_click = true;
+//                 console.log(result);
+//                 result = JSON.parse(result);
+//                 if(result.result == 1){
+//                     if(result.value.length == 0){
+//                         alert('해당 주소록이 비어있습니다.');
+//                     }else{
+//                         init_addr_list(result.value);
+//                     }
+//                 }
+//             }
+//         })
+//     }else{
+//         alert("리스트 호출중입니다.");
+//     }
+// }
+
+function request_product_list(target){
     if(double_click){
         double_click = false;
         $('#receiver_wrap').empty();
@@ -990,10 +945,8 @@ function request_addr_list(target){
             type : "JsonAjaxPost",
             list : {
                 ctl : "Addr",
-                param1 : "addr_list",
-                group_idx : target,
-                search_name : document.getElementById('search_addr_name').value,
-                search_phone_number : document.getElementById('search_addr_phone_number').value,
+                param1 : "product_list",
+                idx : target,
             },
             action : "index.php",
             havior : function(result){
@@ -1027,21 +980,23 @@ function init_addr_list(data){
                 copy_elem.setAttribute('data-copy', '');
                 copy_elem.id = "receiver_"+recevier_index ;
             }
-			if(name == "num"){
-				elem.innerHTML = num++;
-			}else if(name == "name"){
-                elem.innerHTML = data.name;
-            }else if(name == "check_box"){
+			if(name == "check_box"){
                 elem.id = "receiver_check_"+recevier_index ;
                 elem.classList.add('receiver_check');
                 elem.value = data.idx;
-            }else if(name == "phone_number"){
-                // var phone = data.phone_number.replace(/\-/g,'');
-                var phone = phoneFormatter(data.phone_number);
-                elem.innerHTML = phone;
-                elem.classList.add('receiver_pn');
-                receiver_count++;
-                recevier_index ++;
+            // }else if(name == "phone_number"){
+            //     // var phone = data.phone_number.replace(/\-/g,'');
+            //     var phone = phoneFormatter(data.phone_number);
+            //     elem.innerHTML = phone;
+            //     elem.classList.add('receiver_pn');
+            //     receiver_count++;
+            //     recevier_index ++;
+            // 
+        }
+            else{
+                if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
+                    elem.innerHTML = data[name];
+                }
             }
         },
         end : function(){
