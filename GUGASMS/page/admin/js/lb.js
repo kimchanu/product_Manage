@@ -565,7 +565,7 @@
 				var attr_array = JSON.parse(this.attr);
 				// console.log(attr_array);
 				for(var k=0;k<attr_array.length;k++){
-					var list = copy_elem.querySelectorAll("["+attr_array[k]+"]");
+					var list = copy_elem.querySelectorAll("["+attr_array[k]+"]"); 
 					this["data"] = data;
 					if(typeof(this.havior)!="undefined"){
 						//데이터값을 바로 삽입할 경우

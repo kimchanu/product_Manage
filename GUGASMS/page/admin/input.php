@@ -347,6 +347,25 @@
                 </div>
             </div>
         </div>
+    <div style="display:none;">
+    <table>
+        <tbody><tr class="out" data-copy="address_copy">
+            <td class="tit"><span data-attr="group_name"><i class="fas fa-folder"></i></span></td>
+            <td class="number"><span data-attr="group_content">비고</span></td>
+        </tr>
+        <tr data-copy="receiver_copy">
+            <td class="check">
+                <label class="check_label m-auto" value="yes">
+                    <input type="checkbox" data-attr="check_box">
+                    <span class="checkmark"></span>
+                </label>
+            </td>
+            <td class="check" data-attr="num"></td>
+            <td class="etc" data-attr="name"></td>
+            <td class="number" data-attr="phone_number"></td>
+        </tr>
+    </tbody></table>
+	</div>
         <?php include_once $this->dir."page/admin/include/admin_footer.php"; ?>
     </body>
 
