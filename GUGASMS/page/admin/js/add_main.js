@@ -161,60 +161,6 @@ function close_add_modal(){
     addr_modal.style.display = "none";
 }
 
-//번호 추가
-function request_add_addr(){
-    var addr_group_list = document.getElementById('addr_group_list');
-    var addr_name = document.getElementById('addr_name');
-    var addr_phone_number = document.getElementById('addr_phone_number');
-    
-
-    if(double_click){
-        double_click = false;
-        if(addr_group_list.value == ""){
-            alert('번호를 추가할 주소록을 선택해주세요');
-            double_click = true;
-        }else if(addr_name.value == ""){
-            alert('이름을 입력해주세요');
-            double_click = true;
-        }else if(addr_phone_number.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else{
-            lb.ajax({
-                type : "JsonAjaxPost",
-                list : {
-                    ctl : "Addr",
-                    param1 : "add_addr",
-                    group_idx : addr_group_list.value,
-                    name : addr_name.value,
-                    phone_number : addr_phone_number.value,
-                },
-                action : "index.php",
-                havior : function(result){
-                    double_click = true;
-                    console.log(result);
-                    result = JSON.parse(result);
-                    if(result.result == 1){
-                        alert('번호를 추가하였습니다.');
-                        request_addr_list(addr_group_list.value);
-                        close_add_modal();
-                    }else{
-                        if(result.error_code == 601){
-                            alert(result.message);
-                            
-                        }else{
-                            alert('번호 추가를 실패하였습니다.');
-                        }
-                    }
-                }
-            })
-        }
-    }else{
-        alert('번호를 추가 중입니다.')
-    }
-}
-
-
 
 function createTable(data) {
   var tableHtml = '<tr> <td class="check"> <label class="check_label m-auto" value="yes"><input t' +
@@ -359,6 +305,7 @@ async function request_add_product(){
                    if(result.result == 1){
                        alert('자재를 추가하였습니다.');
                        close_add_modal();
+                       request_product_list(user_idx);
                    }else{
                        if(result.error_code == 601){
                            alert(result.message);
@@ -979,62 +926,6 @@ function close_add_modal(){
     var addr_modal = document.getElementById('addr_modal');
     addr_modal.style.display = "none";
 }
-
-//번호 추가
-function request_add_addr(){
-    var addr_group_list = document.getElementById('addr_group_list');
-    var addr_name = document.getElementById('addr_name');
-    var addr_phone_number = document.getElementById('addr_phone_number');
-    
-
-    if(double_click){
-        double_click = false;
-        if(addr_group_list.value == ""){
-            alert('번호를 추가할 주소록을 선택해주세요');
-            double_click = true;
-        }else if(addr_name.value == ""){
-            alert('이름을 입력해주세요');
-            double_click = true;
-        }else if(addr_phone_number.value == ""){
-            alert('휴대전화를 입력해주세요');
-            double_click = true;
-        }else{
-            lb.ajax({
-                type : "JsonAjaxPost",
-                list : {
-                    ctl : "Addr",
-                    param1 : "add_addr",
-                    group_idx : addr_group_list.value,
-                    name : addr_name.value,
-                    phone_number : addr_phone_number.value,
-                },
-                action : "index.php",
-                havior : function(result){
-                    double_click = true;
-                    console.log(result);
-                    result = JSON.parse(result);
-                    if(result.result == 1){
-                        alert('번호를 추가하였습니다.');
-                        request_addr_list(addr_group_list.value);
-                        close_add_modal();
-                        request_product_list(user_idx);
-                    }else{
-                        if(result.error_code == 601){
-                            alert(result.message);
-                            
-                        }else{
-                            alert('번호 추가를 실패하였습니다.');
-                        }
-                    }
-                }
-            })
-        }
-    }else{
-        alert('번호를 추가 중입니다.')
-    }
-}
-
-
 
 //전체 체크
 function all_check(target, elem){
