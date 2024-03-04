@@ -69,7 +69,7 @@
         function product_list(){
             $param = $this->param;
 
-            $sql = "select * from its_mat_temp where user_id = "+$param["idx"]+" order by incom_id asc ";
+            $sql = "select * from its_mat_temp where user_id = "+$param["idx"]+" order by incom_id asc";
 
             $result = $this->conn->db_select($sql);
             if($result["result"] == 1){
