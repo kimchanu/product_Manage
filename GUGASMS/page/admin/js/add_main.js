@@ -282,7 +282,7 @@ async function request_add_product(){
     var product_union = document.getElementById('product_union');
     var product_price = document.getElementById('product_price');
     var product_amount = document.getElementById('product_amount');
-    var product_sum = parseInt(product_price) * parseInt(product_amount);
+    var product_sum = parseInt(product_price.value) * parseInt(product_amount.value);
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
     var data1 = await ss_user_detail().then(function(tableData) {
@@ -347,7 +347,7 @@ async function request_add_product(){
                    mat_in_union : product_union.value,
                    mat_in_price : product_price.value,
                    mat_in_amount : product_amount.value,
-                   mat_in_sum : parseInt(product_price.value) * parseInt(product_amount.value),
+                   mat_in_sum : product_sum,
                 //    into_date : product_in_date.value,
                 //    mat_image : product_image.value,
                },
