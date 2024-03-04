@@ -363,18 +363,18 @@
             <!-- <td class="check" data-attr="num"></td>
             <td class="etc" data-attr="name"></td>
             <td class="number" data-attr="phone_number"></td> -->
-            <td class="tight2" data-attr="mat_in_code">자재코드</td>
-            <td class="tight2" data-attr="mat_in_place">위치</td>
-            <td class="tight2" data-attr="bc_in_b_class">대분류</td>
-            <td class="tight2" data-attr="bc_in_s_class">소분류</td>
+            <td class="tight2" data-attr="mat_in_code">-</td>
+            <td class="tight2" data-attr="mat_in_place">-</td>
+            <td class="tight2" data-attr="bc_in_b_class">-</td>
+            <td class="tight2" data-attr="bc_in_s_class">-</td>
             <td class="number" data-attr="mat_in_name">품명</td>
-            <td class="number" data-attr="mat_in_stand">규격</td>
+            <td class="number" data-attr="mat_in_stand">-</td>
             <td class="tight1" data-attr="mat_in_maker">제조사</td>
-            <td class="tight1" data-attr="mat_in_custom">거래처</td>
-            <td class="tight2" data-attr="mat_in_union">단위</td>
-            <td class="tight1" data-attr="mat_in_price">단가</td>
-            <td class="tight2" data-attr="mat_in_amount">재고수량</td>
-            <td class="tight1" data-attr="mat_in_sum">재고금액</td>
+            <td class="tight1" data-attr="mat_in_custom">-</td>
+            <td class="tight2" data-attr="mat_in_union">-</td>
+            <td class="tight1" data-attr="mat_in_price">-</td>
+            <td class="tight2" data-attr="mat_in_amount">-</td>
+            <td class="tight1" data-attr="mat_in_sum">-</td>
         </tr>
     </tbody></table>
 	</div>
