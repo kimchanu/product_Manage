@@ -903,7 +903,7 @@ function request_product_list(target){
         receiver_count = 0;
         var total_elem = document.getElementById('receiver_total');
         total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-
+        console.log(target);
         lb.ajax({
             type : "JsonAjaxPost",
             list : {
