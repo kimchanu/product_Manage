@@ -693,12 +693,6 @@ function number_check(elem){
     })
 }
 
-$(document).ready(function(){
-    // request_addr_group();
-    // input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
-    // number_check(lb.getElem('addr_phone_number'));
-})
-
 var double_click = true;
 var receiver_count = 0;
 var recevier_index  = 0;
@@ -865,7 +859,7 @@ function request_product_list(target){
                 result = JSON.parse(result);
                 if(result.result == 1){
                     if(result.value.length == 0){
-                        alert('해당 주소록이 비어있습니다.');
+                        alert('등록하신 자재가 없습니다.');
                     }else{
                         init_addr_list(result.value);
                     }
@@ -878,7 +872,6 @@ function request_product_list(target){
 }
  
 function init_addr_list(data){
-	var num = 1;
     $('.loading').fadeIn();
     lb.auto_view({
         wrap : "receiver_wrap",
