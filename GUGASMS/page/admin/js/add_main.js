@@ -248,7 +248,7 @@ async function request_add_product(){
     // console.log(data1);
     let charrc = "";
     let idx1 = user_idx;
-    let group_id1 = data1.idx;
+    let group_id1 = data1.sms;
     if(group_id1 == 0){
         charrc = "its"
     }else if(group_id1 == 1){
