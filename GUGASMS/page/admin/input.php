@@ -360,9 +360,9 @@
                     <span class="checkmark"></span>
                 </label>
             </td>
-            <td class="check" data-attr="num"></td>
+            <!-- <td class="check" data-attr="num"></td>
             <td class="etc" data-attr="name"></td>
-            <td class="number" data-attr="phone_number"></td>
+            <td class="number" data-attr="phone_number"></td> -->
             <td class="tight2" data-attr="code">자재코드</td>
             <td class="tight2" data-attr="position">위치</td>
             <td class="tight2" data-attr="b-class">대분류</td>
