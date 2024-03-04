@@ -282,7 +282,7 @@ async function request_add_product(){
     var product_union = document.getElementById('product_union');
     var product_price = document.getElementById('product_price');
     var product_amount = document.getElementById('product_amount');
-    var product_sum = parseInt(product_price.value) * parseInt(product_amount.value);
+    
     // var product_in_date = document.getElementById('product_in_date');
     // var product_image = document.getElementById('product_image');
     var data1 = await ss_user_detail().then(function(tableData) {
@@ -328,6 +328,7 @@ async function request_add_product(){
             alert('날짜를 입력해주세요');
             double_click = true;
         }else{
+            var product_sum = parseInt(product_price.value) * parseInt(product_amount.value);
             console.log(product_sum);
             lb.ajax({
                type : "JsonAjaxPost",
