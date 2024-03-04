@@ -329,7 +329,7 @@ async function request_add_product(){
             double_click = true;
         }else{
             var product_sum = parseInt(product_price.value) * parseInt(product_amount.value);
-            console.log(product_sum);
+            console.log(parseInt(product_price.value) * parseInt(product_amount.value), parseInt(product_price.value), parseInt(product_amount.value));
             lb.ajax({
                type : "JsonAjaxPost",
                list : {
