@@ -850,6 +850,8 @@ function init_addr_list(data){
             else{
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
                     elem.innerHTML = data[name];
+                }
+                if(name == "mat_in_code"){
                     receiver_count++;
                 }
             }
