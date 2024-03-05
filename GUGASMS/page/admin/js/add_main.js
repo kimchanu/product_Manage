@@ -2,7 +2,7 @@ $(document).ready(function(){
     // request_addr_group();
     // input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
     // number_check(lb.getElem('addr_phone_number'));
-    console.log(user_idx);
+    // console.log(user_idx);
     $("#product_price, #product_amount").change( function(){
         let aa = document.getElementById('product_price').value;
         aa = aa.replace(/,/g, "");
@@ -880,65 +880,6 @@ function all_check(target, elem){
     }
 }
 
-//선택 취소
-function select_del_receiver(){
-    if(addr_click_flag){
-        var del_count = 0;
-        var select_check = document.getElementsByClassName('receiver_check');
-        var select_length = select_check.length;
-        if(select_length == 0){
-            alert('삭제할 주소록 내용을 선택해주세요');
-        }else{
-            var confirm_result = confirm('선택된 주소록을 삭제하시겠습니까?');
-            if(confirm_result){
-                var del_addr_check_list = [];
-                var id_arr = [];
-                for(var i = 0; i<select_length; i++){
-                    if(select_check[i].checked == true){
-                        id_arr.push(select_check[i].parentNode.parentNode.parentNode.id.split('_')[1]);
-                        del_addr_check_list.push(select_check[i].value);
-                        del_count++;
-                    }
-                }
-                if(double_click){
-                    double_click =false;
-                    lb.ajax({
-                        type : "JsonAjaxPost",
-                        list : {
-                            ctl : "Addr",
-                            param1 : "addr_sel_del",
-                            addr_idx : JSON.stringify(del_addr_check_list),
-                        },
-                        action : "index.php",
-                        havior : function(result){
-                            double_click = true;
-                            result = JSON.parse(result);
-                            if(result.result == 1){
-                                alert('해당 주소록의 내용을 삭제하였습니다.');
-                                
-                                for(var i =0 ; i<id_arr.length; i++){
-                                    $('#receiver_'+id_arr[i]).remove();
-                                }
-                                var total_elem = document.getElementById('receiver_total');
-                                receiver_count = receiver_count - del_count;
-                                total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-                                var all_check_elem =document.getElementById('all_check_receiver');
-                                all_check_elem.checked = false;
-                            }else{
-                                if(result.error_code == 620){
-                                    alert(result.message);
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    }else{
-        alert('주소록을 선택해주세요');
-    }
-   
-}
 
 //전체 취소
 function all_del_receiver(target){
