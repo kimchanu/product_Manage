@@ -73,13 +73,6 @@
                                 <p>
                                     <button
                                         type="button"
-                                        id="all_del_btn"
-                                        onclick="all_del_receiver()"
-                                        class="btn-sm btn-defalut">전체삭제</button>
-                                </p>
-                                <p>
-                                    <button
-                                        type="button"
                                         id="select_del_btn"
                                         onclick="select_del_receiver()"
                                         class="btn-sm btn-defalut">선택삭제</button>
