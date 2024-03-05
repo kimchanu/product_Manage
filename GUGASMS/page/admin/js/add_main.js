@@ -355,6 +355,7 @@ function select_del_receiver(){
                         del_count++;
                     }
                 }
+                console.log(double_click);
                 if(double_click){
                     double_click =false;
                     lb.ajax({
