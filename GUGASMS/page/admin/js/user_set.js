@@ -207,54 +207,6 @@ function mat_users(){
     })
 }
 
-function init_user(data){
-    lb.auto_view({
-        wrap : "user_wrap",
-        copy : "user_copy",
-        attr: '["data-attr"]',
-        json: data,
-        havior: function (elem, data, name, copy_elem) { 
-            if (copy_elem.getAttribute('data-copy') == "user_copy") {
-                copy_elem.setAttribute('data-copy', '');
-            }
-
-            if(name == "check_box"){
-                elem.value = data.idx;
-                elem.setAttribute('class','user_check');
-                // if(name == "check_box2"){
-                //     elem.setAttribute('class','user_check2');
-                // }
-            }else if(name == "id"){
-                elem.innerHTML = data.id;
-            }else if(name == "role"){
-                if(data.role == 1){
-                    elem.innerHTML = "관리자";
-                }else{
-                    elem.innerHTML = "사용자";
-                }
-            }else{
-                if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
-                    elem.innerHTML = data[name];
-                }
-            }
-            if(name != "check_box"){
-                var single_del_elem = document.getElementById('single_del');
-                elem.style.cursor = "pointer";
-                elem.onclick = function(){
-                    user_detail(data);
-                    single_del_elem.onclick = function(){
-                        select_del("single",data.idx);
-                    }
-                }
-            }
-        },
-        end : function(){
-            $(".loading").fadeOut();
-            
-        }
-    })
-}
-
 function init_mat_users(data){
     lb.auto_view({
         wrap : "user_wrap2",

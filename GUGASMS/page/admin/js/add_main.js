@@ -832,12 +832,12 @@ function init_addr_list(data){
         havior: function (elem, data, name, copy_elem) { 
             if (copy_elem.getAttribute('data-copy') == "receiver_copy") {
                 copy_elem.setAttribute('data-copy', '');
-                copy_elem.id = "receiver_"+recevier_index ;
+                copy_elem.id = 0;
             }
 			if(name == "check_box"){
-                elem.id = "receiver_check_"+recevier_index ;
+                // elem.id = "receiver_check_"+recevier_index ;
                 elem.classList.add('receiver_check');
-                elem.value = data.idx;
+                elem.value = data.incom_id;
         }
             else{
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
