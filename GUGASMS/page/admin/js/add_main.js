@@ -693,10 +693,6 @@ function number_check(elem){
     })
 }
 
-var double_click = true;
-var receiver_count = 0;
-var recevier_index  = 0;
-
 //주소록 선택 플래그
 var addr_click_flag = false;
 
@@ -798,43 +794,6 @@ function init_search(){
     addr_phone_number.value = "";
 }
 
-//주소록 번호 리스트
-// function request_addr_list(target){
-//     if(double_click){
-//         double_click = false;
-//         $('#receiver_wrap').empty();
-//         addr_click_flag = true;
-//         receiver_count = 0;
-//         var total_elem = document.getElementById('receiver_total');
-//         total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-
-//         lb.ajax({
-//             type : "JsonAjaxPost",
-//             list : {
-//                 ctl : "Addr",
-//                 param1 : "addr_list",
-//                 group_idx : target,
-//                 search_name : document.getElementById('search_addr_name').value,
-//                 search_phone_number : document.getElementById('search_addr_phone_number').value,
-//             },
-//             action : "index.php",
-//             havior : function(result){
-//                 double_click = true;
-//                 console.log(result);
-//                 result = JSON.parse(result);
-//                 if(result.result == 1){
-//                     if(result.value.length == 0){
-//                         alert('해당 주소록이 비어있습니다.');
-//                     }else{
-//                         init_addr_list(result.value);
-//                     }
-//                 }
-//             }
-//         })
-//     }else{
-//         alert("리스트 호출중입니다.");
-//     }
-// }
 
 function request_product_list(target){
     if(double_click){
@@ -887,18 +846,11 @@ function init_addr_list(data){
                 elem.id = "receiver_check_"+recevier_index ;
                 elem.classList.add('receiver_check');
                 elem.value = data.idx;
-            // }else if(name == "phone_number"){
-            //     // var phone = data.phone_number.replace(/\-/g,'');
-            //     var phone = phoneFormatter(data.phone_number);
-            //     elem.innerHTML = phone;
-            //     elem.classList.add('receiver_pn');
-            //     receiver_count++;
-            //     recevier_index ++;
-            // 
         }
             else{
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
                     elem.innerHTML = data[name];
+                    receiver_count++;
                 }
             }
         },
