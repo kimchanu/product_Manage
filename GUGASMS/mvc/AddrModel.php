@@ -358,7 +358,7 @@
                 $param["addr_idx"] = json_decode($param["addr_idx"],true);
                 $target = $param["addr_idx"];
                 if(count($param["addr_idx"]) != 0){
-                    $sql = "delete from its_mat_temp where ";
+                    $sql = "delete from its_mat_temp ";
                     for($i = 0; $i<count($target); $i++){
                         if(count($target) == 1){
                             $sql = $sql . "where incom_id = ".$target[$i]."";
