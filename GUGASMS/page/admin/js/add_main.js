@@ -867,16 +867,14 @@ function close_add_modal(){
     addr_modal.style.display = "none";
 }
 
-//전체 체크
-function all_check(target, elem){
-    for(var i = 0;i<recevier_index; i++){
-        var check_elem = document.getElementById(target+'_check_'+i);
-        if(typeof check_elem != "undefined" && check_elem != null && typeof check_elem != undefined && check_elem != "null"){
-            if(elem.checked == true){
-                check_elem.checked = true;
-            }else{
-                check_elem.checked = false;
-            }
+//전체 체크 receiver_check
+function all_check(elem){
+    var check_elems = document.getElementsByClassName('receiver_check');
+    for(var i=0; i<check_elems.length; i++){
+        if(elem.checked == true){
+            check_elems[i].checked = true;
+        }else{
+            check_elems[i].checked = false;
         }
     }
 }

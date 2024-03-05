@@ -106,7 +106,7 @@
                                                         <input
                                                             type="checkbox"
                                                             id="all_check_receiver"
-                                                            onchange="all_check('receiver', this);">
+                                                            onchange="all_check(this);">
                                                         <span class="checkmark"></span>
                                                     </label>
                                                 </th>
