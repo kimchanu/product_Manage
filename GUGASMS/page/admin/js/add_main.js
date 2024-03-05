@@ -324,29 +324,15 @@ async function request_add_product(){
 }
 
 
-//전체 체크
-function all_check(target, elem){
-    for(var i = 0;i<recevier_index; i++){
-        var check_elem = document.getElementById(target+'_check_'+i);
-        if(typeof check_elem != "undefined" && check_elem != null && typeof check_elem != undefined && check_elem != "null"){
-            if(elem.checked == true){
-                check_elem.checked = true;
-            }else{
-                check_elem.checked = false;
-            }
-        }
-    }
-}
-
 //선택 취소
 function select_del_receiver(){
         var del_count = 0;
         var select_check = document.getElementsByClassName('receiver_check');
         var select_length = select_check.length;
         if(select_length == 0){
-            alert('삭제할 주소록 내용을 선택해주세요');
+            alert('삭제할 자재를 선택해주세요');
         }else{
-            var confirm_result = confirm('선택된 주소록을 삭제하시겠습니까?');
+            var confirm_result = confirm('선택된 자재를 삭제하시겠습니까?');
             if(confirm_result){
                 var del_addr_check_list = [];
                 for(var i = 0; i<select_length; i++){
@@ -370,7 +356,7 @@ function select_del_receiver(){
                             double_click = true;
                             result = JSON.parse(result);
                             if(result.result == 1){
-                                alert('해당 주소록의 내용을 삭제하였습니다.');
+                                alert('해당 자재를 삭제하였습니다.');
                                 var total_elem = document.getElementById('receiver_total');
                                 receiver_count = receiver_count - del_count;
                                 total_elem.innerHTML ="<i>Total</i>"+receiver_count;
@@ -390,48 +376,6 @@ function select_del_receiver(){
             }
         }
 }
-
-//전체 취소
-function all_del_receiver(target){
-    if(typeof target != "undefined" && typeof target != undefined && target != null && target != "null"){
-        if(addr_click_flag){
-            var result = confirm('주소록의 내용을 전체 삭제 하시겠습니까?');
-            if(result){
-                if(double_click){
-                    double_click =false;
-                    lb.ajax({
-                        type : "JsonAjaxPost",
-                        list : {
-                            ctl : "Addr",
-                            param1 : "addr_all_del",
-                            group_idx : target,
-                        },
-                        action : "index.php",
-                        havior : function(result){
-                            double_click = true;
-                            console.log(result);
-                            result = JSON.parse(result);
-                            if(result.result == 1){
-                                alert('해당 주소록의 내용을 삭제하였습니다.');
-                                $('#receiver_wrap').empty();
-                                var total_elem = document.getElementById('receiver_total');
-                                receiver_count = 0;
-                                total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-                                var all_check_elem =document.getElementById('all_check_receiver');
-                                all_check_elem.checked = false;
-                            }
-                        }
-                    });
-                }
-            }
-        }else{
-            alert('주소록을 선택해주세요');
-        }
-    }else{
-        alert('주소록을 선택해주세요');
-    }
-}
-
 
 //엑셀
 //파일 업로드 체크(type = "img", type = "excel")
@@ -876,48 +820,6 @@ function all_check(elem){
         }else{
             check_elems[i].checked = false;
         }
-    }
-}
-
-
-//전체 취소
-function all_del_receiver(target){
-    if(typeof target != "undefined" && typeof target != undefined && target != null && target != "null"){
-        if(addr_click_flag){
-            var result = confirm('주소록의 내용을 전체 삭제 하시겠습니까?');
-            if(result){
-                if(double_click){
-                    double_click =false;
-                    lb.ajax({
-                        type : "JsonAjaxPost",
-                        list : {
-                            ctl : "Addr",
-                            param1 : "addr_all_del",
-                            group_idx : target,
-                        },
-                        action : "index.php",
-                        havior : function(result){
-                            double_click = true;
-                            console.log(result);
-                            result = JSON.parse(result);
-                            if(result.result == 1){
-                                alert('해당 주소록의 내용을 삭제하였습니다.');
-                                $('#receiver_wrap').empty();
-                                var total_elem = document.getElementById('receiver_total');
-                                receiver_count = 0;
-                                total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-                                var all_check_elem =document.getElementById('all_check_receiver');
-                                all_check_elem.checked = false;
-                            }
-                        }
-                    });
-                }
-            }
-        }else{
-            alert('주소록을 선택해주세요');
-        }
-    }else{
-        alert('주소록을 선택해주세요');
     }
 }
 
