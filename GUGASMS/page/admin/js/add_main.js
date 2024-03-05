@@ -377,6 +377,7 @@ function select_del_receiver(){
                                 all_check_elem.checked = false;
                             }else{
                                 alert(result.message);
+                                console.log(result);
                                 if(result.error_code == 620){
                                     alert(result.message);
                                 }
