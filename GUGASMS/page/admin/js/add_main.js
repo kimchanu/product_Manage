@@ -376,6 +376,7 @@ function select_del_receiver(){
                                 total_elem.innerHTML ="<i>Total</i>"+receiver_count;
                                 var all_check_elem =document.getElementById('all_check_receiver');
                                 all_check_elem.checked = false;
+                                request_product_list(user_idx);
                             }else{
                                 alert(result.message);
                                 console.log(result);
