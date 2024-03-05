@@ -340,7 +340,6 @@ function all_check(target, elem){
 
 //선택 취소
 function select_del_receiver(){
-    if(addr_click_flag){
         var del_count = 0;
         var select_check = document.getElementsByClassName('receiver_check');
         var select_length = select_check.length;
@@ -350,10 +349,8 @@ function select_del_receiver(){
             var confirm_result = confirm('선택된 주소록을 삭제하시겠습니까?');
             if(confirm_result){
                 var del_addr_check_list = [];
-                var id_arr = [];
                 for(var i = 0; i<select_length; i++){
                     if(select_check[i].checked == true){
-                        id_arr.push(select_check[i].parentNode.parentNode.parentNode.id.split('_')[1]);
                         del_addr_check_list.push(select_check[i].value);
                         del_count++;
                     }
@@ -373,10 +370,6 @@ function select_del_receiver(){
                             result = JSON.parse(result);
                             if(result.result == 1){
                                 alert('해당 주소록의 내용을 삭제하였습니다.');
-                                
-                                for(var i =0 ; i<id_arr.length; i++){
-                                    $('#receiver_'+id_arr[i]).remove();
-                                }
                                 var total_elem = document.getElementById('receiver_total');
                                 receiver_count = receiver_count - del_count;
                                 total_elem.innerHTML ="<i>Total</i>"+receiver_count;
@@ -392,10 +385,6 @@ function select_del_receiver(){
                 }
             }
         }
-    }else{
-        alert('주소록을 선택해주세요');
-    }
-   
 }
 
 //전체 취소

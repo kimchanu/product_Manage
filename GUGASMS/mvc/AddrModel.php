@@ -356,18 +356,19 @@
             $param = $this->param;
             if($this->value_check(array("addr_idx"))){
                 $param["addr_idx"] = json_decode($param["addr_idx"],true);
+                $target = $param["addr_idx"];
                 if(count($param["addr_idx"]) != 0){
-                    $sql = "delete from addr_list where ";
-                    for($i = 0;$i<count($param["addr_idx"]); $i++){
-                        if(count($param["addr_idx"]) == 1){
-                            $sql = $sql . " idx = ".$param["addr_idx"][$i] . " ";
+                    $sql = "delete from its_mat_temp where ";
+                    for($i = 0; $i<count($target); $i++){
+                        if(count($target) == 1){
+                            $sql = $sql . "where idx = ".$target[$i]."";
                         }else{
                             if($i == 0){
-                                $sql = $sql . " idx in (".$param["addr_idx"][$i]." , ";
-                            }else if($i == (count($param["addr_idx"]) -1)){
-                                $sql = $sql . " ".$param["addr_idx"][$i]." ) ";
+                                $sql = $sql . "where idx in ( ".$target[$i]." , ";
+                            }else if ($i == (count($target) -1)){
+                                $sql = $sql . " ".$target[$i]."  ) ";
                             }else{
-                                $sql = $sql . " ".$param["addr_idx"][$i]." , ";
+                                $sql = $sql . " ".$target[$i].", ";
                             }
                         }
                     }
