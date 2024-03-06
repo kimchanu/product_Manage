@@ -377,6 +377,92 @@ function select_del_receiver(){
         }
 }
 
+function product_to_real(value){
+    if(double_click){
+        var check_elems = document.getElementsByClassName('receiver_check');
+        for(var i = 0; i<check_elems.length; i++){
+            if(check_elems[i].checked == true){
+                target.push(check_elems[i].value);
+            }
+        }
+        console.log(target);
+        if(target.length == 0 || (typeof target[0] == "undefind" ||  target[0] == null || target[0] =="null")){
+            alert('유저를 선택해주세요');
+        }else{
+            confirm_result = confirm("선택한 사용자를 추가 하시겠습니까?");
+            if(confirm_result){
+                double_click = false;
+                $('.loading').fadeIn();
+                $('#user_wrap2').empty();
+                lb.ajax({
+                    type : "JsonAjaxPost",
+                    list : {
+                        ctl : "Admin",
+                        param1 : "mat_to_real_user",
+                        target_idx : JSON.stringify(target),
+                    },
+                    action : "index.php",
+                    havior : function(result){
+                        double_click = true;
+                        console.log(result);
+                        // console.log(result["result"]);
+                        // if(result["result"] == undefined){
+                        //     alert('사용자 등록 실패');
+                        //     $('.loading').fadeOut();
+                        // }
+                        if(result.total != 0){
+                            result = JSON.parse(result);
+                            console.log(result.total);
+                            i_count = result.total;
+                            console.log(parseInt(result.value[0].group_id), parseInt(result.value[0].user_phone.replace(/-/g, '')));
+                            for(i=0;i<i_count;i++){
+                                lb.ajax({
+                                    type : "JsonAjaxPost",
+                                    list : {
+                                        ctl : "Admin",
+                                        param1 : "signup",
+                                        id : result.value[i].user_id,
+                                        pw : result.value[i].user_pw,
+                                        name : result.value[i].user_name,
+                                        role : 2,
+                                        send_number : result.value[i].user_phone,
+                                        sms : parseInt(result.value[i].group_id),
+                                        lms : 0,
+                                        mms : 0,
+                                        t_kakao : 0,
+                                        f_kakao : 0,
+                                        comment : 0,
+                                    },
+                                    action : "index.php",
+                                    havior : function(result2){
+                                        double_click = true;
+                                        console.log(result2);
+                                        result2 = JSON.parse(result2);
+                                        if(result2.result == 1){
+                                            user_list();
+                                        }else{
+                                            if(result2.error_code == "533"){
+                                                alert(result2.message);
+                                            }else{
+                                                alert('사용자 등록 실패');
+                                            }
+                                        }
+                                    }
+                                })
+                        }
+                        }else{
+                            alert('사용자 등록 실패');
+                            $('.loading').fadeOut();
+                        }
+                    }
+                })    
+            }
+        }
+    }else{
+        alert('기다려주세요');
+    }
+}
+
 //엑셀
 //파일 업로드 체크(type = "img", type = "excel")
 function input_file_check(elem, ext_array, type){

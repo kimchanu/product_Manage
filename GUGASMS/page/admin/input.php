@@ -66,10 +66,6 @@
                     <section class="adm_section_container">
                         <div class="adm_section_container_body p-1">
                             <div class="btn-list-con align-right mb-1">
-                                <p>검색날짜
-                                    <input type="date" id="search_date"></p>
-                                <p>검색어
-                                    <input type="text" id="search_product"></p>
                                 <p>
                                     <button
                                         type="button"
