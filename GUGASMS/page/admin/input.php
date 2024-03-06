@@ -78,6 +78,7 @@
                                 </p>
                                 <p>
                                     <button type="button" onclick="excel_upload()" class="btn-sm btn-primary">엑셀업로드</button>
+                                    <input id="excel_upload" class="upload-file wi_upload_hidden" type="file">
                                 </p>
                                 <p>
                                     <button type="button" onclick="open_add_modal();" class="btn-sm btn-secondary">자재추가</button>
