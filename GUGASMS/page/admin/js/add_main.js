@@ -465,7 +465,7 @@ function excel_code(elem){
 // 엑셀 업로드
 function excel_upload(target){
     if(typeof target != "undefined" && typeof target != undefined && target != null && target != "null"){
-        if(addr_click_flag){
+        
             if(typeof excel_value != "undefined" && excel_value != null){
                 var regExp =  /^\d{3}-\d{3,4}-\d{4}$/;
                 var correct = true;
@@ -499,11 +499,6 @@ function excel_upload(target){
             }else{
                 alert('업로드할 파일을 첨부해주세요');
             }
-        }else{
-            alert('주소록 그룹을 먼저 선택해주세요');
-        }
-    }else{
-        alert('주소록 그룹을 먼저 선택해주세요');
     }
 }
 
