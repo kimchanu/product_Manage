@@ -317,10 +317,10 @@ function product_real(){
             $sql = "select * from its_mat_temp ";
             for($i = 0; $i<count($target); $i++){
                 if(count($target) == 1){
-                    $sql = $sql . "where idx = ".$target[$i]."";
+                    $sql = $sql . "where incom_id = ".$target[$i]."";
                 }else{
                     if($i == 0){
-                        $sql = $sql . "where idx in ( ".$target[$i]." , ";
+                        $sql = $sql . "where incom_id in ( ".$target[$i]." , ";
                     }else if ($i == (count($target) -1)){
                         $sql = $sql . " ".$target[$i]."  ) ";
                     }else{
