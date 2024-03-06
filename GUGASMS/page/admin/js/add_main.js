@@ -290,7 +290,7 @@ function product_to_real(){
                     type : "JsonAjaxPost",
                     list : {
                         ctl : "Addr",
-                        param1 : "addr_sel_del",
+                        param1 : "product_real",
                         target_idx : JSON.stringify(target),
                     },
                     action : "index.php",
