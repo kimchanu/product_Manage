@@ -357,7 +357,7 @@ function product_to_real(value){
 //엑셀
 //파일 업로드 체크(type = "img", type = "excel")
 function input_file_check(elem, ext_array, type){
-    var file_name_elem = elem.parentNode.children[0];
+    var file_name_elem = elem.children[0];
     //바이트 수
     var msg_text = document.getElementById("msg_text");
     var standard = elem.id.split('_');
