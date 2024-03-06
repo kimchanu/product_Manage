@@ -296,12 +296,12 @@ function product_to_real(){
                     action : "index.php",
                     havior : function(result){
                         double_click = true;
-                        console.log(result);
-                        // console.log(result["result"]);
-                        // if(result["result"] == undefined){
-                        //     alert('사용자 등록 실패');
-                        //     $('.loading').fadeOut();
-                        // }
+                        // console.log(result);
+                        console.log(result["result"]);
+                        if(result["result"] == undefined){
+                            alert('사용자 등록 실패');
+                            $('.loading').fadeOut();
+                        }
                         if(result.total != 0){
                             result = JSON.parse(result);
                             console.log(result.total);
