@@ -42,8 +42,6 @@
             <section class="adm_section_container">
 				<div class="adm_section_container_body p-1">
 					<div class="btn-list-con align-right mb-1">
-						<p>검색 월 <input type="date" id="start_date"></p>
-						<p>검색어 <input type="text" id = "search_product"></p>
 						<p><button type="button" onclick ="open_add_modal();" class="btn-sm btn-secondary">자재검색</button></p>
 								</div>
 								<div class="adm_table_container">
