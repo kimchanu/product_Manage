@@ -227,38 +227,6 @@
         // 설 명 : 주소록 번호 추가
         // 만든이 : 최진혁
         *********************************************************************/
-        function add_addr(){
-            $param = $this->param;
-            if($this->value_check(array("group_idx","name","phone_number"))){
-                $select_sql = "select phone_number from addr_list where phone_number = ".$this->null_check($param["phone_number"])."";
-                $select_result = $this->conn->db_select($select_sql);
-                if($select_result["result"] == 1){
-                    if(count($select_result["value"]) == 0){
-                        $sql = "insert into addr_list (group_idx, name, phone_number, regdate) values (";
-                        $sql = $sql . $param["group_idx"]. ", ";
-                        $sql = $sql . $this->null_check($param["name"]) . " , ";
-                        $sql = $sql . $this->null_check($param["phone_number"]) . " , now() ";
-                        $sql = $sql . ")";
-                
-                        $result = $this->conn->db_insert($sql);
-                        if($result["result"] == 1){
-                            $this->result = $result;
-                        }else{
-                            $this->result = $result;
-                        }
-                    }else{
-                        $this->result["result"] = 0;
-                        $this->result["error_code"] = "601";
-                        $this->result["message"] = "중복된 휴대전화 입니다.";
-                    }
-                }else{
-                    $this->result = $select_result;
-                }
-
-            }
-            echo $this->jsonEncode($this->result);
-        }
-
 	function its_add_product() {
 		   	$param = $this->param;
 	    // SQL statement to insert data into the mat_register table
@@ -295,6 +263,44 @@
                         }
                     
                 echo $this->jsonEncode($this->result);
+}
+
+function its_add_product_real() {
+    $param = $this->param;
+// SQL statement to insert data into the mat_register table
+     $sql = "insert into its_mat_coming (
+         user_id, group_id, mat_in_code, mat_in_place, bc_in_b_class, bc_in_s_class, 
+         mat_in_name, mat_in_stand, mat_in_maker, mat_in_custom, mat_in_union, mat_in_price, 
+         mat_in_amount,mat_in_sum
+         ) values (";
+
+ // Append values from $param, using null_check for optional fields
+         $sql .= $this->null_check($param["user_id"]) . ", ";
+         $sql .= $this->null_check($param["group_id"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_code"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_place"]) . ", ";
+         $sql .= $this->null_check($param["bc_in_b_class"]) . ", ";
+         $sql .= $this->null_check($param["bc_in_s_class"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_name"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_stand"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_maker"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_custom"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_union"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_price"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_amount"]) . ", ";
+         $sql .= $this->null_check($param["mat_in_sum"]);
+         // $sql .= $this->null_check($param["mat_image"]);
+         $sql .= ")";
+
+     // Execute the query
+             $result = $this->conn->db_insert($sql);
+             if($result["result"] == 1){
+                 $this->result = $result;
+             }else{
+                 $this->result["result"] = 0;
+             }
+         
+     echo $this->jsonEncode($this->result);
 }
 
         /********************************************************************* 

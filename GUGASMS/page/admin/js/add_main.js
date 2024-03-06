@@ -268,8 +268,9 @@ function select_del_receiver(){
         }
 }
 
-function product_to_real(value){
+function product_to_real(){
     if(double_click){
+        var target = [];
         var check_elems = document.getElementsByClassName('receiver_check');
         for(var i = 0; i<check_elems.length; i++){
             if(check_elems[i].checked == true){
@@ -278,18 +279,18 @@ function product_to_real(value){
         }
         console.log(target);
         if(target.length == 0 || (typeof target[0] == "undefind" ||  target[0] == null || target[0] =="null")){
-            alert('유저를 선택해주세요');
+            alert('자재를 선택해주세요');
         }else{
-            confirm_result = confirm("선택한 사용자를 추가 하시겠습니까?");
+            confirm_result = confirm("선택한 자재를 추가 하시겠습니까?");
             if(confirm_result){
                 double_click = false;
                 $('.loading').fadeIn();
-                $('#user_wrap2').empty();
+                // $('#receiver_check').empty();
                 lb.ajax({
                     type : "JsonAjaxPost",
                     list : {
-                        ctl : "Admin",
-                        param1 : "mat_to_real_user",
+                        ctl : "Addr",
+                        param1 : "addr_sel_del",
                         target_idx : JSON.stringify(target),
                     },
                     action : "index.php",
@@ -305,24 +306,25 @@ function product_to_real(value){
                             result = JSON.parse(result);
                             console.log(result.total);
                             i_count = result.total;
-                            console.log(parseInt(result.value[0].group_id), parseInt(result.value[0].user_phone.replace(/-/g, '')));
+                            // console.log(parseInt(result.value[0].group_id), parseInt(result.value[0].user_phone.replace(/-/g, '')));
                             for(i=0;i<i_count;i++){
                                 lb.ajax({
                                     type : "JsonAjaxPost",
                                     list : {
-                                        ctl : "Admin",
-                                        param1 : "signup",
-                                        id : result.value[i].user_id,
-                                        pw : result.value[i].user_pw,
-                                        name : result.value[i].user_name,
-                                        role : 2,
-                                        send_number : result.value[i].user_phone,
-                                        sms : parseInt(result.value[i].group_id),
-                                        lms : 0,
-                                        mms : 0,
-                                        t_kakao : 0,
-                                        f_kakao : 0,
-                                        comment : 0,
+                                        ctl : "Addr",
+                                        param1 : "its_add_product_real",
+                                        user_id : result.value[i].user_id,
+                                        group_id : result.value[i].group_id,
+                                        mat_in_place : result.value[i].mat_in_place,
+                                        bc_in_b_class : 2,
+                                        bc_in_s_class : result.value[i].bc_in_s_class,
+                                        mat_in_name : result.value[i].mat_in_name,
+                                        mat_in_stand : 0,
+                                        mat_in_maker : 0,
+                                        mat_in_custom : 0,
+                                        mat_in_price : 0,
+                                        mat_in_amount : 0,
+                                        mat_in_sum : 0,
                                     },
                                     action : "index.php",
                                     havior : function(result2){
@@ -330,7 +332,7 @@ function product_to_real(value){
                                         console.log(result2);
                                         result2 = JSON.parse(result2);
                                         if(result2.result == 1){
-                                            user_list();
+                                            select_del_receiver();
                                         }else{
                                             if(result2.error_code == "533"){
                                                 alert(result2.message);
@@ -603,75 +605,8 @@ function number_check(elem){
     })
 }
 
-//주소록 선택 플래그
+
 var addr_click_flag = false;
-
-function init_addr_group(data){
-
-    var excel_btn = document.getElementById('excel_btn');
-    var all_del_btn = document.getElementById('all_del_btn');
-    var select_del_btn = document.getElementById('select_del_btn');
-    var search_btn = document.getElementById('search_btn');
-    lb.auto_view({
-        wrap : "address_wrap",
-        copy : "address_copy",
-        attr: '["data-attr"]',
-        json: data,
-        havior: function (elem, data, name, copy_elem) { 
-            if (copy_elem.getAttribute('data-copy') == "address_copy") {
-                copy_elem.setAttribute('data-copy', '');
-                copy_elem.style.cursor = "pointer";
-                
-                copy_elem.onclick = function(){
-                    request_addr_list(data.idx);
-                    excel_btn.onclick = function(){
-                        excel_upload(data.idx);
-                    }
-                    all_del_btn.onclick = function(){
-                        all_del_receiver(data.idx);
-                    }
-                    select_del_btn.onclick =function(){
-                        select_del_receiver(data.idx);
-                    }
-                    search_btn.onclick = function(){
-                        search(data.idx);
-                    }
-                    
-                    var target = this.children[0].children[0].children[0];
-                    var select_folder = document.getElementsByClassName('select_folder');
-
-                    for(var i= 0; i<select_folder.length; i++){
-                        if(target == select_folder[i]){
-                            this.classList.add('table_select');
-                        }else{
-                            var copy_elem = select_folder[i].parentNode.parentNode.parentNode;
-                            if(copy_elem.classList.contains('table_select')){
-                                copy_elem.classList.remove('table_select');
-                            }
-                        } 
-                    }
-
-                }
-            }
-			if(name == "group_name"){
-                elem.innerHTML = "<i class = 'fas fa-folder select_folder'></i>"+data.group_name;
-            }else if(name == "group_content"){
-                if(typeof data.content != "undefined" && typeof data.content != undefined && data.content != null && data.content !="null"){
-                    elem.innerHTML = data.content;
-                }
-                
-            }
-        }
-    })
-    var addr_group_list = document.getElementById('addr_group_list');
-    for(var i = 0; i<data.length; i++){
-        var option = document.createElement('option');
-        option.text = data[i].group_name;
-        option.value = data[i].idx;
-        addr_group_list.options.add(option);
-    }
-}
-
 
 function request_product_list(target){
     if(double_click){
