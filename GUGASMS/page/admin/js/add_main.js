@@ -290,7 +290,7 @@ function product_to_real(){
                     type : "JsonAjaxPost",
                     list : {
                         ctl : "Addr",
-                        param1 : "product_real",
+                        param1 : "products_real",
                         target_idx : JSON.stringify(target),
                     },
                     action : "index.php",
@@ -302,7 +302,7 @@ function product_to_real(){
                             alert('사용자 등록 실패');
                             $('.loading').fadeOut();
                         }
-                        if(result.total != 0){
+                        else if(result.total != 0){
                             result = JSON.parse(result);
                             console.log(result.total);
                             i_count = result.total;
