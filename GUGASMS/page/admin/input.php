@@ -77,7 +77,7 @@
                                     <button type="button" onclick="exportExcel();" class="btn-sm btn-primary">엑셀다운</button>
                                 </p>
                                 <p>
-                                    <button type="button" onclick="" class="btn-sm btn-primary">엑셀입력</button>
+                                    <button type="button" onclick="excel_upload()" class="btn-sm btn-primary">엑셀업로드</button>
                                 </p>
                                 <p>
                                     <button type="button" onclick="open_add_modal();" class="btn-sm btn-secondary">자재추가</button>
