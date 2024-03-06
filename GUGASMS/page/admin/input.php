@@ -74,13 +74,14 @@
                                         class="btn-sm btn-defalut">선택삭제</button>
                                 </p>
                                 <p>
-                                    <button type="button" onclick="exportExcel();" class="btn-sm btn-primary">엑셀다운</button>
-                                </p>
-                                <p>
                                     <!-- <button type="button" onclick="excel_upload()" class="btn-sm btn-primary">엑셀업로드</button> -->
                                     <label for="excel_upload" class="upload-btn" onclick="">파일첨부</label>
                                     <input id="excel_upload" class="upload-file wi_upload_hidden" type="file" style="display:none;">
                                 </p>
+                                <p>
+                                    <button type="button" onclick="exportExcel();" class="btn-sm btn-primary">엑셀다운</button>
+                                </p>
+
                                 <p>
                                     <button type="button" onclick="open_add_modal();" class="btn-sm btn-secondary">자재추가</button>
                                 </p>
