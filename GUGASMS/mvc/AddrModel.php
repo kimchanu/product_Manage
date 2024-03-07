@@ -310,7 +310,7 @@ function products_real(){
         // $param["target_idx"] = json_decode($param["target_idx"], true);
         $target = $param["target_idx"];
         // $this->result = $sql;
-        if(count($target) == 0){
+        if(count($target) != 0){
             $this->result["result"] = 0;
             $this->result["error_code"] = "200";
             $this->result["message"] = "선택된 사용자가 없습니다.";
