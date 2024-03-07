@@ -316,6 +316,7 @@ function product_to_real(){
                                         param1 : "its_add_product_real",
                                         user_id : result.value[i].user_id,
                                         group_id : result.value[i].group_id,
+                                        mat_in_code : result.value[i].mat_in_code,
                                         mat_in_place : result.value[i].mat_in_place,
                                         bc_in_b_class : 2,
                                         bc_in_s_class : result.value[i].bc_in_s_class,
