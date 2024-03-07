@@ -332,8 +332,8 @@ function product_to_real(){
                                     action : "index.php",
                                     havior : function(result2){
                                         double_click = true;
-                                        console.log(result2);
-                                        result2 = JSON.parse(result2);
+                                        console.log(result2["result"]);
+                                        result2 = JSON.parse(result2.value);
                                         if(result2.result == 1){
                                             select_del_receiver();
                                         }else{
