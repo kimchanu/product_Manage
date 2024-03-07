@@ -247,7 +247,7 @@ function select_del_receiver(){
                             double_click = true;
                             result = JSON.parse(result);
                             if(result.result == 1){
-                                alert('해당 자재를 삭제하였습니다.');
+                                // alert('해당 자재를 삭제하였습니다.');
                                 var total_elem = document.getElementById('receiver_total');
                                 receiver_count = receiver_count - del_count;
                                 total_elem.innerHTML ="<i>Total</i>"+receiver_count;
@@ -316,18 +316,18 @@ function product_to_real(){
                                         param1 : "its_add_product_real",
                                         user_id : result.value[i].user_id,
                                         group_id : result.value[i].group_id,
-                                        mat_in_code : 0,
-                                        mat_in_place : 0,
-                                        bc_in_b_class : 2,
-                                        bc_in_s_class : 0,
+                                        mat_in_code : result.value[i].mat_in_code,
+                                        mat_in_place : result.value[i].mat_in_place,
+                                        bc_in_b_class : result.value[i].bc_in_b_class,
+                                        bc_in_s_class : result.value[i].bc_in_s_class,
                                         mat_in_name : result.value[i].mat_in_name,
-                                        mat_in_stand : 0,
-                                        mat_in_maker : 0,
-                                        mat_in_custom : 0,
-                                        mat_in_union : 0,
-                                        mat_in_price : 0,
-                                        mat_in_amount : 0,
-                                        mat_in_sum : 0,
+                                        mat_in_stand : result.value[i].mat_in_stand,
+                                        mat_in_maker : result.value[i].mat_in_maker,
+                                        mat_in_custom : result.value[i].mat_in_custom,
+                                        mat_in_union : result.value[i].mat_in_union,
+                                        mat_in_price : result.value[i].mat_in_price,
+                                        mat_in_amount : result.value[i].mat_in_amount,
+                                        mat_in_sum : result.value[i].mat_in_sum,
                                     },
                                     action : "index.php",
                                     havior : function(result2){
