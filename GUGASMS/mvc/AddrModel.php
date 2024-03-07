@@ -312,9 +312,9 @@ function products_real(){
         $target = $param["target_idx"];
         // $this->result = $sql;
         if(count($target) == 0){
-            $this->result["result"] == 0;
-            $this->result["error_code"] == "200";
-            $this->result["message"] == "선택된 사용자가 없습니다.";
+            $this->result["result"] = 0;
+            $this->result["error_code"] = "200";
+            $this->result["message"] = "선택된 사용자가 없습니다.";
         }else{
             $sql = "select * from its_mat_temp ";
             for($i = 0; $i<count($target); $i++){
@@ -332,7 +332,7 @@ function products_real(){
             }
             
             if($sql == ""){
-                $this->result["message"] = "sql에 아무것도 없음.";
+                $this->result["result"] = "sql에 아무것도 없음.";
             }else{
                 $select_result = $this->conn->db_select($sql);
                 if($select_result["result"] == 0){
