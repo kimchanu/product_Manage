@@ -314,7 +314,7 @@ function products_real(){
             $this->result["error_code"] == "200";
             $this->result["message"] == "선택된 사용자가 없습니다.";
         }else{
-            $sql = "select * from its_mat_temp ";
+            $sql = "select * from its_mat_tempaa ";
             for($i = 0; $i<count($target); $i++){
                 if(count($target) == 1){
                     $sql = $sql . "where incom_id = ".$target[$i]."";
