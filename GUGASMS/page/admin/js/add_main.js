@@ -286,6 +286,7 @@ function product_to_real(){
                 double_click = false;
                 $('.loading').fadeIn();
                 $('#receiver_check').empty();
+                console.log(JSON.stringify(target));
                 lb.ajax({
                     type : "JsonAjaxPost",
                     list : {
