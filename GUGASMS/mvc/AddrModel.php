@@ -310,7 +310,7 @@ function products_real(){
     if($this->value_check(array("target_idx"))){
         $param["target_idx"] = json_decode($param["target_idx"], true);
         $target = $param["target_idx"];
-        $this->result = $sql;
+        // $this->result = $sql;
         if(count($target) == 0){
             $this->result["result"] == 0;
             $this->result["error_code"] == "200";
