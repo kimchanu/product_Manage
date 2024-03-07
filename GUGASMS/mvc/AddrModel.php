@@ -305,6 +305,7 @@ function its_add_product_real() {
 
 function products_real(){
     $param = $this->json;
+    $sql="123";
     if($this->value_check(array("target_idx"))){
         $param["target_idx"] = json_decode($param["target_idx"], true);
         $target = $param["target_idx"];
@@ -314,7 +315,7 @@ function products_real(){
             $this->result["error_code"] == "200";
             $this->result["message"] == "선택된 사용자가 없습니다.";
         }else{
-            $sql = "select * from its_mat_tempaa ";
+            $sql = "select * from its_mat_temp ";
             for($i = 0; $i<count($target); $i++){
                 if(count($target) == 1){
                     $sql = $sql . "where incom_id = ".$target[$i]."";
