@@ -307,7 +307,7 @@ function products_real(){
     $param = $this->json;
     
     if($this->value_check(array("target_idx"))){
-        $param["target_idx"] = json_decode($param["target_idx"], true);
+        // $param["target_idx"] = json_decode($param["target_idx"], true);
         $target = $param["target_idx"];
         // $this->result = $sql;
         if(count($target) == 0){
