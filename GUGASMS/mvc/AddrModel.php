@@ -332,7 +332,7 @@ function products_real(){
             }
             
             if($sql == ""){
-                $this->result = $result;
+                $this->result["message"] = "sql에 아무것도 없음.";
             }else{
                 $select_result = $this->conn->db_select($sql);
                 if($select_result["result"] == 0){
