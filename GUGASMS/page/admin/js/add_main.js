@@ -285,7 +285,7 @@ function product_to_real(){
             if(confirm_result){
                 double_click = false;
                 $('.loading').fadeIn();
-                $('#receiver_check').empty();
+                // $('#receiver_check').empty();
                 console.log(JSON.stringify(target));
                 lb.ajax({
                     type : "JsonAjaxPost",
