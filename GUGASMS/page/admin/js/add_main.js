@@ -324,6 +324,7 @@ function product_to_real(){
                                         mat_in_stand : 0,
                                         mat_in_maker : 0,
                                         mat_in_custom : 0,
+                                        mat_in_union : 0,
                                         mat_in_price : 0,
                                         mat_in_amount : 0,
                                         mat_in_sum : 0,
