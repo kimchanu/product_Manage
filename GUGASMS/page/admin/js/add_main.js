@@ -297,7 +297,7 @@ function product_to_real(){
                     havior : function(result){
                         double_click = true;
                         console.log(result);
-                        console.log(result["result"]);
+                        // console.log(result["result"]);
                         // if(result["result"] == undefined){
                         //     alert('등록 실패');
                         //     $('.loading').fadeOut();
