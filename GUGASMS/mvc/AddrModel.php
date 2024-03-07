@@ -305,15 +305,14 @@ function its_add_product_real() {
 
 function products_real(){
     $param = $this->json;
-    
-    if($this->value_check(array("abc"))){
-        $param["abc"] = json_decode($param["abc"], true);
-        $target = $param["abc"];
+    if($this->value_check(array("target_idx"))){
+        $param["target_idx"] = json_decode($param["target_idx"], true);
+        $target = $param["target_idx"];
         // $this->result = $sql;
         if(count($target) == 0){
             $this->result["result"] = 0;
             $this->result["error_code"] = "200";
-            $this->result["message"] = "선택된 사용자가 없습니다.";
+            $this->result["message"] = "선택된 사용자가 없습니다.".$target;
         }else{
             $sql = "select * from its_mat_temp ";
             for($i = 0; $i<count($target); $i++){

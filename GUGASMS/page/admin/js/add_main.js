@@ -291,7 +291,7 @@ function product_to_real(){
                     list : {
                         ctl : "Addr",
                         param1 : "products_real",
-                        abc : JSON.stringify(target),
+                        target_idx : JSON.stringify(target),
                     },
                     action : "index.php",
                     havior : function(result){
