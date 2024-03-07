@@ -188,9 +188,9 @@
                 $target = $param["target_idx"];
 
                 if(count($target) == 0){
-                    $this->result["result"] == 0;
-                    $this->result["error_code"] == "200";
-                    $this->result["message"] == "선택된 사용자가 없습니다.";
+                    $this->result["result"] = 0;
+                    $this->result["error_code"] = "200";
+                    $this->result["message"] = "선택된 사용자가 없습니다.";
                 }else{
                     $sql = "select * from mat_users ";
                     // $sql = "update mat_users set ";
