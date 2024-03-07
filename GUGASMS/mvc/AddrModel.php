@@ -313,7 +313,7 @@ function products_real(){
             $this->result["result"] = 0;
             $this->result["error_code"] = "200";
             $this->result["message"] = "선택된 사용자가 없습니다.";
-            $this->result["value"] = $target.$param["target_idx"]
+            $this->result["value"] = $target.$param["target_idx"];
         }else{
             $sql = "select * from its_mat_temp ";
             for($i = 0; $i<count($target); $i++){
