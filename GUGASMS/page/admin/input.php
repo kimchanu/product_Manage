@@ -66,17 +66,18 @@
                     <section class="adm_section_container">
                         <div class="adm_section_container_body p-1">
                             <div class="btn-list-con align-right mb-1">
+                            <p>
+                                    <!-- <button type="button" onclick="excel_upload()" class="btn-sm btn-primary">엑셀업로드</button> -->
+                                    <label for="excel_upload" class="upload-btn" onclick="">파일첨부</label>
+                                    <input id="excel_upload" class="upload-file wi_upload_hidden" type="file" style="display:none;">
+                                </p>
+                            <p class="mt-1"><button type="button" id ="excel_btn" onclick ="excel_upload();" class="btn-sm btn-primary">등록</button></p>
                                 <p>
                                     <button
                                         type="button"
                                         id="select_del_btn"
                                         onclick="select_del_receiver()"
                                         class="btn-sm btn-defalut">선택삭제</button>
-                                </p>
-                                <p>
-                                    <!-- <button type="button" onclick="excel_upload()" class="btn-sm btn-primary">엑셀업로드</button> -->
-                                    <label for="excel_upload" class="upload-btn" onclick="">파일첨부</label>
-                                    <input id="excel_upload" class="upload-file wi_upload_hidden" type="file" style="display:none;">
                                 </p>
                                 <p>
                                     <button type="button" onclick="exportExcel();" class="btn-sm btn-primary">엑셀다운</button>
