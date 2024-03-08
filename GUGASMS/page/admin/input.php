@@ -71,7 +71,7 @@
                                     <label for="excel_upload" class="upload-btn" onclick="">파일첨부</label>
                                     <input id="excel_upload" class="upload-file wi_upload_hidden" type="file" style="display:none;">
                                 </p>
-                            <p class="mt-1"><button type="button" id ="excel_btn" onclick ="excel_upload();" class="btn-sm btn-primary">등록</button></p>
+                            <p class="mt-1"><button type="button" id ="excel_btn" onclick ="excel_upload(this);" class="btn-sm btn-primary">등록</button></p>
                                 <p>
                                     <button
                                         type="button"
