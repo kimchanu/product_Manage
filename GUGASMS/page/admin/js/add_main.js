@@ -371,6 +371,7 @@ function input_file_check(elem, ext_array, type){
     $(elem).change(function(e){
         var file_value = $(elem).val().split("\\");
         var file_name = file_value[file_value.length -1];
+        console.log(file_name_elem, file_value, file_name);
         if($(this).val() != ""){
             var ext =  $(this).val().split(".").pop().toLowerCase();
             // 매개변수로 받을 값
