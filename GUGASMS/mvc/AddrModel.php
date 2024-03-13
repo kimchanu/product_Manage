@@ -357,7 +357,7 @@ function products_real(){
                 $param["name"] = json_decode($param["name"], true);
                 $param["phone"] = json_decode ($param["phone"], true);
                 
-                $sql = "insert into addr_list (group_idx, name, phone_number, regdate) values ";
+                $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_code, regdate) values ";
                 for($i = 0; $i<count($param["name"]); $i++){
                     $sql = $sql . "( ";
                     $sql = $sql . $param["group_idx"] . ", ";
@@ -376,22 +376,22 @@ function products_real(){
                 
                 $this->conn->s_transaction();
                 $result = $this->conn->db_insert($sql);
-                if($result["result"] == 1){
-                    $sql = "select idx, name, phone_number from addr_list ";
-                    $sql = $sql . "where group_idx = ".$param["group_idx"]."";
+            //     if($result["result"] == 1){
+            //         $sql = "select idx, name, phone_number from addr_list ";
+            //         $sql = $sql . "where group_idx = ".$param["group_idx"]."";
 
-                    $result = $this->conn->db_select($sql);
-                    if($result["result"] == 1){
-                        $this->conn->commit();
-                        $this->result = $result;
-                    }else{
-                        $this->conn->rollback();
-                        $this->result = $result;
-                    }
-                }else{
-                    $this->result = $result;
-                }
-            }
+            //         $result = $this->conn->db_select($sql);
+            //         if($result["result"] == 1){
+            //             $this->conn->commit();
+            //             $this->result = $result;
+            //         }else{
+            //             $this->conn->rollback();
+            //             $this->result = $result;
+            //         }
+            //     }else{
+            //         $this->result = $result;
+            //     }
+            // }
             echo $this->jsonEncode($this->result);
         }
 

@@ -524,6 +524,7 @@ function excel_add_list(name_arr, phone_arr){
             list : {
                 ctl : "Addr",
                 param1 : "addr_add_excel",
+                group_idx : group_idx,
                 name : JSON.stringify(name_arr),
                 phone : JSON.stringify(phone_arr),
             },
@@ -536,7 +537,7 @@ function excel_add_list(name_arr, phone_arr){
                     alert('해당 주소록에 데이터가 등록되었습니다.');
                     $('#receiver_wrap').empty();
                     receiver_count = 0;
-                    init_addr_list(result.value);
+                    init_addr_list(user_idx);
                 }
             }
         });
