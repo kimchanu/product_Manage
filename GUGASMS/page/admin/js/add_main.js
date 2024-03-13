@@ -497,7 +497,7 @@ function excel_upload(){
                     }
                 }
                 if(correct == true){
-                    excel_add_list(target, excel_name_arr, excel_phone_arr);
+                    excel_add_list(excel_name_arr, excel_phone_arr);
                     // init_addr_list(excel_value);
                 }
             }else{
@@ -505,7 +505,7 @@ function excel_upload(){
             }
 }
 
-function excel_add_list(target,name_arr, phone_arr){
+function excel_add_list(name_arr, phone_arr){
     if(double_click){
         double_click =false;
         lb.ajax({
