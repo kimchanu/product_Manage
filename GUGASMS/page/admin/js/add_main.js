@@ -1,3 +1,8 @@
+var double_click = true;
+var receiver_count = 0;
+var recevier_index  = 0;
+var group_idx = 100;
+
 $(document).ready(function(){
     request_product_list(user_idx);
     // number_check(lb.getElem('addr_phone_number'));
@@ -12,6 +17,7 @@ $(document).ready(function(){
         let num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         $( '#product_sum' ).prop( 'value', result1);
         $( '#product_price' ).prop( 'value', num3);
+        console.log(group_idx);
         // document.getElementById('product_price').innerText = num1;
     });  
     input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
@@ -20,9 +26,7 @@ $(document).ready(function(){
 function addCommas(value) {
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
-var double_click = true;
-var receiver_count = 0;
-var recevier_index  = 0;
+
 
 // 검색
 function search(target){
@@ -139,6 +143,7 @@ async function request_add_product(){
     let charrc = "";
     let idx1 = user_idx;
     let group_id1 = data1.group;
+    group_idx = group_id1;
     if(group_id1 == 0){
         charrc = "its"
     }else if(group_id1 == 1){
@@ -439,18 +444,6 @@ function input_file_check(elem, ext_array, type){
 function excel_code(elem){
     var input = elem;
     var reader = new FileReader();
-    // reader.onload = function(){
-    //     var file_data =reader.result;
-    //     var wb = XLSX.read(file_data, {type : 'binary'});
-    //     wb.SheetNames.forEach(function(sheetName, index){
-    //         if(index == 0){
-    //             var rowObj = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
-    //             excel_value = rowObj;
-    //         }
-    //     })
-    // }
-    // ie에서 작동안함
-    // reader.readAsBinaryString(input.files[0]);
     reader.onload = function(e){
         if(e.target.readyState == FileReader.DONE){
             var data = e.target.result;
