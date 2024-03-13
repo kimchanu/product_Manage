@@ -7,7 +7,7 @@ $(document).ready(function(){
     request_product_list(user_idx);
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
-    console.log(window.group_idx);
+    console.log(group_idx);
     $("#product_price, #product_amount").change( function(){
         let aa = document.getElementById('product_price').value;
         aa = aa.replace(/,/g, "");
@@ -109,6 +109,19 @@ function ss_user_detail(){
         });
     });
 }
+var data1 = await ss_user_detail().then(function(tableData) {
+    var result22 = {
+        idx: tableData.idx,
+        name: tableData.name,
+        group: tableData.sms,
+        id: tableData.id
+    }
+    data1 = result22;
+    console.log(data1);
+    return result22;
+}).catch(function(error) {
+    console.error(error); // 프로미스가 거부될 때 발생한 오류를 처리합니다.
+});
 
 async function request_add_product(){
     var product_code = document.getElementById('product_code');
@@ -199,7 +212,6 @@ async function request_add_product(){
                    result = JSON.parse(result);
                    if(result.result == 1){
                        alert('자재를 추가하였습니다.');
-                       group_idx = group_id1;
                        close_add_modal();
                        request_product_list(user_idx);
                    }else{
