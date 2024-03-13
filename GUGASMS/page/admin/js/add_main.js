@@ -14,7 +14,6 @@ function ss_user_detail2(){
         action : "index.php",
         havior : function(result){
             result = JSON.parse(result);
-            resolve(result.value[0]);
             group_idx = result.value[0].sms;
         }
         });
