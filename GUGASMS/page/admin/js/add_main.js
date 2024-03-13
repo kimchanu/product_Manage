@@ -1,25 +1,29 @@
 var double_click = true;
 var receiver_count = 0;
 var recevier_index  = 0;
+var group_idx = 100
 
+async function async_abc(){
 
-var data1 = await ss_user_detail().then(function(tableData) {
-    var result22 = {
-        idx: tableData.idx,
-        name: tableData.name,
-        group: tableData.sms,
-        id: tableData.id
-    }
-    data1 = result22;
-    console.log(data1);
-    return result22;
-}).catch(function(error) {
-    console.error(error); // 프로미스가 거부될 때 발생한 오류를 처리합니다.
-});
+    var data1 = await ss_user_detail().then(function(tableData) {
+        var result22 = {
+            idx: tableData.idx,
+            name: tableData.name,
+            group: tableData.sms,
+            id: tableData.id
+        }
+        data1 = result22;
+        console.log(data1);
+        return result22;
+    }).catch(function(error) {
+        console.error(error); // 프로미스가 거부될 때 발생한 오류를 처리합니다.
+    });
+    group_idx = data1.group;
+}
 
-var group_idx = data1.group;
 $(document).ready(function(){
     request_product_list(user_idx);
+    async_abc();
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
     console.log(group_idx);
