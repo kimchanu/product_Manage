@@ -470,39 +470,39 @@ function excel_code(elem){
 
 // 엑셀 업로드
 function excel_upload(){
-            if(typeof excel_value != "undefined" && excel_value != null){
-                var regExp =  /^\d{3}-\d{3,4}-\d{4}$/;
-                var correct = true;
-                var excel_name_arr = [];
-                var excel_phone_arr = [];
-                for(var i in excel_value){
-                    if(typeof excel_value[i].name == "undefined" || excel_value[i].name == null){
-                        alert('이름이 비어있는 행이 있습니다.');
-                        correct = false;
-                        break;
-                    }else{
-                        excel_name_arr.push(excel_value[i].name);
-                    }
-                    if(typeof excel_value[i].phone_number == "undefined"|| excel_value[i].phone_number == null){
-                        alert('번호가 비어있는 행이 있습니다');
-                        correct = false;
-                        break;
-                    }else{
-                        if(!regExp.test(excel_value[i].phone_number)){
-                            alert('잘못된 유형의 번호가 있는 행이 있습니다');
-                            correct = false;
-                            break;
-                        }
-                        excel_phone_arr.push(excel_value[i].phone_number);
-                    }
-                }
-                if(correct == true){
-                    excel_add_list(excel_name_arr, excel_phone_arr);
-                    // init_addr_list(excel_value);
-                }
+    if(typeof excel_value != "undefined" && excel_value != null){
+        var regExp =  /^\d{3}-\d{3,4}-\d{4}$/;
+        var correct = true;
+        var excel_name_arr = [];
+        var excel_phone_arr = [];
+        for(var i in excel_value){
+            if(typeof excel_value[i].name == "undefined" || excel_value[i].name == null){
+                alert('이름이 비어있는 행이 있습니다.');
+                correct = false;
+                break;
             }else{
-                alert('업로드할 파일을 첨부해주세요');
+                excel_name_arr.push(excel_value[i].name);
             }
+            if(typeof excel_value[i].phone_number == "undefined"|| excel_value[i].phone_number == null){
+                alert('번호가 비어있는 행이 있습니다');
+                correct = false;
+                break;
+            }else{
+                if(!regExp.test(excel_value[i].phone_number)){
+                    alert('잘못된 유형의 번호가 있는 행이 있습니다');
+                    correct = false;
+                    break;
+                }
+                excel_phone_arr.push(excel_value[i].phone_number);
+            }
+        }
+        if(correct == true){
+            excel_add_list(excel_name_arr, excel_phone_arr);
+            // init_addr_list(excel_value);
+        }
+    }else{
+        alert('업로드할 파일을 첨부해주세요');
+    }
 }
 
 function excel_add_list(name_arr, phone_arr){
@@ -519,7 +519,7 @@ function excel_add_list(name_arr, phone_arr){
             action : "index.php",
             havior : function(result){
                 double_click = true;
-                // console.log(result);
+                console.log(result);
                 result = JSON.parse(result);
                 if(result.result == 1){
                     alert('해당 주소록에 데이터가 등록되었습니다.');
