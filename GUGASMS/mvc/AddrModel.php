@@ -357,7 +357,7 @@ function products_real(){
                 $param["name"] = json_decode($param["name"], true);
                 $param["phone"] = json_decode ($param["phone"], true);
                 
-                $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_code, regdate) values ";
+                $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_code, into_time) values ";
                 for($i = 0; $i<count($param["name"]); $i++){
                     $sql = $sql . "( ";
                     $sql = $sql . $param["group_idx"] . ", ";
