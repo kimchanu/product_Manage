@@ -7,7 +7,7 @@ $(document).ready(function(){
     request_product_list(user_idx);
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
-    console.log(group_idx);
+    console.log(window.group_idx);
     $("#product_price, #product_amount").change( function(){
         let aa = document.getElementById('product_price').value;
         aa = aa.replace(/,/g, "");
