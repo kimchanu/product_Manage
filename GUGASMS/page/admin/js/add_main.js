@@ -1,6 +1,5 @@
 $(document).ready(function(){
-    // request_addr_group();
-    input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
+    request_product_list(user_idx);
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
     $("#product_price, #product_amount").change( function(){
@@ -14,8 +13,8 @@ $(document).ready(function(){
         $( '#product_sum' ).prop( 'value', result1);
         $( '#product_price' ).prop( 'value', num3);
         // document.getElementById('product_price').innerText = num1;
-    });
-    request_product_list(user_idx);
+    });  
+    input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
 });
 
 function addCommas(value) {
@@ -362,7 +361,7 @@ function product_to_real(){
 //엑셀
 //파일 업로드 체크(type = "img", type = "excel")
 function input_file_check(elem, ext_array, type){
-    var file_name_elem = elem[0].files;
+    var file_name_elem = elem.files;
     console.log(file_name_elem);
     //바이트 수
     var msg_text = document.getElementById("msg_text");
