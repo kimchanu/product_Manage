@@ -22,6 +22,7 @@ function ss_user_detail2(){
 
 $(document).ready(function(){
     request_product_list(user_idx);
+    ss_user_detail2();
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
     console.log(group_idx);
