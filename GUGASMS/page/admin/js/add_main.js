@@ -3,27 +3,25 @@ var receiver_count = 0;
 var recevier_index  = 0;
 var group_idx = 100
 
-async function async_abc(){
-
-    var data1 = await ss_user_detail().then(function(tableData) {
-        var result22 = {
-            idx: tableData.idx,
-            name: tableData.name,
-            group: tableData.sms,
-            id: tableData.id
+function ss_user_detail2(){
+    lb.ajax({
+        type : "JsonAjaxPost",
+        list : {
+            ctl : "Admin",
+            param1 : "admin_detail",
+            target : user_idx,
+        },
+        action : "index.php",
+        havior : function(result){
+            result = JSON.parse(result);
+            resolve(result.value[0]);
+            group_idx = result.value[0].sms;
         }
-        data1 = result22;
-        console.log(data1);
-        return result22;
-    }).catch(function(error) {
-        console.error(error); // 프로미스가 거부될 때 발생한 오류를 처리합니다.
-    });
-    return data1.group;
+        });
 }
 
 $(document).ready(function(){
     request_product_list(user_idx);
-    group_idx = async_abc();
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
     console.log(group_idx);
