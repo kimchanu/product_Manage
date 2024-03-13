@@ -18,12 +18,12 @@ async function async_abc(){
     }).catch(function(error) {
         console.error(error); // 프로미스가 거부될 때 발생한 오류를 처리합니다.
     });
-    group_idx = data1.group;
+    return data1.group;
 }
 
 $(document).ready(function(){
     request_product_list(user_idx);
-    async_abc();
+    group_idx = async_abc();
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
     console.log(group_idx);
