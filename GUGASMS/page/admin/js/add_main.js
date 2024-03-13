@@ -277,7 +277,7 @@ function product_to_real(){
                 target.push(check_elems[i].value);
             }
         }
-        console.log(target);
+        // console.log(target);
         if(target.length == 0 || (typeof target[0] == "undefind" ||  target[0] == null || target[0] =="null")){
             alert('자재를 선택해주세요');
         }else{
@@ -619,7 +619,7 @@ function request_product_list(target){
         receiver_count = 0;
         var total_elem = document.getElementById('receiver_total');
         total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-        console.log(target);
+        // console.log(target);
         lb.ajax({
             type : "JsonAjaxPost",
             list : {
