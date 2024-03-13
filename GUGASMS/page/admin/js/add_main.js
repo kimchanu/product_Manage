@@ -143,7 +143,7 @@ async function request_add_product(){
     let charrc = "";
     let idx1 = user_idx;
     let group_id1 = data1.group;
-    group_idx = group_id1;
+    
     if(group_id1 == 0){
         charrc = "its"
     }else if(group_id1 == 1){
@@ -199,6 +199,7 @@ async function request_add_product(){
                    result = JSON.parse(result);
                    if(result.result == 1){
                        alert('자재를 추가하였습니다.');
+                       group_idx = group_id1;
                        close_add_modal();
                        request_product_list(user_idx);
                    }else{
