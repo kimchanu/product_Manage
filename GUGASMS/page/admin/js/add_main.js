@@ -7,6 +7,7 @@ $(document).ready(function(){
     request_product_list(user_idx);
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
+    console.log(group_idx);
     $("#product_price, #product_amount").change( function(){
         let aa = document.getElementById('product_price').value;
         aa = aa.replace(/,/g, "");
@@ -17,7 +18,6 @@ $(document).ready(function(){
         let num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         $( '#product_sum' ).prop( 'value', result1);
         $( '#product_price' ).prop( 'value', num3);
-        console.log(group_idx);
         // document.getElementById('product_price').innerText = num1;
     });  
     input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
