@@ -469,9 +469,7 @@ function excel_code(elem){
 }
 
 // 엑셀 업로드
-function excel_upload(target){
-    if(typeof target != "undefined" && typeof target != undefined && target != null && target != "null"){
-        
+function excel_upload(){
             if(typeof excel_value != "undefined" && excel_value != null){
                 var regExp =  /^\d{3}-\d{3,4}-\d{4}$/;
                 var correct = true;
@@ -505,9 +503,7 @@ function excel_upload(target){
             }else{
                 alert('업로드할 파일을 첨부해주세요');
             }
-    }
 }
-
 
 function excel_add_list(target,name_arr, phone_arr){
     if(double_click){
@@ -517,7 +513,6 @@ function excel_add_list(target,name_arr, phone_arr){
             list : {
                 ctl : "Addr",
                 param1 : "addr_add_excel",
-                group_idx : target,
                 name : JSON.stringify(name_arr),
                 phone : JSON.stringify(phone_arr),
             },
