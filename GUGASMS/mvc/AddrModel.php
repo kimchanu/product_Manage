@@ -376,21 +376,21 @@ function products_real(){
                 
                 $this->conn->s_transaction();
                 $result = $this->conn->db_insert($sql);
-                // if($result["result"] == 1){
-                //     $sql = "select idx, name, phone_number from addr_list ";
-                //     $sql = $sql . "where group_idx = ".$param["group_idx"]."";
+                if($result["result"] == 1){
+                    $sql = "select group_id, mat_in_name, mat_in_code from its_mat_coming ";
+                    $sql = $sql . "where group_id = ".$param["group_idx"]."";
 
-                //     $result = $this->conn->db_select($sql);
-                //     if($result["result"] == 1){
-                //         $this->conn->commit();
-                //         $this->result = $result;
-                //     }else{
-                //         $this->conn->rollback();
-                //         $this->result = $result;
-                //     }
-                // }else{
-                //     $this->result = $result;
-                // }
+                    $result = $this->conn->db_select($sql);
+                    if($result["result"] == 1){
+                        $this->conn->commit();
+                        $this->result = $result;
+                    }else{
+                        $this->conn->rollback();
+                        $this->result = $result;
+                    }
+                }else{
+                    $this->result = $result;
+                }
             }
             echo $this->jsonEncode($this->result);
         }
