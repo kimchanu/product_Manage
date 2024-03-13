@@ -24,7 +24,6 @@ $(document).ready(function(){
     ss_user_detail2();
     // number_check(lb.getElem('addr_phone_number'));
     // console.log(user_idx);
-    console.log(group_idx);
     $("#product_price, #product_amount").change( function(){
         let aa = document.getElementById('product_price').value;
         aa = aa.replace(/,/g, "");
@@ -481,6 +480,7 @@ function excel_code(elem){
 
 // 엑셀 업로드
 function excel_upload(){
+    console.log(group_idx);
     if(typeof excel_value != "undefined" && excel_value != null){
         var regExp =  /^\d{3}-\d{3,4}-\d{4}$/;
         var correct = true;
