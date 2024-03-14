@@ -484,7 +484,7 @@ function excel_upload(){
     console.log(group_idx);
     if(typeof excel_value != "undefined" && excel_value != null){
         var correct = true;
-        var excel_name_arr = [];
+        var excel_mat_in_name = [];
         var excel_mat_in_price = [];
         var excel_mat_in_amount = [];
         var excel_mat_in_sum = [];
@@ -509,7 +509,7 @@ function excel_upload(){
                 correct = false;
                 break;
             }else{
-                excel_name_arr.push(excel_value[i].mat_in_name);
+                excel_mat_in_name.push(excel_value[i].mat_in_name);
             }
             if(typeof excel_value[i].mat_in_price == "undefined" || excel_value[i].mat_in_price == null){
                 alert('가격이 비어있는 행이 있습니다.');
@@ -542,7 +542,7 @@ function excel_upload(){
             
         }
         if(correct == true){
-            excel_add_list(excel_name_arr, excel_phone_arr);
+            excel_add_list(excel_mat_in_name, excel_mat_in_price, excel_mat_in_amount, excel_mat_in_sum, excel_mat_in_union);
             // init_addr_list(excel_value);
         }
     }else{
@@ -550,7 +550,7 @@ function excel_upload(){
     }
 }
 
-function excel_add_list(name_arr, phone_arr){
+function excel_add_list(name_arr, phone_arr, excel_mat_in_amount, excel_mat_in_sum,excel_mat_in_union){
     if(double_click){
         double_click =false;
         lb.ajax({
@@ -561,6 +561,9 @@ function excel_add_list(name_arr, phone_arr){
                 group_idx : group_idx,
                 name : JSON.stringify(name_arr),
                 phone : JSON.stringify(phone_arr),
+                mat_in_amount : JSON.stringify(excel_mat_in_amount),
+                mat_in_sum : JSON.stringify(excel_mat_in_sum),
+                mat_in_union : JSON.stringify(excel_mat_in_union),
             },
             action : "index.php",
             havior : function(result){

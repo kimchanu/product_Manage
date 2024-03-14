@@ -360,13 +360,20 @@ function products_real(){
             if($this->value_check(array("group_idx","name","phone"))){
                 $param["name"] = json_decode($param["name"], true);
                 $param["phone"] = json_decode ($param["phone"], true);
+                $param["phone"] = json_decode ($param["mat_in_amount"], true);
+                $param["phone"] = json_decode ($param["mat_in_sum"], true);
+                $param["phone"] = json_decode ($param["mat_in_union"], true);
+
                 
-                $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_code, into_time) values ";
+                $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_price, mat_in_amount, mat_in_sum, mat_in_union) values ";
                 for($i = 0; $i<count($param["name"]); $i++){
                     $sql = $sql . "( ";
                     $sql = $sql . $param["group_idx"] . ", ";
                     $sql = $sql . $this->null_check($param["name"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["phone"][$i]) . ", now() ";
+                    $sql = $sql . $this->null_check($param["phone"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["mat_in_amount"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["mat_in_sum"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["mat_in_union"][$i]) . ", ";
                     if(count($param["name"]) == 1){
                         $sql = $sql . ")";
                     }else{
