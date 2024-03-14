@@ -293,12 +293,16 @@ function its_add_product_real() {
          $sql .= ")";
 
      // Execute the query
+     if($sql == ""){
+        $this->result["result"] = "sql에 아무것도 없음.";
+    }else{
              $result = $this->conn->db_insert($sql);
              if($result["result"] == 1){
                  $this->result = $result;
              }else{
                  $this->result["result"] = 0;
              }
+            }
          
      echo $this->jsonEncode($this->result);
 }
