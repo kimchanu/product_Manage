@@ -373,7 +373,7 @@ function products_real(){
                     $sql = $sql . $this->null_check($param["phone"][$i]) . ", ";
                     $sql = $sql . $this->null_check($param["mat_in_amount"][$i]) . ", ";
                     $sql = $sql . $this->null_check($param["mat_in_sum"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["mat_in_union"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["mat_in_union"][$i]);
                     if(count($param["name"]) == 1){
                         $sql = $sql . ")";
                     }else{
