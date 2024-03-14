@@ -382,7 +382,7 @@ function products_real(){
                             $sql = $sql . "),";
                         }
                     }
-                // }
+                }
                  // Prepare the SQL statement
             // $sql = "INSERT INTO its_mat_coming (group_id, mat_in_name, mat_in_price, mat_in_amount, mat_in_sum, mat_in_union) VALUES ";
 
