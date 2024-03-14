@@ -353,12 +353,12 @@ function product_to_real(){
                                     action : "index.php",
                                     havior : function(result){
                                         double_click = true;
-                                        console.log(result2["result"]);
+                                        console.log(result["result"]);
                                         result = JSON.parse(result.value);
                                         if(result.result == 1){
                                             select_del_receiver();
                                         }else{
-                                            if(result2.error_code == "533"){
+                                            if(result.error_code == "533"){
                                                 alert(result.message);
                                             }else{
                                                 alert('사용자 등록 실패');
