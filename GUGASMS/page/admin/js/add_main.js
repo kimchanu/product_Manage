@@ -353,17 +353,18 @@ function product_to_real(){
                                     action : "index.php",
                                     havior : function(res){
                                         double_click = true;
-                                        console.log(res["result"]);
-                                        res = JSON.parse(res.value);
-                                        if(res.result == 1){
-                                            select_del_receiver();
-                                        }else{
-                                            if(res.error_code == "533"){
-                                                alert(res.message);
-                                            }else{
-                                                alert('사용자 등록 실패');
-                                            }
-                                        }
+                                        select_del_receiver();
+                                        // console.log(res["result"]);
+                                        // res = JSON.parse(res.value);
+                                        // if(res.result == 1){
+                                            
+                                        // }else{
+                                        //     if(res.error_code == "533"){
+                                        //         alert(res.message);
+                                        //     }else{
+                                        //         alert('사용자 등록 실패');
+                                        //     }
+                                        // }
                                     }
                                 })
                         }
