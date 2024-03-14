@@ -360,9 +360,9 @@ function products_real(){
             if($this->value_check(array("group_idx","name","phone"))){
                 $param["name"] = json_decode($param["name"], true);
                 $param["phone"] = json_decode ($param["phone"], true);
-                $param["phone"] = json_decode ($param["mat_in_amount"], true);
-                $param["phone"] = json_decode ($param["mat_in_sum"], true);
-                $param["phone"] = json_decode ($param["mat_in_union"], true);
+                $param["mat_in_amount"] = json_decode ($param["mat_in_amount"], true);
+                $param["mat_in_sum"] = json_decode ($param["mat_in_sum"], true);
+                $param["mat_in_union"] = json_decode ($param["mat_in_union"], true);
 
                 
                 $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_price, mat_in_amount, mat_in_sum, mat_in_union) values ";
