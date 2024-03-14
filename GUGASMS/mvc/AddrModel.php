@@ -365,25 +365,43 @@ function products_real(){
                 $param["mat_in_union"] = json_decode ($param["mat_in_union"], true);
 
                 $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_price, mat_in_amount, mat_in_sum, mat_in_union) values ";
-                for($i = 0; $i<count($param["name"]); $i++){
+                for($i = 0; $i<count($param["mat_in_name"]); $i++){
                     $sql = $sql . "( ";
                     $sql = $sql . $param["group_idx"] . ", ";
-                    $sql = $sql . $this->null_check($param["name"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["phone"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["mat_in_name"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["mat_in_price"][$i]) . ", ";
                     $sql = $sql . $this->null_check($param["mat_in_amount"][$i]) . ", ";
                     $sql = $sql . $this->null_check($param["mat_in_sum"][$i]) . ", ";
                     $sql = $sql . $this->null_check($param["mat_in_union"][$i]);
-                    if(count($param["name"]) == 1){
+                    if(count($param["mat_in_name"]) == 1){
                         $sql = $sql . ")";
                     }else{
-                        if($i == (count($param["name"]) -1)){
+                        if($i == (count($param["mat_in_name"]) -1)){
                             $sql = $sql . " )";
                         }else{
                             $sql = $sql . "),";
                         }
                     }
-                }
-                
+                // }
+                 // Prepare the SQL statement
+            // $sql = "INSERT INTO its_mat_coming (group_id, mat_in_name, mat_in_price, mat_in_amount, mat_in_sum, mat_in_union) VALUES ";
+
+            // // Build the values string for bulk insert
+            // $values = array();
+            // for ($i = 0; $i < count($param["mat_in_name"]); $i++) {
+            //     $values[] = "(" . $param["group_idx"] . ", " . 
+            //                 $this->null_check($param["mat_in_name"][$i]) . ", " . 
+            //                 $this->null_check($param["mat_in_price"][$i]) . ", " . 
+            //                 $this->null_check($param["mat_in_amount"][$i]) . ", " . 
+            //                 $this->null_check($param["mat_in_sum"][$i]) . ", " . 
+            //                 $this->null_check($param["mat_in_union"][$i]) . ")";
+            // }
+
+            // // Concatenate the values string with the SQL statement
+            // $sql .= implode(",", $values);
+
+        // Execute the SQL query
+
                 $this->conn->s_transaction();
                 $result = $this->conn->db_insert($sql);
                 if($result["result"] == 1){
