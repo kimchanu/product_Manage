@@ -388,7 +388,7 @@ function products_real(){
                 $this->conn->s_transaction();
                 $result = $this->conn->db_insert($sql);
                 if($result["result"] == 1){
-                    $sql = "select group_id, mat_in_name, mat_in_price, mat_in_amount from its_mat_coming ";
+                    $sql = "select mat_in_sum, mat_in_name, mat_in_price, mat_in_amount from its_mat_coming ";
                     $sql = $sql . "where group_id = ".$param["group_idx"]."";
 
                     $result = $this->conn->db_select($sql);
