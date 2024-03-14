@@ -255,12 +255,12 @@
                     $sql .= ")";
 
                 // Execute the query
-                        $result = $this->conn->db_insert($sql);
-                        if($result["result"] == 1){
-                            $this->result = $result;
-                        }else{
-                            $this->result["result"] = 0;
-                        }
+                    $result = $this->conn->db_insert($sql);
+                    if($result["result"] == 1){
+                        $this->result = $result;
+                    }else{
+                        $this->result["result"] = 0;
+                    }
                     
                 echo $this->jsonEncode($this->result);
 }

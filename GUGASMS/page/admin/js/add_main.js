@@ -351,15 +351,15 @@ function product_to_real(){
                                         mat_in_sum : result.value[i].mat_in_sum,
                                     },
                                     action : "index.php",
-                                    havior : function(result2){
+                                    havior : function(result){
                                         double_click = true;
                                         console.log(result2["result"]);
-                                        result2 = JSON.parse(result2.value);
-                                        if(result2.result == 1){
+                                        result = JSON.parse(result.value);
+                                        if(result.result == 1){
                                             select_del_receiver();
                                         }else{
                                             if(result2.error_code == "533"){
-                                                alert(result2.message);
+                                                alert(result.message);
                                             }else{
                                                 alert('사용자 등록 실패');
                                             }
@@ -482,30 +482,63 @@ function excel_code(elem){
 function excel_upload(){
     console.log(group_idx);
     if(typeof excel_value != "undefined" && excel_value != null){
-        var regExp =  /^\d{3}-\d{3,4}-\d{4}$/;
         var correct = true;
         var excel_name_arr = [];
-        var excel_phone_arr = [];
+        var excel_mat_in_price = [];
+        var excel_mat_in_amount = [];
+        var excel_mat_in_sum = [];
+        var excel_mat_in_union = [];
+        var excel_mat_in_code = [];
+        var excel_mat_in_place = [];
+        var excel_bc_in_b_class = [];
+        var excel_bc_in_s_class = [];
+        var excel_mat_in_stand = [];
+        var excel_mat_in_custom = [];
+
         for(var i in excel_value){
-            if(typeof excel_value[i].name == "undefined" || excel_value[i].name == null){
-                alert('이름이 비어있는 행이 있습니다.');
+            excel_mat_in_code.push(excel_value[i].mat_in_code);
+            excel_mat_in_place.push(excel_value[i].mat_in_place);
+            excel_bc_in_b_class.push(excel_value[i].bc_in_b_class);
+            excel_bc_in_s_class.push(excel_value[i].bc_in_s_class);
+            excel_mat_in_stand.push(excel_value[i].mat_in_stand);
+            excel_mat_in_custom.push(excel_value[i].mat_in_custom);
+            
+            if(typeof excel_value[i].mat_in_name == "undefined" || excel_value[i].mat_in_name == null){
+                alert('자재명이 비어있는 행이 있습니다.');
                 correct = false;
                 break;
             }else{
-                excel_name_arr.push(excel_value[i].name);
+                excel_name_arr.push(excel_value[i].mat_in_name);
             }
-            if(typeof excel_value[i].phone_number == "undefined"|| excel_value[i].phone_number == null){
-                alert('번호가 비어있는 행이 있습니다');
+            if(typeof excel_value[i].mat_in_price == "undefined" || excel_value[i].mat_in_price == null){
+                alert('가격이 비어있는 행이 있습니다.');
                 correct = false;
                 break;
             }else{
-                if(!regExp.test(excel_value[i].phone_number)){
-                    alert('잘못된 유형의 번호가 있는 행이 있습니다');
-                    correct = false;
-                    break;
-                }
-                excel_phone_arr.push(excel_value[i].phone_number);
+                excel_mat_in_price.push(excel_value[i].mat_in_price);
             }
+            if(typeof excel_value[i].mat_in_amount == "undefined" || excel_value[i].mat_in_amount == null){
+                alert('수량이 비어있는 행이 있습니다.');
+                correct = false;
+                break;
+            }else{
+                excel_mat_in_amount.push(excel_value[i].mat_in_amount);
+            }
+            if(typeof excel_value[i].mat_in_sum == "undefined" || excel_value[i].mat_in_sum == null){
+                alert('총가격이 비어있는 행이 있습니다.');
+                correct = false;
+                break;
+            }else{
+                excel_mat_in_sum.push(excel_value[i].mat_in_sum);
+            }
+            if(typeof excel_value[i].mat_in_union == "undefined" || excel_value[i].mat_in_union == null){
+                alert('단위가 비어있는 행이 있습니다.');
+                correct = false;
+                break;
+            }else{
+                excel_mat_in_union.push(excel_value[i].mat_in_union);
+            }
+            
         }
         if(correct == true){
             excel_add_list(excel_name_arr, excel_phone_arr);
