@@ -543,14 +543,13 @@ function excel_upload(){
         }
         if(correct == true){
             excel_add_list(excel_mat_in_name, excel_mat_in_price, excel_mat_in_amount, excel_mat_in_sum, excel_mat_in_union);
-            // init_addr_list(excel_value);
         }
     }else{
         alert('업로드할 파일을 첨부해주세요');
     }
 }
 
-function excel_add_list(name_arr, phone_arr, excel_mat_in_amount, excel_mat_in_sum,excel_mat_in_union){
+function excel_add_list(mat_in_name, mat_in_price, excel_mat_in_amount, excel_mat_in_sum,excel_mat_in_union){
     if(double_click){
         double_click =false;
         lb.ajax({
@@ -559,8 +558,8 @@ function excel_add_list(name_arr, phone_arr, excel_mat_in_amount, excel_mat_in_s
                 ctl : "Addr",
                 param1 : "addr_add_excel",
                 group_idx : group_idx,
-                name : JSON.stringify(name_arr),
-                phone : JSON.stringify(phone_arr),
+                mat_in_name : JSON.stringify(mat_in_name),
+                mat_in_price : JSON.stringify(mat_in_price),
                 mat_in_amount : JSON.stringify(excel_mat_in_amount),
                 mat_in_sum : JSON.stringify(excel_mat_in_sum),
                 mat_in_union : JSON.stringify(excel_mat_in_union),
@@ -571,7 +570,7 @@ function excel_add_list(name_arr, phone_arr, excel_mat_in_amount, excel_mat_in_s
                 console.log(result);
                 result = JSON.parse(result);
                 if(result.result == 1){
-                    alert('해당 주소록에 데이터가 등록되었습니다.');
+                    alert('자재가 등록되었습니다.');
                     $('#receiver_wrap').empty();
                     receiver_count = 0;
                     init_addr_list(user_idx);
