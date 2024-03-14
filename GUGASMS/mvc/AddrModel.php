@@ -357,7 +357,7 @@ function products_real(){
         *********************************************************************/
         function addr_add_excel(){
             $param = $this->param;
-            if($this->value_check(array("group_idx","name","phone"))){
+            if($this->value_check(array("group_idx","mat_in_name","mat_in_price"))){
                 $param["mat_in_name"] = json_decode($param["mat_in_name"], true);
                 $param["mat_in_price"] = json_decode ($param["mat_in_price"], true);
                 $param["mat_in_amount"] = json_decode ($param["mat_in_amount"], true);
