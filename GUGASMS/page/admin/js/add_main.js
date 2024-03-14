@@ -351,15 +351,15 @@ function product_to_real(){
                                         mat_in_sum : result.value[i].mat_in_sum,
                                     },
                                     action : "index.php",
-                                    havior : function(result){
+                                    havior : function(res){
                                         double_click = true;
-                                        console.log(result["result"]);
-                                        result = JSON.parse(result.value);
-                                        if(result.result == 1){
+                                        console.log(res["result"]);
+                                        res = JSON.parse(res.value);
+                                        if(res.result == 1){
                                             select_del_receiver();
                                         }else{
-                                            if(result.error_code == "533"){
-                                                alert(result.message);
+                                            if(res.error_code == "533"){
+                                                alert(res.message);
                                             }else{
                                                 alert('사용자 등록 실패');
                                             }
