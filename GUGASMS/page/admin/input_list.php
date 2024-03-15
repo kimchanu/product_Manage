@@ -164,12 +164,12 @@
             <td class="number"><span data-attr="group_content">비고</span></td>
         </tr>
         <tr data-copy="receiver_copy">
-            <td class="check">
+            <!-- <td class="check">
                 <label class="check_label m-auto" value="yes">
                     <input type="checkbox" data-attr="check_box">
                     <span class="checkmark"></span>
                 </label>
-            </td>
+            </td> -->
             <!-- <td class="check" data-attr="num"></td>
             <td class="etc" data-attr="name"></td>
             <td class="number" data-attr="phone_number"></td> -->

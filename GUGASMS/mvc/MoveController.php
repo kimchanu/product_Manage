@@ -19,7 +19,7 @@
             if($this->session->is_admin_login_php()){
                 $user_idx = $this->session->get_admin_idx();
                 $user_role =$this->session->get_admin_role();
-                $group_idx = $this->session->get_admin_group();
+                // $group_idx = $this->session->get_admin_group();
                 $receiver = $this->session->get_receiver_list();
 
                 if(isset($this->param["param1"])){
@@ -55,7 +55,7 @@
             if($this->session->is_admin_login_php()){
                 $user_idx = $this->session->get_admin_idx();
                 $user_role = $this->session->get_admin_role();
-                $group_idx = $this->session->get_admin_group();
+                // $group_idx = $this->session->get_admin_group();
                 if($user_role == "2" || $user_role == "0"){
                     echo "style='display:none'";
                 }
