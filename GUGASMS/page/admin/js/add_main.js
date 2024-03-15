@@ -573,7 +573,7 @@ function excel_add_list(mat_in_name, mat_in_price, excel_mat_in_amount, excel_ma
                     alert('자재가 등록되었습니다.');
                     $('#receiver_wrap').empty();
                     receiver_count = 0;
-                    init_addr_list(user_idx);
+                    request_product_list(user_idx);
                 }
             }
         });

@@ -360,7 +360,7 @@
             <td class="tight2" data-attr="mat_in_place">-</td>
             <td class="tight2" data-attr="bc_in_b_class">-</td>
             <td class="tight2" data-attr="bc_in_s_class">-</td>
-            <td class="number" data-attr="mat_in_name">품명</td>
+            <td class="number" data-attr="mat_in_name">-</td>
             <td class="number" data-attr="mat_in_stand">-</td>
             <td class="tight1" data-attr="mat_in_maker">-</td>
             <td class="tight1" data-attr="mat_in_custom">-</td>
