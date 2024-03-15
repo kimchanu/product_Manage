@@ -51,21 +51,6 @@
         // 설 명 : 주소록 그룹 리스트
         // 만든이 : 최진혁
         *********************************************************************/
-        function addr_group_list(){
-            $param = $this->param;
-
-            $sql = "select * from addr_group order by idx asc ";
-
-            $result = $this->conn->db_select($sql);
-            if($result["result"] == 1){
-                $this->result = $result;
-            }else{
-                $this->result = $result;
-            }
-            
-            echo $this->jsonEncode($this->result);
-        }
-
         function product_list(){
             $param = $this->param;
 
@@ -80,6 +65,22 @@
             
             echo $this->jsonEncode($this->result);
         }
+
+        function product_list2(){
+            $param = $this->param;
+
+            $sql = "select * from its_mat_coming where group_id = ".$param["idx"]." order by incom_id asc";
+
+            $result = $this->conn->db_select($sql);
+            if($result["result"] == 1){
+                $this->result = $result;
+            }else{
+                $this->result = $result;
+            }
+            
+            echo $this->jsonEncode($this->result);
+        }
+
 
 
         /********************************************************************* 

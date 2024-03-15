@@ -1,7 +1,27 @@
+var group_idx = 100;
+
+function ss_user_detail2(){
+    lb.ajax({
+        type : "JsonAjaxPost",
+        list : {
+            ctl : "Admin",
+            param1 : "admin_detail",
+            target : user_idx,
+        },
+        action : "index.php",
+        havior : function(result){
+            result = JSON.parse(result);
+            group_idx = result.value[0].sms;
+        }
+        });
+}
+
 $(document).ready(function(){
     request_product_list(user_idx);
+    ss_user_detail2();
 
 });
+
 
 
 
@@ -10,6 +30,7 @@ var receiver_count = 0;
 var recevier_index  = 0;
 
 function request_product_list(target){
+    target = group_idx;
     if(double_click){
         double_click = false;
         $('#receiver_wrap').empty();
@@ -22,7 +43,7 @@ function request_product_list(target){
             type : "JsonAjaxPost",
             list : {
                 ctl : "Addr",
-                param1 : "product_list",
+                param1 : "product_list2",
                 idx : target,
             },
             action : "index.php",

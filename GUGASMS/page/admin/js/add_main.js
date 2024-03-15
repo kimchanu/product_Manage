@@ -1,7 +1,7 @@
 var double_click = true;
 var receiver_count = 0;
 var recevier_index  = 0;
-var group_idx = 100
+var group_idx = 100;
 
 function ss_user_detail2(){
     lb.ajax({
