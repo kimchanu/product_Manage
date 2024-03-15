@@ -138,24 +138,6 @@
 		<!-- adm_container끝 -->
 		<?php include_once $this->dir . "page/admin/include/admin_footer.php"; ?>
 	</div>
-	<!-- 모달화면 -->
-	<div class="modal admin_modal" id="content_modal" style= "display:none;">
-		<div class="popup_wrap modal-md modal-md-other">
-			<div class="adm_popup_container" style ="width:396px;">
-				<h4>메시지 전송내용</h4>
-				<section class="adm_section_container">
-					<div class="adm_simple_input" style ="width:298px; height:262px;">
-						<textarea style ="width:298px; height:262px; font-size:16px;" id ="msg_text"></textarea>
-					</div>
-				</section>
-				<div class="adm_table_btn">
-					<ul>
-						<li><input class="btn-sm btn-default" type="button" value="닫기" id="btnClose" onclick="close_content_modal();"/></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
 	<!-- wrap끝 -->
 	<div style="display:none;">
     <table>
