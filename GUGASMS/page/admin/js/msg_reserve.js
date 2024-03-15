@@ -17,8 +17,9 @@ function ss_user_detail2(){
 }
 
 $(document).ready(function(){
-    request_product_list(user_idx);
     ss_user_detail2();
+    request_product_list(user_idx);
+    
 
 });
 
