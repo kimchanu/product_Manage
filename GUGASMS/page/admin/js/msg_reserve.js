@@ -82,8 +82,8 @@ function init_addr_list(data){
 function search(target){
     if(typeof target != undefined && target != null && typeof target != "undefined" && target != "null"){
         if(addr_click_flag){
-            var addr_name = document.getElementById('search_addr_name');
-            var addr_phone_number = document.getElementById('search_addr_phone_number');
+            var addr_name = document.getElementById('mat_in_code');
+            var addr_phone_number = document.getElementById('send_kind');
             if(addr_name.value == "" && addr_phone_number.value == ""){
                 alert('이름 또는 휴대전화를 입력해주세요');
             }else{
@@ -98,8 +98,8 @@ function search(target){
 }
 
 function init_search(){
-    var addr_name = document.getElementById('search_addr_name');
-    var addr_phone_number = document.getElementById('search_addr_phone_number');
+    var addr_name = document.getElementById('mat_in_code');
+    var addr_phone_number = document.getElementById('send_kind');
 
     addr_name.value = "";
     addr_phone_number.value = "";
