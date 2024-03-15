@@ -46,10 +46,11 @@
         // $idx : 관리자 idx
         // 만든이: 안정환 만든날 : 2019-05-29
         *********************************************************************/
-        function success_admin_login($idx, $role){
+        function success_admin_login($idx, $role, $sms){
             // echo $this->project_name."\n";
             $this->create_session($this->project_name."admin_idx",$idx);
             $this->create_session($this->project_name."user_role",$role);
+            $this->create_session($this->project_name."group_idx",$sms);
         }
 
         /********************************************************************* 
@@ -116,6 +117,15 @@
             $this->start_session();
             if(isset($_SESSION[$this->project_name."user_role"])){ //$admin이 있으면 로그인중인상태
                 return $_SESSION[$this->project_name."user_role"];
+            }else{
+                return 0;
+            }
+        }
+
+        function get_admin_group(){
+            $this->start_session();
+            if(isset($_SESSION[$this->project_name."group_idx"])){ //$admin이 있으면 로그인중인상태
+                return $_SESSION[$this->project_name."group_idx"];
             }else{
                 return 0;
             }

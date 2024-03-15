@@ -46,7 +46,7 @@
 
         /********************************************************************* 
         // 함 수 : login()
-        // 설 명 : 관리자로그인
+        // 설 명 : 관리자로그인 
         // 담당자: 최진혁
         *********************************************************************/
         function login(){
@@ -62,7 +62,7 @@
                         if($result["value"][0]["role"] != 4){
                             $session=new Session();
                             // $session->success_admin_login($list[0]["idx"]);
-                            $session->success_admin_login($list[0]["idx"], $list[0]["role"]);
+                            $session->success_admin_login($list[0]["idx"], $list[0]["role"], $list[0]["sms"]);
                             $this->result = $result;
                             $this->result["message"] = "관리자 로그인 성공";
                         }else{

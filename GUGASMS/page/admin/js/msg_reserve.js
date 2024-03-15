@@ -1,21 +1,3 @@
-var group_idx = 100;
-
-function ss_user_detail2(){
-    lb.ajax({
-        type : "JsonAjaxPost",
-        list : {
-            ctl : "Admin",
-            param1 : "admin_detail",
-            target : user_idx,
-        },
-        action : "index.php",
-        havior : function(result){
-            result = JSON.parse(result);
-            group_idx = result.value[0].sms;
-        }
-        });
-}
-
 $(document).ready(function(){
     ss_user_detail2();
     request_product_list(user_idx);
