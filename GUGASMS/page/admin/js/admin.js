@@ -22,6 +22,8 @@
 
 // admin 메뉴 반응형 
 
+var group_idx = 0;
+
 $(document).ready(function(){
     $('#adm_menu_bar').click(function() {
 		$(".adm_aside").toggleClass("on");
@@ -220,6 +222,7 @@ function s_init_user_detail(data){
     var sms_elem = document.getElementById('sms_elem');
     var lms_elem = document.getElementById('lms_elem');
     var mms_elem = document.getElementById('mms_elem');
+    group_idx = data.sms;
     if(typeof data.name != "undefined" && typeof data.name != undefined && data.name != null && data.name != "null"){
         login_name.innerHTML = '<em>로그인: </em>'+data.name;
     }else{
