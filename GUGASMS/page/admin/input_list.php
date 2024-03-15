@@ -45,8 +45,8 @@
 							<div class="adm_section_container_body p-1">
                                 <ul class="clearfix row input-list-container">
                                     <li class="col-md-6">
-                                        <p class="input-tit">검색일</p>
-                                        <div class="insert"><input placeholder="yyyy-mm-dd" id ="start_date" type="text"></div>
+                                        <p class="input-tit">자재코드</p>
+                                        <div class="insert"><input type="text" id = "mat_in_code"></div>
                                     </li>
                                     <!-- <li class="col-md-6">
                                         <p class="input-tit">검색종료일</p>
