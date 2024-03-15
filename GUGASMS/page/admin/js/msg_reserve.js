@@ -1,8 +1,5 @@
 $(document).ready(function(){
-    ss_user_detail2();
     request_product_list(user_idx);
-    
-
 });
 
 
