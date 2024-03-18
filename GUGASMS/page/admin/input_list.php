@@ -66,7 +66,7 @@
 
                                 </ul>
                                 <div class="btn-list-con align-right mt-1 border-t">
-                                    <p class="mt-1"><button type="button" onclick = "init_search_elem();" class="btn-sm btn-clear">초기화</button></p>
+                                    <p class="mt-1"><button type="button" onclick = "init_search();" class="btn-sm btn-clear">초기화</button></p>
                                     <p class="mt-1"><button type="button" onclick = "search();" class="btn-sm btn-primary">검색</button></p>
                                 </div>
                             </div>
