@@ -6,7 +6,7 @@
 <header class="adm_header on">
 	<div class="adm_header_container">
 		<!-- <div style="padding-top: 15px; float:left;" id = "adm_menu_bar">
-			<svg width="25" height="30">
+			<svg width="25" height="30"> 
 				<path d="M0,5 25,5" stroke="#fff" stroke-width="2"></path>
 				<path d="M0,13 25,13" stroke="#fff" stroke-width="2"></path>
 				<path d="M0,21 25,21" stroke="#fff" stroke-width="2"></path>
@@ -15,7 +15,67 @@
 		<!-- hamburger // -->
 		<div class="header_left" id = "login_header_menu" style = "display:none;">
 			<div class="header-menu">
-				
+			<ul class="depth1-con clearfix">
+					<li class="depth1" data-side="">
+						<a class="depth2-a" id ="kakao_side" href="#" onclick = "side_bar(this); return false;">자재찾기</a>
+						<ul class="depth2-con" style ="display:none;">
+
+						<li class="depth2">
+							<a href="#" onclick="side_bar(this); return false;">관리동-2F</a>
+							<ul class="depth2-con" style="display:none;">
+								<li class="depth3">
+									<a href="?ctl=Move&param1=its">ITS</a>
+								</li>
+								<li class="depth3">
+									<a href="?ctl=Move&param1=manage_gk">관리</a>
+								</li>
+							</ul>
+						</li>
+
+						<li class="depth2">
+                   			<a href="#" onclick="side_bar(this); return false;">관리동-창고</a>
+                   			 <ul class="depth2-con" style="display:none;">
+                        		<li class="depth3">
+                            		<a href="?ctl=Move&param1=civil">시설</a>
+                       			</li>
+                        		<li class="depth3">
+                            		<a href="?ctl=Move&param1=electric_engine">전기/기계</a>
+                       			</li>
+                        		<li class="depth3">
+                            		<a href="?ctl=Move&param1=its_outside">ITS</a>
+                        		</li>
+                   			</ul>
+						</li>
+						</ul>
+					</li>
+					
+					<li class="depth1" data-side="">
+						<a class="depth2-a" id ="kakao_side" href="#" onclick = "side_bar(this); return false;">카카오톡보내기</a>
+						<ul class="depth2-con" style ="display:none;">
+							<li class="depth2"><a href="?ctl=Move&param1=kakao_main">알림톡전송</a></li>
+<!-- 							<li class="depth2"><a href="?ctl=Move&param1=kakao_f_main">친구톡전송</a></li> -->
+							<li class="depth2 admin_none"><a href="?ctl=Move&param1=kakao_result">전송결과</a></li>
+							<li class="depth2 admin_none"><a href="?ctl=Move&param1=kakao_num_set">발신번호관리</a></li>
+							<li class="depth2 admin_none"><a href="?ctl=Move&param1=kakao_pf_set">발신프로필관리</a></li>
+							<li class="depth2 admin_none"><a href="?ctl=Move&param1=kakao_tpl_set">알림톡템플릿관리</a></li>
+						</ul>
+					</li>
+					<li class="depth1"  data-side="">
+						<a class="depth2-a" id ="addr_side" href="#" onclick = "side_bar(this); return false;">주소록</a>
+						<ul class="depth2-con" style ="display:none;">
+							<li class="depth2"><a href="?ctl=Move&param1=add_main">주소록</a></li>
+							<li class="depth2 admin_none"><a href="?ctl=Move&param1=add_set">주소록그룹관리</a></li>
+						</ul>
+					</li>
+					<li class="depth1"  <?php echo $this->side_bar();?> data-side="">
+						<a class="depth2-a" id ="user_side" href="#" onclick = "side_bar(this); return false;">관리자</a>
+						<ul class="depth2-con" style ="display:none;">
+							<li class="depth2"><a href="?ctl=Move&param1=user_set">사용자관리</a></li>
+							<li class="depth2"><a href="?ctl=Move&param1=state_day">일별통계</a></li>
+							<li class="depth2"><a href="?ctl=Move&param1=state_month">월별통계</a></li>
+						</ul>
+					</li>
+				</ul>
 			</div>
 		</div>
 		<div>

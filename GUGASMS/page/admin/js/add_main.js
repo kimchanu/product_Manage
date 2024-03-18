@@ -526,14 +526,14 @@ function excel_upload(){
             
         }
         if(correct == true){
-            excel_add_list(excel_mat_in_name, excel_mat_in_price, excel_mat_in_amount, excel_mat_in_sum, excel_mat_in_union);
+            excel_add_list(excel_mat_in_name, excel_mat_in_price, excel_mat_in_amount, excel_mat_in_sum, excel_mat_in_union, excel_mat_in_code, excel_mat_in_place, excel_bc_in_b_class, excel_bc_in_s_class,excel_mat_in_stand, excel_mat_in_custom);
         }
     }else{
         alert('업로드할 파일을 첨부해주세요');
     }
 }
 
-function excel_add_list(mat_in_name, mat_in_price, excel_mat_in_amount, excel_mat_in_sum,excel_mat_in_union){
+function excel_add_list(mat_in_name, mat_in_price, excel_mat_in_amount, excel_mat_in_sum,excel_mat_in_union,excel_mat_in_code, excel_mat_in_place, excel_bc_in_b_class, excel_bc_in_s_class,excel_mat_in_stand, excel_mat_in_custom){
     if(double_click){
         double_click =false;
         lb.ajax({
@@ -547,6 +547,7 @@ function excel_add_list(mat_in_name, mat_in_price, excel_mat_in_amount, excel_ma
                 mat_in_amount : JSON.stringify(excel_mat_in_amount),
                 mat_in_sum : JSON.stringify(excel_mat_in_sum),
                 mat_in_union : JSON.stringify(excel_mat_in_union),
+                excel_mat_in_code : JSON.stringify(excel_mat_in_code),
             },
             action : "index.php",
             havior : function(result){
