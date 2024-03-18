@@ -364,8 +364,14 @@ function products_real(){
                 $param["mat_in_amount"] = json_decode ($param["mat_in_amount"], true);
                 $param["mat_in_sum"] = json_decode ($param["mat_in_sum"], true);
                 $param["mat_in_union"] = json_decode ($param["mat_in_union"], true);
+                $param["excel_mat_in_code"] = json_decode ($param["excel_mat_in_code"], true);
+                $param["excel_mat_in_place"] = json_decode ($param["excel_mat_in_place"], true);
+                $param["excel_bc_in_b_class"] = json_decode ($param["excel_bc_in_b_class"], true);
+                $param["excel_bc_in_s_class"] = json_decode ($param["excel_bc_in_s_class"], true);
+                $param["excel_mat_in_stand"] = json_decode ($param["excel_mat_in_stand"], true);
+                $param["excel_mat_in_custom"] = json_decode ($param["excel_mat_in_custom"], true);
 
-                $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_price, mat_in_amount, mat_in_sum, mat_in_union) values ";
+                $sql = "insert into its_mat_coming (group_id, mat_in_name, mat_in_price, mat_in_amount, mat_in_sum, mat_in_code, mat_in_place, bc_in_b_class, bc_in_s_class, mat_in_stand, mat_in_custom, mat_in_union) values ";
                 for($i = 0; $i<count($param["mat_in_name"]); $i++){
                     $sql = $sql . "( ";
                     $sql = $sql . $param["group_idx"] . ", ";
@@ -373,6 +379,12 @@ function products_real(){
                     $sql = $sql . $this->null_check($param["mat_in_price"][$i]) . ", ";
                     $sql = $sql . $this->null_check($param["mat_in_amount"][$i]) . ", ";
                     $sql = $sql . $this->null_check($param["mat_in_sum"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["excel_mat_in_code"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["excel_mat_in_place"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["excel_bc_in_b_class"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["excel_bc_in_s_class"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["excel_mat_in_stand"][$i]) . ", ";
+                    $sql = $sql . $this->null_check($param["excel_mat_in_custom"][$i]) . ", ";
                     $sql = $sql . $this->null_check($param["mat_in_union"][$i]);
                     if(count($param["mat_in_name"]) == 1){
                         $sql = $sql . ")";
