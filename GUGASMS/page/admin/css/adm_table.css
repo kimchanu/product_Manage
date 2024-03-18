@@ -8,7 +8,7 @@
 
 .adm_table thead > tr { cursor: auto;}
 
-.adm_table thead > tr.abcde {position: absolute;}
+.adm_table thead.abcde {position: absolute;}
 .adm_table th, .adm_table td {padding:12px 8px; vertical-align: middle; border-right:1px solid #e5e5e5;}
 .adm_table th { border-bottom: 3px solid #e5e5e5; font-weight:500;}
 .adm_table td {border-bottom: 1px solid #e5e5e5; text-align: center;}
