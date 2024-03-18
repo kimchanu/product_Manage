@@ -94,12 +94,6 @@
 					<li class="depth2">
 						<a href="?ctl=Move&param1=user_set" <?php echo $this->side_bar();?>>사용자관리</a>
 					</li>
-					<!-- <li class="depth2">
-						<a href="?ctl=Move&param1=state_day">일별통계</a>
-					</li>
-					<li class="depth2">
-						<a href="?ctl=Move&param1=state_month">월별통계</a>
-					</li> -->
 				</ul>
 			</li>
 		</ul>
