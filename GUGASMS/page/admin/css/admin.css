@@ -47,7 +47,7 @@
 
 /* adm footer */
 .adm_footer{width:100%; max-width: 2000px; left:50%; transform: translateX(-50%);  -ms-transform:translateX(-50%); -webkit-transform:translateX(-50%);
-  background:#fff; padding:12px; box-shadow:0 -1px 6px 0 hsla(0,0%,0%,0.1); font-size:12px; color:#888; bottom:0; position: fixed; z-index: 999;}
+  background:#fff; padding:12px; box-shadow:0 -1px 6px 0 hsla(0,0%,0%,0.1); font-size:12px; color:#888; bottom:0; position: fixed; z-index: 1;}
 .adm_footer_copy{padding:10px 0;text-align: center;}
 
 /* adm main container */
