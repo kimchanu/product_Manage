@@ -219,11 +219,6 @@
 .s-box .s-box-inner{padding:16px;}
 
 
-@media (max-width: 2500px){
-  .adm_aside{width: 200px;}
-  .adm_container{padding-left:200px;}
-
-}
 @media (max-width: 1400px){
   .header-menu .depth1 > a{padding: 19px 20px;}  
   .header-menu .depth1:nth-child(3)>ul{width: 150%;}
