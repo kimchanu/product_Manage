@@ -75,11 +75,11 @@
 				<ul class="depth2-con" style="display:none;">
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=kakao_main">알림톡전송</a></li> -->
 					<li side_bar();="side_bar();" class="depth2 admin_none">
-						<a href="?ctl=Move&param1=output">자재출고등록</a>
+						<a href="?ctl=Move&param1=output">자재출고</a>
 					</li>
-					<li side_bar();="side_bar();" class="depth2 admin_none">
+					<!-- <li side_bar();="side_bar();" class="depth2 admin_none">
 						<a href="?ctl=Move&param1=output_list">자재출고현황</a>
-					</li>
+					</li> -->
 					<li side_bar();="side_bar();" class="depth2 admin_none">
 						<a href="?ctl=Move&param1=output_month">월 집계</a>
 					</li>
