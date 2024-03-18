@@ -10,7 +10,7 @@
 
 
 .adm_table th, .adm_table td {padding:12px 8px; vertical-align: middle; border-right:1px solid #e5e5e5;}
-.adm_table th { border-bottom: 3px solid #e5e5e5; font-weight:500; position: absolute;}
+.adm_table th { border-bottom: 3px solid #e5e5e5; font-weight:500;}
 .adm_table td {border-bottom: 1px solid #e5e5e5; text-align: center;}
 .adm_table td.tit{text-align: left;}
 .adm_table .check{width: 40px; padding:12px 0; text-align: center;} .adm_table .number {width:144px;}  .tight1 {width:80px;} .tight2 {width:50px;} .adm_table .etc { width: 96px;} .adm_table .tit{width:280px;}
