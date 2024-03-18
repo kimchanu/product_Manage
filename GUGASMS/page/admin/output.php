@@ -36,7 +36,7 @@
           <div class="adm_container">
             <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
 			<div class="adm_section_container_head pb-0">
-				<h2>출고등록</h2>
+				<h2>자재출고</h2>
 			</div>
 		<div class="adm_main_container">
             <section class="adm_section_container">
