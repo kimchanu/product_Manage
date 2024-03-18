@@ -52,7 +52,7 @@
     </head>
     <body>
         <div class="wrap">
-            <?php include_once $this->dir."page/admin/include/admin_sidebar.php"; ?>
+
             <div class="adm_container">
                 <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
                 <div

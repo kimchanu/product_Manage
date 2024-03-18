@@ -25,7 +25,7 @@
 <body>
 	<div class="wrap">
 		<div class="loading"><img class="loading_img" src ="GUGASMS/page/admin/images/Spinner.gif"></div>
-        <?php include_once $this->dir."page/admin/include/admin_sidebar.php";?>
+
 		<div class="adm_container">
 			<?php include_once $this->dir . "page/admin/include/admin_header.php"; ?>
 			<div class="adm_section_container_head pb-0">
