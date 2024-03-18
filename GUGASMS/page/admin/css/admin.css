@@ -232,7 +232,7 @@
 }
 
 @media (max-width: 1080px){
-  .header_left{position: relative; top: 60px; left: -16px; background-color: #222e44; width: calc(100% + 32px); border-top: 1px solid rgba(255, 255, 255, 0.1);}
+  /* .header_left{position: relative; top: 60px; left: -16px; background-color: #222e44; width: calc(100% + 32px); border-top: 1px solid rgba(255, 255, 255, 0.1);} */
   .adm_section_container_head{padding: 80px 16px 24px 16px;}
   .header-menu .depth1{display: inline-block; float: none;}
   .header-menu{text-align: center;}
