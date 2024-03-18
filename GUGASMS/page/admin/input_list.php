@@ -87,7 +87,7 @@
 									<div class="adm_table_long_responsive">
 										<table id ="table_elem" class="adm_table adm_fixed_table mb-1">
 											<thead>
-												<tr>
+												<tr class = "abcde">
 													<!-- <th class="check">
 														<label class="check_label m-auto" value="yes" >
 															<input type="checkbox" onchange ="all_check(this);">
