@@ -92,7 +92,7 @@
                                     <i>Total</i>0</p>
                                 <div class="adm_table_long_responsive" >
                                     <table class="adm_table adm_fixed_table mb-1">
-                                        <thead>
+                                        <thead class = "abcde">
                                             <tr>
                                                 <th class="check">
                                                     <label class="check_label m-auto" value="yes">
