@@ -29,760 +29,822 @@
 		<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 		<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
 	</head>
+
+	<body>
 	<div class="wrap">
-		<div class="adm_container">
-            <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
-		<table cellpadding="5px">
-			<colgroup>
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			<col width="3%">
-			</colgroup>
-			<tr>
-				<td align="center" COLSPAN="26" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:24pt><strong>2024년 3월 자재수불명세서대장</strong></div></td>
+    <div class="adm_container">
+        <?php include_once $this->dir."page/admin/include/admin_header.php"; ?>
+        <table cellpadding="5px">
+            <colgroup>
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+                <col width="3%">
+            </colgroup>
+            <tr>
+                <td align="center" colspan="26" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:24pt">
+                        <strong>2024년 3월 자재수불명세서대장</strong>
+                    </div>
+                </td>
 
-				
-				<td align="center" COLSPAN="2" ROWSPAN="2" class="bb" style="color:#000000">결<br />재</td>
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">담 당</td>
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">&nbsp;</td>
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">&nbsp;</td>
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">&nbsp;</td>
-				
-				
-			</tr>
-			<tr>
+                <td align="center" colspan="2" rowspan="2" class="bb" style="color:#000000">결<br/>재</td>
 
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:28pt>&nbsp;</div></td>
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:28pt>&nbsp;</div></td>
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:28pt>&nbsp;</div></td>
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:28pt>&nbsp;</div></td>
-				
-				
-			</tr>
-			<tr>
-				<td align="right"   style="color:#000000"><div style=font-size:12pt><strong>&nbsp;</strong></div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000">&nbsp;</td>
-				<td align="right"   style="color:#000000">&nbsp;</td>
-				<td align="right"   style="color:#000000">&nbsp;</td>
-				<td align="right"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>문서번호</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>GK-24-C-003</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>작성일자</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>2024.3.5.</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>부서명</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>GK사업소</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>작성자</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>김찬우</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-			</tr>
-			<tr>
-				<td align="right"   style="color:#000000"><div style=font-size:12pt><strong>&nbsp;</strong></div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000">&nbsp;</td>
-				<td align="right"   style="color:#000000">&nbsp;</td>
-				<td align="right"   style="color:#000000">&nbsp;</td>
-				<td align="right"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="3" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:12pt>구 분</div></td>
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:12pt>전월재고</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>입 고</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>출 고</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:12pt>재 고</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="4" ROWSPAN="2" class="bb" style="color:#000000">재고율<br />(입고대비)</td>
-				
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="2" class="bb" style="color:#000000">재고비율<br />(구 분 별)</td>
-				
-				
-			</tr>
-			<tr>
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>당 월</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>누 계</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>당 월</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>누 계</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">(E)TCS</td>
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 100,069,200 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 281,419,200 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 181,350,000 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 100,069,200 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="4" ROWSPAN="1" class="bb" style="color:#000000">35.6%</td>
-				
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">62.1%</td>
-				
-				
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">FTMS</td>
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 39,595,930 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 181,434,530 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 141,838,600 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 39,595,930 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="4" ROWSPAN="1" class="bb" style="color:#000000">21.8%</td>
-				
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">24.6%</td>
-				
-				
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">전  산</td>
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 21,031,100 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 224,934,810 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 1,754,200 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 205,657,910 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 19,276,900 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="4" ROWSPAN="1" class="bb" style="color:#000000">8.6%</td>
-				
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">12.0%</td>
-				
-				
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">기  타</td>
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 2,213,750 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 99,412,957 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 97,199,207 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 2,213,750 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="4" ROWSPAN="1" class="bb" style="color:#000000">2.2%</td>
-				
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">1.4%</td>
-				
-				
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>합 계</div></td>
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt> 162,909,980 </div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt> - </div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt> 787,201,497 </div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt> 1,754,200 </div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt> 626,045,717 </div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt> 161,155,780 </div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="4" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>20.5%</div></td>
-				
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>100.0%</div></td>
-				
-				
-			</tr>
-			<tr>
-				<td align="left"   style="color:#000000"><div style=font-size:12pt>&nbsp;</div></td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000"><strong>&nbsp;</strong></td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-				<td align="center"   style="color:#000000">&nbsp;</td>
-			</tr>
-			<tr>
-				<td align="left"   style="color:#000000"><div style=font-size:12pt><strong> 예산집행 현황 (2024년)</strong></div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-				<td align="right"   style="color:#000000"><div style=font-size:10pt>&nbsp;</div></td>
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="3" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:12pt>구 분</div></td>
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:12pt>예 산</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>당월집행</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="10" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>집행누계</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:12pt>잔 액</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="4" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:12pt>집행률</div></td>
-				
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="2" class="bb" style="color:#000000"><div style=font-size:12pt>비 고</div></td>
-				
-				
-			</tr>
-			<tr>
-				
-				
-				
-				
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>MRO</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>기 타</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>MRO</div></td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"><div style=font-size:12pt>기 타</div></td>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-			</tr>
-			<tr>
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">6월</td>
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 44,090,000 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> - </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 1,754,200 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="5" ROWSPAN="1" class="bb" style="color:#000000"> 42,335,800 </td>
-				
-				
-				
-				
-				<td align="center" COLSPAN="4" ROWSPAN="1" class="bb" style="color:#000000">4.0%</td>
-				
-				
-				
-				<td align="center" COLSPAN="3" ROWSPAN="1" class="bb" style="color:#000000">&nbsp;</td>
-				
-				
-			</tr>
-		</table>
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">담 당</td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">&nbsp;</td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">&nbsp;</td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">&nbsp;</td>
+
+            </tr>
+            <tr>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:28pt">&nbsp;</div>
+                </td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:28pt">&nbsp;</div>
+                </td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:28pt">&nbsp;</div>
+                </td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:28pt">&nbsp;</div>
+                </td>
+
+            </tr>
+            <tr>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:12pt">
+                        <strong>&nbsp;</strong>
+                    </div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">&nbsp;</td>
+                <td align="right" style="color:#000000">&nbsp;</td>
+                <td align="right" style="color:#000000">&nbsp;</td>
+                <td align="right" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">문서번호</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">GK-24-C-003</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">작성일자</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">2024.3.5.</div>
+                </td>
+
+            </tr>
+            <tr>
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">부서명</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">GK사업소</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">작성자</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">김찬우</div>
+                </td>
+
+            </tr>
+            <tr>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:12pt">
+                        <strong>&nbsp;</strong>
+                    </div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">&nbsp;</td>
+                <td align="right" style="color:#000000">&nbsp;</td>
+                <td align="right" style="color:#000000">&nbsp;</td>
+                <td align="right" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="center" colspan="3" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">구 분</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">전월재고</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">입 고</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">출 고</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">재 고</div>
+                </td>
+
+                <td align="center" colspan="4" rowspan="2" class="bb" style="color:#000000">재고율<br/>(입고대비)</td>
+
+                <td align="center" colspan="3" rowspan="2" class="bb" style="color:#000000">재고비율<br/>(구 분 별)</td>
+
+            </tr>
+            <tr>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">당 월</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">누 계</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">당 월</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">누 계</div>
+                </td>
+
+            </tr>
+            <tr>
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">(E)TCS</td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    100,069,200
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    281,419,200
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    181,350,000
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    100,069,200
+                </td>
+
+                <td align="center" colspan="4" rowspan="1" class="bb" style="color:#000000">35.6%</td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">62.1%</td>
+
+            </tr>
+            <tr>
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">FTMS</td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    39,595,930
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    181,434,530
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    141,838,600
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    39,595,930
+                </td>
+
+                <td align="center" colspan="4" rowspan="1" class="bb" style="color:#000000">21.8%</td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">24.6%</td>
+
+            </tr>
+            <tr>
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">전 산</td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    21,031,100
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    224,934,810
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    1,754,200
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    205,657,910
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    19,276,900
+                </td>
+
+                <td align="center" colspan="4" rowspan="1" class="bb" style="color:#000000">8.6%</td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">12.0%</td>
+
+            </tr>
+            <tr>
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">기 타</td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    2,213,750
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    99,412,957
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    97,199,207
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    2,213,750
+                </td>
+
+                <td align="center" colspan="4" rowspan="1" class="bb" style="color:#000000">2.2%</td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">1.4%</td>
+
+            </tr>
+            <tr>
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">합 계</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">
+                        162,909,980
+                    </div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">
+                        -
+                    </div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">
+                        787,201,497
+                    </div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">
+                        1,754,200
+                    </div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">
+                        626,045,717
+                    </div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">
+                        161,155,780
+                    </div>
+                </td>
+
+                <td align="center" colspan="4" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">20.5%</div>
+                </td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">100.0%</div>
+                </td>
+
+            </tr>
+            <tr>
+                <td align="left" style="color:#000000">
+                    <div style="font-size:12pt">&nbsp;</div>
+                </td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">
+                    <strong>&nbsp;</strong>
+                </td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+                <td align="center" style="color:#000000">&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="left" style="color:#000000">
+                    <div style="font-size:12pt">
+                        <strong>
+                            예산집행 현황 (2024년)</strong>
+                    </div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+                <td align="right" style="color:#000000">
+                    <div style="font-size:10pt">&nbsp;</div>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="3" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">구 분</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">예 산</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">당월집행</div>
+                </td>
+
+                <td align="center" colspan="10" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">집행누계</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">잔 액</div>
+                </td>
+
+                <td align="center" colspan="4" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">집행률</div>
+                </td>
+
+                <td align="center" colspan="3" rowspan="2" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">비 고</div>
+                </td>
+
+            </tr>
+            <tr>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">MRO</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">기 타</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">MRO</div>
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    <div style="font-size:12pt">기 타</div>
+                </td>
+
+            </tr>
+            <tr>
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">6월</td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    44,090,000
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    -
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    1,754,200
+                </td>
+
+                <td align="center" colspan="5" rowspan="1" class="bb" style="color:#000000">
+                    42,335,800
+                </td>
+
+                <td align="center" colspan="4" rowspan="1" class="bb" style="color:#000000">4.0%</td>
+
+                <td align="center" colspan="3" rowspan="1" class="bb" style="color:#000000">&nbsp;</td>
+
+            </tr>
+        </table>
+    </div>
 </div>
-	</div>
+</body>
 </html>
