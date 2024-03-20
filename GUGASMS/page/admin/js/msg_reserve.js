@@ -81,11 +81,11 @@ function init_addr_list(data){
 
 function search(){
 
-    var mat_code = document.getElementById('mat_in_code');
+    var mat_code = document.getElementById('mat_in_code').value;
     // var department = document.getElementById('send_kind');
-    var mat_in_amount = document.getElementById('mat_in_amount');
-    var mat_in_name = document.getElementById('mat_in_name');
-    var mat_in_stand = document.getElementById('mat_in_stand');
+    var mat_in_amount = document.getElementById('mat_in_amount').value;
+    var mat_in_name = document.getElementById('mat_in_name').value;
+    var mat_in_stand = document.getElementById('mat_in_stand').value;
     if(typeof mat_code == undefined || typeof mat_code == null){
         mat_code = "";
     }
