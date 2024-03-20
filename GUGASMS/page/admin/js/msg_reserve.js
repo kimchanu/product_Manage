@@ -79,27 +79,62 @@ function init_addr_list(data){
     })
 }
 
-function search(target){
-    if(typeof target != undefined && target != null && typeof target != "undefined" && target != "null"){
-        if(addr_click_flag){
-            var addr_name = document.getElementById('mat_in_code');
-            var addr_phone_number = document.getElementById('send_kind');
-            if(addr_name.value == "" && addr_phone_number.value == ""){
-                alert('이름 또는 휴대전화를 입력해주세요');
-            }else{
-                request_addr_list(target);    
+function search(){
+
+    var mat_code = document.getElementById('mat_in_code');
+    // var department = document.getElementById('send_kind');
+    var mat_code = document.getElementById('mat_in_amount');
+    var mat_code = document.getElementById('mat_in_name');
+    var mat_code = document.getElementById('mat_in_stand');
+
+    search_list(mat_code, mat_in_amount, mat_in_name, mat_in_stand);
+}
+
+function search_list(mat_code, department, mat_in_name, mat_in_stand){
+    var target = group_idx;
+    if(double_click){
+        double_click = false;
+        $('#receiver_wrap').empty();
+        addr_click_flag = true;
+        receiver_count = 0;
+        var total_elem = document.getElementById('receiver_total');
+        total_elem.innerHTML ="<i>Total</i>"+receiver_count;
+        // console.log(target);
+        lb.ajax({
+            type : "JsonAjaxPost",
+            list : {
+                ctl : "Addr",
+                param1 : "product_list3",
+                idx : target,
+                mat_code : mat_code,
+                mat_in_amount : department,
+                mat_in_name : mat_in_name,
+                mat_in_stand : mat_in_stand,
+            },
+            action : "index.php",
+            havior : function(result){
+                double_click = true;
+                console.log(result);
+                result = JSON.parse(result);
+                if(result.result == 1){
+                    if(result.value.length == 0){
+                        alert('검색하신 자재가 없습니다.');
+                    }else{
+                        init_addr_list(result.value);
+                    }
+                }
             }
-        }else{
-            alert('주소록을 선택해주세요');
-        }
+        })
     }else{
-        alert('주소록을 선택해주세요');
+        alert("리스트 호출중입니다.");
     }
 }
 
+
+    
 function init_search(){
     var addr_name = document.getElementById('mat_in_code');
-    var addr_phone_number = document.getElementById('send_kind');
+    var addr_phone_number = document.getElementById('mat_in_name');
 
     addr_name.value = "";
     addr_phone_number.value = "";

@@ -69,6 +69,22 @@
         function product_list2(){
             $param = $this->param;
 
+            $sql = "select * from its_mat_coming where group_id = ".$param["idx"]." and ". "(mat_in_amount > ".$param["mat_in_amount"]." and "." mat_in_name LIKE ". "%".$param["mat_in_name"]."$". " order by incom_id desc";
+
+            $result = $this->conn->db_select($sql);
+            if($result["result"] == 1){
+                $this->result = $result;
+            }else{
+                $this->result = $result;
+            }
+            
+            echo $this->jsonEncode($this->result);
+        }
+
+        
+        function product_list3(){
+            $param = $this->param;
+
             $sql = "select * from its_mat_coming where group_id = ".$param["idx"]." order by incom_id asc";
 
             $result = $this->conn->db_select($sql);

@@ -52,7 +52,7 @@
                                         <p class="input-tit">검색종료일</p>
                                         <div class="insert"><input placeholder="yyyy-mm-dd" id ="end_date" type="text"></div>
                                     </li> -->
-                                    <li class="col-md-6">
+                                    <!-- <li class="col-md-6">
                                         <p class="input-tit">부서</p>
                                         <div class="insert">
                                             <select id ="send_kind">
@@ -62,6 +62,18 @@
                                                 <option value = "3">시설</option>
                                             </select>
                                         </div>
+                                    </li> -->
+									<li class="col-md-6">
+                                        <p class="input-tit">수량</p>
+                                        <div class="insert"><input type="text" id = "mat_in_amount"></div>
+                                    </li>
+									<li class="col-md-6">
+                                        <p class="input-tit">품목</p>
+                                        <div class="insert"><input type="text" id = "mat_in_name"></div>
+                                    </li>
+									<li class="col-md-6">
+                                        <p class="input-tit">규격</p>
+                                        <div class="insert"><input type="text" id = "mat_in_stand"></div>
                                     </li>
 
                                 </ul>
