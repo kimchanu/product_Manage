@@ -148,8 +148,9 @@ function init_search(){
     request_product_list(1);
 }
 
-content = document.querySelector( "[contenteditable]" );
+
 document.addEventListener("DOMContentLoaded", function() {
+    content = document.querySelector( "[contenteditable]" );
 
     // @breif 더블클릭시 실행
     content.addEventListener("dblclick", function(event) {
