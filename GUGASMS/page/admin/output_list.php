@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>출고현황</title>
+	<title>자재출고</title>
 	<!-- FONT -->
 	<link href="https://fonts.googleapis.com/css?family=Gothic+A1:100,200,300,400,500,700,800,900&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/common.css<?php echo $this->version; ?>" />
@@ -24,16 +24,16 @@
 	<script src="GUGASMS/page/admin/js/FileSaver.min.js"></script>
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
-	<script src="GUGASMS/page/admin/js/msg_reserve.js<?php echo $this->version; ?>"></script>
+	<script src="GUGASMS/page/admin/js/msg_box.js<?php echo $this->version; ?>"></script>
 </head>
 <body>
 	<div class="loading"><img class="loading_img" src ="GUGASMS/page/admin/images/Spinner.gif"></div>
 	<div class="wrap">
-
+        
 		<div class="adm_container">
 			<?php include_once $this->dir . "page/admin/include/admin_header.php"; ?>
 			<div class="adm_section_container_head pb-0">
-				<h2>출고현황</h2>
+				<h2>자재출고</h2>
 			</div>
 			<div class="adm_main_container">
 				<div class="clearfix row">
@@ -45,14 +45,14 @@
 							<div class="adm_section_container_body p-1">
                                 <ul class="clearfix row input-list-container">
                                     <li class="col-md-6">
-                                        <p class="input-tit">검색일</p>
-                                        <div class="insert"><input placeholder="yyyy-mm-dd" id ="start_date" type="text"></div>
+                                        <p class="input-tit">자재코드</p>
+                                        <div class="insert"><input type="text" id = "mat_in_code"></div>
                                     </li>
                                     <!-- <li class="col-md-6">
                                         <p class="input-tit">검색종료일</p>
                                         <div class="insert"><input placeholder="yyyy-mm-dd" id ="end_date" type="text"></div>
                                     </li> -->
-                                    <li class="col-md-6 mt-1">
+                                    <!-- <li class="col-md-6">
                                         <p class="input-tit">부서</p>
                                         <div class="insert">
                                             <select id ="send_kind">
@@ -62,22 +62,23 @@
                                                 <option value = "3">시설</option>
                                             </select>
                                         </div>
-                                    </li>
-                                    <!-- <li class="col-md-6 mt-1">
-                                        <p class="input-tit">발신번호</p>
-                                        <div class="insert"><input placeholder="-는 제외하고 번호만 입력해주세요" id ="send_number" type="text"></div>
-                                    </li>
-                                    <li class="col-md-6 mt-1">
-                                        <p class="input-tit">수신자번호</p>
-                                        <div class="insert"><input placeholder="-는 제외하고 번호만 입력해주세요" id ="receiver_number" type="text"></div>
                                     </li> -->
-                                    <!-- <li class="col-md-6 mt-1">
-                                        <p class="input-tit">내용</p>
-                                        <div class="insert"><input id ="msg_content" type="text"></div>
-                                    </li> -->
+									<li class="col-md-6">
+                                        <p class="input-tit">수량</p>
+                                        <div class="insert"><input type="text" id = "mat_in_amount"></div>
+                                    </li>
+									<li class="col-md-6">
+                                        <p class="input-tit">품목</p>
+                                        <div class="insert"><input type="text" id = "mat_in_name"></div>
+                                    </li>
+									<li class="col-md-6">
+                                        <p class="input-tit">규격</p>
+                                        <div class="insert"><input type="text" id = "mat_in_stand"></div>
+                                    </li>
+
                                 </ul>
                                 <div class="btn-list-con align-right mt-1 border-t">
-                                    <p class="mt-1"><button type="button" onclick = "init_search_elem();" class="btn-sm btn-clear">초기화</button></p>
+                                    <p class="mt-1"><button type="button" onclick = "init_search();" class="btn-sm btn-clear">초기화</button></p>
                                     <p class="mt-1"><button type="button" onclick = "search();" class="btn-sm btn-primary">검색</button></p>
                                 </div>
                             </div>
@@ -91,12 +92,13 @@
 								<div class="btn-list-con align-right mb-1">
                                     <!-- <p><button type="button" onclick="all_del_check();" class="btn-sm btn-defalut">전체삭제</button></p>
                                     <p><button type="button" class="btn-sm btn-defalut">선택삭제</button></p> -->
-									<p><button type="button" onclick="exportExcel();" class="btn-sm btn-primary">엑셀다운</button></p>
 								</div>
 								<div class="adm_table_container">
+								<p class="adm_table_total" id="receiver_total">
+                                    <i>Total</i>0</p>
 									<div class="adm_table_long_responsive">
 										<table id ="table_elem" class="adm_table adm_fixed_table mb-1">
-											<thead>
+											<thead class = "abcde">
 												<tr>
 													<!-- <th class="check">
 														<label class="check_label m-auto" value="yes" >
@@ -104,63 +106,23 @@
 															<span class="checkmark"></span>
 														</label>
                                                     </th> -->
-													<th class="number">자재코드</th>
-													<th class="number">위치</th>
-													<th class="number">대분류</th>
-													<th class="number">소분류</th>
+													<th class="tight2">자재코드</th>
+													<!-- <th class="tight2">위치</th> -->
+													<th class="tight2">대분류</th>
+													<!-- <th class="tight2">소분류</th> -->
 													<th class="number">품명</th>
 													<th class="number">규격</th>
-													<th class="number">제조사</th>
-													<th class="number">거래처</th>
-													<th class="number">단위</th>
-													<th class="number">단가</th>
-													<th class="number">수량</th>
-													<th class="number">금액</th>
-													<th class="number">도입일자</th>
-													<th class="number">이미지</th>
+													<!-- <th class="tight1">제조사</th> -->
+													<!-- <th class="tight1">거래처</th> -->
+													<th class="tight2">단위</th>
+													<th class="tight1">단가</th>
+													<th class="tight2">재고수량</th>
+													<th class="tight1">재고금액</th>
                                                     <!-- <th class="etc">등록자</th> -->
 												</tr>
 											</thead>
-											<tbody data-wrap="reserve_wrap" id ="reserve_wrap">
-												<!-- <tr>
-													<td class="check">
-														<label class="check_label m-auto" value="yes">
-															<input type="checkbox">
-															<span class="checkmark"></span>
-														</label>
-													</td>
-													<td class="etc">SMS</td>
-                                                    <td class="number">010-3021-551</td>
-                                                    <td class="number">010-233-1341</td>
-                                                    <td class="etc">김정민</td>
-                                                    <td class="number">2020-02-01</td>
-                                                    <td class="number">18:12:54</td>
-                                                    <td class="etc">발송</td>
-													<td class="tit"><span claㄴss="ellipsis"></span></td>
-                                                    <td class="etc">김철수</td>
-                                                </tr>
-                                                <tr>
-													<td class="check">
-														<label class="check_label m-auto" value="yes">
-															<input type="checkbox">
-															<span class="checkmark"></span>
-														</label>
-													</td>
-													<td class="etc">SMS</td>
-                                                    <td class="number">010-302-1551</td>
-                                                    <td class="number">010-233-1341</td>
-                                                    <td class="etc">홍길동</td>
-                                                    <td class="number">2020-02-01</td>
-                                                    <td class="number">18:12:54</td>
-                                                    <td class="etc">발송</td>
-													<td class="tit"><span class="ellipsis"></span></td>
-                                                    <td class="etc">홍길동</td>
-												</tr> -->
-												<!-- 내용이 비었을 경우 -->
-												<!-- <tr id ="reserve_nothing">
-													<td colspan = "8" class="align-center" height="185">내용이 없습니다.</td>
-												</tr> -->
-												<!-- 내용이 비었을 경우 // -->
+											<tbody data-wrap="receiver_wrap" id ="receiver_wrap">
+									
 											</tbody>
 										</table>
 									</div>
@@ -177,44 +139,37 @@
 		<!-- adm_container끝 -->
 		<?php include_once $this->dir . "page/admin/include/admin_footer.php"; ?>
 	</div>
-	<!-- 모달화면 -->
-	<div class="modal admin_modal" id="content_modal" style= "display:none;">
-		<div class="popup_wrap modal-md modal-md-other">
-			<div class="adm_popup_container" style ="width:396px;">
-				<h4>메시지 전송내용</h4>
-				<section class="adm_section_container">
-					<div class="adm_simple_input" style ="width:298px; height:262px;">
-						<textarea style ="width:298px; height:262px; font-size:16px;" id ="msg_text"></textarea>
-					</div>
-				</section>
-				<div class="adm_table_btn">
-					<ul>
-						<li><input class="btn-sm btn-default" type="button" value="닫기" id="btnClose" onclick="close_content_modal();"/></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
 	<!-- wrap끝 -->
 	<div style="display:none;">
-		<table>
-			<tr data-copy ="reserve_copy">
-				<!-- <td class="check">
-					<label class="check_label m-auto" value="yes">
-						<input type="checkbox" data-attr ="check_box">
-						<span class="checkmark"></span>
-					</label>
-				</td> -->
-				<td class="etc" data-attr ="send_kind"></td>
-				<td class="number" data-attr="sender_number"></td>
-				<td class="number" data-attr="receiver_number"></td>
-				<td class="number" data-attr="send_date"></td>
-				<td class="number" data-attr="send_time"></td>
-				<td class="etc" data-attr="state"></td>
-				<td class="tit"><span class="ellipsis" data-attr="content"></span></td>
-				<!-- <td class="etc">관리자</td> -->
-			</tr>
-		</table>
+    <table>
+        <tbody><tr class="out" data-copy="address_copy">
+            <td class="tit"><span data-attr="group_name"><i class="fas fa-folder"></i></span></td>
+            <td class="number"><span data-attr="group_content">비고</span></td>
+        </tr>
+        <tr data-copy="receiver_copy">
+            <!-- <td class="check">
+                <label class="check_label m-auto" value="yes">
+                    <input type="checkbox" data-attr="check_box">
+                    <span class="checkmark"></span>
+                </label>
+            </td> -->
+            <!-- <td class="check" data-attr="num"></td>
+            <td class="etc" data-attr="name"></td>
+            <td class="number" data-attr="phone_number"></td> -->
+            <td class="tight2" data-attr="mat_in_code">-</td>
+            <!-- <td class="tight2" data-attr="mat_in_place">-</td> -->
+            <td class="tight2" data-attr="bc_in_b_class">-</td>
+            <!-- <td class="tight2" data-attr="bc_in_s_class">-</td> -->
+            <td class="number" data-attr="mat_in_name">-</td>
+            <td class="number" data-attr="mat_in_stand">-</td>
+            <!-- <td class="tight1" data-attr="mat_in_maker">-</td> -->
+            <!-- <td class="tight1" data-attr="mat_in_custom">-</td> -->
+            <td class="tight2" data-attr="mat_in_union">-</td>
+            <td class="tight1" data-attr="mat_in_price">-</td>
+            <td class="tight2" data-attr="mat_in_amount">-</td>
+            <td class="tight1" data-attr="mat_in_sum">-</td>
+        </tr>
+    </tbody></table>
 	</div>
 </body>
 
