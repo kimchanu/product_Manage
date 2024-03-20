@@ -83,9 +83,9 @@ function search(){
 
     var mat_code = document.getElementById('mat_in_code');
     // var department = document.getElementById('send_kind');
-    var mat_code = document.getElementById('mat_in_amount');
-    var mat_code = document.getElementById('mat_in_name');
-    var mat_code = document.getElementById('mat_in_stand');
+    var mat_in_amount = document.getElementById('mat_in_amount');
+    var mat_in_name = document.getElementById('mat_in_name');
+    var mat_in_stand = document.getElementById('mat_in_stand');
 
     search_list(mat_code, mat_in_amount, mat_in_name, mat_in_stand);
 }
