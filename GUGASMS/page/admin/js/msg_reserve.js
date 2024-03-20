@@ -136,9 +136,14 @@ function search_list(mat_code, department, mat_in_name, mat_in_stand){
 
     
 function init_search(){
-    var addr_name = document.getElementById('mat_in_code');
-    var addr_phone_number = document.getElementById('mat_in_name');
+    var mat_in_code = document.getElementById('mat_in_code');
+    var mat_in_name = document.getElementById('mat_in_name');
+    var mat_in_stand = document.getElementById('mat_in_stand');
+    var mat_in_amount = document.getElementById('mat_in_amount');
 
-    addr_name.value = "";
-    addr_phone_number.value = "";
+    mat_in_code.value = "";
+    mat_in_name.value = "";
+    mat_in_stand.value = "";
+    mat_in_amount.value = "";
+    request_product_list(1);
 }
