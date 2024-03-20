@@ -86,7 +86,10 @@ function search(){
     var mat_in_amount = document.getElementById('mat_in_amount');
     var mat_in_name = document.getElementById('mat_in_name');
     var mat_in_stand = document.getElementById('mat_in_stand');
-
+    if(typeof mat_code == undefined or typeof mat_code == null){
+        mat_code = "";
+    }
+    console.log(mat_code, mat_in_amount, mat_in_name);
     search_list(mat_code, mat_in_amount, mat_in_name, mat_in_stand);
 }
 
