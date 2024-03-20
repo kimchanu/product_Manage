@@ -147,3 +147,35 @@ function init_search(){
     mat_in_amount.value = "";
     request_product_list(1);
 }
+
+content = document.querySelector( "[contenteditable]" );
+document.addEventListener("DOMContentLoaded", function() {
+
+    // @breif 더블클릭시 실행
+    content.addEventListener("dblclick", function(event) {
+
+        // @details contenteditable 속성이 수정 불가인 경우 실행( false )
+        if(content.isContentEditable == false) {
+
+            // @details 편집 가능 상태로 변경
+            content.contentEditable = true;
+
+            // @details 텍스트 문구 변경
+            content.textContent = "편집 가능한 상태로 변경되었습니다.";
+
+            // @details CSS 효과 추가
+            content.style.border = "1px solid #FE7F9C";
+
+            // @details 포커스 지정
+            content.focus();
+        }
+
+        // @details contenteditable 속성이 수정 가능인 경우 실행( true )
+        else {
+
+            // 편집 불가 상태로 변경
+            content.contentEditable = false;
+            content.style.border = "0px";
+        }
+    });
+});

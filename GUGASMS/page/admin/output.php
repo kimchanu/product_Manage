@@ -166,7 +166,7 @@
             <!-- <td class="tight1" data-attr="mat_in_custom">-</td> -->
             <td class="tight2" data-attr="mat_in_union">-</td>
             <td class="tight1" data-attr="mat_in_price">-</td>
-            <td class="tight2" data-attr="mat_in_amount">-</td>
+            <td class="tight2" contenteditable="false" data-attr="mat_in_amount">-</td>
             <td class="tight1" data-attr="mat_in_sum">-</td>
         </tr>
     </tbody></table>
