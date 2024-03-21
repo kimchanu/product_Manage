@@ -148,7 +148,7 @@ function init_search(){
     request_product_list(1);
 }
 
-var contents = document.querySelector( "[contenteditable]" );
+var contents = document.getElementsByClassName( "aaaa" );
 
 document.addEventListener("DOMContentLoaded", function() {
 
