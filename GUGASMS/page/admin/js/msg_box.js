@@ -150,7 +150,7 @@ function init_search(){
 
 
 document.addEventListener("DOMContentLoaded", function() {
-    content = document.querySelector( "contenteditable" );
+    content = document.querySelector( "[contenteditable]" );
     console.log(content);
 
     // @breif 더블클릭시 실행
