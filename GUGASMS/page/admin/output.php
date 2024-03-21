@@ -25,6 +25,7 @@
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
 	<script src="GUGASMS/page/admin/js/msg_box.js<?php echo $this->version; ?>"></script>
+	<script src="GUGASMS/page/admin/js/kakao_pf_set.js<?php echo $this->version; ?>"></script>
 </head>
 <body>
 	<div class="loading"><img class="loading_img" src ="GUGASMS/page/admin/images/Spinner.gif"></div>
@@ -166,7 +167,7 @@
             <!-- <td class="tight1" data-attr="mat_in_custom">-</td> -->
             <td class="tight2" data-attr="mat_in_union">-</td>
             <td class="tight1" data-attr="mat_in_price">-</td>
-            <td class="tight2 aaaa" contenteditable="false" data-attr="mat_in_amount">-</td>
+            <td class="tight2 editable" contenteditable="false" data-attr="mat_in_amount">-</td>
             <td class="tight1" data-attr="mat_in_sum">-</td>
         </tr>
     </tbody></table>
