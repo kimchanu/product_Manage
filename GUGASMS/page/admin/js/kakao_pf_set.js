@@ -108,4 +108,6 @@ function createEditor(callback){
     this.source = document.createTextNode(this.frm.value);
   }
 
-  var editor = createEditor(callback);
+
+var abc = document.getElementsByClassName("editable")
+var editor = createEditor(abc);
