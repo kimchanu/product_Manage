@@ -154,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log(content);
 
     // @breif 더블클릭시 실행
-    content.addEventListener("dblclick", function(event) {
+    content.addEventListener("onclick", function(event) {
 
         // @details contenteditable 속성이 수정 불가인 경우 실행( false )
         if(content.isContentEditable == false) {
