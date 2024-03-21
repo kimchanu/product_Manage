@@ -151,6 +151,7 @@ function init_search(){
 
 document.addEventListener("DOMContentLoaded", function() {
     content = document.querySelector( "contenteditable" );
+    console.log(content);
 
     // @breif 더블클릭시 실행
     content.addEventListener("dblclick", function(event) {
