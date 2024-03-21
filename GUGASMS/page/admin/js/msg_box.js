@@ -151,11 +151,12 @@ function init_search(){
 var contents = document.getElementsByClassName( "aaaa" );
 
 document.addEventListener("DOMContentLoaded", function() {
+    console.log(contents);
 
 
     // @breif rowColumn 클래스의 갯수 만큼 반복문을 실행한다.
     Array.from(contents).forEach(function(content) {
-
+        console.log("hihi");
 
         // @breif 마우스로 해당영역을 더블클릭 한경우
         content.addEventListener("dblclick", function(event) {
