@@ -150,11 +150,11 @@ function init_search(){
 
 
 document.addEventListener("DOMContentLoaded", function() {
-    content = document.querySelector( "[contenteditable]" );
+    var content = document.querySelector( "[contenteditable]" );
     console.log(content);
 
     // @breif 더블클릭시 실행
-    content.addEventListener("onclick", function(event) {
+    content.addEventListener("dblclick", function(event) {
         console.log("실행되는중");
 
         // @details contenteditable 속성이 수정 불가인 경우 실행( false )
