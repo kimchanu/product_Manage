@@ -107,3 +107,5 @@ function createEditor(callback){
   Editor.prototype.save = function(){
     this.source = document.createTextNode(this.frm.value);
   }
+
+  var editor = createEditor(callback);
