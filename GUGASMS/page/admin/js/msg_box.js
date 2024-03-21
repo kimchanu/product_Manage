@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    request_product_list(user_idx);
+    // request_product_list(user_idx);
 });
 
 

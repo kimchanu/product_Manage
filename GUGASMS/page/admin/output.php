@@ -40,9 +40,9 @@
 				<div class="clearfix row">
 					<div class="col-md-7 col-lg-12">
 						<section class="adm_section_container">
-                            <div class="adm_section_container_head bg-light-gray other_head">
+                            <!-- <div class="adm_section_container_head bg-light-gray other_head">
                                 <h2>검색</h2>
-                            </div>
+                            </div> -->
 							<div class="adm_section_container_body p-1">
                                 <ul class="clearfix row input-list-container">
                                     <li class="col-md-6">
