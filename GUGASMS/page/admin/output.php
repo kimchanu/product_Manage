@@ -54,11 +54,11 @@
                                         <div class="insert"><input placeholder="yyyy-mm-dd" id ="end_date" type="text"></div>
                                     </li> -->
                                     <li class="col-md-6">
-                                        <p class="input-tit">부서</p>
+                                        <p class="input-tit">수량</p>
                                         <div class="insert">
                                             <select id ="mat_in_amount">
                                                 <option value = "0">0</option>
-                                                <option value = "1">1이상</option>
+                                                <option value = "1" selected>1이상</option>
 												<option value = "2">전부</option>
                                             </select>
                                         </div>
