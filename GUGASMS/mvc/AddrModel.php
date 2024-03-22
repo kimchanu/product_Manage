@@ -84,13 +84,30 @@
         
         function product_list3(){
             $param = $this->param;
-
+            if($param["mat_in_amount"] ==1){
             $sql = "select * from its_mat_coming where group_id = " . $param["idx"] . " and " . 
             "(mat_in_amount > " . $param["mat_in_amount"] . " and " . 
             "mat_in_name LIKE '%" . $param["mat_in_name"] . "%' and " . 
             "mat_in_stand LIKE '%" . $param["mat_in_stand"] . "%' and " . 
             "mat_in_code LIKE '%" . $param["mat_in_code"] . "%') " . 
             "order by incom_id desc";
+            }
+            else if($param["mat_in_amount"] == 0 ){
+                $sql = "select * from its_mat_coming where group_id = " . $param["idx"] . " and " . 
+            "(mat_in_amount = " . $param["mat_in_amount"] . " and " . 
+            "mat_in_name LIKE '%" . $param["mat_in_name"] . "%' and " . 
+            "mat_in_stand LIKE '%" . $param["mat_in_stand"] . "%' and " . 
+            "mat_in_code LIKE '%" . $param["mat_in_code"] . "%') " . 
+            "order by incom_id desc";
+            }
+            else{
+                $sql = "select * from its_mat_coming where group_id = " . $param["idx"] . " and " . 
+            "(mat_in_amount >= " . "0". " and " . 
+            "mat_in_name LIKE '%" . $param["mat_in_name"] . "%' and " . 
+            "mat_in_stand LIKE '%" . $param["mat_in_stand"] . "%' and " . 
+            "mat_in_code LIKE '%" . $param["mat_in_code"] . "%') " . 
+            "order by incom_id desc";
+            }
             $result = $this->conn->db_select($sql);
             
             if($result["result"] == 1){
