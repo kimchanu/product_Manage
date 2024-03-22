@@ -70,16 +70,12 @@ function init_addr_list(data){
                     receiver_count++;
                 }
             }
-            // if(name != "check_box"){
-            //     var single_del_elem = document.getElementById('single_del');
-            //     elem.style.cursor = "pointer";
-            //     elem.onclick = function(){
-            //         user_detail(data);
-            //         single_del_elem.onclick = function(){
-            //             select_del("single",data.idx);
-            //         }
-            //     }
-            // }
+            if(name == "modify"){
+                elem.style.cursor = "pointer";
+                elem.onclick = function(){
+                    user_detail(data);
+                }
+            }
         },
         end : function(){
             $('.loading').fadeOut();
@@ -159,8 +155,8 @@ function init_search(){
 }
 
 function user_detail(data){
-    var id = document.getElementById('id');
-    var pw = document.getElementById('pw');
+    var product_code = document.getElementById('product_code');
+    var product_position = document.getElementById('product_position');
     var name = document.getElementById('user_name');
     var role =document.getElementById('role');
     var sms = document.getElementById('sms');
@@ -185,5 +181,72 @@ function user_detail(data){
 
     register_btn.onclick = function(){
         user_modify(data.idx);
+    }
+}
+
+function open_add_modal(){
+    var addr_modal = document.getElementById('addr_modal');
+    addr_modal.style.display = "block";
+}
+
+
+function user_modify(target){
+
+    if(double_click){
+        double_click = false;
+        var pw = document.getElementById('pw');
+        var name = document.getElementById('user_name');
+        var role = document.getElementById('role');
+        var send_number = document.getElementById('send_number');
+        var sms = document.getElementById('sms');
+        var mms = document.getElementById('mms');
+        var lms = document.getElementById('lms');
+        var t_kakao = document.getElementById('t_kakao');
+        var f_kakao = document.getElementById('f_kakao');
+        var comment = document.getElementById('comment');
+
+        if(pw.value == ""){
+            alert('비밀번호를 입력해주세요');
+            double_click = true;
+        }else if(name.value == ""){
+            alert('사용자명을 입력해주세요');
+            double_click = true;
+        }else if(role.value == "0"){
+            alert('권한그룹을 입력해주세요');
+            double_click = true;
+        }else{
+            lb.ajax({
+                type : "JsonAjaxPost",
+                list : {
+                    ctl : "Admin",
+                    param1 : "user_modify",
+                    target_idx : target,
+                    pw : pw.value,
+                    name : name.value,
+                    role : role.value,
+                    send_number : send_number.value,
+                    sms : sms.value,
+                    mms : mms.value,
+                    lms : lms.value,
+                    t_kakao : t_kakao.value,
+                    f_kakao : f_kakao.value,
+                    comment : comment.value,
+                },
+                action : "index.php",
+                havior : function(result){
+                    double_click = true;
+                    console.log(result);
+                    result = JSON.parse(result);
+                    if(result.result == 1){
+                        alert('사용자가 수정되었습니다.');
+                        user_list();
+                    }else{
+                        alert('사용자 수정 실패');
+                    }
+                }
+            })
+        }
+    }else{
+        alert('사용자 등록중입니다.');
     }
 }

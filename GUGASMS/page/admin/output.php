@@ -168,9 +168,207 @@
             <td class="tight1" data-attr="mat_in_price">-</td>
             <td class="tight2 editable" contenteditable="false" data-attr="mat_in_amount">-</td>
             <td class="tight1" data-attr="mat_in_sum">-</td>
+			<td class="number" data-attr="modify"><<button type="button" onclick="open_add_modal();"></button></td>
         </tr>
     </tbody></table>
 	</div>
+
+	<!-- wrap -->
+	<div class="modal admin_modal" id="addr_modal" style="display:none;">
+                <div class="popup_wrap modal-xl">
+                    <div class="adm_popup_container">
+                        <h4>수정</h4>
+                        <section class="adm_section_container">
+                            <div class="adm_modal_input_container">
+                                <div class="modal_table">
+                                    <div class="wi_board_form_row">
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">자재코드</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_code"
+                                                class="wi_board_input_control2"
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">위치</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_position"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">대분류</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_b_class"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">소분류</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_s_class"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                    </div>
+
+                                    <div class="wi_board_form_row">
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">품명</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_name"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">규격</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_stand"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">제조사</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_maker"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="wi_board_form_row">
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">거래처</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_custom"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">단위</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_union"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">단가</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="text"
+                                                id="product_price"
+                                                value=""
+                                                class="wi_board_input_control"
+                                                autocomplete="off"
+                                                >
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">수량</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="number"
+                                                id="product_amount"
+                                                value=""
+                                                class="wi_board_input_control"
+                                                autocomplete="off"
+                                                >
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="wi_board_form_row">
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">금액</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <!-- <div id="product_sum" style="color: black;"></div> -->
+                                            <input
+                                                type="text"
+                                                id="product_sum"
+                                                value=""
+                                                class="wi_board_input_control"
+                                                disabled
+                                                autocomplete="off">
+                                        </div>
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">도입일자</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                            <input
+                                                type="date"
+                                                id="product_in_date"
+                                                class="wi_board_input_control"
+                                                autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="wi_board_form_row">
+                                        <div class="wi_board_form_title">
+                                            <label for="" class="wi_board_label_control">이미지</label>
+                                        </div>
+                                        <div class="wi_board_form_content">
+                                        <form action="/upload" method="post" enctype="multipart/form-data">
+                                            <input
+                                                type="file"
+                                                id="product_image"
+                                                name="attachment"
+                                                class="wi_board_input_control"
+                                                style="border : none">
+                                        </form>
+                                        </div>
+                                        
+                                    </div>                     
+                                </div>
+                            </section>
+                            <div class="adm_table_btn">
+                                <ul>
+                                    <li><input
+                                        class="btn-sm btn-default"
+                                        type="button"
+                                        value="자재추가"
+                                        id="btnClose"
+                                        onclick="request_add_product();"/></li>
+                                    <li><input
+                                        class="btn-sm btn-default"
+                                        type="button"
+                                        value="닫기"
+                                        id="btnClose"
+                                        onclick="close_add_modal();"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 </body>
 
 </html>
