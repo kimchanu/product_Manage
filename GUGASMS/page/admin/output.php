@@ -118,6 +118,7 @@
 													<th class="tight1">단가</th>
 													<th class="tight2">재고수량</th>
 													<th class="tight1">재고금액</th>
+													<th class="number">수정</th>
                                                     <!-- <th class="etc">등록자</th> -->
 												</tr>
 											</thead>
@@ -329,22 +330,6 @@
                                                 autocomplete="off">
                                         </div>
                                     </div>
-                                    <div class="wi_board_form_row">
-                                        <div class="wi_board_form_title">
-                                            <label for="" class="wi_board_label_control">이미지</label>
-                                        </div>
-                                        <div class="wi_board_form_content">
-                                        <form action="/upload" method="post" enctype="multipart/form-data">
-                                            <input
-                                                type="file"
-                                                id="product_image"
-                                                name="attachment"
-                                                class="wi_board_input_control"
-                                                style="border : none">
-                                        </form>
-                                        </div>
-                                        
-                                    </div>                     
                                 </div>
                             </section>
                             <div class="adm_table_btn">
