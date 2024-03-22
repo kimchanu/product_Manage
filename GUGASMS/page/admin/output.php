@@ -169,7 +169,7 @@
             <td class="tight1" data-attr="mat_in_price">-</td>
             <td class="tight2 editable" contenteditable="false" data-attr="mat_in_amount">-</td>
             <td class="tight1" data-attr="mat_in_sum">-</td>
-			<td class="number" data-attr="modify"><<button type="button" onclick="open_add_modal();"></button></td>
+			<td class="number" data-attr="modify"><button type="button" onclick="open_add_modal();"></button></td>
         </tr>
     </tbody></table>
 	</div>
