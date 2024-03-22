@@ -118,7 +118,7 @@
 													<th class="tight1">단가</th>
 													<th class="tight2">재고수량</th>
 													<th class="tight1">재고금액</th>
-													<th class="number">수정</th>
+													<th class="tight2">수정</th>
                                                     <!-- <th class="etc">등록자</th> -->
 												</tr>
 											</thead>
