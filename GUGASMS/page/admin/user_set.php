@@ -91,35 +91,11 @@
                                                     <th class="etc">부서</th>
                                                     <th class="etc">직책</th>
                                                     <th class="etc">휴대전화</th>
-                                                    <!-- <th class="etc">LMS 사용량</th>
-													<th class="number">MMS 월별발송량</th>
-                                                    <th class="etc">MMS 사용량</th>
-													<th class="number">알림톡 월별발송량</th>
-                                                    <th class="etc">알림톡 사용량</th>
-													<th class="number">친구톡 월별발송량</th>
-                                                    <th class="etc">친구톡 사용량</th> -->
+
 												</tr>
 											</thead>
 											<tbody data-wrap="user_wrap" id ="user_wrap">
-												<!-- <tr>
-													<td class="check">
-														<label class="check_label m-auto" value="yes">
-															<input type="checkbox" >
-															<span class="checkmark"></span>
-														</label>
-													</td>
-                                                    <td class="etc">홍길동</td>
-                                                    <td class="etc">아이디</td>
-                                                    <td class="number">내용</td>
-                                                    <td class="number">내용</td>
-                                                    <td class="etc">내용</td>
-                                                    <td class="number">내용</td>
-                                                    <td class="etc">내용</td>
-												</tr>
-												<tr>
-													<td colspan = "8" class="align-center" height="321">내용이 없습니다.</td>
-												</tr> -->
-												<!-- 내용이 비었을 경우 // -->
+
 											</tbody>
 										</table>
 									</div>
@@ -159,25 +135,7 @@
 												</tr>
 											</thead>
 											<tbody data-wrap="user_wrap2" id ="user_wrap2">
-												<!-- <tr>
-													<td class="check">
-														<label class="check_label m-auto" value="yes">
-															<input type="checkbox" >
-															<span class="checkmark"></span>
-														</label>
-													</td>
-                                                    <td class="etc">홍길동</td>
-                                                    <td class="etc">아이디</td>
-                                                    <td class="number">내용</td>
-                                                    <td class="number">내용</td>
-                                                    <td class="etc">내용</td>
-                                                    <td class="number">내용</td>
-                                                    <td class="etc">내용</td>
-												</tr>
-												<tr>
-													<td colspan = "8" class="align-center" height="321">내용이 없습니다.</td>
-												</tr> -->
-												<!-- 내용이 비었을 경우 // -->
+	
 											</tbody>
 										</table>
 									</div>
@@ -238,30 +196,7 @@
                                         <p class="input-tit">LMS 사용량</p>
 										<div class="insert"><input placeholder="0" type="text" readonly id ="use_lms"></div>
                                     </li>
-                                    <!-- <li class="col-md-12 mt-1">
-                                        <p class="input-tit">MMS 월별 발송량</p>
-										<div class="insert"><input value = "100" type="text"  id ="mms"></div>
-                                    </li>
-                                    <li class="col-md-12 mt-1">
-                                        <p class="input-tit">MMS 사용량</p>
-										<div class="insert"><input placeholder="0" type="text" readonly id ="use_mms"></div>
-                                    </li>
-                                    <li class="col-md-12 mt-1">
-                                        <p class="input-tit">알림톡 월별 발송량</p>
-										<div class="insert"><input value = "100" type="text"  id ="t_kakao"></div>
-                                    </li>
-                                    <li class="col-md-12 mt-1">
-                                        <p class="input-tit">알림톡 사용량</p>
-										<div class="insert"><input placeholder="0" type="text" readonly id ="use_t_kakao"></div>
-                                    </li>
-                                    <li class="col-md-12 mt-1">
-                                        <p class="input-tit">친구톡 월별 발송량</p>
-										<div class="insert"><input value = "100" type="text"  id ="f_kakao"></div>
-                                    </li>
-                                    <li class="col-md-12 mt-1">
-                                        <p class="input-tit">친구톡 사용량</p>
-										<div class="insert"><input placeholder="0" type="text" readonly id ="use_f_kakao"></div>
-                                    </li> -->
+                                  
                                     <li class="col-md-12 mt-1">
                                         <p class="input-tit">비고</p>
 										<div class="insert">
@@ -294,15 +229,7 @@
 				<td class="number" data-attr="role">내용</td>
 				<td class="number" data-attr="sms">내용</td>
 				<td class="etc" data-attr="use_sms">내용</td>
-				<!-- <td class="number" data-attr="lms">내용</td>
-				<td class="etc" data-attr="use_lms">내용</td>
-				<td class="number" data-attr="mms">내용</td>
-				<td class="etc" data-attr="use_mms">내용</td>
-				<td class="number" data-attr="t_kakao">내용</td>
-				<td class="etc" data-attr="use_t_kakao">내용</td>
-				<td class="number" data-attr="f_kakao">내용</td>
-				<td class="etc" data-attr="use_f_kakao">내용</td>
-			</tr> -->
+			</tr>
 		</table>
 	</div>
 	<!-- wrap끝 -->

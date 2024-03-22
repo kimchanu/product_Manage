@@ -99,7 +99,7 @@
 .input-list-container li .insert{position: relative; width:75%;}
 .input-list-container li .insert > .etc-txt{font-size:13px; font-weight: 700; margin-bottom:8px;}
 .input-list-container li input{width:100%; height:44px; border:1px solid #ddd; margin:4px 0;}
-.input-list-container li select{width:100%; height:44px; margin-top:2px;}
+.input-list-container li select{width:100%; height:51px; margin-top:2px;}
 .input-list-container li span.sub_btn{cursor:pointer; position: absolute; top:50%; transform: translateY(-50%); -ms-transform: translateY(-50%); -webkit-transform: translateY(-50%);
     min-width: 96px; right:0; text-align: center; 
     font-size: 0.85em; background:#777; height:44px; line-height: 43px;

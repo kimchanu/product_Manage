@@ -70,6 +70,16 @@ function init_addr_list(data){
                     receiver_count++;
                 }
             }
+            // if(name != "check_box"){
+            //     var single_del_elem = document.getElementById('single_del');
+            //     elem.style.cursor = "pointer";
+            //     elem.onclick = function(){
+            //         user_detail(data);
+            //         single_del_elem.onclick = function(){
+            //             select_del("single",data.idx);
+            //         }
+            //     }
+            // }
         },
         end : function(){
             $('.loading').fadeOut();
@@ -146,4 +156,34 @@ function init_search(){
     mat_in_stand.value = "";
     mat_in_amount.value = "";
     request_product_list(1);
+}
+
+function user_detail(data){
+    var id = document.getElementById('id');
+    var pw = document.getElementById('pw');
+    var name = document.getElementById('user_name');
+    var role =document.getElementById('role');
+    var sms = document.getElementById('sms');
+
+    id.value = data.id;
+    id.setAttribute('readonly', true);
+    pw.value = data.pw;
+    name.value = data.name;
+    role.value = data.role;
+    sms.value = data.sms;
+    use_sms.value = data.use_sms;
+    lms.value = data.lms;
+    use_lms.value = data.use_lms;
+    mms.value = data.mms;
+    use_mms.value = data.use_mms;
+    t_kakao.value = data.t_kakao;
+    use_t_kakao.value = data.use_t_kakao;
+    f_kakao.value = data.f_kakao;
+    use_f_kakao.value = data.use_f_kakao;
+    comment.value = data.comment;
+    send_number.value = data.send_number;
+
+    register_btn.onclick = function(){
+        user_modify(data.idx);
+    }
 }
