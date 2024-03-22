@@ -150,7 +150,7 @@ function init_search(){
     mat_in_code.value = "";
     mat_in_name.value = "";
     mat_in_stand.value = "";
-    mat_in_amount.value = "";
+    mat_in_amount.value = "1";
     request_product_list(1);
 }
 
