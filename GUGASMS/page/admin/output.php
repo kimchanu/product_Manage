@@ -53,21 +53,20 @@
                                         <p class="input-tit">검색종료일</p>
                                         <div class="insert"><input placeholder="yyyy-mm-dd" id ="end_date" type="text"></div>
                                     </li> -->
-                                    <!-- <li class="col-md-6">
+                                    <li class="col-md-6">
                                         <p class="input-tit">부서</p>
                                         <div class="insert">
-                                            <select id ="send_kind">
-                                                <option value = "0">ITS</option>
-                                                <option value = "1">기전</option>
-												<option value = "2">장비</option>
-                                                <option value = "3">시설</option>
+                                            <select id ="mat_in_amount">
+                                                <option value = "0">0</option>
+                                                <option value = "1">1이상</option>
+												<option value = "2">전부</option>
                                             </select>
                                         </div>
-                                    </li> -->
-									<li class="col-md-6">
+                                    </li>
+									<!-- <li class="col-md-6">
                                         <p class="input-tit">수량</p>
                                         <div class="insert"><input type="text" id = "mat_in_amount"></div>
-                                    </li>
+                                    </li> -->
 									<li class="col-md-6">
                                         <p class="input-tit">품목</p>
                                         <div class="insert"><input type="text" id = "mat_in_name"></div>
