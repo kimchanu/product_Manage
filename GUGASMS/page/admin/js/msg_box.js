@@ -69,6 +69,12 @@ function init_addr_list(data){
                 if(name == "mat_in_code"){
                     receiver_count++;
                 }
+                else if(name == "mat_in_sum"){
+                    let result11 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    result11 = result11.replace(/\.00$/, "");
+
+                    elem.innerHTML = result11;
+                }
             }
             if(name == "modify"){
                 elem.style.cursor = "pointer";
