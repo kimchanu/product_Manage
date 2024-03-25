@@ -115,7 +115,7 @@ function search_list(mat_code, department, mat_in_name, mat_in_stand){
                 ctl : "Addr",
                 param1 : "product_list3",
                 idx : target,
-                mat_code : mat_code,
+                mat_in_code : mat_code,
                 mat_in_amount : department,
                 mat_in_name : mat_in_name,
                 mat_in_stand : mat_in_stand,
