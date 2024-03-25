@@ -702,8 +702,10 @@ function init_addr_list(data){
                     receiver_count++;
                 }
                 else if(name == "mat_in_sum"){
-                    result1 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                    elem.innerHTML = result1;
+                    let result11 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    result11 = result11.replace(/\.00$/, "");
+
+                    elem.innerHTML = result11;
                 }
             }
         },
