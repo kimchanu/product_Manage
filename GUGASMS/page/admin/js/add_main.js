@@ -6,8 +6,7 @@ var recevier_index  = 0;
 
 $(document).ready(function(){
     request_product_list(user_idx);
-    // number_check(lb.getElem('addr_phone_number'));
-    // console.log(user_idx);
+
     $("#product_price, #product_amount").change( function(){
         let aa = document.getElementById('product_price').value;
         aa = aa.replace(/,/g, "");
@@ -18,7 +17,6 @@ $(document).ready(function(){
         let num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         $( '#product_sum' ).prop( 'value', result1);
         $( '#product_price' ).prop( 'value', num3);
-        // document.getElementById('product_price').innerText = num1;
     });  
     input_file_check(lb.getElem('excel_upload'),["xlsx"],"excel");
 });
@@ -702,6 +700,10 @@ function init_addr_list(data){
                 }
                 if(name == "mat_in_code"){
                     receiver_count++;
+                }
+                else if(name == "mat_in_sum"){
+                    result1 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    elem.innerHTML = result1;
                 }
             }
         },
