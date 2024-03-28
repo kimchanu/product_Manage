@@ -217,7 +217,7 @@ function user_modify(target){
             lb.ajax({
                 type : "JsonAjaxPost",
                 list : {
-                    ctl : "Admin",
+                    ctl : "Addr",
                     param1 : "mat_modify",
                     incom_id : target,
                     mat_in_amount : product_amount.value,
