@@ -207,16 +207,7 @@
                                                 class="wi_board_input_control"
                                                 autocomplete="off">
                                         </div>
-                                        <div class="wi_board_form_title">
-                                            <label for="" class="wi_board_label_control">소분류</label>
-                                        </div>
-                                        <div class="wi_board_form_content">
-                                            <input
-                                                type="text"
-                                                id="product_s_class"
-                                                class="wi_board_input_control"
-                                                autocomplete="off">
-                                        </div>
+
                                     </div>
 
                                     <div class="wi_board_form_row">
@@ -240,29 +231,11 @@
                                                 class="wi_board_input_control"
                                                 autocomplete="off">
                                         </div>
-                                        <div class="wi_board_form_title">
-                                            <label for="" class="wi_board_label_control">제조사</label>
-                                        </div>
-                                        <div class="wi_board_form_content">
-                                            <input
-                                                type="text"
-                                                id="product_maker"
-                                                class="wi_board_input_control"
-                                                autocomplete="off">
-                                        </div>
+
                                     </div>
                                     
                                     <div class="wi_board_form_row">
-                                        <div class="wi_board_form_title">
-                                            <label for="" class="wi_board_label_control">거래처</label>
-                                        </div>
-                                        <div class="wi_board_form_content">
-                                            <input
-                                                type="text"
-                                                id="product_custom"
-                                                class="wi_board_input_control"
-                                                autocomplete="off">
-                                        </div>
+
                                         <div class="wi_board_form_title">
                                             <label for="" class="wi_board_label_control">단위</label>
                                         </div>
@@ -313,16 +286,7 @@
                                                 disabled
                                                 autocomplete="off">
                                         </div>
-                                        <!-- <div class="wi_board_form_title">
-                                            <label for="" class="wi_board_label_control">도입일자</label>
-                                        </div>
-                                        <div class="wi_board_form_content">
-                                            <input
-                                                type="date"
-                                                id="product_in_date"
-                                                class="wi_board_input_control"
-                                                autocomplete="off">
-                                        </div> -->
+
                                     </div>
                                 </div>
                             </section>
