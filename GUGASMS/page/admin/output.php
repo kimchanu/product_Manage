@@ -163,7 +163,7 @@
             <td class="tight1" data-attr="mat_in_price">-</td>
             <td class="tight2 editable" contenteditable="false" data-attr="mat_in_amount">-</td>
             <td class="tight1" data-attr="mat_in_sum">-</td>
-			<td class="number" data-attr="modify"><button type="button" onclick="open_add_modal();"></button></td>
+			<td class="number" data-attr="modify"><button type="button" onclick="open_add_modal();" style = "background-color:red"></button></td>
         </tr>
     </tbody></table>
 	</div>
@@ -313,7 +313,7 @@
                                                 disabled
                                                 autocomplete="off">
                                         </div>
-                                        <div class="wi_board_form_title">
+                                        <!-- <div class="wi_board_form_title">
                                             <label for="" class="wi_board_label_control">도입일자</label>
                                         </div>
                                         <div class="wi_board_form_content">
@@ -322,7 +322,7 @@
                                                 id="product_in_date"
                                                 class="wi_board_input_control"
                                                 autocomplete="off">
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </section>
