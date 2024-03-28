@@ -207,8 +207,8 @@ function open_add_modal(){
 function user_modify(target){
     if(double_click){
         double_click = false;
-        var product_amount = document.getElementById('product_amount');
-        var product_sum = document.getElementById('product_sum');
+        var product_amount = document.getElementById('product_amount').value;
+        var product_sum = document.getElementById('product_sum').value;
         console.log(product_sum);
         if(product_amount.value == ""){
             alert('수량을 입력해주세요');
