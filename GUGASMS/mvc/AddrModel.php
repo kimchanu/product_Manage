@@ -346,6 +346,25 @@ function its_add_product_real() {
      echo $this->jsonEncode($this->result);
 }
 
+function mat_modify(){
+    $param = $this->param;
+    if($this->value_check(array("target_idx"))){
+        $sql = "update its_mat_coming set ";
+        $sql = $sql . "mat_in_amount = ".$this->null_check($param["mat_in_amount"])." , ";
+        $sql = $sql . "mat_in_sum = ".$this->null_check($param["mat_in_sum"])." ";
+        $sql = $sql . "where incom_id = ".$param["target"]."";
+
+        $result = $this->conn->db_update($sql);
+        if($result["result"] == 0){
+            $this->result = $result;
+        }else{
+            $this->result = $result;
+        }
+    }
+    echo json_encode($this->result,JSON_UNESCAPED_UNICODE);
+}
+
+
 function products_real(){
     $param = $this->param;
     if($this->value_check(array("target_idx"))){

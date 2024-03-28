@@ -209,7 +209,7 @@ function user_modify(target){
         double_click = false;
         var product_amount = document.getElementById('product_amount');
         var product_sum = document.getElementById('product_sum');
-
+        console.log(product_sum);
         if(product_amount.value == ""){
             alert('수량을 입력해주세요');
             double_click = true;
@@ -218,7 +218,7 @@ function user_modify(target){
                 type : "JsonAjaxPost",
                 list : {
                     ctl : "Admin",
-                    param1 : "user_modify",
+                    param1 : "mat_modify",
                     incom_id : target,
                     mat_in_amount : product_amount.value,
                     mat_in_sum : product_sum.value,
