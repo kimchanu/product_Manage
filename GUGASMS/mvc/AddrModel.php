@@ -348,11 +348,11 @@ function its_add_product_real() {
 
 function mat_modify(){
     $param = $this->param;
-    if($this->value_check(array("target"))){
+    if($this->value_check(array("incom_id"))){
         $sql = "update its_mat_coming set ";
         $sql = $sql . "mat_in_amount = ".$this->null_check($param["mat_in_amount"])." , ";
         $sql = $sql . "mat_in_sum = ".$this->null_check($param["mat_in_sum"])." ";
-        $sql = $sql . "where incom_id = ".$param["target"]."";
+        $sql = $sql . "where incom_id = ".$param["incom_id"]."";
 
         $result = $this->conn->db_update($sql);
         if($result["result"] == 0){
