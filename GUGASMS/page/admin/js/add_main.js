@@ -388,16 +388,7 @@ function input_file_check(elem, ext_array, type){
                         return;
                     }else{
                         var reader = new FileReader();
-                        // if(img_elem.parentNode.classList.contains('d-none')){
-                        //     img_elem.parentNode.classList.remove("d-none");
-                        //     reader.onload = function(e){
-                        //         mms_state = 1;
-                        //         byteCheckViewDisplay(msg_text);
-                        //         $(img_elem).attr('src', e.target.result);
-                        //     }
-                        //     reader.readAsDataURL(elem.files[0]);
-                        // }
-                        //설정값 입력
+
                         file_name_elem.value = file_name;
                     }
                 }

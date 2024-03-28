@@ -284,7 +284,7 @@
                                         class="btn-sm btn-default"
                                         type="button"
                                         value="수정"
-                                        id="btnClose"
+                                        id="btnopen"
                                         onclick=""/></li>
                                     <li><input
                                         class="btn-sm btn-default"

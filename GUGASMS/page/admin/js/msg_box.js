@@ -1,9 +1,16 @@
 $(document).ready(function(){
-    // request_product_list(user_idx);
+    $("#product_price, #product_amount").change( function(){
+        let aa = document.getElementById('product_price').value;
+        aa = aa.replace(/,/g, "");
+        let num1 = parseInt(aa);
+        let num2 = parseInt(document.getElementById('product_amount').value);
+        let result1 = num1 * num2;
+        result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        let num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        $( '#product_sum' ).prop( 'value', result1);
+        $( '#product_price' ).prop( 'value', num3);
+    });  
 });
-
-
-
 
 var double_click = true;
 var receiver_count = 0;
@@ -169,7 +176,7 @@ function user_detail(data){
     var product_price = document.getElementById('product_price');
     var product_amount = document.getElementById('product_amount');
     var product_sum = document.getElementById('product_sum');
-
+    btnopen = document.getElementById('btnopen');
     product_code.value = data.mat_in_code;
     product_code.setAttribute('readonly', true);
     product_b_class.value = data.bc_in_b_class;
@@ -186,7 +193,7 @@ function user_detail(data){
     product_sum.setAttribute('readonly', true);
     
 
-    register_btn.onclick = function(){
+    btnopen.onclick = function(){
         user_modify(data.incom_id);
     }
 }
@@ -203,7 +210,6 @@ function user_modify(target){
         var product_amount = document.getElementById('product_amount');
         var product_sum = document.getElementById('product_sum');
 
-
         if(product_amount.value == ""){
             alert('수량을 입력해주세요');
             double_click = true;
@@ -213,17 +219,10 @@ function user_modify(target){
                 list : {
                     ctl : "Admin",
                     param1 : "user_modify",
-                    target_idx : target,
-                    pw : pw.value,
-                    name : name.value,
-                    role : role.value,
-                    send_number : send_number.value,
-                    sms : sms.value,
-                    mms : mms.value,
-                    lms : lms.value,
-                    t_kakao : t_kakao.value,
-                    f_kakao : f_kakao.value,
-                    comment : comment.value,
+                    incom_id : target,
+                    mat_in_amount : product_amount.value,
+                    mat_in_sum : product_sum.value,
+    
                 },
                 action : "index.php",
                 havior : function(result){
@@ -231,15 +230,15 @@ function user_modify(target){
                     console.log(result);
                     result = JSON.parse(result);
                     if(result.result == 1){
-                        alert('사용자가 수정되었습니다.');
-                        user_list();
+                        alert('수정되었습니다.');
+                        search();
                     }else{
-                        alert('사용자 수정 실패');
+                        alert('수정 실패');
                     }
                 }
             })
         }
     }else{
-        alert('사용자 등록중입니다.');
+        alert('등록중입니다.');
     }
 }
