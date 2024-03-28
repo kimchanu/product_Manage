@@ -109,5 +109,5 @@ function createEditor(callback){
   }
 
 
-var abc = document.getElementsByClassName("editable")
-var editor = createEditor(abc);
+// var abc = document.getElementsByClassName("editable")
+// var editor = createEditor(abc);
