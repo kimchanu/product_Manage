@@ -209,6 +209,8 @@ function user_modify(target){
         double_click = false;
         var product_amount = document.getElementById('product_amount').value;
         var product_sum = document.getElementById('product_sum').value;
+        product_sum = product_sum.replace(/,/g, "");
+        product_sum = parseInt(product_sum);
         console.log(product_amount);
         if(product_amount.value == ""){
             alert('수량을 입력해주세요');
