@@ -283,7 +283,7 @@
                                     <li><input
                                         class="btn-sm btn-default"
                                         type="button"
-                                        value="자재추가"
+                                        value="수정하기"
                                         id="btnClose"
                                         onclick=""/></li>
                                     <li><input
