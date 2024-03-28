@@ -348,7 +348,7 @@ function its_add_product_real() {
 
 function mat_modify(){
     $param = $this->param;
-    if($this->value_check(array("target_idx"))){
+    if($this->value_check(array("target"))){
         $sql = "update its_mat_coming set ";
         $sql = $sql . "mat_in_amount = ".$this->null_check($param["mat_in_amount"])." , ";
         $sql = $sql . "mat_in_sum = ".$this->null_check($param["mat_in_sum"])." ";
