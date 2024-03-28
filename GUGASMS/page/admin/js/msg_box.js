@@ -147,8 +147,6 @@ function search_list(mat_code, department, mat_in_name, mat_in_stand){
     }
 }
 
-
-    
 function init_search(){
     var mat_in_code = document.getElementById('mat_in_code');
     var mat_in_name = document.getElementById('mat_in_name');
@@ -180,7 +178,11 @@ function user_detail(data){
     product_union.value = data.mat_in_union;
     product_price.value = data.mat_in_price;
     product_amount.value = data.mat_in_amount;
-    product_sum.value = data.mat_in_sum;
+    
+    let result11 = data.mat_in_sum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    result11 = result11.replace(/\.00$/, "");
+    product_sum.value = result11;
+    
 
     register_btn.onclick = function(){
         user_modify(data.incom_id);
@@ -194,28 +196,14 @@ function open_add_modal(){
 
 
 function user_modify(target){
-
     if(double_click){
         double_click = false;
-        var pw = document.getElementById('pw');
-        var name = document.getElementById('user_name');
-        var role = document.getElementById('role');
-        var send_number = document.getElementById('send_number');
-        var sms = document.getElementById('sms');
-        var mms = document.getElementById('mms');
-        var lms = document.getElementById('lms');
-        var t_kakao = document.getElementById('t_kakao');
-        var f_kakao = document.getElementById('f_kakao');
-        var comment = document.getElementById('comment');
+        var product_amount = document.getElementById('product_amount');
+        var product_sum = document.getElementById('product_sum');
 
-        if(pw.value == ""){
-            alert('비밀번호를 입력해주세요');
-            double_click = true;
-        }else if(name.value == ""){
-            alert('사용자명을 입력해주세요');
-            double_click = true;
-        }else if(role.value == "0"){
-            alert('권한그룹을 입력해주세요');
+
+        if(product_amount.value == ""){
+            alert('수량을 입력해주세요');
             double_click = true;
         }else{
             lb.ajax({
