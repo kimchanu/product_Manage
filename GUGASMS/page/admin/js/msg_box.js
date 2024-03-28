@@ -66,7 +66,7 @@ function init_addr_list(data){
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
                     elem.innerHTML = data[name];
                 }
-                
+
 
                 if(name == "mat_in_code"){
                     receiver_count++;
@@ -164,31 +164,26 @@ function init_search(){
 
 function user_detail(data){
     var product_code = document.getElementById('product_code');
-    var product_position = document.getElementById('product_position');
-    var name = document.getElementById('user_name');
-    var role =document.getElementById('role');
-    var sms = document.getElementById('sms');
+    var product_b_class = document.getElementById('product_b_class');
+    var product_name = document.getElementById('product_name');
+    var product_stand =document.getElementById('product_stand');
+    var product_union = document.getElementById('product_union');
+    var product_price = document.getElementById('product_price');
+    var product_amount = document.getElementById('product_amount');
+    var product_sum = document.getElementById('product_sum');
 
-    id.value = data.id;
-    id.setAttribute('readonly', true);
-    pw.value = data.pw;
-    name.value = data.name;
-    role.value = data.role;
-    sms.value = data.sms;
-    use_sms.value = data.use_sms;
-    lms.value = data.lms;
-    use_lms.value = data.use_lms;
-    mms.value = data.mms;
-    use_mms.value = data.use_mms;
-    t_kakao.value = data.t_kakao;
-    use_t_kakao.value = data.use_t_kakao;
-    f_kakao.value = data.f_kakao;
-    use_f_kakao.value = data.use_f_kakao;
-    comment.value = data.comment;
-    send_number.value = data.send_number;
+    product_code.value = data.mat_in_code;
+    product_code.setAttribute('readonly', true);
+    product_b_class.value = data.bc_in_b_class;
+    product_name.value = data.mat_in_name;
+    product_stand.value = data.mat_in_stand;
+    product_union.value = data.mat_in_union;
+    product_price.value = data.mat_in_price;
+    product_amount.value = data.mat_in_amount;
+    product_sum.value = data.mat_in_sum;
 
     register_btn.onclick = function(){
-        user_modify(data.idx);
+        user_modify(data.incom_id);
     }
 }
 
