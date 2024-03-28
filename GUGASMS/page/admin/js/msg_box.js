@@ -177,11 +177,13 @@ function user_detail(data){
     product_stand.value = data.mat_in_stand;
     product_union.value = data.mat_in_union;
     product_price.value = data.mat_in_price;
+    product_price.setAttribute('readonly', true);
     product_amount.value = data.mat_in_amount;
-    
+
     let result11 = data.mat_in_sum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
     result11 = result11.replace(/\.00$/, "");
     product_sum.value = result11;
+    product_sum.setAttribute('readonly', true);
     
 
     register_btn.onclick = function(){
