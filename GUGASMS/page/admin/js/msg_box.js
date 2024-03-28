@@ -209,7 +209,7 @@ function user_modify(target){
         double_click = false;
         var product_amount = document.getElementById('product_amount').value;
         var product_sum = document.getElementById('product_sum').value;
-        console.log(product_sum);
+        console.log(product_amount);
         if(product_amount.value == ""){
             alert('수량을 입력해주세요');
             double_click = true;
