@@ -220,8 +220,8 @@ function user_modify(target){
                     ctl : "Addr",
                     param1 : "mat_modify",
                     incom_id : target,
-                    mat_in_amount : product_amount.value,
-                    mat_in_sum : product_sum.value,
+                    mat_in_amount : product_amount,
+                    mat_in_sum : product_sum,
     
                 },
                 action : "index.php",
