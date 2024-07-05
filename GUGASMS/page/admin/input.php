@@ -120,11 +120,7 @@
                                             </tr>
                                         </thead>
                                         <tbody data-wrap="receiver_wrap" id="receiver_wrap">
-                                            <!-- <tr> <td class="check"> <label class="check_label m-auto" value="yes">
-                                            <input type="checkbox"> <span class="checkmark"></span> </label> </td>
-                                            <td>홍길동</td> <td class="number">010-3021-1125</td> </tr> <tr> <td colspan = "3"
-                                            class="align-center" height="185">내용이 없습니다.</td> </tr> -->
-                                            <!-- 내용이 비었을 경우 // -->
+   
                                         </tbody>
                                     </table>
                                     

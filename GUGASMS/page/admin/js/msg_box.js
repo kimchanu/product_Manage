@@ -1,16 +1,175 @@
 $(document).ready(function(){
-    $("#product_price, #product_amount").change( function(){
-        let aa = document.getElementById('product_price').value;
-        aa = aa.replace(/,/g, "");
-        let num1 = parseInt(aa);
-        let num2 = parseInt(document.getElementById('product_amount').value);
-        let result1 = num1 * num2;
-        result1 = result1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-        let num3 = num1.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-        $( '#product_sum' ).prop( 'value', result1);
-        $( '#product_price' ).prop( 'value', num3);
-    });  
 });
+
+$(document).on('change','.input-text', function(){
+    var parentElement = $(this).parent();
+    var price = $(this).parent().prev().prev().html();
+    var now_amount = $(this).parent().prev().html();
+    var sonn = $(this).parent().next();
+    parentElement.addClass("error");
+    sonn.addClass("error");
+
+    update_amount = now_amount - $(this).val();
+    // console.log(update_amount);
+    price = price.replace(",", "");
+    let summ = update_amount * parseInt(price);
+    summ = summ.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    // console.log(summ);
+    $(this).parent().next().html(summ);
+});
+
+
+var list_result1 = [];
+var update_amount = 0;
+
+$(document).on('click', '#getRowValue', function() {
+        var allRows = [];
+        var allRows2 = [];
+        var date = $('#date1').val();
+        var comment = $('#comment').val();
+        if(window.confirm("정말로 저장하시겠습니까? 되돌릴 수 없습니다.")){
+        $('#table_elem2 tbody tr').each(function() {
+            var rowValues = [];
+            var rowValues2 = [];
+            var cellValue = $(this).find('td:eq(4) input').val(); // 사용수량
+            var cellValue2 = $(this).find('td').eq(5).text(); // 남은재고금액
+            var cellValue3 = $(this).find('td').eq(3).text(); // 단가
+            console.log(parseInt(cellValue2.replace(",", "")));
+            rowValues.push((cellValue3-cellValue), parseInt(cellValue2.replace(",", "")));
+            rowValues2.push(cellValue, date, comment);
+            allRows2.push(rowValues2);
+            allRows.push(rowValues);
+        });
+        
+        if (!date || !comment) {
+            alert('날짜 또는 출고내용을 입력해 주세요.');
+        } else {
+            console.log(list_result1, user_idx, allRows2); // 선택한 날짜 값을 콘솔에 출력
+        update_product(allRows);
+        product_output(allRows2);
+        list_result1 = [];
+        }
+    }
+        else{
+            let a = 1;
+        }
+        
+        
+});
+
+function product_output(allRows2){
+    for(var i=0; i<list_result1.length; i++){
+        lb.ajax({
+            type : "JsonAjaxPost",
+            list : {
+                ctl : "Addr",
+                param1 : "output_insert",
+                idx : list_result1[i],
+                user_idx : user_idx,
+                remain : allRows2[i][0],
+                date : allRows2[i][1],
+                comment : allRows2[i][2],
+            },
+            action : "index.php",
+            havior : function(result){
+                $('#receiver_wrap3').empty();
+                console.log(result);
+                
+            }
+        });
+            
+    }
+}
+
+function update_product(allRows){
+    for(var i=0; i<list_result1.length; i++){
+        console.log(list_result1[i], allRows[i][0], allRows[i][1]);
+        lb.ajax({
+            type : "JsonAjaxPost",
+            list : {
+                ctl : "Addr",
+                param1 : "mat_modify",
+                incom_id : list_result1[i],
+                mat_in_amount : allRows[i][0],
+                mat_in_sum : allRows[i][1],
+            },
+            action : "index.php",
+            havior : function(result){
+                $('#receiver_wrap').empty();
+                console.log(result);
+            }
+        });
+            
+    }
+}
+
+   $(document).on('change', 'input[id="myCheckbox"]', function () {
+        if (this.checked) {
+            list_result1.push($(this).val());
+            let list_aa = [];
+            list_aa.push($(this).val());
+            lb.ajax({
+                type : "JsonAjaxPost",
+                list : {
+                    ctl : "Addr",
+                    param1 : "product_to_modify",
+                    idx : JSON.stringify(list_aa),
+                },
+                action : "index.php",
+                havior : function(result){
+                    double_click = true;
+                    if(result.total != 0){
+                        result = JSON.parse(result);
+                    }else{
+                        alert('등록 실패');
+                    }
+                    data = result.value;
+                    // $('#receiver_wrap3').empty();
+                    lb.auto_view({
+                        wrap : "receiver_wrap3",
+                        copy : "receiver_copy2",
+                        attr: '["data-attr"]',
+                        json: data,
+                        havior: function (elem, data, name, copy_elem) { 
+                            if (copy_elem.getAttribute('data-copy') == "receiver_copy2") {
+                                copy_elem.setAttribute('data-copy', '');
+                                copy_elem.id = 0;
+                            }
+                            if(name == "check_box"){
+                                let a = 1;
+                        }
+                            else{
+                                    if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
+                                        elem.innerHTML = data[name];
+                                }
+                                    if(name == "mat_in_sum"){
+                                    let result11 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                                    result11 = result11.replace(/\.00$/, "");
+                
+                                    elem.innerHTML = result11;
+                                }
+                            }
+                        },
+                    })
+                }
+            })
+            console.log(list_result1);
+        }
+        if(!this.checked){
+            list_result1 = list_result1.filter((num) => num !== $(this).val());
+            if(list_result1.length == 0){
+                $('#receiver_wrap3').empty();
+                let aa = 1;
+            }
+            else{
+                let table = document.getElementById('table_elem2');
+            table.deleteRow(-1);
+            console.log(table.rows[1]);
+            }
+        }
+        
+    });
+
 
 var double_click = true;
 var receiver_count = 0;
@@ -67,6 +226,7 @@ function init_addr_list(data){
 			if(name == "check_box"){
                 // elem.id = "receiver_check_"+recevier_index ;
                 elem.classList.add('receiver_check');
+                elem.setAttribute('id', 'myCheckbox');
                 elem.value = data.incom_id;
         }
             else{
@@ -85,12 +245,6 @@ function init_addr_list(data){
                     elem.innerHTML = result11;
                 }
             }
-            if(name == "modify"){
-                elem.style.cursor = "pointer";
-                elem.onclick = function(){
-                    user_detail(data);
-                }
-            }
         },
         end : function(){
             $('.loading').fadeOut();
@@ -103,15 +257,14 @@ function init_addr_list(data){
 function search(){
 
     var mat_code = document.getElementById('mat_in_code').value;
-    // var department = document.getElementById('send_kind');
     var mat_in_amount = document.getElementById('mat_in_amount').value;
     var mat_in_name = document.getElementById('mat_in_name').value;
     var mat_in_stand = document.getElementById('mat_in_stand').value;
     if(typeof mat_code == undefined || typeof mat_code == null){
         mat_code = "";
     }
-    console.log(mat_code, mat_in_amount, mat_in_name);
     search_list(mat_code, mat_in_amount, mat_in_name, mat_in_stand);
+    
 }
 
 function search_list(mat_code, department, mat_in_name, mat_in_stand){
@@ -123,7 +276,6 @@ function search_list(mat_code, department, mat_in_name, mat_in_stand){
         receiver_count = 0;
         var total_elem = document.getElementById('receiver_total');
         total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-        // console.log(target);
         lb.ajax({
             type : "JsonAjaxPost",
             list : {
@@ -138,7 +290,6 @@ function search_list(mat_code, department, mat_in_name, mat_in_stand){
             action : "index.php",
             havior : function(result){
                 double_click = true;
-                console.log(result);
                 result = JSON.parse(result);
                 if(result.result == 1){
                     if(result.value.length == 0){
@@ -151,97 +302,5 @@ function search_list(mat_code, department, mat_in_name, mat_in_stand){
         })
     }else{
         alert("리스트 호출중입니다.");
-    }
-}
-
-function init_search(){
-    var mat_in_code = document.getElementById('mat_in_code');
-    var mat_in_name = document.getElementById('mat_in_name');
-    var mat_in_stand = document.getElementById('mat_in_stand');
-    var mat_in_amount = document.getElementById('mat_in_amount');
-
-    mat_in_code.value = "";
-    mat_in_name.value = "";
-    mat_in_stand.value = "";
-    mat_in_amount.value = "1";
-    request_product_list(1);
-}
-
-function user_detail(data){
-    var product_code = document.getElementById('product_code');
-    var product_b_class = document.getElementById('product_b_class');
-    var product_name = document.getElementById('product_name');
-    var product_stand =document.getElementById('product_stand');
-    var product_union = document.getElementById('product_union');
-    var product_price = document.getElementById('product_price');
-    var product_amount = document.getElementById('product_amount');
-    var product_sum = document.getElementById('product_sum');
-    btnopen = document.getElementById('btnopen');
-    product_code.value = data.mat_in_code;
-    product_code.setAttribute('readonly', true);
-    product_b_class.value = data.bc_in_b_class;
-    product_name.value = data.mat_in_name;
-    product_stand.value = data.mat_in_stand;
-    product_union.value = data.mat_in_union;
-    product_price.value = data.mat_in_price;
-    product_price.setAttribute('readonly', true);
-    product_amount.value = data.mat_in_amount;
-
-    let result11 = data.mat_in_sum.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    result11 = result11.replace(/\.00$/, "");
-    product_sum.value = result11;
-    product_sum.setAttribute('readonly', true);
-    
-
-    btnopen.onclick = function(){
-        user_modify(data.incom_id);
-    }
-}
-
-function open_add_modal(){
-    var addr_modal = document.getElementById('addr_modal');
-    addr_modal.style.display = "block";
-}
-
-
-function user_modify(target){
-    if(double_click){
-        double_click = false;
-        var product_amount = document.getElementById('product_amount').value;
-        var product_sum = document.getElementById('product_sum').value;
-        product_sum = product_sum.replace(/,/g, "");
-        product_sum = parseInt(product_sum);
-        console.log(product_amount);
-        if(product_amount.value == ""){
-            alert('수량을 입력해주세요');
-            double_click = true;
-        }else{
-            lb.ajax({
-                type : "JsonAjaxPost",
-                list : {
-                    ctl : "Addr",
-                    param1 : "mat_modify",
-                    incom_id : target,
-                    mat_in_amount : product_amount,
-                    mat_in_sum : product_sum,
-    
-                },
-                action : "index.php",
-                havior : function(result){
-                    double_click = true;
-                    console.log(result);
-                    result = JSON.parse(result);
-                    if(result.result == 1){
-                        alert('수정되었습니다.');
-                        search();
-                        close_add_modal();
-                    }else{
-                        alert('수정 실패');
-                    }
-                }
-            })
-        }
-    }else{
-        alert('등록중입니다.');
     }
 }
