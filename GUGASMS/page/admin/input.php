@@ -52,7 +52,7 @@
         <script src="GUGASMS/page/admin/js/FileSaver.min.js"></script>
         <script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
         <script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
-        <script src="GUGASMS/page/admin/js/add_main.js<?php echo $this->version;?>"></script>
+        <script src="GUGASMS/page/admin/js/input.js<?php echo $this->version;?>"></script>
     </head>
     <body>
         <div class="wrap">

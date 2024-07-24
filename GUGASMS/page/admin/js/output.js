@@ -32,22 +32,21 @@ $(document).on('click', '#getRowValue', function() {
             var rowValues = [];
             var rowValues2 = [];
             var cellValue = $(this).find('td:eq(4) input').val(); // 사용수량
-            var cellValue2 = $(this).find('td').eq(5).text(); // 남은재고금액
-            var cellValue3 = $(this).find('td').eq(3).text(); // 단가
-            console.log(parseInt(cellValue2.replace(",", "")));
-            rowValues.push((cellValue3-cellValue), parseInt(cellValue2.replace(",", "")));
+            // var cellValue2 = $(this).find('td').eq(5).text(); // 남은재고금액
+            // var cellValue3 = $(this).find('td').eq(3).text(); // 단가
+            // rowValues.push((cellValue3-cellValue), parseInt(cellValue2.replace(",", "")));
             rowValues2.push(cellValue, date, comment);
             allRows2.push(rowValues2);
-            allRows.push(rowValues);
+            console.log(date);
+            // allRows.push(rowValues);
         });
         
         if (!date || !comment) {
             alert('날짜 또는 출고내용을 입력해 주세요.');
         } else {
             console.log(list_result1, user_idx, allRows2); // 선택한 날짜 값을 콘솔에 출력
-        update_product(allRows);
-        product_output(allRows2);
-        list_result1 = [];
+            product_output(allRows2);
+            list_result1 = [];
         }
     }
         else{
@@ -65,8 +64,8 @@ function product_output(allRows2){
                 ctl : "Addr",
                 param1 : "output_insert",
                 idx : list_result1[i],
-                user_idx : user_idx,
-                remain : allRows2[i][0],
+                user_id : user_idx,
+                amount : allRows2[i][0],
                 date : allRows2[i][1],
                 comment : allRows2[i][2],
             },
@@ -74,6 +73,7 @@ function product_output(allRows2){
             havior : function(result){
                 $('#receiver_wrap3').empty();
                 console.log(result);
+                location.reload();
                 
             }
         });
@@ -81,135 +81,99 @@ function product_output(allRows2){
     }
 }
 
-function update_product(allRows){
-    for(var i=0; i<list_result1.length; i++){
-        console.log(list_result1[i], allRows[i][0], allRows[i][1]);
+
+
+$(document).on('change', 'input[id="myCheckbox"]', function () {
+    if (this.checked) {
+        list_result1.push($(this).val());
+        let list_aa = [];
+        list_aa.push($(this).val());
         lb.ajax({
             type : "JsonAjaxPost",
             list : {
                 ctl : "Addr",
-                param1 : "mat_modify",
-                incom_id : list_result1[i],
-                mat_in_amount : allRows[i][0],
-                mat_in_sum : allRows[i][1],
+                param1 : "product_to_modify",
+                idx : JSON.stringify(list_aa),
             },
             action : "index.php",
             havior : function(result){
-                $('#receiver_wrap').empty();
-                console.log(result);
-            }
-        });
-            
-    }
-}
-
-   $(document).on('change', 'input[id="myCheckbox"]', function () {
-        if (this.checked) {
-            list_result1.push($(this).val());
-            let list_aa = [];
-            list_aa.push($(this).val());
-            lb.ajax({
-                type : "JsonAjaxPost",
-                list : {
-                    ctl : "Addr",
-                    param1 : "product_to_modify",
-                    idx : JSON.stringify(list_aa),
-                },
-                action : "index.php",
-                havior : function(result){
-                    double_click = true;
-                    if(result.total != 0){
-                        result = JSON.parse(result);
-                    }else{
-                        alert('등록 실패');
-                    }
-                    data = result.value;
-                    // $('#receiver_wrap3').empty();
-                    lb.auto_view({
-                        wrap : "receiver_wrap3",
-                        copy : "receiver_copy2",
-                        attr: '["data-attr"]',
-                        json: data,
-                        havior: function (elem, data, name, copy_elem) { 
-                            if (copy_elem.getAttribute('data-copy') == "receiver_copy2") {
-                                copy_elem.setAttribute('data-copy', '');
-                                copy_elem.id = 0;
-                            }
-                            if(name == "check_box"){
-                                let a = 1;
-                        }
-                            else{
-                                    if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
-                                        elem.innerHTML = data[name];
-                                }
-                                    if(name == "mat_in_sum"){
-                                    let result11 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                                    result11 = result11.replace(/\.00$/, "");
-                
-                                    elem.innerHTML = result11;
-                                }
-                            }
-                        },
-                    })
+                double_click = true;
+                if(result.total != 0){
+                    result = JSON.parse(result);
+                }else{
+                    alert('등록 실패');
                 }
-            })
+                data = result.value;
+                // $('#receiver_wrap3').empty();
+                lb.auto_view({
+                    wrap : "receiver_wrap3",
+                    copy : "receiver_copy2",
+                    attr: '["data-attr"]',
+                    json: data,
+                    havior: function (elem, data, name, copy_elem) { 
+                        if (copy_elem.getAttribute('data-copy') == "receiver_copy2") {
+                            copy_elem.setAttribute('data-copy', '');
+                            copy_elem.id = 0;
+                        }
+                        if(name == "checkboxx"){
+                            elem.setAttribute('id', 'myname');
+                            
+                    }
+                        else{
+                                if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
+                                    elem.innerHTML = data[name];
+                            }
+                                if(name == "mat_in_sum"){
+                                let result11 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                                result11 = result11.replace(/\.00$/, "");
+            
+                                elem.innerHTML = result11;
+                                }
+                                if(name == "mat_in_name"){
+                                    elem.value = data.incom_id;
+                                }
+                        }
+                    },
+                })
+            }
+        })
+        console.log(list_result1);
+    }
+    if(!this.checked){
+        let aa = $(this).val();
+        console.log(aa);
+        list_result1 = list_result1.filter((num) => num !== $(this).val());
+        if(list_result1.length == 0){
+            $('#receiver_wrap3').empty();
+            
+        }
+        else{
+            let table = document.getElementById('table_elem2');
+            removeRowByValue(aa);
             console.log(list_result1);
         }
-        if(!this.checked){
-            list_result1 = list_result1.filter((num) => num !== $(this).val());
-            if(list_result1.length == 0){
-                $('#receiver_wrap3').empty();
-                let aa = 1;
-            }
-            else{
-                let table = document.getElementById('table_elem2');
-            table.deleteRow(-1);
-            console.log(table.rows[1]);
+    }
+    
+});
+
+function removeRowByValue(value) {
+    var table = document.getElementById('table_elem2');
+    var checkboxes = table.querySelectorAll('td[data-attr="mat_in_name"]');
+    checkboxes.forEach(function(checkbox) {
+        if (checkbox.value === value) {
+            // Find the closest row to the checkbox and remove it
+            var row = checkbox.closest('tr');
+            if (row) {
+                row.remove();
             }
         }
-        
     });
-
+}
 
 var double_click = true;
 var receiver_count = 0;
 var recevier_index  = 0;
 
-function request_product_list(target){
-    target = group_idx;
-    if(double_click){
-        double_click = false;
-        $('#receiver_wrap').empty();
-        addr_click_flag = true;
-        receiver_count = 0;
-        var total_elem = document.getElementById('receiver_total');
-        total_elem.innerHTML ="<i>Total</i>"+receiver_count;
-        console.log(target);
-        lb.ajax({
-            type : "JsonAjaxPost",
-            list : {
-                ctl : "Addr",
-                param1 : "product_list2",
-                idx : target,
-            },
-            action : "index.php",
-            havior : function(result){
-                double_click = true;
-                console.log(result);
-                result = JSON.parse(result);
-                if(result.result == 1){
-                    if(result.value.length == 0){
-                        alert('등록하신 자재가 없습니다.');
-                    }else{
-                        init_addr_list(result.value);
-                    }
-                }
-            }
-        })
-    }else{
-        alert("리스트 호출중입니다.");
-    }
-}
 
 function init_addr_list(data){
     $('.loading').fadeIn();
@@ -233,15 +197,10 @@ function init_addr_list(data){
                 if(typeof data[name] != undefined && typeof data[name] != "undefined" && data[name] != null && data[name] != "null"){
                     elem.innerHTML = data[name];
                 }
-
-
-                if(name == "mat_in_code"){
-                    receiver_count++;
-                }
                 if(name == "mat_in_sum"){
                     let result11 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                     result11 = result11.replace(/\.00$/, "");
-
+                    receiver_count++;
                     elem.innerHTML = result11;
                 }
             }
@@ -267,7 +226,7 @@ function search(){
     
 }
 
-function search_list(mat_code, department, mat_in_name, mat_in_stand){
+function search_list(mat_code, mat_in_amount, mat_in_name, mat_in_stand){
     var target = group_idx;
     if(double_click){
         double_click = false;
@@ -280,10 +239,10 @@ function search_list(mat_code, department, mat_in_name, mat_in_stand){
             type : "JsonAjaxPost",
             list : {
                 ctl : "Addr",
-                param1 : "product_list3",
+                param1 : "now_list",
                 idx : target,
                 mat_in_code : mat_code,
-                mat_in_amount : department,
+                mat_in_amount : mat_in_amount,
                 mat_in_name : mat_in_name,
                 mat_in_stand : mat_in_stand,
             },

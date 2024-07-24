@@ -7,11 +7,23 @@ $(document).ready(function(){
     if (event.which == 13) { // 엔터 키의 키 코드
         search();
     }
-});
+    });
+
+    $('#input_date1').click(function() {
+        $('.datepicker').datepicker().datepicker('show');
+    });
+
+    $('.datepicker').datepicker({
+        dateFormat: 'yy-mm-dd',
+        onSelect: function(dateText) {
+            $('.date-cell').text(dateText);
+            all_date_input = dateText;
+        }
+    })
 });
 
 var dupli;
-
+var all_date_input;
 function abc(data) {
     // 중복 제거 후 객체 배열로 변환
     const uniqueCodes = [...new Set(data.map(item => item.mat_in_code))].map(code => {
@@ -53,27 +65,40 @@ $(document).on('click', '#getRowValue', function() {
     $('#table_elem tbody tr').each(function() {
         var cellValue = $(this).find('td').eq(0).val(); // 자재 id
         var selectValue = $(this).find('td').eq(1).find('select').val();
-        console.log(cellValue);
-        console.log(selectValue);
+        console.log(all_date_input);
         allRows.push([cellValue, selectValue]);
-
+        
     });
-    if(window.confirm("정말로 저장하시겠습니까? 되돌릴 수 없습니다.")){
-        update_product(allRows);
+    console.log(allRows);
+    if(allRows.length === 0){
+        alert('아무것도 입력하지 않으셨습니다');
+        return;
     }
-    
+    condition = window.confirm("정말로 저장하시겠습니까? 되돌릴 수 없습니다.");
+    if(condition && (allRows[0][1] !== undefined)){
+        update_b_class(allRows);
+    }
+    if(condition && (all_date_input !== undefined)){
+        date_update(allRows);
+    }
+
+    search();
 });
 
 
 
-function update_product(allRows){
+function update_b_class(allRows){
+    if(allRows[0][1] == undefined){
+        alert('dfafdas');
+        return;
+    }
     for(var i=0; i<allRows.length; i++){
         console.log(allRows[i][0], allRows[i][1]);
         lb.ajax({
             type : "JsonAjaxPost",
             list : {
                 ctl : "Addr",
-                param1 : "mat_modify2",
+                param1 : "update_b_class",
                 incom_id : allRows[i][0],
                 bc_in_b_class : allRows[i][1],
             },
@@ -85,7 +110,31 @@ function update_product(allRows){
         });
             
     }
-    search();
+}
+
+function date_update(allRows){
+    if(all_date_input == undefined){
+        alert('dfafdas');
+        return;
+    }
+    for(var i=0; i<allRows.length; i++){
+        console.log(allRows[i][0], allRows[i][1]);
+        lb.ajax({
+            type : "JsonAjaxPost",
+            list : {
+                ctl : "Addr",
+                param1 : "date_update",
+                incom_id : allRows[i][0],
+                date : all_date_input,
+            },
+            action : "index.php",
+            havior : function(result){
+                $('#receiver_wrap').empty();
+                console.log(result);
+            }
+        });
+            
+    }
 }
 
 
@@ -115,7 +164,12 @@ function init_addr_list(data){
                     receiver_count++;
                     elem.value = data.incom_id;
                 }
+                if(name == "mat_in_sum"){
+                    let result11 = data[name].toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                    result11 = result11.replace(/\.00$/, "");
 
+                    elem.innerHTML = result11;
+                }
             }
         },
         end : function(){
@@ -209,4 +263,3 @@ function code_init(){
     }
 }
 
-    

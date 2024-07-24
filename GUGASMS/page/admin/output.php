@@ -14,17 +14,17 @@
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/admin.modal.css<?php echo $this->version;?>"/>
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/adm_table.css<?php echo $this->version; ?>" />
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/common2.css<?php echo $this->version; ?>" />
-
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<link rel="stylesheet" href="GUGASMS/page/admin/css/jquery-ui.min.css">
 	<script src="GUGASMS/page/admin/js/jquery/jquery-3.3.1.min.js"></script>
 	<script src="GUGASMS/page/admin/js/jquery-ui.min.js"></script>
-	
+	 
 	<!-- sript시작 -->
 	<script src="GUGASMS/page/admin/js/xlsx.full.min.js"></script>
 	<script src="GUGASMS/page/admin/js/FileSaver.min.js"></script>
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
-	<script src="GUGASMS/page/admin/js/msg_box.js<?php echo $this->version; ?>"></script>
+	<script src="GUGASMS/page/admin/js/output.js<?php echo $this->version; ?>"></script>
 </head>
 <body>
 	<div class="loading"><img class="loading_img" src ="GUGASMS/page/admin/images/Spinner.gif"></div>
@@ -51,7 +51,6 @@
                                             <select id ="mat_in_amount">
                                                 <option value = "0">0</option>
                                                 <option value = "1" selected>1이상</option>
-												<option value = "2">전부</option>
                                             </select>
                                         </div>
                                     </li>
@@ -87,25 +86,13 @@
 											<thead class = "abcde">
 												<tr>
 													<th class="check">
-														<!-- <label class="check_label m-auto" value="yes" >
-															<input type="checkbox" onchange ="all_check(this);">
-															<span class="checkmark"></span>
-														</label> -->
                                                     </th>
 													<th class="tight2">자재코드</th>
-													<!-- <th class="tight2">위치</th> -->
-													<!-- <th class="tight2">대분류</th> -->
-													<!-- <th class="tight2">소분류</th> -->
 													<th class="number">품명</th>
 													<th class="number">규격</th>
-													<!-- <th class="tight1">제조사</th> -->
-													<!-- <th class="tight1">거래처</th> -->
-													<!-- <th class="tight2">단위</th> -->
 													<th class="tight1">단가</th>
 													<th class="tight2">재고수량</th>
 													<th class="tight1">재고금액</th>
-													<!-- <th class="tight2">수정</th> -->
-                                                    <!-- <th class="etc">등록자</th> -->
 												</tr>
 											</thead>
 											<tbody data-wrap="receiver_wrap" id ="receiver_wrap">
@@ -205,9 +192,6 @@
         <tr data-copy="receiver_copy2">
             <td class="number" data-attr="mat_in_name">-</td>
             <td class="number" data-attr="mat_in_stand">-</td>
-            <!-- <td class="tight1" data-attr="mat_in_maker">-</td> -->
-            <!-- <td class="tight1" data-attr="mat_in_custom">-</td> -->
-            <!-- <td class="tight2" data-attr="mat_in_union">-</td> -->
             <td class="tight1" data-attr="mat_in_price">-</td>
 			<td class="tight1" data-attr="mat_in_amount">-</td>
             <td class="tight2" ><input type="text" data-attr="mat_in_new_amount" value = "" class="input-text" style="width : 30px; text-align: center"></td>

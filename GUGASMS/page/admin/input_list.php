@@ -14,17 +14,25 @@
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/admin.modal.css<?php echo $this->version;?>"/>
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/adm_table.css<?php echo $this->version; ?>" />
 	<link rel="stylesheet" type="text/css" href="GUGASMS/page/admin/css/common2.css<?php echo $this->version; ?>" />
+	<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 
-	<link rel="stylesheet" href="GUGASMS/page/admin/css/jquery-ui.min.css">
-	<script src="GUGASMS/page/admin/js/jquery/jquery-3.3.1.min.js"></script>
-	<script src="GUGASMS/page/admin/js/jquery-ui.min.js"></script>
-	
 	<!-- sript시작 -->
+	<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 	<script src="GUGASMS/page/admin/js/xlsx.full.min.js"></script>
 	<script src="GUGASMS/page/admin/js/FileSaver.min.js"></script>
 	<script src="GUGASMS/page/admin/js/lb.js<?php echo $this->version; ?>"></script>
 	<script src="GUGASMS/page/admin/js/admin.js<?php echo $this->version;?>"></script>
-	<script src="GUGASMS/page/admin/js/msg_reserve.js<?php echo $this->version; ?>"></script>
+	<script src="GUGASMS/page/admin/js/input_list.js<?php echo $this->version; ?>"></script>
+	<link rel="stylesheet" href="GUGASMS/page/admin/css/jquery-ui.min.css">
+
+	<style>
+        .date-picker-icon {
+            cursor: pointer;
+            margin-left: 5px;
+            position: relative;
+        }
+    </style>
 </head>
 <body>
 	<div class="loading"><img class="loading_img" src ="GUGASMS/page/admin/images/Spinner.gif"></div>
@@ -69,7 +77,7 @@
 						</section>
 						<!-- adm_section_container끝 -->
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-9">
 						<section class="adm_section_container">
 							<div class="adm_section_container_body p-1">
 								<div class="btn-list-con align-right mb-1">
@@ -93,7 +101,7 @@
 													<th class="tight1">단가</th>
 													<th class="tight2">수량</th>
 													<th class="tight1">금액</th>
-                                                    <!-- <th class="etc">등록자</th> -->
+                                                    <th class="tight1" id = "input_date1">입고날짜 <i class="fa fa-calendar-alt" onclick=""></i><input class="datepicker" type="text" style=" visibility : hidden; width : 1px; height : 1px;"></th>
 												</tr>
 											</thead>
 											<tbody data-wrap="receiver_wrap" id ="receiver_wrap">
@@ -147,6 +155,7 @@
             <td class="tight1" data-attr="mat_in_price">-</td>
             <td class="tight2" data-attr="mat_in_amount">-</td>
             <td class="tight1" data-attr="mat_in_sum">-</td>
+			<td class="tight1 date-cell" data-attr="input_date">-</td>
         </tr>
     </tbody></table>
 	</div>

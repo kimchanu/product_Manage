@@ -53,21 +53,17 @@
 				<a id="msg_side" href="#" onclick="side_bar(this); return false;">내부관리(수불대장)</a>
 				<ul class="depth2-con" style="display:none;">
 					<li class="depth2">
-						<a href="?ctl=Move&param1=input">자재등록</a>
+						<a href="?ctl=Move&param1=input">입고(엑셀)</a>
 					</li>
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=msg_main">자재등록</a></li> -->
 					<li class="depth2">
-						<a href="?ctl=Move&param1=input_list">자재현황</a>
+						<a href="?ctl=Move&param1=input_list">입고현황</a>
 					</li>
-					<!-- <li class="depth2 admin_none"><a
-					href="?ctl=Move&param1=msg_result">전송결과</a></li> -->
+
 					<li class="depth2">
-						<a href="?ctl=Move&param1=input_month">월 집계</a>
+						<a href="?ctl=Move&param1=input_month">입고집계</a>
 					</li>
-					<!-- <li class="depth2"><a
-					href="?ctl=Move&param1=product_register">메시지함관리</a></li> -->
-					<!-- <li class="depth2"><a href="?ctl=Move&param1=msg_box_set">메시지함관리</a></li>
-					-->
+
 				</ul>
 			</li>
 			<li class="depth1" data-side="">
@@ -75,13 +71,13 @@
 				<ul class="depth2-con" style="display:none;">
 					<!-- <li class="depth2"><a href="?ctl=Move&param1=kakao_main">알림톡전송</a></li> -->
 					<li side_bar();="side_bar();" class="depth2 admin_none">
-						<a href="?ctl=Move&param1=output">자재출고</a>
+						<a href="?ctl=Move&param1=output">출고</a>
 					</li>
-					<!-- <li side_bar();="side_bar();" class="depth2 admin_none">
-						<a href="?ctl=Move&param1=output_list">자재출고현황</a>
-					</li> -->
 					<li side_bar();="side_bar();" class="depth2 admin_none">
-						<a href="?ctl=Move&param1=output_month">월 집계</a>
+						<a href="?ctl=Move&param1=output_list">출고현황</a>
+					</li>
+					<li side_bar();="side_bar();" class="depth2 admin_none">
+						<a href="?ctl=Move&param1=output_month">출고집계</a>
 					</li>
 					<!-- <li class="depth2 admin_none"<a
 					href="?ctl=Move&param1=kakao_tpl_set">알림톡템플릿관리</a></li> -->
