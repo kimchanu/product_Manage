@@ -485,48 +485,119 @@ function processAndSendData() {
 }
 
 //엑셀 다운로드
-var excelHandler ={
-    getExcelFileName : function(){
-        return "result_table.xlsx";
-    },
-    getSheetName : function(){
-        return "Sheet1";
-    },
-    getExcelData : function(){
-        //Excel 다운시 checkbox 제외시키기
-        var clone_table = document.getElementById('receiver_wrap').cloneNode(true);
-        var tr = clone_table.querySelectorAll('tr');
-        for(var i = 0; i < tr.length; i++){
-            tr[i].removeChild(tr[i].querySelector('.check'));
-        }
-        return clone_table;
-    },
-    getWorksheet : function(){
-        return XLSX.utils.table_to_sheet(this.getExcelData());
-    }
+// var excelHandler ={
+//     getExcelFileName : function(){
+//         return "result_table.xlsx";
+//     },
+//     getSheetName : function(){
+//         return "Sheet1";
+//     },
+//     getExcelData : function(){
+//         //Excel 다운시 checkbox 제외시키기
+//         var clone_table = document.getElementById('receiver_wrap').cloneNode(true);
+//         var tr = clone_table.querySelectorAll('tr');
+//         for(var i = 0; i < tr.length; i++){
+//             tr[i].removeChild(tr[i].querySelector('.check'));
+//         }
+//         return clone_table;
+//     },
+//     getWorksheet : function(){
+//         return XLSX.utils.table_to_sheet(this.getExcelData());
+//     }
+// }
+
+// function s2ab(s){
+//     var buf = new ArrayBuffer(s.length);
+//     var view = new Uint8Array(buf);
+//     for(var i =0; i<s.length; i++){
+//         view[i] = s.charCodeAt(i) & 0xFF;
+//     }
+//     return buf;
+// }
+
+// function exportExcel(){
+//     var wb = XLSX.utils.book_new();
+
+//     var newWorksheet = excelHandler.getWorksheet();
+
+//     XLSX.utils.book_append_sheet(wb, newWorksheet, excelHandler.getSheetName());
+
+//     var wbout = XLSX.write(wb, {bookType : 'xlsx', type : "binary"});
+
+//     saveAs(new Blob([s2ab(wbout)], {type : "application/octet-stream"}), excelHandler.getExcelFileName());
+// } 
+
+function exportExcel() {
+    fetch('/path/to/fetch_excel_data.php')
+        .then(response => response.json())
+        .then(data => {
+            var wb = XLSX.utils.book_new();
+            var newWorksheet = excelHandler.getWorksheet(data);
+            XLSX.utils.book_append_sheet(wb, newWorksheet, excelHandler.getSheetName());
+            var wbout = XLSX.write(wb, {bookType: 'xlsx', type: "binary"});
+            saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), excelHandler.getExcelFileName());
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 }
 
-function s2ab(s){
+var excelHandler = {
+    getExcelFileName: function() {
+        return '자재수불대장_내부관리용.xlsx';
+    },
+    getSheetName: function() {
+        return '내부관리용(수불대장)';
+    },
+    getWorksheet: function(data) {
+        var worksheetData = [];
+
+        // 헤더 작성 (기존 엑셀 양식과 동일하게 설정)
+        worksheetData.push([
+            'No.', '자재코드', '위치', '대분류', '소분류', '품명', '규격', '제조사', '거래처', '단위', '단가',
+            '이월누계(ⓐ)', '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월',
+            '출고 이월누계(ⓐ)', '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월',
+            '재고수량'
+        ]);
+
+        // 데이터 작성
+        data.forEach(function(row) {
+            // 각 row에서 데이터를 추출해 배열에 추가
+            worksheetData.push([
+                row.incom_id, 
+                row.mat_in_code, 
+                row.mat_in_place, 
+                row.bc_in_b_class, 
+                row.bc_in_s_class, 
+                row.mat_in_name, 
+                row.mat_in_stand, 
+                row.mat_in_maker, 
+                row.mat_in_custom, 
+                row.mat_in_union, 
+                row.mat_in_price,
+
+                row.input_carry_over || 0, // 이월누계 (입고)
+                row.input_amount || 0,     // 1월~12월 입고량
+                '', '', '', '', '', '', '', '', '', '', '',
+
+                row.output_carry_over || 0, // 이월누계 (출고)
+                row.output_amount || 0,     // 1월~12월 출고량
+                '', '', '', '', '', '', '', '', '', '', '',
+
+                '' // 재고수량 (계산 필요)
+            ]);
+        });
+
+        return XLSX.utils.aoa_to_sheet(worksheetData);
+    }
+};
+
+function s2ab(s) {
     var buf = new ArrayBuffer(s.length);
     var view = new Uint8Array(buf);
-    for(var i =0; i<s.length; i++){
-        view[i] = s.charCodeAt(i) & 0xFF;
-    }
+    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
     return buf;
 }
-
-function exportExcel(){
-    var wb = XLSX.utils.book_new();
-
-    var newWorksheet = excelHandler.getWorksheet();
-
-    XLSX.utils.book_append_sheet(wb, newWorksheet, excelHandler.getSheetName());
-
-    var wbout = XLSX.write(wb, {bookType : 'xlsx', type : "binary"});
-
-    saveAs(new Blob([s2ab(wbout)], {type : "application/octet-stream"}), excelHandler.getExcelFileName());
-} 
-
 
 //휴대폰 번호 사이에 -를 붙혀주는 함수
 function phoneFormatter(num) {
