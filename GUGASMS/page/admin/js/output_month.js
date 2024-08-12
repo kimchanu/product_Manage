@@ -40,7 +40,7 @@ function code_init(year, month) {
                 FROM 
                     its_mat_coming m
                 LEFT JOIN 
-                    its_input i ON m.incom_id = i.incom_id
+                    its_output i ON m.incom_id = i.incom_id
                 WHERE 
                     m.bc_in_b_class = '${b_class}'
                     AND MONTH(i.date) = ${month}
@@ -85,92 +85,6 @@ function transform(originalData){
     return transformedData;
 }
 
-// function updateCharts(data, budget_its) {
-//     var dataTCS = data[0];
-//     var dataFTMS = data[1];
-//     var dataCS = data[2];
-//     var dataETC = data[3];
-
-//     var ctxBar = document.getElementById('barChart').getContext('2d');
-//     var barChart = new Chart(ctxBar, {
-//         type: 'bar',
-//         data: {
-//             labels: labels,
-//             datasets: [
-//                 {
-//                     label: 'TCS',
-//                     data: dataTCS,
-//                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
-//                     borderColor: 'rgba(75, 192, 192, 1)',
-//                     borderWidth: 1
-//                 },
-//                 {
-//                     label: 'FTMS',
-//                     data: dataFTMS,
-//                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
-//                     borderColor: 'rgba(54, 162, 235, 1)',
-//                     borderWidth: 1
-//                 },
-//                 {
-//                     label: '전산',
-//                     data: dataCS,
-//                     backgroundColor: 'rgba(255, 206, 86, 0.2)',
-//                     borderColor: 'rgba(255, 206, 86, 1)',
-//                     borderWidth: 1
-//                 },
-//                 {
-//                     label: '기타',
-//                     data: dataETC,
-//                     backgroundColor: 'rgba(153, 102, 255, 0.2)',
-//                     borderColor: 'rgba(153, 102, 255, 1)',
-//                     borderWidth: 1
-//                 }
-//             ]
-//         },
-//         options: {
-//             responsive: true,
-//             scales: {
-//                 y: {
-//                     beginAtZero: true
-//                 }
-//             }
-//         }
-//     });
-
-//     var totalData = dataTCS.reduce((a, b) => a + b, 0) + dataFTMS.reduce((a, b) => a + b, 0) + dataCS.reduce((a, b) => a + b, 0) + dataETC.reduce((a, b) => a + b, 0);
-//     var pieData = [
-//         (dataTCS.reduce((a, b) => a + b, 0) / totalData * 100).toFixed(2),
-//         (dataFTMS.reduce((a, b) => a + b, 0) / totalData * 100).toFixed(2),
-//         (dataCS.reduce((a, b) => a + b, 0) / totalData * 100).toFixed(2),
-//         (dataETC.reduce((a, b) => a + b, 0) / totalData * 100).toFixed(2)
-//     ];
-//     var ctxPie = document.getElementById('pieChart').getContext('2d');
-//     var pieChart = new Chart(ctxPie, {
-//         type: 'pie',
-//         data: {
-//             labels: ['TCS', 'FTMS', '전산', '기타'],
-//             datasets: [{
-//                 data: pieData,
-//                 backgroundColor: [
-//                     'rgba(75, 192, 192, 0.2)',
-//                     'rgba(54, 162, 235, 0.2)',
-//                     'rgba(255, 206, 86, 0.2)',
-//                     'rgba(153, 102, 255, 0.2)'
-//                 ],
-//                 borderColor: [
-//                     'rgba(75, 192, 192, 1)',
-//                     'rgba(54, 162, 235, 1)',
-//                     'rgba(255, 206, 86, 1)',
-//                     'rgba(153, 102, 255, 1)'
-//                 ],
-//                 borderWidth: 1
-//             }]
-//         },
-//         options: {
-//             responsive: true
-//         }
-//     });
-// }
 function updateCharts(data, budget_its) {
     var dataTCS = data[0];
     var dataFTMS = data[1];
@@ -249,10 +163,10 @@ function updateCharts(data, budget_its) {
         type: 'pie',
         data: {
             labels: [
-                `TCS (${budgetData[0]}%)`,
-                `FTMS (${budgetData[1]}%)`,
-                `전산 (${budgetData[2]}%)`,
-                `기타 (${budgetData[3]}%)`
+                `TCS (${pieData[0]}%)`,
+                `FTMS (${pieData[1]}%)`,
+                `전산 (${pieData[2]}%)`,
+                `기타 (${pieData[3]}%)`
             ],
             datasets: [{
                 data: pieData,
@@ -289,13 +203,13 @@ function updateTotalUsage(data, budget_its) {
 
 
     totalUsageDiv.innerHTML = `
-        <p>예산: ${parseInt(budget_its).toLocaleString()}원</p> <br/>
-        <p>TCS 입고금액: ${totalTCS.toLocaleString()}원</p>
-        <p>FTMS 입고금액: ${totalFTMS.toLocaleString()}원</p>
-        <p>전산 입고금액: ${totalCS.toLocaleString()}원</p>
-        <p>기타 입고금액: ${totalETC.toLocaleString()}원</p>
-        <p>입고 금액: ${totalSum.toLocaleString()}원</p>
-        <p>잔액: ${remain.toLocaleString()}원</p>
+
+        <p>TCS 출고금액: ${totalTCS.toLocaleString()}원</p>
+        <p>FTMS 출고금액: ${totalFTMS.toLocaleString()}원</p>
+        <p>전산 출고금액: ${totalCS.toLocaleString()}원</p>
+        <p>기타 출고금액: ${totalETC.toLocaleString()}원</p>
+        <p>총출고 금액: ${totalSum.toLocaleString()}원</p>
+
     `;
 }
 

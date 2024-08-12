@@ -32,12 +32,9 @@
         
 		<div class="adm_container">
 			<?php include_once $this->dir . "page/admin/include/admin_header.php"; ?>
-			<div class="adm_section_container_head pb-0">
-				<h2>출고현황</h2>
-			</div>
 			<div class="adm_main_container">
 				<div class="clearfix row">
-					<div class="col-md-8 col-lg-12">
+					<div class="col-md-12 col-lg-12">
 						<section class="adm_section_container">
 							<div class="adm_section_container_body p-1">
                                 <ul class="clearfix row input-list-container">
@@ -76,7 +73,7 @@
 						</section>
 						<!-- adm_section_container끝 -->
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-12">
 						<section class="adm_section_container">
 							<div class="adm_section_container_body p-1">
 								<div class="btn-list-con align-right mb-1">
@@ -103,9 +100,9 @@
 											</tbody>
 										</table>
 									</div>
-									<div class="btn-list-con align-right">
+									<!-- <div class="btn-list-con align-right">
                                 	<p class="mb-1"><button id ="getRowValue" type="button" class="btn-sm btn-primary" onclick = "" style = "margin-right:10px;">저장</button></p>
-                       			 	</div>
+                       			 	</div> -->
 									<!-- adm_table_responsive // -->
 								</div>
 								
@@ -114,13 +111,6 @@
 						</section>
 						<!-- adm_section_container // -->
 					</div>
-				<div class="col-md-3">
-					<p> 예산 : <br>
-						기집행액 : <br>
-						현재집행액 : <br>
-						잔액 :
-					</p>
-				</div>
 				</div>
 
 			</div>

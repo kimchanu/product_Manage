@@ -98,13 +98,13 @@ function update_b_class(allRows){
             type : "JsonAjaxPost",
             list : {
                 ctl : "Addr",
-                param1 : "update_b_class",
+                param1 : "update_b_class", 
                 incom_id : allRows[i][0],
                 bc_in_b_class : allRows[i][1],
             },
             action : "index.php",
             havior : function(result){
-                $('#receiver_wrap').empty();
+                search();
                 console.log(result);
             }
         });
@@ -210,7 +210,7 @@ function search_list(mat_in_code){
             type : "JsonAjaxPost",
             list : {
                 ctl : "Addr",
-                param1 : "product_list3",
+                param1 : "search_list",
                 idx : target,
                 mat_in_code : mat_in_code,
             },
@@ -242,7 +242,7 @@ function code_init(){
             type : "JsonAjaxPost",
             list : {
                 ctl : "Addr",
-                param1 : "product_list4",
+                param1 : "mat_code_init",
                 idx : target,
             },
             action : "index.php",

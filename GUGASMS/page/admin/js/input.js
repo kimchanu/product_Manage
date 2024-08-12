@@ -5,7 +5,7 @@ var recevier_index  = 0;
 
 
 $(document).ready(function(){
-    request_product_list(user_idx);
+    // request_product_list(user_idx);
 
     $("#product_price, #product_amount").change( function(){
         let aa = document.getElementById('product_price').value;
@@ -24,7 +24,6 @@ $(document).ready(function(){
 function addCommas(value) {
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
-
 
 function createTable(data) {
   var tableHtml = '<tr> <td class="check"> <label class="check_label m-auto" value="yes"><input t' +
@@ -76,7 +75,6 @@ function ss_user_detail(){
         });
     });
 }
-
 
 async function request_add_product(){
     var product_code = document.getElementById('product_code');
@@ -404,130 +402,87 @@ function input_file_check(elem, ext_array, type){
 function excel_code(elem){
     var input = elem;
     var reader = new FileReader();
-    reader.onload = function(e){
-        if(e.target.readyState == FileReader.DONE){
+    reader.onload = function(e) {
+        if (e.target.readyState == FileReader.DONE) {
             var data = e.target.result;
             data = new Uint8Array(data);
-            var workbook = XLSX.read(data, {type :"array"});
-            var sheetName = "";
-            workbook.SheetNames.forEach(function(data,idx){
-                if(idx == 0){
-                    sheetName = data;
-                    excel_value = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-                }
-            });
+            var workbook = XLSX.read(data, { type: "array" });
+            var sheetName = "내부관리용(수불대장)"; // 시트 이름을 지정
+            var excelData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+
+            // 서버로 전송하는 함수 호출
+            // processAndSendData(excelData);
+            excel_value = excelData;
         }
     };
     reader.readAsArrayBuffer(input.files[0]);
 }
 
 // 엑셀 업로드
-function excel_upload(){
-    console.log(group_idx);
-    if(typeof excel_value != "undefined" && excel_value != null){
-        var correct = true;
-        var excel_mat_in_name = [];
-        var excel_mat_in_price = [];
-        var excel_mat_in_amount = [];
-        var excel_mat_in_sum = [];
-        var excel_mat_in_union = [];
-        var excel_mat_in_code = [];
-        var excel_mat_in_place = [];
-        var excel_bc_in_b_class = [];
-        var excel_bc_in_s_class = [];
-        var excel_mat_in_stand = [];
-        var excel_mat_in_custom = [];
 
-        for(var i in excel_value){
-            excel_mat_in_code.push(excel_value[i].mat_in_code);
-            excel_mat_in_place.push(excel_value[i].mat_in_place);
-            excel_bc_in_b_class.push(excel_value[i].bc_in_b_class);
-            excel_bc_in_s_class.push(excel_value[i].bc_in_s_class);
-            excel_mat_in_stand.push(excel_value[i].mat_in_stand);
-            excel_mat_in_custom.push(excel_value[i].mat_in_custom);
-            
-            if(typeof excel_value[i].mat_in_name == "undefined" || excel_value[i].mat_in_name == null){
-                alert('자재명이 비어있는 행이 있습니다.');
-                correct = false;
-                break;
-            }else{
-                excel_mat_in_name.push(excel_value[i].mat_in_name);
-            }
-            if(typeof excel_value[i].mat_in_price == "undefined" || excel_value[i].mat_in_price == null){
-                alert('가격이 비어있는 행이 있습니다.');
-                correct = false;
-                break;
-            }else{
-                excel_mat_in_price.push(excel_value[i].mat_in_price);
-            }
-            if(typeof excel_value[i].mat_in_amount == "undefined" || excel_value[i].mat_in_amount == null){
-                alert('수량이 비어있는 행이 있습니다.');
-                correct = false;
-                break;
-            }else{
-                excel_mat_in_amount.push(excel_value[i].mat_in_amount);
-            }
-            if(typeof excel_value[i].mat_in_sum == "undefined" || excel_value[i].mat_in_sum == null){
-                alert('총가격이 비어있는 행이 있습니다.');
-                correct = false;
-                break;
-            }else{
-                excel_mat_in_sum.push(excel_value[i].mat_in_sum);
-            }
-            if(typeof excel_value[i].mat_in_union == "undefined" || excel_value[i].mat_in_union == null){
-                alert('단위가 비어있는 행이 있습니다.');
-                correct = false;
-                break;
-            }else{
-                excel_mat_in_union.push(excel_value[i].mat_in_union);
-            }
-            
-        }
-        if(correct == true){
-            excel_add_list(excel_mat_in_name, excel_mat_in_price, excel_mat_in_amount, excel_mat_in_sum, excel_mat_in_union, excel_mat_in_code, excel_mat_in_place, excel_bc_in_b_class, excel_bc_in_s_class,excel_mat_in_stand, excel_mat_in_custom);
-        }
-    }else{
-        alert('업로드할 파일을 첨부해주세요');
-    }
-}
 
-function excel_add_list(mat_in_name, mat_in_price, excel_mat_in_amount, excel_mat_in_sum,excel_mat_in_union,excel_mat_in_code, excel_mat_in_place, excel_bc_in_b_class, excel_bc_in_s_class,excel_mat_in_stand, excel_mat_in_custom){
-    if(double_click){
-        double_click =false;
-        lb.ajax({
-            type : "JsonAjaxPost",
-            list : {
-                ctl : "Addr",
-                param1 : "addr_add_excel",
-                group_idx : group_idx,
-                mat_in_name : JSON.stringify(mat_in_name),
-                mat_in_price : JSON.stringify(mat_in_price),
-                mat_in_amount : JSON.stringify(excel_mat_in_amount),
-                mat_in_sum : JSON.stringify(excel_mat_in_sum),
-                mat_in_union : JSON.stringify(excel_mat_in_union),
-                excel_mat_in_code : JSON.stringify(excel_mat_in_code),
-                excel_mat_in_place : JSON.stringify(excel_mat_in_place),
-                excel_bc_in_b_class : JSON.stringify(excel_bc_in_b_class),
-                excel_bc_in_s_class : JSON.stringify(excel_bc_in_s_class),
-                excel_mat_in_stand : JSON.stringify(excel_mat_in_stand),
-                excel_mat_in_custom : JSON.stringify(excel_mat_in_custom),
-            },
-            action : "index.php",
-            havior : function(result){
-                double_click = true;
-                console.log(result);
-                result = JSON.parse(result);
-                if(result.result == 1){
-                    alert('자재가 등록되었습니다.');
-                    $('#receiver_wrap').empty();
-                    receiver_count = 0;
-                    request_product_list(user_idx);
+function processAndSendData() {
+    // 데이터 처리 및 전송
+    var processedData = excel_value.slice(6).map(row => ({
+        no: row[0] || '',
+        자재코드: row[1] || '',
+        위치: row[2] || '',
+        대분류: row[3] || '',
+        소분류: row[4] || '',
+        품명: row[5] || '',
+        규격: row[6] || '',
+        제조사: row[7] || '',
+        거래처: row[8] || '',
+        단위: row[9] || '',
+        단가: row[10] ? parseFloat(row[10].replace(/,/g, '').trim()) || 0 : 0, // 문자열로 된 금액을 숫자로 변환, 값이 없으면 0
+        입고현황: row.filter((value, index) => index % 2 !== 0 && index >= 11 && index < 36).map(value => parseFloat(value.trim()) || 0), // 홀수 인덱스(월별 수량)만 가져옴
+        출고현황: row.filter((value, index) => index >= 40 && index <= 64 && index % 2 === 0).map(value => parseFloat(value.trim()) || 0), // 짝수 인덱스(월별 수량)만 가져옴
+    }));
+    console.log(processedData);
+    lb.ajax({
+        type: 'JsonAjaxPost',
+        list: {
+            ctl: 'Addr',
+            param1: 'uploadExcel',
+            excelData: JSON.stringify(processedData)
+        },
+        action: 'index.php',
+        havior: function(result) {
+            // PHP에서 반환된 JSON을 파싱
+            try {
+                // 서버에서 받은 응답을 JSON으로 파싱
+                var response = JSON.parse(result);
+                console.log("PHP Response:", response);
+
+                // 각각의 SQL 쿼리 및 결과를 확인
+                if (response.sqlMatComing) {
+                    console.log("SQL MatComing Query:", response.sqlMatComing);
                 }
-            }
-        });
-    }
-}
 
+                if (response.sqlInput) {
+                    console.log("SQL Input Query:", response.sqlInput);
+                }
+
+                if (response.sqlOutput) {
+                    console.log("SQL Output Query:", response.sqlOutput);
+                }
+
+                if (response.status === "success") {
+                    console.log("Data successfully inserted!");
+                } else {
+                    console.error("Error Status:", response.status);
+                    if (response.error) {
+                        console.error("Error Details:", response.error);
+                    }
+                }
+            } catch (e) {
+                // JSON 파싱 중 오류 발생시 처리
+                console.error("Failed to parse response:", e);
+                console.error("Raw response from server:", result);
+            }
+        }
+    });
+}
 
 //엑셀 다운로드
 var excelHandler ={
@@ -590,8 +545,6 @@ function phoneFormatter(num) {
     return formatNum;
  }
 
-
- 
 // 번호 체크
 function number_check(elem){
     $(elem).on('propertychange change keyup paste input', function(){
