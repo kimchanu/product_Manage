@@ -1,4 +1,5 @@
 <?php
+
     class AddrModel extends gf{
         private $json;
         private $dir;
@@ -476,182 +477,221 @@
         // 만든이 : 김찬우
         *********************************************************************/
 
-        function input_excel(){
-            $param = $this->param;
-            if($this->value_check(array("incom_id"))){
-                $param["incom_id"] = json_decode($param["incom_id"], true);
-                $param["carry_over"] = json_decode ($param["carry_over"], true);
-                $sql = "insert into its_input (group_id, incom_id, carry_over) values ";
-                for($i = 0; $i<count($param["incom_id"]); $i++){
-                    $sql = $sql . "( ";
-                    $sql = $sql . $param["group_idx"] . ", ";
-                    $sql = $sql . $this->null_check($param["incom_id"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["carry_over"][$i]);
-                    if(count($param["incom_id"]) == 1){
-                        $sql = $sql . ")";
-                    }else{
-                        if($i == (count($param["incom_id"]) -1)){
-                            $sql = $sql . " )";
-                        }else{
-                            $sql = $sql . "),";
-                        }
-                    }
-                }
-                $this->conn->s_transaction();
-                $result = $this->conn->db_insert($sql);
-                if($result["result"] == 1){
-                    $sql = "select * from its_input ";
-                    $sql = $sql . "where group_id = ".$param["group_idx"]."";
-
-                    $result = $this->conn->db_select($sql);
-                    if($result["result"] == 1){
-                        $this->conn->commit();
-                        $this->result = $result;
-                    }else{
-                        $this->conn->rollback();
-                        $this->result = $result;
-                    }
-                }else{
-                    $this->result = $result;
-                }
-
-            }
-            echo $this->jsonEncode($this->result);
-            
-        }
-
-        function input_excel_new(){
-            $param = $this->param;
-            if($this->value_check(array("incom_id"))){
-                $param["incom_id"] = json_decode($param["incom_id"], true);
-                $param["date"] = json_decode ($param["date"], true);
-                $param["amount"] = json_decode ($param["amount"], true);
-                $sql = "insert into its_input (group_id, incom_id, date, amount) values ";
-                for($i = 0; $i<count($param["incom_id"]); $i++){
-                    $sql = $sql . "( ";
-                    $sql = $sql . $param["group_idx"] . ", ";
-                    $sql = $sql . $this->null_check($param["incom_id"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["date"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["amount"][$i]);
-                    if(count($param["incom_id"]) == 1){
-                        $sql = $sql . ")";
-                    }else{
-                        if($i == (count($param["incom_id"]) -1)){
-                            $sql = $sql . " )";
-                        }else{
-                            $sql = $sql . "),";
-                        }
-                    }
-                }
-                $this->conn->s_transaction();
-                $result = $this->conn->db_insert($sql);
-                if($result["result"] == 1){
-                    $sql = "select * from its_input ";
-                    $sql = $sql . "where group_id = ".$param["group_idx"]."";
-
-                    $result = $this->conn->db_select($sql);
-                    if($result["result"] == 1){
-                        $this->conn->commit();
-                        $this->result = $result;
-                    }else{
-                        $this->conn->rollback();
-                        $this->result = $result;
-                    }
-                }else{
-                    $this->result = $result;
-                }
-            }
-            echo $this->jsonEncode($this->result);
-        }
-
-        function output_excel(){
-            $param = $this->param;
-            if($this->value_check(array("incom_id"))){
-                $param["incom_id"] = json_decode($param["incom_id"], true);
-                $param["carry_over"] = json_decode ($param["carry_over"], true);
-                $sql = "insert into its_output(group_id, incom_id, carry_over) values ";
-                for($i = 0; $i<count($param["incom_id"]); $i++){
-                    $sql = $sql . "( ";
-                    $sql = $sql . $param["group_idx"] . ", ";
-                    $sql = $sql . $this->null_check($param["incom_id"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["carry_over"][$i]);
-                    if(count($param["incom_id"]) == 1){
-                        $sql = $sql . ")";
-                    }else{
-                        if($i == (count($param["incom_id"]) -1)){
-                            $sql = $sql . " )";
-                        }else{
-                            $sql = $sql . "),";
-                        }
-                    }
-                }
-                $this->conn->s_transaction();
-                $result = $this->conn->db_insert($sql);
-                if($result["result"] == 1){
-                    $sql = "select * from its_output ";
-                    $sql = $sql . "where group_id = ".$param["group_idx"]."";
-    
-                    $result = $this->conn->db_select($sql);
-                    if($result["result"] == 1){
-                        $this->conn->commit();
-                        $this->result = $result;
-                    }else{
-                        $this->conn->rollback();
-                        $this->result = $result;
-                    }
-                }else{
-                    $this->result = $result;
-                }
+        // function export_excel() {
+        //     $param = $this->param;
+        //     $response = []; // 자바스크립트로 전달할 응답 배열
+        //     try {
+        //         // 필요한 데이터를 가져오는 SQL 쿼리
+        //         $sql = "
+        //         SELECT 
+        //             m.incom_id, m.mat_in_code, m.mat_in_place, m.bc_in_b_class, m.bc_in_s_class, m.mat_in_name, m.mat_in_stand, m.mat_in_maker, m.mat_in_custom, m.mat_in_union, m.mat_in_price,
+        //             i.carry_over as input_carry_over, i.amount as input_amount, i.date as input_date,
+        //             o.carry_over as output_carry_over, o.amount as output_amount, o.date as output_date
+        //         FROM 
+        //             eletech_mat_coming m
+        //         LEFT JOIN 
+        //             eletech_input i ON m.incom_id = i.incom_id
+        //         LEFT JOIN 
+        //             eletech_output o ON m.incom_id = o.incom_id
+        //         ORDER BY 
+        //             m.incom_id ASC";
                 
-        }
-        echo $this->jsonEncode($this->result);
-        }
-
-        function output_excel_new(){
+        //         // DB에서 데이터를 가져옴
+        //         $result = $this->conn->db_select($sql);
+        //         if ($result['result'] == 1) {
+        //             $data = $result['value']; // 가져온 데이터
+                    
+        //             // Excel 파일 생성을 위한 데이터 준비
+        //             $excelData = [];
+                    
+        //             // 엑셀의 첫 번째 행 (헤더)
+        //             $excelData[] = [
+        //                 'No.', '자재코드', '위치', '대분류', '소분류', '품명', '규격', '제조사', '거래처', '단위', '단가',
+        //                 '이월누계(ⓐ)', '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월',
+        //                 '출고 이월누계(ⓐ)', '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월',
+        //                 '재고수량'
+        //             ];
+                    
+        //             // 데이터를 엑셀에 맞게 변환
+        //             foreach ($data as $row) {
+        //                 // 월별 입고 데이터
+        //                 $inputMonthlyData = array_fill(0, 12, 0); // 12개월을 위한 배열
+        //                 if (isset($row['input_date'])) {
+        //                     $inputMonth = (int)date('n', strtotime($row['input_date'])) - 1; // 1월 -> 0 인덱스
+        //                     $inputMonthlyData[$inputMonth] = isset($row['input_amount']) ? $row['input_amount'] : 0;
+        //                 }
+        
+        //                 // 월별 출고 데이터
+        //                 $outputMonthlyData = array_fill(0, 12, 0); // 12개월을 위한 배열
+        //                 if (isset($row['output_date'])) {
+        //                     $outputMonth = (int)date('n', strtotime($row['output_date'])) - 1; // 1월 -> 0 인덱스
+        //                     $outputMonthlyData[$outputMonth] = isset($row['output_amount']) ? $row['output_amount'] : 0;
+        //                 }
+        
+        //                 // 엑셀에 추가할 행 데이터
+        //                 $excelData[] = array_merge(
+        //                     [
+        //                         isset($row['incom_id']) ? $row['incom_id'] : '',
+        //                         isset($row['mat_in_code']) ? $row['mat_in_code'] : '',
+        //                         isset($row['mat_in_place']) ? $row['mat_in_place'] : '',
+        //                         isset($row['bc_in_b_class']) ? $row['bc_in_b_class'] : '',
+        //                         isset($row['bc_in_s_class']) ? $row['bc_in_s_class'] : '',
+        //                         isset($row['mat_in_name']) ? $row['mat_in_name'] : '',
+        //                         isset($row['mat_in_stand']) ? $row['mat_in_stand'] : '',
+        //                         isset($row['mat_in_maker']) ? $row['mat_in_maker'] : '',
+        //                         isset($row['mat_in_custom']) ? $row['mat_in_custom'] : '',
+        //                         isset($row['mat_in_union']) ? $row['mat_in_union'] : '',
+        //                         isset($row['mat_in_price']) ? $row['mat_in_price'] : 0
+        //                     ],
+        //                     [
+        //                         isset($row['input_carry_over']) ? $row['input_carry_over'] : 0
+        //                     ],
+        //                     $inputMonthlyData, // 월별 입고 데이터
+        //                     [
+        //                         isset($row['output_carry_over']) ? $row['output_carry_over'] : 0
+        //                     ],
+        //                     $outputMonthlyData, // 월별 출고 데이터
+        //                     [
+        //                         ''  // 재고수량 (필요한 경우 계산)
+        //                     ]
+        //                 );
+        //             }
+                    
+        //             // 엑셀 생성 및 다운로드를 위한 응답
+        //             $response['result'] = 1;
+        //             $response['excelData'] = $excelData;
+        //         } else {
+        //             $response['result'] = 0;
+        //             $response['message'] = '데이터를 가져오는 중 오류가 발생했습니다.';
+        //         }
+        //     } catch (Exception $e) {
+        //         $response['result'] = 0;
+        //         $response['message'] = $e->getMessage();
+        //     }
+            
+        //     echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        // }
+        
+        function export_excel() {
             $param = $this->param;
-            if($this->value_check(array("incom_id"))){
-                $param["incom_id"] = json_decode($param["incom_id"], true);
-                $param["date"] = json_decode ($param["date"], true);
-                $param["amount"] = json_decode ($param["amount"], true);
-                $sql = "insert into eletech_output (group_id, incom_id, date, amount) values ";
-                for($i = 0; $i<count($param["incom_id"]); $i++){
-                    $sql = $sql . "( ";
-                    $sql = $sql . $param["group_idx"] . ", ";
-                    $sql = $sql . $this->null_check($param["incom_id"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["date"][$i]) . ", ";
-                    $sql = $sql . $this->null_check($param["amount"][$i]);
-                    if(count($param["incom_id"]) == 1){
-                        $sql = $sql . ")";
-                    }else{
-                        if($i == (count($param["incom_id"]) -1)){
-                            $sql = $sql . " )";
-                        }else{
-                            $sql = $sql . "),";
+            $response = []; // 자바스크립트로 전달할 응답 배열
+            try {
+                // 필요한 데이터를 가져오는 SQL 쿼리
+                $sql = "
+                SELECT 
+                    m.incom_id, m.mat_in_code, m.mat_in_place, m.bc_in_b_class, m.bc_in_s_class, m.mat_in_name, m.mat_in_stand, m.mat_in_maker, m.mat_in_custom, m.mat_in_union, m.mat_in_price,
+                    i.carry_over as input_carry_over, i.amount as input_amount, i.date as input_date,
+                    o.carry_over as output_carry_over, o.amount as output_amount, o.date as output_date
+                FROM 
+                    eletech_mat_coming m
+                LEFT JOIN 
+                    eletech_input i ON m.incom_id = i.incom_id
+                LEFT JOIN 
+                    eletech_output o ON m.incom_id = o.incom_id
+                ORDER BY 
+                    m.incom_id ASC";
+                
+                // DB에서 데이터를 가져옴
+                $result = $this->conn->db_select($sql);
+                if ($result['result'] == 1) {
+                    $data = $result['value']; // 가져온 데이터
+                    
+                    // 데이터를 incom_id별로 그룹화하여 병합
+                    $groupedData = [];
+                    foreach ($data as $row) {
+                        $incom_id = $row['incom_id'];
+                        
+                        if (!isset($groupedData[$incom_id])) {
+                            // 새로운 incom_id의 데이터를 추가
+                            $groupedData[$incom_id] = [
+                                'incom_id' => $row['incom_id'],
+                                'mat_in_code' => $row['mat_in_code'],
+                                'mat_in_place' => $row['mat_in_place'],
+                                'bc_in_b_class' => $row['bc_in_b_class'],
+                                'bc_in_s_class' => $row['bc_in_s_class'],
+                                'mat_in_name' => $row['mat_in_name'],
+                                'mat_in_stand' => $row['mat_in_stand'],
+                                'mat_in_maker' => $row['mat_in_maker'],
+                                'mat_in_custom' => $row['mat_in_custom'],
+                                'mat_in_union' => $row['mat_in_union'],
+                                'mat_in_price' => $row['mat_in_price'],
+                                'input_carry_over' => $row['input_carry_over'],
+                                'input_monthly_data' => array_fill(0, 12, 0), // 12개월을 위한 배열
+                                'output_carry_over' => $row['output_carry_over'],
+                                'output_monthly_data' => array_fill(0, 12, 0)  // 12개월을 위한 배열
+                            ];
+                        }
+                        
+                        // 월별 입고 데이터 병합
+                        if (isset($row['input_date'])) {
+                            $inputMonth = (int)date('n', strtotime($row['input_date'])) - 1; // 1월 -> 0 인덱스
+                            $groupedData[$incom_id]['input_monthly_data'][$inputMonth] = $row['input_amount'];
+                        }
+                        
+                        // 월별 출고 데이터 병합
+                        if (isset($row['output_date'])) {
+                            $outputMonth = (int)date('n', strtotime($row['output_date'])) - 1; // 1월 -> 0 인덱스
+                            $groupedData[$incom_id]['output_monthly_data'][$outputMonth] = $row['output_amount'];
                         }
                     }
-                }
-                $this->conn->s_transaction();
-                $result = $this->conn->db_insert($sql);
-                if($result["result"] == 1){
-                    $sql = "select * from eletech_output ";
-                   
-
-                    $result = $this->conn->db_select($sql);
-                    if($result["result"] == 1){
-                        $this->conn->commit();
-                        $this->result = $result;
-                    }else{
-                        $this->conn->rollback();
-                        $this->result = $result;
+        
+                    // Excel 파일 생성을 위한 데이터 준비
+                    $excelData = [];
+                    
+                    // 엑셀의 첫 번째 행 (헤더)
+                    $excelData[] = [
+                        'No.', '자재코드', '위치', '대분류', '소분류', '품명', '규격', '제조사', '거래처', '단위', '단가',
+                        '이월누계(ⓐ)', '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월',
+                        '출고 이월누계(ⓐ)', '1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월',
+                        '재고수량'
+                    ];
+                    
+                    // 병합된 데이터를 엑셀 형식으로 변환
+                    foreach ($groupedData as $row) {
+                        $excelData[] = array_merge(
+                            [
+                                $row['incom_id'],
+                                $row['mat_in_code'],
+                                $row['mat_in_place'],
+                                $row['bc_in_b_class'],
+                                $row['bc_in_s_class'],
+                                $row['mat_in_name'],
+                                $row['mat_in_stand'],
+                                $row['mat_in_maker'],
+                                $row['mat_in_custom'],
+                                $row['mat_in_union'],
+                                $row['mat_in_price']
+                            ],
+                            [
+                                $row['input_carry_over']
+                            ],
+                            $row['input_monthly_data'], // 월별 입고 데이터
+                            [
+                                $row['output_carry_over']
+                            ],
+                            $row['output_monthly_data'], // 월별 출고 데이터
+                            [
+                                ''  // 재고수량 (필요한 경우 계산)
+                            ]
+                        );
                     }
-                }else{
-                    $this->result = $result;
+                    
+                    // 엑셀 생성 및 다운로드를 위한 응답
+                    $response['result'] = 1;
+                    $response['excelData'] = $excelData;
+                } else {
+                    $response['result'] = 0;
+                    $response['message'] = '데이터를 가져오는 중 오류가 발생했습니다.';
                 }
-
+            } catch (Exception $e) {
+                $response['result'] = 0;
+                $response['message'] = $e->getMessage();
             }
-            echo $this->jsonEncode($this->result);
+            
+            echo json_encode($response, JSON_UNESCAPED_UNICODE);
         }
-    
+        
+
         function uploadExcel() {
             $param = $this->param;
             $response = []; // 자바스크립트로 전달할 응답 배열
@@ -698,7 +738,7 @@
                         $valuesInput[] = "(" . implode(", ", [
                             $this->null_check($carryOver),
                             "NULL", // amount는 NULL
-                            "'" . $currentYear . "-01-01'", // 이월 누계의 일자
+                            "NULL", // 이월 누계의 일자
                             "NULL",
                             $this->null_check($row['no'])
                         ]) . ")";
@@ -725,7 +765,7 @@
                         $valuesOutput[] = "(" . implode(", ", [
                             $this->null_check($carryOver),
                             "NULL", // amount는 NULL
-                            "'" . $currentYear . "-01-01'", // 이월 누계의 일자
+                            "NULL", // 이월 누계의 일자
                             "NULL",
                             $this->null_check($row['no'])
                         ]) . ")";

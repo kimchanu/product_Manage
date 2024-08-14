@@ -26,12 +26,5 @@ class AddrController{
         }
     }
 
-    // function open_api(){
-    //     $ch = curl_init();
-    //     $url = "https://msds.kosha.or.kr/openapi/service/msdschem/chemlist?serviceKey=3h5o8Pm7wctZGh8LPV70Bcu0Z38%2BE3swtfbcO3%2F4%2FLRh3E9E62nhm5o1JPLHNs7Sxb3MOxucrHIFmzxYWoOt8A%3D%3D&searchWrd=wd&searchCnd=0"
-    //     $data =file_get_contents($url);
-    //     $xml = simplexml_load_string($data);
-    //     $obj_addr=$xml->body[0]->items[0];//->item[0];
-    // }
 }
 ?>

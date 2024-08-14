@@ -63,7 +63,6 @@
 					<li class="depth2">
 						<a href="?ctl=Move&param1=input_month">입고집계</a>
 					</li>
-
 				</ul>
 			</li>
 			<li class="depth1" data-side="">

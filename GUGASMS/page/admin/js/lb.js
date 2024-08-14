@@ -1,23 +1,3 @@
-//(function(global){
-//	var lb = function(selector) {
-//		
-//		return new lb.fn.init(selector);
-//	}
-//
-//	lb.fn = lb.prototype = {
-//		constructor : lb,
-//		init : function(selector){
-//			this.ajax = function(){
-//				
-//			}
-//		}
-//	}
-//
-//	lb.fn.init.prototype = lb.fn;
-//	
-//	window.lb = lb;
-//})(window);
-
 (function(global){
 	
 	var lb = function(){
