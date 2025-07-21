@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Search_select from "./Selector/Search_select";
 import { FaFilter } from "react-icons/fa";
 import Product_list_edit from "./Product_list_edit";
@@ -99,13 +99,40 @@ function Product_list() {
             ((material?.total_input_quantity || 0) - (material?.total_output_quantity || 0)) >= (material?.appropriate || 0)))
     );
 
-  // 체크박스 전체 선택
-  const allChecked = filteredMaterials.length > 0 && selectedRows.length === filteredMaterials.length;
+  // 무한 스크롤: 보여줄 자재 개수 상태
+  const [visibleCount, setVisibleCount] = useState(20);
+
+  // 검색/필터가 바뀌면 visibleCount를 20으로 초기화
+  useEffect(() => {
+    setVisibleCount(20);
+    setSelectedRows([]); // 검색/필터/데이터 바뀔 때 체크박스 해제
+  }, [searchTerm, filters, materials]);
+
+  // 무한 스크롤 핸들러
+  const handleScroll = useCallback((e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      setVisibleCount((prev) => Math.min(prev + 20, filteredMaterials.length));
+    }
+  }, [filteredMaterials.length]);
+
+  // 보여줄 데이터
+  const pagedMaterials = filteredMaterials.slice(0, visibleCount);
+
+  // 전체 체크박스 상태 (pagedMaterials 기준)
+  const allChecked = pagedMaterials.length > 0 && pagedMaterials.every(row => selectedRows.includes(row.material_id));
+  const isIndeterminate = pagedMaterials.some(row => selectedRows.includes(row.material_id)) && !allChecked;
+
+  // 전체 체크박스 핸들러 (보이는 것만)
   const handleCheckAll = (e) => {
     if (e.target.checked) {
-      setSelectedRows(filteredMaterials.map(row => row.material_id));
+      // 보이는 것만 추가
+      const newSelected = Array.from(new Set([...selectedRows, ...pagedMaterials.map(row => row.material_id)]));
+      setSelectedRows(newSelected);
     } else {
-      setSelectedRows([]);
+      // 보이는 것만 해제
+      const newSelected = selectedRows.filter(id => !pagedMaterials.some(row => row.material_id === id));
+      setSelectedRows(newSelected);
     }
   };
   // 개별 체크박스
@@ -175,12 +202,12 @@ function Product_list() {
         </div>
         {/* 테이블 */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="overflow-x-auto max-h-[710px] overflow-y-auto">
+          <div className="overflow-x-auto max-h-[710px] overflow-y-auto" onScroll={handleScroll}>
             <table className="min-w-full border-collapse border border-gray-200">
               <thead className="bg-gray-100 sticky top-0 z-10">
                 <tr className="border-b border-gray-300">
                   <th className="px-2 py-3 text-sm font-medium text-gray-600 border-r border-gray-200">
-                    <input type="checkbox" checked={allChecked} onChange={handleCheckAll} />
+                    <input type="checkbox" checked={allChecked} ref={el => { if (el) el.indeterminate = isIndeterminate; }} onChange={handleCheckAll} />
                   </th>
                   {[
                     "자재코드", "위치", "대분류", "중분류", "소분류", "품명",
@@ -336,8 +363,8 @@ function Product_list() {
                 </tr>
               </thead>
               <tbody>
-                {filteredMaterials.length > 0 ? (
-                  filteredMaterials.map((material, idx) => {
+                {pagedMaterials.length > 0 ? (
+                  pagedMaterials.map((material, idx) => {
                     const currentStock =
                       (material?.total_input_quantity || 0) - (material?.total_output_quantity || 0);
                     const appropriate = material?.appropriate || 0;

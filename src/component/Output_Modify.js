@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import User_info from "./User_info";
 import ModifyFilters from "./output_modify/ModifyFilters";
 import ModifyTableHeader from "./output_modify/ModifyTableHeader";
@@ -17,6 +17,75 @@ const Modify = () => {
   const [batchEditMode, setBatchEditMode] = useState(null);
   const [batchEditValue, setBatchEditValue] = useState("");
   const [selectedRows, setSelectedRows] = useState(new Set());
+  // 무한 스크롤: 보여줄 자재 개수 상태
+  const [visibleCount, setVisibleCount] = useState(20);
+
+  // filteredMaterials를 가장 먼저 선언
+  const filteredMaterials = materials.flatMap((material) => {
+    const totalInput = material.inputs?.reduce((acc, cur) => acc + (cur.quantity || 0), 0) || 0;
+    const totalOutput = material.outputs?.reduce((acc, cur) => acc + (cur.quantity || 0), 0) || 0;
+    const remainingQuantity = totalInput - totalOutput;
+    const remainingPrice = remainingQuantity * (material.price || 0);
+
+    return material.outputs?.length > 0
+      ? material.outputs
+        .map((output) => ({
+          material_code: material.material_code,
+          name: material.name,
+          specification: material.specification,
+          price: material.price,
+          output_quantity: output.quantity,
+          output_date: output.date,
+          output_user: output.user_id,
+          output_comment: output.comment,
+          remaining_quantity: remainingQuantity,
+          remaining_price: remainingPrice,
+          output_id: output.id,
+          material_id: material.material_id,
+          location: material.location,
+          big_category: material.big_category,
+          category: material.category,
+          sub_category: material.sub_category,
+          manufacturer: material.manufacturer,
+          unit: material.unit,
+        }))
+        .filter((output) => {
+          const outputDate = new Date(output.output_date);
+          const start = startDate ? new Date(startDate) : null;
+          const end = endDate ? new Date(endDate) : null;
+
+          const matchesSearch =
+            output.material_code?.includes(searchTerm) ||
+            output.name?.includes(searchTerm) ||
+            material.category?.includes(searchTerm) ||
+            material.sub_category?.includes(searchTerm);
+
+          const inDateRange = (!start || outputDate >= start) && (!end || outputDate <= end);
+
+          // 출고 수량이 1 이상인 경우만 필터링
+          const hasValidQuantity = output.output_quantity >= 1;
+
+          return matchesSearch && inDateRange && hasValidQuantity;
+        })
+      : [];
+  });
+
+  // 검색/필터가 바뀌면 visibleCount를 20으로 초기화
+  useEffect(() => {
+    setVisibleCount(20);
+    setSelectedRows(new Set()); // 검색/필터/데이터 바뀔 때 체크박스 해제
+  }, [searchTerm, startDate, endDate, materials]);
+
+  // 무한 스크롤 핸들러
+  const handleScroll = useCallback((e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      setVisibleCount((prev) => Math.min(prev + 20, filteredMaterials.length));
+    }
+  }, [filteredMaterials.length]);
+
+  // 보여줄 데이터
+  const pagedMaterials = filteredMaterials.slice(0, visibleCount);
 
   const fetchData = async (userInfo = user) => {
     if (!userInfo?.business_location || !userInfo?.department) {
@@ -90,55 +159,6 @@ const Modify = () => {
   useEffect(() => {
     fetchData();
   }, [user]);
-
-  const filteredMaterials = materials.flatMap((material) => {
-    const totalInput = material.inputs?.reduce((acc, cur) => acc + (cur.quantity || 0), 0) || 0;
-    const totalOutput = material.outputs?.reduce((acc, cur) => acc + (cur.quantity || 0), 0) || 0;
-    const remainingQuantity = totalInput - totalOutput;
-    const remainingPrice = remainingQuantity * (material.price || 0);
-
-    return material.outputs?.length > 0
-      ? material.outputs
-        .map((output) => ({
-          material_code: material.material_code,
-          name: material.name,
-          specification: material.specification,
-          price: material.price,
-          output_quantity: output.quantity,
-          output_date: output.date,
-          output_user: output.user_id,
-          output_comment: output.comment,
-          remaining_quantity: remainingQuantity,
-          remaining_price: remainingPrice,
-          output_id: output.id,
-          material_id: material.material_id,
-          location: material.location,
-          big_category: material.big_category,
-          category: material.category,
-          sub_category: material.sub_category,
-          manufacturer: material.manufacturer,
-          unit: material.unit,
-        }))
-        .filter((output) => {
-          const outputDate = new Date(output.output_date);
-          const start = startDate ? new Date(startDate) : null;
-          const end = endDate ? new Date(endDate) : null;
-
-          const matchesSearch =
-            output.material_code?.includes(searchTerm) ||
-            output.name?.includes(searchTerm) ||
-            material.category?.includes(searchTerm) ||
-            material.sub_category?.includes(searchTerm);
-
-          const inDateRange = (!start || outputDate >= start) && (!end || outputDate <= end);
-
-          // 출고 수량이 1 이상인 경우만 필터링
-          const hasValidQuantity = output.output_quantity >= 1;
-
-          return matchesSearch && inDateRange && hasValidQuantity;
-        })
-      : [];
-  });
 
   const handleEditClick = (index) => {
     setEditRowIndex(index);
@@ -221,12 +241,22 @@ const Modify = () => {
     }
   };
 
+  // 전체 체크박스 상태 (pagedMaterials 기준)
+  const allChecked = pagedMaterials.length > 0 && pagedMaterials.every((_, idx) => selectedRows.has(idx));
+  const isIndeterminate = pagedMaterials.some((_, idx) => selectedRows.has(idx)) && !allChecked;
+
+  // 전체 체크박스 핸들러 (보이는 것만)
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      const allRows = new Set(filteredMaterials.map((_, idx) => idx));
-      setSelectedRows(allRows);
+      // 보이는 것만 추가
+      const newRows = new Set(selectedRows);
+      pagedMaterials.forEach((_, idx) => newRows.add(idx));
+      setSelectedRows(newRows);
     } else {
-      setSelectedRows(new Set());
+      // 보이는 것만 해제
+      const newRows = new Set(selectedRows);
+      pagedMaterials.forEach((_, idx) => newRows.delete(idx));
+      setSelectedRows(newRows);
     }
   };
 
@@ -333,20 +363,22 @@ const Modify = () => {
 
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
-            <div className="max-h-[760px] overflow-y-auto">
+            <div className="max-h-[760px] overflow-y-auto" onScroll={handleScroll}>
               <table className="min-w-full table-auto">
                 <ModifyTableHeader
                   selectedRows={selectedRows}
-                  filteredMaterials={filteredMaterials}
+                  filteredMaterials={pagedMaterials}
+                  allChecked={allChecked}
+                  isIndeterminate={isIndeterminate}
+                  handleSelectAll={handleSelectAll}
                   batchEditMode={batchEditMode}
                   batchEditValue={batchEditValue}
                   setBatchEditValue={setBatchEditValue}
-                  handleSelectAll={handleSelectAll}
                   handleHeaderClick={handleHeaderClick}
                 />
                 <tbody className="divide-y divide-gray-200">
-                  {filteredMaterials.length > 0 ? (
-                    filteredMaterials.map((item, idx) => (
+                  {pagedMaterials.length > 0 ? (
+                    pagedMaterials.map((item, idx) => (
                       <ModifyRow
                         key={idx}
                         item={item}

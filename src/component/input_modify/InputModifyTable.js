@@ -15,6 +15,7 @@ const InputModifyTable = ({
     handleDeleteClick,
     batchEditMode,
     batchEditValue,
+    setBatchEditValue,
     handleHeaderClick,
     handleBatchEdit,
     setEditRowIndex,
@@ -22,10 +23,13 @@ const InputModifyTable = ({
     showMaterialCodeFilter,
     setShowMaterialCodeFilter,
     setMaterialCodeFilter,
+    allChecked,
+    isIndeterminate,
+    handleScroll,
 }) => (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-            <div className="max-h-[760px] overflow-y-auto">
+            <div className="max-h-[760px] overflow-y-auto" onScroll={handleScroll}>
                 <table className="min-w-full table-auto">
                     <thead className="bg-gray-100 sticky top-0 z-10">
                         <tr>
@@ -33,7 +37,8 @@ const InputModifyTable = ({
                                 <input
                                     type="checkbox"
                                     className="form-checkbox"
-                                    checked={selectedRows.size === filteredMaterials.length}
+                                    checked={allChecked}
+                                    ref={el => { if (el) el.indeterminate = isIndeterminate; }}
                                     onChange={handleSelectAll}
                                 />
                             </th>
@@ -98,8 +103,9 @@ const InputModifyTable = ({
                                         <input
                                             type="date"
                                             value={batchEditValue}
-                                            onChange={(e) => e.stopPropagation() || handleHeaderClick('date', e.target.value)}
+                                            onChange={(e) => setBatchEditValue(e.target.value)}
                                             className="border rounded px-1 py-0.5 text-sm"
+                                            onClick={(e) => e.stopPropagation()}
                                         />
                                     </div>
                                 )}
@@ -114,9 +120,10 @@ const InputModifyTable = ({
                                         <input
                                             type="text"
                                             value={batchEditValue}
-                                            onChange={(e) => e.stopPropagation() || handleHeaderClick('user', e.target.value)}
+                                            onChange={(e) => setBatchEditValue(e.target.value)}
                                             maxLength={3}
                                             className="border rounded px-1 py-0.5 text-sm w-16"
+                                            onClick={(e) => e.stopPropagation()}
                                         />
                                     </div>
                                 )}
@@ -131,14 +138,14 @@ const InputModifyTable = ({
                                         <input
                                             type="text"
                                             value={batchEditValue}
-                                            onChange={(e) => e.stopPropagation() || handleHeaderClick('comment', e.target.value)}
+                                            onChange={(e) => setBatchEditValue(e.target.value)}
                                             className="border rounded px-2 py-0.5 text-sm w-32"
+                                            onClick={(e) => e.stopPropagation()}
                                         />
                                     </div>
                                 )}
                             </th>
                             <th className="px-4 py-2 text-center text-sm w-20">수정</th>
-                            <th className="px-4 py-2 text-center text-sm w-20">삭제</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -235,14 +242,6 @@ const InputModifyTable = ({
                                                 수정
                                             </button>
                                         )}
-                                    </td>
-                                    <td className="px-4 py-2 text-center w-28">
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); handleDeleteClick(idx); }}
-                                            className="bg-transparent text-black px-2 py-0.5 rounded min-w-[50px] text-sm hover:bg-gray-200 transition"
-                                        >
-                                            삭제
-                                        </button>
                                     </td>
                                 </tr>
                             ))

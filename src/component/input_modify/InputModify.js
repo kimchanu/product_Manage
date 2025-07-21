@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import User_info from "../User_info";
 import useInputModifyData from "./useInputModifyData";
 import InputModifyToolbar from "./InputModifyToolbar";
@@ -6,15 +6,7 @@ import InputModifyTable from "./InputModifyTable";
 import { FaFilter } from "react-icons/fa";
 
 const InputModify = () => {
-    const [user, setUser] = useState(null);
-    const [editRowIndex, setEditRowIndex] = useState(null);
-    const [editedRow, setEditedRow] = useState({});
-    const [batchEditMode, setBatchEditMode] = useState(null);
-    const [batchEditValue, setBatchEditValue] = useState("");
-    const [selectedRows, setSelectedRows] = useState(new Set());
-    const [showMaterialCodeFilter, setShowMaterialCodeFilter] = useState(false);
-    const [materialCodeFilter, setMaterialCodeFilter] = useState("");
-
+    const [user, setUser] = useState(null); // user를 가장 먼저 선언
     // 커스텀 훅으로 데이터/필터 상태 관리
     const {
         materials,
@@ -29,9 +21,57 @@ const InputModify = () => {
         filteredMaterials
     } = useInputModifyData(user);
 
+    const [showMaterialCodeFilter, setShowMaterialCodeFilter] = useState(false);
+    const [materialCodeFilter, setMaterialCodeFilter] = useState("");
+
+    // finalFilteredMaterials를 materialCodeFilter 선언 이후에 선언
     const finalFilteredMaterials = materialCodeFilter
         ? filteredMaterials.filter(item => item.material_code === materialCodeFilter)
         : filteredMaterials;
+
+    const [editRowIndex, setEditRowIndex] = useState(null);
+    const [editedRow, setEditedRow] = useState({});
+    const [batchEditMode, setBatchEditMode] = useState(null);
+    const [batchEditValue, setBatchEditValue] = useState("");
+    const [selectedRows, setSelectedRows] = useState(new Set());
+    // 무한 스크롤: 보여줄 자재 개수 상태
+    const [visibleCount, setVisibleCount] = useState(20);
+
+    // 검색/필터/데이터 바뀔 때 visibleCount, 체크박스 초기화
+    useEffect(() => {
+        setVisibleCount(20);
+        setSelectedRows(new Set());
+    }, [searchTerm, startDate, endDate, materialCodeFilter, materials]);
+
+    // 무한 스크롤 핸들러
+    const handleScroll = useCallback((e) => {
+        const { scrollTop, scrollHeight, clientHeight } = e.target;
+        if (scrollTop + clientHeight >= scrollHeight - 10) {
+            setVisibleCount((prev) => Math.min(prev + 20, finalFilteredMaterials.length));
+        }
+    }, [finalFilteredMaterials.length]);
+
+    // 보여줄 데이터
+    const pagedMaterials = finalFilteredMaterials.slice(0, visibleCount);
+
+    // 전체 체크박스 상태 (pagedMaterials 기준)
+    const allChecked = pagedMaterials.length > 0 && pagedMaterials.every((_, idx) => selectedRows.has(idx));
+    const isIndeterminate = pagedMaterials.some((_, idx) => selectedRows.has(idx)) && !allChecked;
+
+    // 전체 체크박스 핸들러 (보이는 것만)
+    const handleSelectAll = (e) => {
+        if (e.target.checked) {
+            // 보이는 것만 추가
+            const newRows = new Set(selectedRows);
+            pagedMaterials.forEach((_, idx) => newRows.add(idx));
+            setSelectedRows(newRows);
+        } else {
+            // 보이는 것만 해제
+            const newRows = new Set(selectedRows);
+            pagedMaterials.forEach((_, idx) => newRows.delete(idx));
+            setSelectedRows(newRows);
+        }
+    };
 
     // 행 수정 관련 함수
     const handleEditClick = (index) => {
@@ -102,14 +142,6 @@ const InputModify = () => {
         }
     };
     // 체크박스
-    const handleSelectAll = (e) => {
-        if (e.target.checked) {
-            const allRows = new Set(finalFilteredMaterials.map((_, idx) => idx));
-            setSelectedRows(allRows);
-        } else {
-            setSelectedRows(new Set());
-        }
-    };
     const handleRowSelect = (idx) => {
         const newSelectedRows = new Set(selectedRows);
         if (newSelectedRows.has(idx)) {
@@ -120,13 +152,13 @@ const InputModify = () => {
         setSelectedRows(newSelectedRows);
     };
     // 일괄수정
-    const handleHeaderClick = (column, value) => {
+    const handleHeaderClick = (column) => {
         if (batchEditMode === column) {
             setBatchEditMode(null);
             setBatchEditValue("");
         } else {
             setBatchEditMode(column);
-            setBatchEditValue(value || "");
+            setBatchEditValue("");
         }
     };
     const handleBatchEdit = async () => {
@@ -185,10 +217,13 @@ const InputModify = () => {
                     filteredMaterials={finalFilteredMaterials}
                 />
                 <InputModifyTable
-                    filteredMaterials={finalFilteredMaterials}
+                    filteredMaterials={pagedMaterials}
+                    allChecked={allChecked}
+                    isIndeterminate={isIndeterminate}
+                    handleSelectAll={handleSelectAll}
+                    handleScroll={handleScroll}
                     allMaterialsForFilter={filteredMaterials}
                     selectedRows={selectedRows}
-                    handleSelectAll={handleSelectAll}
                     handleRowSelect={handleRowSelect}
                     editRowIndex={editRowIndex}
                     editedRow={editedRow}
@@ -198,6 +233,7 @@ const InputModify = () => {
                     handleDeleteClick={handleDeleteClick}
                     batchEditMode={batchEditMode}
                     batchEditValue={batchEditValue}
+                    setBatchEditValue={setBatchEditValue}
                     handleHeaderClick={handleHeaderClick}
                     handleBatchEdit={handleBatchEdit}
                     setEditRowIndex={setEditRowIndex}
