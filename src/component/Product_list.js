@@ -177,7 +177,7 @@ function Product_list() {
         setBusinessLocation={setBusinessLocation}
         setDepartment={setDepartment}
       />
-      <div className="p-4 w-full mx-auto">
+      <div className="p-4 w-4/5 mx-auto">
         {/* 검색창 */}
         <div className="mb-4 flex space-x-4">
           <input

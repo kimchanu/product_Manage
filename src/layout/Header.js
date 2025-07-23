@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Image from "../image/koinfra.png";
 import User_info from "../component/User_info";
 
-function Nav() {
+function Nav({ user }) {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [clickedCategory, setClickedCategory] = useState(null);
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
   let timer;
 
   // 카테고리 목록을 user.admin 값에 따라 동적으로 생성
@@ -24,22 +21,12 @@ function Nav() {
       ? [...baseCategories, adminCategory]
       : baseCategories;
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    setUser(null);
-    navigate("/login_page");
-  };
-
   return (
     <nav>
-      <User_info setUser={setUser} />
+      {/* 이 div는 전체 내비게이션 바의 컨테이너입니다. */}
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
-        <Link to="/">
-          <img src={Image} alt="koinfra" />
-        </Link>
-
-        {/* 카테고리 */}
-        <div className="flex justify-around relative w-full ml-4 items-center">
+        {/* 카테고리들을 감싸는 이 div에 margin-bottom을 추가합니다. */}
+        <div className="flex justify-around relative w-full ml-4 items-center mb-3"> {/* 여기에 mb-4 추가 */}
           {categories.map((category, idx) => (
             <div
               key={idx}
@@ -104,15 +91,38 @@ function Nav() {
             </div>
           ))}
         </div>
+      </div>
+    </nav>
+  );
+}
 
-        {/* 로그인 메뉴 */}
-        <div className="ml-5 flex items-center space-x-4">
+function Header() {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    setUser(null);
+    navigate("/login_page");
+  };
+
+  return (
+    <header>
+      <User_info setUser={setUser} />
+      <div style={{ display: "flex", alignItems: "center", width: "100%", padding: "0.5rem 1rem 1rem 1rem" }}>
+        <h1 style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", fontSize: "2rem", fontWeight: "bold", margin: "0.5rem 0 0 0" }}>
+          <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
+            잡자재관리시스템
+          </Link>
+        </h1>
+        <div style={{ display: "flex", alignItems: "center", flexShrink: 0, minWidth: 'fit-content', marginLeft: 'auto' }}>
           {user ? (
             <>
-              <span className="text-sm text-gray-600 flex-shrink-0">{user.business_location} {user.name}</span>
+              <span className="text-sm text-gray-600 flex-shrink-0" style={{ marginRight: "1rem" }}>{user.business_location} {user.name}</span>
               <button
                 onClick={handleLogout}
                 className="text-sm text-red-600 hover:text-red-800 transition whitespace-nowrap"
+                style={{ marginRight: "1rem" }}
               >
                 로그아웃
               </button>
@@ -133,14 +143,7 @@ function Nav() {
           )}
         </div>
       </div>
-    </nav>
-  );
-}
-
-function Header() {
-  return (
-    <header>
-      <Nav />
+      <Nav user={user} />
     </header>
   );
 }

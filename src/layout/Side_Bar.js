@@ -4,7 +4,7 @@ function Sidebar({ onSelectDepartment, selectedDepartment }) {
     const departments = ["GK사업소", "천마사업소", "을숙도사업소"];
 
     return (
-        <aside className="w-60 bg-gray-100 h-screen fixed top-16 left-0 p-4 overflow-auto shadow-md">
+        <aside className="w-60 bg-gray-100 h-screen fixed top-[87px] left-0 p-4 overflow-auto shadow-md">
             <div className="mb-6 font-semibold text-lg border-b border-gray-300 pb-2">
                 부서
             </div>
