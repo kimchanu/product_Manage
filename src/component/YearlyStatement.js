@@ -3,9 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import DateSelector from "./Selector/DateSelector";
 import User_info from "./User_info";
 import ExcelStatementReport from "./Excel/ExcelStatementReport";
-import YearlyStatement from "./YearlyStatement";
 
-const Statement = () => {
+const YearlyStatement = () => {
     const today = new Date();
     const [searchParams, setSearchParams] = useSearchParams();
     const [year, setYear] = useState(today.getFullYear());
@@ -14,7 +13,7 @@ const Statement = () => {
     const [stats, setStats] = useState({});
     const [categories, setCategories] = useState([]);
     const [budgetData, setBudgetData] = useState(null);
-    const [reportType, setReportType] = useState(searchParams.get("type") || "monthly"); // URL 파라미터에서 초기값 가져오기
+    const [reportType, setReportType] = useState(searchParams.get("type") || "partYearly");
 
     useEffect(() => {
         const fetchBudget = async () => {
@@ -70,14 +69,13 @@ const Statement = () => {
             }
             setCategories(selectedCategories);
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/statement`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/yearlyStatement`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         businessLocation: user.business_location,
                         department: user.department,
                         year,
-                        month,
                         categories: selectedCategories,
                     }),
                 });
@@ -85,7 +83,7 @@ const Statement = () => {
                 if (!response.ok) throw new Error("통계 데이터를 가져오지 못했습니다");
 
                 const data = await response.json();
-                console.log(data);
+                console.log("연간 데이터:", data);
                 setStats(data);
             } catch (err) {
                 console.error(err);
@@ -93,34 +91,43 @@ const Statement = () => {
         };
 
         fetchStatistics();
-    }, [user, year, month]);
+    }, [user, year]);
 
-    const renderRow = (cat) => {
-        const row = stats.byCategory?.[cat] || {
-            prevStock: 0,
-            input: 0,
-            output: 0,
-            remaining: 0,
-        };
+    // 실제 API 데이터 사용
+    const monthlyData = stats.monthlyData || {};
+
+    const renderMonthlyRow = (cat, type) => {
+        const values = [];
+        for (let month = 1; month <= 12; month++) {
+            const monthData = monthlyData[month]?.[cat];
+            if (monthData) {
+                values.push(type === 'input' ? monthData.input : monthData.output);
+            } else {
+                values.push(0);
+            }
+        }
+
+        const total = values.reduce((sum, val) => sum + val, 0);
 
         return (
-            <tr key={cat}>
-                <td className="border border-black h-12" colSpan={3}>{cat}</td>
-                <td className="border border-black h-12" colSpan={9}>{row.prevStock.toLocaleString()}</td>
-                <td className="border border-black h-12" colSpan={9}>{row.input.toLocaleString()}</td>
-                <td className="border border-black h-12" colSpan={9}>{row.output.toLocaleString()}</td>
-                <td className="border border-black h-12" colSpan={9}>{row.remaining.toLocaleString()}</td>
-                <td className="border border-black h-12" colSpan={3}>&nbsp;</td>
+            <tr key={`${cat}-${type}`}>
+                <td className="border border-black h-10 text-left pl-4" rowSpan={type === 'input' ? 2 : 1}>
+                    {type === 'input' ? cat : ''}
+                </td>
+                <td className="border border-black h-10">
+                    {type === 'input' ? '입고' : '출고'}
+                </td>
+                {values.map((value, index) => (
+                    <td key={index} className="border border-black h-10">
+                        {value.toLocaleString()}
+                    </td>
+                ))}
+                <td className="border border-black h-10 font-bold">
+                    {total.toLocaleString()}
+                </td>
             </tr>
         );
     };
-
-    // 보고서 유형에 따라 다른 컴포넌트 렌더링
-    if (reportType === "partYearly" || reportType === "allPartYearly") {
-        return <YearlyStatement />;
-    }
-
-    // 월간보고서일 때는 기존 Statement 컴포넌트 렌더링
 
     return (
         <div className="p-4 mx-20">
@@ -161,16 +168,17 @@ const Statement = () => {
                         month={month}
                         user={user}
                         budgetAmount={budgetData?.amount || 0}
-                        currentMonthAmount={stats.byCategory?.["합 계"]?.input || 0}
-                        yearTotalInputAmount={stats.yearTotalInputAmount || 0}
-                        remainingAmount={(budgetData?.amount || 0) - (stats.remaining || 0)}
-                        reportType={reportType} // 추가: 보고서 유형 전달
+                        currentMonthAmount={stats.yearlyTotals?.["합 계"]?.input || 0}
+                        yearTotalInputAmount={stats.yearlyTotals?.["합 계"]?.input || 0}
+                        remainingAmount={(budgetData?.amount || 0) - (stats.yearlyTotals?.["합 계"]?.output || 0)}
+                        reportType={reportType}
                     />
                 </div>
             </div>
+
             <div className="flex items-center justify-center gap-4 mb-6 px-4">
                 <h1 className="text-xl font-bold whitespace-nowrap text-center">
-                    {year}년 {month.toString().padStart(2, "0")}월 자재수불명세서대장
+                    {year}년 {user?.department} 연간보고서
                 </h1>
             </div>
 
@@ -198,9 +206,9 @@ const Statement = () => {
                 <tbody>
                     <tr>
                         <td className="border border-black h-10 w-1/4">문서번호</td>
-                        <td className="border border-black h-10 w-1/4">GK-{year.toString().slice(2)}-C-003</td>
+                        <td className="border border-black h-10 w-1/4">GK-{year.toString().slice(2)}-C-004</td>
                         <td className="border border-black h-10 w-1/4">작성일자</td>
-                        <td className="border border-black h-10 w-1/4">{year}.{month.toString().padStart(2, "0")}</td>
+                        <td className="border border-black h-10 w-1/4">{year}.12</td>
                     </tr>
                     <tr>
                         <td className="border border-black h-10 w-1/4">부서명</td>
@@ -211,24 +219,42 @@ const Statement = () => {
                 </tbody>
             </table>
 
-            {/* 자재수불명세서 표 */}
+            {/* 연간 자재수불명세서 표 */}
+            <div className="text-right text-sm mb-2">(단위 : 원)</div>
             <table className="w-full border border-black text-sm text-center table-fixed">
                 <thead>
                     <tr className="bg-gray-100">
-                        <th className="border border-black" colSpan={3}>구 분</th>
-                        <th className="border border-black" colSpan={9}>전월재고</th>
-                        <th className="border border-black" colSpan={9}>입 고</th>
-                        <th className="border border-black" colSpan={9}>출 고</th>
-                        <th className="border border-black" colSpan={9}>재 고</th>
-                        <th className="border border-black" colSpan={3}>비 고</th>
+                        <th className="border border-black" rowSpan={2}>구 분</th>
+                        <th className="border border-black" rowSpan={2}>구분</th>
+                        <th className="border border-black" colSpan={12}>월별</th>
+                        <th className="border border-black" rowSpan={2}>합계</th>
+                    </tr>
+                    <tr className="bg-gray-100">
+                        <th className="border border-black">1월</th>
+                        <th className="border border-black">2월</th>
+                        <th className="border border-black">3월</th>
+                        <th className="border border-black">4월</th>
+                        <th className="border border-black">5월</th>
+                        <th className="border border-black">6월</th>
+                        <th className="border border-black">7월</th>
+                        <th className="border border-black">8월</th>
+                        <th className="border border-black">9월</th>
+                        <th className="border border-black">10월</th>
+                        <th className="border border-black">11월</th>
+                        <th className="border border-black">12월</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {categories.map((cat) => renderRow(cat))}
+                    {categories.map((cat) => (
+                        <React.Fragment key={cat}>
+                            {renderMonthlyRow(cat, 'input')}
+                            {renderMonthlyRow(cat, 'output')}
+                        </React.Fragment>
+                    ))}
                 </tbody>
             </table>
 
-            {/* 예산집행 현황 */}
+            {/* 연간 예산집행 현황 */}
             <h2 className="text-left font-semibold mt-10 mb-2">{year}년 예산집행 현황</h2>
             <div className="text-right text-sm mb-2">(단위 : 원)</div>
 
@@ -237,8 +263,8 @@ const Statement = () => {
                     <tr className="bg-gray-100">
                         <th className="border border-black" colSpan={3}>구 분</th>
                         <th className="border border-black" colSpan={9}>예 산</th>
-                        <th className="border border-black" colSpan={9}>당월집행 금액</th>
-                        <th className="border border-black" colSpan={9}>집행누계 금액</th>
+                        <th className="border border-black" colSpan={9}>연간집행 금액</th>
+                        <th className="border border-black" colSpan={9}>집행률</th>
                         <th className="border border-black" colSpan={9}>잔 액</th>
                         <th className="border border-black" colSpan={3}>비 고</th>
                     </tr>
@@ -246,12 +272,17 @@ const Statement = () => {
                 <tbody>
                     <tr>
                         <td className="border border-black h-12" colSpan={3}>
-                            {month.toString().padStart(2, "0")}월
+                            연간
                         </td>
                         <td className="border border-black h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
-                        <td className="border border-black h-12" colSpan={9}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
-                        <td className="border border-black h-12" colSpan={9}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
-                        <td className="border border-black h-12" colSpan={9}>{((budgetData?.amount || 0) - (stats.remaining || 0)).toLocaleString()}</td>
+                        <td className="border border-black h-12" colSpan={9}>{(stats.yearlyTotals?.["합 계"]?.input || 0).toLocaleString()}</td>
+                        <td className="border border-black h-12" colSpan={9}>
+                            {budgetData?.amount ?
+                                `${(((stats.yearlyTotals?.["합 계"]?.input || 0) / budgetData.amount) * 100).toFixed(1)}%` :
+                                '0%'
+                            }
+                        </td>
+                        <td className="border border-black h-12" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearlyTotals?.["합 계"]?.output || 0)).toLocaleString()}</td>
                         <td className="border border-black h-12" colSpan={3}>&nbsp;</td>
                     </tr>
                 </tbody>
@@ -260,4 +291,4 @@ const Statement = () => {
     );
 };
 
-export default Statement;
+export default YearlyStatement; 

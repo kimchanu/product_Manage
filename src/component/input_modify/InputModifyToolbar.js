@@ -1,5 +1,5 @@
 import React from "react";
-import ExcelReport from "../Excel/ExcelReport";
+import ExcelInputReport from "../Excel/ExcelInputReport";
 
 const InputModifyToolbar = ({
     startDate,
@@ -37,7 +37,7 @@ const InputModifyToolbar = ({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <ExcelReport
+        <ExcelInputReport
             materials={filteredMaterials}
             startDate={startDate}
             endDate={endDate}
