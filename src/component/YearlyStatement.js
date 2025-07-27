@@ -96,36 +96,118 @@ const YearlyStatement = () => {
     // 실제 API 데이터 사용
     const monthlyData = stats.monthlyData || {};
 
-    const renderMonthlyRow = (cat, type) => {
-        const values = [];
-        for (let month = 1; month <= 12; month++) {
-            const monthData = monthlyData[month]?.[cat];
-            if (monthData) {
-                values.push(type === 'input' ? monthData.input : monthData.output);
-            } else {
-                values.push(0);
-            }
+    const renderYearlyTables = () => {
+        // 1~6월 데이터 (전체 카테고리 합계)
+        const firstHalfData = [];
+        for (let month = 1; month <= 6; month++) {
+            let totalInput = 0;
+            let totalOutput = 0;
+
+            // 모든 카테고리의 해당 월 데이터 합계
+            categories.forEach(cat => {
+                const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0 };
+                totalInput += monthData.input;
+                totalOutput += monthData.output;
+            });
+
+            const stock = totalInput - totalOutput;
+            firstHalfData.push({
+                month,
+                input: totalInput,
+                output: totalOutput,
+                stock
+            });
         }
 
-        const total = values.reduce((sum, val) => sum + val, 0);
+        // 7~12월 데이터 (전체 카테고리 합계)
+        const secondHalfData = [];
+        for (let month = 7; month <= 12; month++) {
+            let totalInput = 0;
+            let totalOutput = 0;
+
+            // 모든 카테고리의 해당 월 데이터 합계
+            categories.forEach(cat => {
+                const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0 };
+                totalInput += monthData.input;
+                totalOutput += monthData.output;
+            });
+
+            const stock = totalInput - totalOutput;
+            secondHalfData.push({
+                month,
+                input: totalInput,
+                output: totalOutput,
+                stock
+            });
+        }
+
+        // 총합계 계산
+        const totalInput = firstHalfData.reduce((sum, data) => sum + data.input, 0) +
+            secondHalfData.reduce((sum, data) => sum + data.input, 0);
+        const totalOutput = firstHalfData.reduce((sum, data) => sum + data.output, 0) +
+            secondHalfData.reduce((sum, data) => sum + data.output, 0);
+        const totalStock = totalInput - totalOutput;
 
         return (
-            <tr key={`${cat}-${type}`}>
-                <td className="border border-black h-10 text-left pl-4" rowSpan={type === 'input' ? 2 : 1}>
-                    {type === 'input' ? cat : ''}
-                </td>
-                <td className="border border-black h-10">
-                    {type === 'input' ? '입고' : '출고'}
-                </td>
-                {values.map((value, index) => (
-                    <td key={index} className="border border-black h-10">
-                        {value.toLocaleString()}
-                    </td>
-                ))}
-                <td className="border border-black h-10 font-bold">
-                    {total.toLocaleString()}
-                </td>
-            </tr>
+            <div className="mb-8">
+                {/* 가로로 2개 표 배치 */}
+                <div className="flex gap-8 mb-6">
+                    {/* 1~6월 표 */}
+                    <div className="flex-1">
+                        <table className="w-full border border-black text-sm text-center table-fixed">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    <th className="border border-black h-10">월</th>
+                                    <th className="border border-black h-10">입고</th>
+                                    <th className="border border-black h-10">출고</th>
+                                    <th className="border border-black h-10">재고</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {firstHalfData.map((data) => (
+                                    <tr key={data.month}>
+                                        <td className="border border-black h-10">{data.month}월</td>
+                                        <td className="border border-black h-10">{data.input.toLocaleString()}</td>
+                                        <td className="border border-black h-10">{data.output.toLocaleString()}</td>
+                                        <td className="border border-black h-10">{data.stock.toLocaleString()}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* 7~12월 표 + 총합계 */}
+                    <div className="flex-1">
+                        <table className="w-full border border-black text-sm text-center table-fixed">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    <th className="border border-black h-10">월</th>
+                                    <th className="border border-black h-10">입고</th>
+                                    <th className="border border-black h-10">출고</th>
+                                    <th className="border border-black h-10">재고</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {secondHalfData.map((data) => (
+                                    <tr key={data.month}>
+                                        <td className="border border-black h-10">{data.month}월</td>
+                                        <td className="border border-black h-10">{data.input.toLocaleString()}</td>
+                                        <td className="border border-black h-10">{data.output.toLocaleString()}</td>
+                                        <td className="border border-black h-10">{data.stock.toLocaleString()}</td>
+                                    </tr>
+                                ))}
+                                {/* 총합계 행을 7~12월 표 아래에 추가 */}
+                                <tr className="bg-blue-100">
+                                    <td className="border border-black h-10 font-bold">총합계</td>
+                                    <td className="border border-black h-10 font-bold">{totalInput.toLocaleString()}</td>
+                                    <td className="border border-black h-10 font-bold">{totalOutput.toLocaleString()}</td>
+                                    <td className="border border-black h-10 font-bold">{totalStock.toLocaleString()}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         );
     };
 
@@ -146,6 +228,11 @@ const YearlyStatement = () => {
                                 const newType = e.target.value;
                                 setReportType(newType);
                                 setSearchParams({ type: newType }); // URL 파라미터 업데이트
+
+                                // 월간보고서 선택 시 페이지 새로고침
+                                if (newType === "monthly") {
+                                    window.location.reload();
+                                }
                             }}
                             className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
@@ -221,38 +308,9 @@ const YearlyStatement = () => {
 
             {/* 연간 자재수불명세서 표 */}
             <div className="text-right text-sm mb-2">(단위 : 원)</div>
-            <table className="w-full border border-black text-sm text-center table-fixed">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="border border-black" rowSpan={2}>구 분</th>
-                        <th className="border border-black" rowSpan={2}>구분</th>
-                        <th className="border border-black" colSpan={12}>월별</th>
-                        <th className="border border-black" rowSpan={2}>합계</th>
-                    </tr>
-                    <tr className="bg-gray-100">
-                        <th className="border border-black">1월</th>
-                        <th className="border border-black">2월</th>
-                        <th className="border border-black">3월</th>
-                        <th className="border border-black">4월</th>
-                        <th className="border border-black">5월</th>
-                        <th className="border border-black">6월</th>
-                        <th className="border border-black">7월</th>
-                        <th className="border border-black">8월</th>
-                        <th className="border border-black">9월</th>
-                        <th className="border border-black">10월</th>
-                        <th className="border border-black">11월</th>
-                        <th className="border border-black">12월</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {categories.map((cat) => (
-                        <React.Fragment key={cat}>
-                            {renderMonthlyRow(cat, 'input')}
-                            {renderMonthlyRow(cat, 'output')}
-                        </React.Fragment>
-                    ))}
-                </tbody>
-            </table>
+
+            {/* 연간 테이블들 */}
+            {renderYearlyTables()}
 
             {/* 연간 예산집행 현황 */}
             <h2 className="text-left font-semibold mt-10 mb-2">{year}년 예산집행 현황</h2>
