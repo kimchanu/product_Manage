@@ -92,7 +92,9 @@ const InputStatistics = () => {
         <div className="container mx-auto px-4 py-8">
             <User_info />
 
-            <div className="mb-6 flex gap-4">
+            <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">입고 통계</h1>
+
+            <div className="mb-6 flex justify-end gap-4">
                 <select
                     value={year}
                     onChange={(e) => setYear(Number(e.target.value))}

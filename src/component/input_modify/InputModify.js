@@ -207,6 +207,7 @@ const InputModify = () => {
         <div>
             <User_info setUser={setUser} />
             <div className="p-4 max-w-8xl mx-auto">
+                <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">입고 현황</h1>
                 <InputModifyToolbar
                     startDate={startDate}
                     setStartDate={setStartDate}

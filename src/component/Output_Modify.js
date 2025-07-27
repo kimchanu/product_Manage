@@ -351,6 +351,7 @@ const Modify = () => {
     <div>
       <User_info setUser={setUser} />
       <div className="p-4 max-w-8xl mx-auto">
+        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">출고 현황</h1>
         <ModifyFilters
           startDate={startDate}
           setStartDate={setStartDate}
