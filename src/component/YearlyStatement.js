@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import DateSelector from "./Selector/DateSelector";
 import User_info from "./User_info";
-import ExcelStatementReport from "./Excel/ExcelStatementReport";
+import ExcelYearlyStatementReport from "./Excel/ExcelYearlyStatementReport";
 
 const YearlyStatement = () => {
     const today = new Date();
@@ -97,6 +97,23 @@ const YearlyStatement = () => {
     const monthlyData = stats.monthlyData || {};
 
     const renderYearlyTables = () => {
+        // Statement와 동일한 방식으로 누적 재고 계산
+        // 전년도 말일까지의 재고를 시작점으로 사용
+        let cumulativeStock = 0;
+
+        // 전년도 말일까지의 재고 계산 (API에서 이미 계산된 remaining 값 사용)
+        if (stats.yearlyTotals) {
+            categories.forEach(cat => {
+                if (cat !== "합 계") {
+                    // 첫 번째 월(1월)의 remaining 값을 시작점으로 사용
+                    const firstMonthData = monthlyData[1]?.[cat] || { input: 0, output: 0, remaining: 0 };
+                    // 1월의 remaining에서 1월의 입고를 빼면 전년도 말일까지의 재고
+                    const prevYearStock = firstMonthData.remaining - firstMonthData.input;
+                    cumulativeStock += prevYearStock;
+                }
+            });
+        }
+
         // 1~6월 데이터 (전체 카테고리 합계)
         const firstHalfData = [];
         for (let month = 1; month <= 6; month++) {
@@ -105,17 +122,23 @@ const YearlyStatement = () => {
 
             // 모든 카테고리의 해당 월 데이터 합계
             categories.forEach(cat => {
-                const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0 };
-                totalInput += monthData.input;
-                totalOutput += monthData.output;
+                if (cat !== "합 계") {
+                    const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0, remaining: 0 };
+                    totalInput += monthData.input;
+                    totalOutput += monthData.output;
+                }
             });
 
-            const stock = totalInput - totalOutput;
+            // 누적 재고 계산: 이전 재고 + 입고 - 출고
+            cumulativeStock = cumulativeStock + totalInput - totalOutput;
+
+            console.log(`${month}월 - 입고: ${totalInput}, 출고: ${totalOutput}, 누적재고: ${cumulativeStock}`);
+
             firstHalfData.push({
                 month,
                 input: totalInput,
                 output: totalOutput,
-                stock
+                stock: cumulativeStock  // 누적 재고
             });
         }
 
@@ -127,17 +150,23 @@ const YearlyStatement = () => {
 
             // 모든 카테고리의 해당 월 데이터 합계
             categories.forEach(cat => {
-                const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0 };
-                totalInput += monthData.input;
-                totalOutput += monthData.output;
+                if (cat !== "합 계") {
+                    const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0, remaining: 0 };
+                    totalInput += monthData.input;
+                    totalOutput += monthData.output;
+                }
             });
 
-            const stock = totalInput - totalOutput;
+            // 누적 재고 계산: 이전 재고 + 입고 - 출고
+            cumulativeStock = cumulativeStock + totalInput - totalOutput;
+
+            console.log(`${month}월 - 입고: ${totalInput}, 출고: ${totalOutput}, 누적재고: ${cumulativeStock}`);
+
             secondHalfData.push({
                 month,
                 input: totalInput,
                 output: totalOutput,
-                stock
+                stock: cumulativeStock  // 누적 재고
             });
         }
 
@@ -146,7 +175,12 @@ const YearlyStatement = () => {
             secondHalfData.reduce((sum, data) => sum + data.input, 0);
         const totalOutput = firstHalfData.reduce((sum, data) => sum + data.output, 0) +
             secondHalfData.reduce((sum, data) => sum + data.output, 0);
-        const totalStock = totalInput - totalOutput;
+        // 총합계 재고는 12월 말일의 누적 재고값 사용
+        const totalStock = secondHalfData.length > 0 ? secondHalfData[secondHalfData.length - 1].stock : 0;
+
+        // 전역 변수로 설정하여 다른 곳에서 사용할 수 있도록 함
+        window.yearlyTotalOutput = totalOutput;
+        window.yearlyTotalInput = totalInput;
 
         return (
             <div className="mb-8">
@@ -164,14 +198,17 @@ const YearlyStatement = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {firstHalfData.map((data) => (
-                                    <tr key={data.month}>
-                                        <td className="border border-black h-10">{data.month}월</td>
-                                        <td className="border border-black h-10">{data.input.toLocaleString()}</td>
-                                        <td className="border border-black h-10">{data.output.toLocaleString()}</td>
-                                        <td className="border border-black h-10">{data.stock.toLocaleString()}</td>
-                                    </tr>
-                                ))}
+                                {firstHalfData.map((data) => {
+                                    console.log(`[UI 렌더링] ${data.month}월 - 입고: ${data.input}, 출고: ${data.output}, 재고: ${data.stock}`);
+                                    return (
+                                        <tr key={data.month}>
+                                            <td className="border border-black h-10">{data.month}월</td>
+                                            <td className="border border-black h-10">{data.input.toLocaleString()}</td>
+                                            <td className="border border-black h-10">{data.output.toLocaleString()}</td>
+                                            <td className="border border-black h-10">{data.stock.toLocaleString()}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -248,7 +285,7 @@ const YearlyStatement = () => {
                         onYearChange={setYear}
                         onMonthChange={setMonth}
                     />
-                    <ExcelStatementReport
+                    <ExcelYearlyStatementReport
                         stats={stats}
                         categories={categories}
                         year={year}
@@ -333,14 +370,14 @@ const YearlyStatement = () => {
                             연간
                         </td>
                         <td className="border border-black h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
-                        <td className="border border-black h-12" colSpan={9}>{(stats.yearlyTotals?.["합 계"]?.input || 0).toLocaleString()}</td>
+                        <td className="border border-black h-12" colSpan={9}>{(window.yearlyTotalInput || 0).toLocaleString()}</td>
                         <td className="border border-black h-12" colSpan={9}>
                             {budgetData?.amount ?
-                                `${(((stats.yearlyTotals?.["합 계"]?.input || 0) / budgetData.amount) * 100).toFixed(1)}%` :
+                                `${(((window.yearlyTotalInput || 0) / budgetData.amount) * 100).toFixed(1)}%` :
                                 '0%'
                             }
                         </td>
-                        <td className="border border-black h-12" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearlyTotals?.["합 계"]?.output || 0)).toLocaleString()}</td>
+                        <td className="border border-black h-12" colSpan={9}>{((budgetData?.amount || 0) - (window.yearlyTotalInput || 0)).toLocaleString()}</td>
                         <td className="border border-black h-12" colSpan={3}>&nbsp;</td>
                     </tr>
                 </tbody>

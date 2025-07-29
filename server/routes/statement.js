@@ -25,13 +25,17 @@ router.post("/", async (req, res) => {
         const yearEndDate = new Date(year, 11, 31); // 12월 31일
         yearEndDate.setHours(23, 59, 59, 999);
 
+        // 선택된 월까지의 누적 입고 데이터 조회 (1월부터 현재 월까지)
+        const cumulativeEndDate = new Date(year, month, 0); // 현재 월 말일
+        cumulativeEndDate.setHours(23, 59, 59, 999);
+
         const includeProduct = {
             model: Product,
             as: "product",
             attributes: ["material_id", "price", "big_category"],
         };
 
-        const [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, yearTotalInputs] = await Promise.all([
+        const [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, yearTotalInputs, cumulativeInputs] = await Promise.all([
             Input.findAll({
                 where: { date: { [Op.lte]: prevEndDate } },
                 attributes: ["material_id", "quantity"],
@@ -54,6 +58,11 @@ router.post("/", async (req, res) => {
             }),
             Input.findAll({
                 where: { date: { [Op.gte]: yearStartDate, [Op.lte]: yearEndDate } },
+                attributes: ["material_id", "quantity"],
+                include: [includeProduct],
+            }),
+            Input.findAll({
+                where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
                 attributes: ["material_id", "quantity"],
                 include: [includeProduct],
             }),
@@ -130,9 +139,9 @@ router.post("/", async (req, res) => {
         process(thisMonthInputs, "input");
         process(thisMonthOutputs, "output");
 
-        // 연간 총 입고 금액 계산
+        // 연간 총 입고 금액 계산 (1월부터 현재 월까지의 누적)
         let yearTotalInputAmount = 0;
-        yearTotalInputs.forEach(item => {
+        cumulativeInputs.forEach(item => {
             const product = item.product;
             if (!product) {
                 console.warn(`[yearTotalInput] product is null for material_id:`, item.material_id);
