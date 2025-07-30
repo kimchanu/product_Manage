@@ -20,28 +20,38 @@ router.post("/", async (req, res) => {
 
         const startDate = new Date(year, month - 1, 1);
         const endDate = new Date(year, month, 0);
+        endDate.setHours(23, 59, 59, 999); // 월말을 정확히 설정
 
-        // 총 입고 금액 (전체 기간)
-        const totalInputs = await Input.findAll({
-            attributes: ['quantity', 'date', 'material_id'],
-            raw: true
-        });
+        console.log(`Requested year: ${year}, month: ${month}`);
+        console.log(`Date range: ${startDate.toISOString()} to ${endDate.toISOString()}`);
 
-        // 자재 정보 조회
-        const materialIds = [...new Set(totalInputs.map(input => input.material_id))];
-        const products = await Product.findAll({
-            where: { material_id: materialIds },
+        // 자재 정보 조회 (전체 자재)
+        const allProducts = await Product.findAll({
             attributes: ['material_id', 'price', 'name'],
             raw: true
         });
 
         // 자재 정보를 Map으로 변환
-        const productMap = new Map(products.map(p => [p.material_id, p]));
+        const productMap = new Map(allProducts.map(p => [p.material_id, p]));
+
+        // 총 입고 금액 (선택된 월의 데이터만)
+        const totalInputs = await Input.findAll({
+            where: {
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
+            attributes: ['quantity', 'date', 'material_id'],
+            raw: true
+        });
 
         const totalInputAmount = totalInputs.reduce((sum, input) => {
             const product = productMap.get(input.material_id);
             return sum + (input.quantity * (product?.price || 0));
         }, 0);
+
+        console.log(`Total inputs found: ${totalInputs.length}`);
+        console.log(`Total input amount: ${totalInputAmount}`);
 
         // 월 입고 금액
         const monthlyInputs = await Input.findAll({
@@ -58,6 +68,9 @@ router.post("/", async (req, res) => {
             const product = productMap.get(input.material_id);
             return sum + (input.quantity * (product?.price || 0));
         }, 0);
+
+        console.log(`Monthly inputs found: ${monthlyInputs.length}`);
+        console.log(`Monthly input amount: ${monthlyInputAmount}`);
 
         // 월별 추이
         const monthlyTrend = await Promise.all(
@@ -88,16 +101,29 @@ router.post("/", async (req, res) => {
             })
         );
 
-        // 최근 입고 내역
+        // 최근 입고 내역 (선택된 월의 데이터만)
         const recentInputs = await Input.findAll({
+            where: {
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
             limit: 5,
             order: [['date', 'DESC']],
             attributes: ['quantity', 'date', 'material_id'],
             raw: true
         });
 
-        // 입고 상위 자재
+        console.log(`Recent inputs found: ${recentInputs.length}`);
+        console.log('Recent inputs:', recentInputs);
+
+        // 입고 상위 자재 (선택된 월의 데이터만)
         const inputTop5 = await Input.findAll({
+            where: {
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
             attributes: [
                 'material_id',
                 [sequelize.fn('SUM', sequelize.col('quantity')), 'totalQuantity']

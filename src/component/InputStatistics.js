@@ -63,6 +63,9 @@ const InputStatistics = () => {
 
             const data = await response.json();
             console.log('Received statistics:', data);
+            console.log('Total input amount:', data.totalInputAmount);
+            console.log('Monthly input amount:', data.monthlyInputAmount);
+            console.log('Recent inputs:', data.recentInputs);
             console.log('Monthly trend data:', data.monthlyTrend);
             setStatistics(data);
         } catch (error) {
@@ -99,6 +102,7 @@ const InputStatistics = () => {
                     value={year}
                     onChange={(e) => setYear(Number(e.target.value))}
                     className="border rounded p-2"
+                    disabled={loading}
                 >
                     {Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i).map(y => (
                         <option key={y} value={y}>{y}년</option>
@@ -108,6 +112,7 @@ const InputStatistics = () => {
                     value={month}
                     onChange={(e) => setMonth(Number(e.target.value))}
                     className="border rounded p-2"
+                    disabled={loading}
                 >
                     {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
                         <option key={m} value={m}>{m}월</option>
