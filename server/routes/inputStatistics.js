@@ -5,8 +5,8 @@ const { Op } = require('sequelize');
 const sequelize = require('../db2');
 
 router.post("/", async (req, res) => {
-    const { businessLocation, department, year, month } = req.body;
 
+    const { businessLocation, department, year, month } = req.body;
     if (!businessLocation || !department || !year || !month) {
         return res.status(400).json({ message: "필수 정보가 누락되었습니다." });
     }
@@ -20,40 +20,50 @@ router.post("/", async (req, res) => {
 
         const startDate = new Date(year, month - 1, 1);
         const endDate = new Date(year, month, 0);
-        endDate.setHours(23, 59, 59, 999); // 월말을 정확히 설정
+        endDate.setHours(23, 59, 59, 999);
 
-        console.log(`Requested year: ${year}, month: ${month}`);
-        console.log(`Date range: ${startDate.toISOString()} to ${endDate.toISOString()}`);
+        console.log(`요청: ${year}년 ${month}월`);
+        console.log(`해당 월 범위: ${startDate.toISOString()} ~ ${endDate.toISOString()}`);
 
-        // 자재 정보 조회 (전체 자재)
+        // 모든 자재 정보 조회
         const allProducts = await Product.findAll({
             attributes: ['material_id', 'price', 'name'],
             raw: true
         });
-
-        // 자재 정보를 Map으로 변환
         const productMap = new Map(allProducts.map(p => [p.material_id, p]));
 
-        // 총 입고 금액 (선택된 월의 데이터만)
-        const totalInputs = await Input.findAll({
+        // 🔹 누적 입고 데이터 조회 (해당 월 이전까지의 데이터)
+        const cumulativeEndDate = new Date(year, month - 1, 0); // 해당 월의 마지막 날
+        cumulativeEndDate.setHours(23, 59, 59, 999);
+
+        const cumulativeInputs = await Input.findAll({
             where: {
                 date: {
-                    [Op.between]: [startDate, endDate]
+                    [Op.lte]: cumulativeEndDate
                 }
             },
+            order: [['date', 'ASC']],
             attributes: ['quantity', 'date', 'material_id'],
             raw: true
         });
 
-        const totalInputAmount = totalInputs.reduce((sum, input) => {
+        // 🔹 누적 입고 금액 계산 (해당 월 이전까지)
+        const totalInputAmount = cumulativeInputs.reduce((sum, input) => {
             const product = productMap.get(input.material_id);
-            return sum + (input.quantity * (product?.price || 0));
+            const itemAmount = input.quantity * (product?.price || 0);
+            return sum + itemAmount;
         }, 0);
 
-        console.log(`Total inputs found: ${totalInputs.length}`);
-        console.log(`Total input amount: ${totalInputAmount}`);
+        // 🔹 누적 입고 리스트 생성 (해당 월 이전까지)
+        const cumulativeInputList = cumulativeInputs.map(input => ({
+            name: productMap.get(input.material_id)?.name || 'Unknown',
+            quantity: input.quantity,
+            date: input.date
+        }));
 
-        // 월 입고 금액
+        console.log(`총 입고 건수: ${cumulativeInputs.length}, 누적 입고 금액: ${totalInputAmount}`);
+
+        // 🔸 월 입고 금액 계산 (선택 월만)
         const monthlyInputs = await Input.findAll({
             where: {
                 date: {
@@ -66,20 +76,18 @@ router.post("/", async (req, res) => {
 
         const monthlyInputAmount = monthlyInputs.reduce((sum, input) => {
             const product = productMap.get(input.material_id);
-            return sum + (input.quantity * (product?.price || 0));
+            const itemAmount = input.quantity * (product?.price || 0);
+            return sum + itemAmount;
         }, 0);
 
-        console.log(`Monthly inputs found: ${monthlyInputs.length}`);
-        console.log(`Monthly input amount: ${monthlyInputAmount}`);
+        console.log(`월 입고 금액: ${monthlyInputAmount}`);
 
-        // 월별 추이
+        // 🔸 월별 추이 계산 (1~12월)
         const monthlyTrend = await Promise.all(
             Array.from({ length: 12 }, (_, i) => i + 1).map(async (m) => {
                 const monthStart = new Date(year, m - 1, 1);
                 const monthEnd = new Date(year, m, 0);
-                monthEnd.setHours(23, 59, 59, 999); // 월말을 정확히 설정
-
-                console.log(`Month ${m}: ${monthStart.toISOString()} to ${monthEnd.toISOString()}`);
+                monthEnd.setHours(23, 59, 59, 999);
 
                 const monthInputs = await Input.findAll({
                     where: {
@@ -96,12 +104,11 @@ router.post("/", async (req, res) => {
                     return sum + (input.quantity * (product?.price || 0));
                 }, 0);
 
-                console.log(`Month ${m} amount: ${monthAmount}`);
                 return monthAmount;
             })
         );
 
-        // 최근 입고 내역 (선택된 월의 데이터만)
+        // 🔸 최근 입고 내역 (선택 월 기준 상위 5건)
         const recentInputs = await Input.findAll({
             where: {
                 date: {
@@ -114,10 +121,13 @@ router.post("/", async (req, res) => {
             raw: true
         });
 
-        console.log(`Recent inputs found: ${recentInputs.length}`);
-        console.log('Recent inputs:', recentInputs);
+        const formattedRecentInputs = recentInputs.map(input => ({
+            name: productMap.get(input.material_id)?.name || 'Unknown',
+            quantity: input.quantity,
+            date: input.date
+        }));
 
-        // 입고 상위 자재 (선택된 월의 데이터만)
+        // 🔸 입고 상위 자재 5종 (선택 월 기준)
         const inputTop5 = await Input.findAll({
             where: {
                 date: {
@@ -134,24 +144,25 @@ router.post("/", async (req, res) => {
             raw: true
         });
 
+        const formattedTop5 = inputTop5.map(item => ({
+            name: productMap.get(item.material_id)?.name || 'Unknown',
+            totalQuantity: item.totalQuantity
+        }));
+
+        // ✅ 최종 응답
         res.json({
-            totalInputAmount,
-            monthlyInputAmount,
-            monthlyTrend,
-            recentInputs: recentInputs.map(input => ({
-                name: productMap.get(input.material_id)?.name || 'Unknown',
-                quantity: input.quantity,
-                date: input.date
-            })),
-            inputTop5: inputTop5.map(item => ({
-                name: productMap.get(item.material_id)?.name || 'Unknown',
-                totalQuantity: item.totalQuantity
-            }))
+            totalInputAmount,           // 전체 누적 입고 금액
+            cumulativeInputList,       // 전체 누적 입고 리스트
+            monthlyInputAmount,        // 월 입고 금액
+            monthlyTrend,              // 월별 추이
+            recentInputs: formattedRecentInputs, // 최근 입고 5건
+            inputTop5: formattedTop5   // 입고 상위 5자재
         });
+
     } catch (error) {
         console.error("입고 통계 조회 오류:", error);
         res.status(500).json({ message: error.message || "입고 통계 조회 중 오류가 발생했습니다." });
     }
 });
 
-module.exports = router; 
+module.exports = router;

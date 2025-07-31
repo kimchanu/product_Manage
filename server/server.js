@@ -32,7 +32,7 @@ app.use("/api/materials", materialRoutes);
 app.use("/api/materials", require("./routes/product_list_edit"));
 app.use("/api/materials/output", outputRouter);
 app.use("/api/materials/input", inputRouter);
-app.use("/api/statistics", output_statistics);
+app.use("/api/statistics/output", output_statistics);
 app.use("/api/statistics/input", inputStatisticsRouter);
 app.use("/api/statement", statement);
 app.use("/api/yearlyStatement", yearlyStatement);

@@ -1,330 +1,85 @@
 const express = require("express");
 const router = express.Router();
 const { createModels } = require("../models/material");
-const createInputModel = require('../models/InputModel');
 const createOutputModel = require('../models/OutputModel');
 const { Op } = require('sequelize');
 const sequelize = require('../db/sequelize');
 
 router.post("/", async (req, res) => {
     const { businessLocation, department, year, month } = req.body;
-
-    if (!businessLocation || !department || !year || !month) {
-        return res.status(400).json({ error: "사업소, 부서, 연도, 월을 모두 입력하세요." });
-    }
-
-    try {
-        // console.log(`[요청] 사업소: ${businessLocation}, 부서: ${department}, 연도: ${year}, 월: ${month}`);
-
-        const { Product, Output } = createModels(businessLocation, department);
-        const products = await Product.findAll({
-            include: [
-                {
-                    model: Output,
-                    as: "outputs",
-                    attributes: ["quantity", "date"],
-                },
-            ],
-        });
-
-        let totalOutputAmount = 0;
-        let monthlyOutputAmount = 0;
-        const recentOutputs = [];
-
-        // ✅ 월별 출고 금액 (index 0 = 1월, index 11 = 12월)
-        const monthlyTrend = Array(12).fill(0);
-
-        for (const product of products) {
-            const outputs = product.outputs || [];
-
-            for (const out of outputs) {
-                const price = product.price || 0;
-                const quantity = out.quantity || 0;
-                const outDate = new Date(out.date);
-
-                totalOutputAmount += quantity * price;
-
-                const outputYear = outDate.getFullYear();
-                const outputMonth = outDate.getMonth(); // 0~11
-
-                // ✅ 월별 출고금액 누적
-                if (outputYear === parseInt(year)) {
-                    monthlyTrend[outputMonth] += quantity * price;
-                }
-
-                // 현재 선택한 월의 출고 금액 누적
-                if (
-                    outputYear === parseInt(year) &&
-                    outputMonth + 1 === parseInt(month)
-                ) {
-                    monthlyOutputAmount += quantity * price;
-                }
-
-                recentOutputs.push({
-                    material_code: product.material_code,
-                    name: product.name,
-                    quantity: quantity,
-                    date: out.date,
-                });
-            }
-        }
-
-        recentOutputs.sort((a, b) => new Date(b.date) - new Date(a.date));
-        const latestFive = recentOutputs.slice(0, 5);
-
-        const materialOutputMap = {};
-        for (const item of recentOutputs) {
-            const key = `${item.material_code}|${item.name}`;
-            if (!materialOutputMap[key]) {
-                materialOutputMap[key] = 0;
-            }
-            materialOutputMap[key] += item.quantity;
-        }
-
-        const outputTop5 = Object.entries(materialOutputMap)
-            .map(([key, qty]) => {
-                const [material_code, name] = key.split("|");
-                return { material_code, name, total: qty };
-            })
-            .sort((a, b) => b.total - a.total)
-            .slice(0, 5);
-
-        // ✅ 로그 출력
-        // console.log("📦 총 출고금액:", totalOutputAmount);
-        // console.log("📅 월 출고금액:", monthlyOutputAmount);
-        // console.log("📊 월별 추이:", monthlyTrend);
-        // console.log("🕓 최근 출고 5건:", latestFive);
-        // console.log("🏆 출고 상위 5자재:", outputTop5);
-
-        res.json({
-            totalOutputAmount,
-            monthlyOutputAmount,
-            monthlyTrend, // ✅ 추가된 필드
-            recentOutputs: latestFive,
-            outputTop5,
-        });
-    } catch (error) {
-        console.error("통계 API 오류:", error);
-        res.status(500).json({ error: "통계 정보를 불러오는 중 오류 발생" });
-    }
-});
-
-// 입고 통계 조회
-router.post("/input", async (req, res) => {
-    const { businessLocation, department, year, month } = req.body;
-
     if (!businessLocation || !department || !year || !month) {
         return res.status(400).json({ message: "필수 정보가 누락되었습니다." });
     }
 
     try {
-        // console.log(`[입고 통계 요청] 사업소: ${businessLocation}, 부서: ${department}, 연도: ${year}, 월: ${month}`);
-
-        let Input, Product;
-
-        try {
-            Input = createInputModel(businessLocation, department);
-            const models = createModels(businessLocation, department);
-            Product = models.Product;
-        } catch (modelError) {
-            console.error("모델 생성 오류:", modelError);
-            // 테이블이 존재하지 않거나 모델 생성에 실패한 경우 빈 데이터 반환
-            return res.json({
-                totalInputAmount: 0,
-                monthlyInputAmount: 0,
-                monthlyTrend: Array(12).fill(0),
-                recentInputs: [],
-                inputTop5: []
-            });
-        }
+        const { Product, Output } = createModels(businessLocation, department);
 
         if (!Product) {
-            console.log("Product 모델을 찾을 수 없습니다.");
-            return res.json({
-                totalInputAmount: 0,
-                monthlyInputAmount: 0,
-                monthlyTrend: Array(12).fill(0),
-                recentInputs: [],
-                inputTop5: []
-            });
+            throw new Error("Product 모델을 찾을 수 없습니다.");
         }
 
         const startDate = new Date(year, month - 1, 1);
         const endDate = new Date(year, month, 0);
+        endDate.setHours(23, 59, 59, 999);
 
-        // 총 입고 금액 (전체 기간)
-        const totalInputs = await Input.findAll({
-            attributes: ['quantity', 'date', 'material_id'],
-            raw: true
-        });
+        console.log(`요청: ${year}년 ${month}월`);
+        console.log(`해당 월 범위: ${startDate.toISOString()} ~ ${endDate.toISOString()}`);
 
-        // 자재 정보 조회
-        const materialIds = [...new Set(totalInputs.map(input => input.material_id))];
-        const products = await Product.findAll({
-            where: { material_id: materialIds },
+        // 모든 자재 정보 조회
+        const allProducts = await Product.findAll({
             attributes: ['material_id', 'price', 'name'],
             raw: true
         });
+        const productMap = new Map(allProducts.map(p => [p.material_id, p]));
 
-        // 자재 정보를 Map으로 변환
-        const productMap = new Map(products.map(p => [p.material_id, p]));
+        // 🔹 누적 출고 데이터 조회 (해당 월까지의 데이터)
+        // 해당 월의 마지막 날을 정확히 계산
+        const cumulativeEndDate = new Date(year, month, 0);
+        cumulativeEndDate.setHours(23, 59, 59, 999);
 
-        const totalInputAmount = totalInputs.reduce((sum, input) => {
-            const product = productMap.get(input.material_id);
-            return sum + (input.quantity * (product?.price || 0));
-        }, 0);
+        console.log(`누적 계산 종료일: ${cumulativeEndDate.toISOString()}`);
+        console.log(`요청: ${year}년 ${month}월, 누적 종료일: ${cumulativeEndDate.getFullYear()}년 ${cumulativeEndDate.getMonth() + 1}월 ${cumulativeEndDate.getDate()}일`);
 
-        // 월 입고 금액
-        const monthlyInputs = await Input.findAll({
+        // 디버깅을 위해 실제 조회되는 데이터 확인
+        const allOutputs = await Output.findAll({
+            order: [['date', 'ASC']],
+            attributes: ['quantity', 'date', 'material_id'],
+            raw: true
+        });
+        console.log(`전체 출고 데이터 개수: ${allOutputs.length}`);
+        if (allOutputs.length > 0) {
+            console.log(`전체 데이터 날짜 범위: ${allOutputs[0].date} ~ ${allOutputs[allOutputs.length - 1].date}`);
+        }
+
+        const cumulativeOutputs = await Output.findAll({
             where: {
                 date: {
-                    [Op.between]: [startDate, endDate]
+                    [Op.lte]: cumulativeEndDate
                 }
             },
+            order: [['date', 'ASC']],
             attributes: ['quantity', 'date', 'material_id'],
             raw: true
         });
 
-        const monthlyInputAmount = monthlyInputs.reduce((sum, input) => {
-            const product = productMap.get(input.material_id);
-            return sum + (input.quantity * (product?.price || 0));
+        // 🔹 누적 출고 금액 계산 (해당 월까지)
+        const totalOutputAmount = cumulativeOutputs.reduce((sum, output) => {
+            const product = productMap.get(output.material_id);
+            const itemAmount = output.quantity * (product?.price || 0);
+            return sum + itemAmount;
         }, 0);
 
-        // 월별 추이
-        const monthlyTrend = await Promise.all(
-            Array.from({ length: 12 }, (_, i) => i + 1).map(async (m) => {
-                const monthStart = new Date(year, m - 1, 1);
-                const monthEnd = new Date(year, m, 0);
-                const monthInputs = await Input.findAll({
-                    where: {
-                        date: {
-                            [Op.between]: [monthStart, monthEnd]
-                        }
-                    },
-                    attributes: ['quantity', 'material_id'],
-                    raw: true
-                });
+        // 🔹 누적 출고 리스트 생성 (해당 월까지)
+        const cumulativeOutputList = cumulativeOutputs.map(output => ({
+            name: productMap.get(output.material_id)?.name || 'Unknown',
+            quantity: output.quantity,
+            date: output.date
+        }));
 
-                return monthInputs.reduce((sum, input) => {
-                    const product = productMap.get(input.material_id);
-                    return sum + (input.quantity * (product?.price || 0));
-                }, 0);
-            })
-        );
+        console.log(`총 출고 건수: ${cumulativeOutputs.length}, 누적 출고 금액: ${totalOutputAmount}`);
+        console.log(`누적 데이터 날짜 범위: ${cumulativeOutputs.length > 0 ? cumulativeOutputs[0].date : 'N/A'} ~ ${cumulativeOutputs.length > 0 ? cumulativeOutputs[cumulativeOutputs.length - 1].date : 'N/A'}`);
 
-        // 최근 입고 내역
-        const recentInputs = await Input.findAll({
-            limit: 5,
-            order: [['date', 'DESC']],
-            attributes: ['quantity', 'date', 'material_id'],
-            raw: true
-        });
-
-        // 입고 상위 자재
-        const inputTop5 = await Input.findAll({
-            attributes: [
-                'material_id',
-                [sequelize.fn('SUM', sequelize.col('quantity')), 'totalQuantity']
-            ],
-            group: ['material_id'],
-            order: [[sequelize.fn('SUM', sequelize.col('quantity')), 'DESC']],
-            limit: 5,
-            raw: true
-        });
-
-        res.json({
-            totalInputAmount,
-            monthlyInputAmount,
-            monthlyTrend,
-            recentInputs: recentInputs.map(input => ({
-                name: productMap.get(input.material_id)?.name || 'Unknown',
-                quantity: input.quantity,
-                date: input.date
-            })),
-            inputTop5: inputTop5.map(item => ({
-                name: productMap.get(item.material_id)?.name || 'Unknown',
-                totalQuantity: item.totalQuantity
-            }))
-        });
-    } catch (error) {
-        console.error("입고 통계 조회 오류:", error);
-        // 테이블이 존재하지 않거나 기타 오류 발생 시 빈 데이터 반환
-        res.json({
-            totalInputAmount: 0,
-            monthlyInputAmount: 0,
-            monthlyTrend: Array(12).fill(0),
-            recentInputs: [],
-            inputTop5: []
-        });
-    }
-});
-
-// 출고 통계 조회
-router.post("/output", async (req, res) => {
-    const { businessLocation, department, year, month } = req.body;
-
-    if (!businessLocation || !department || !year || !month) {
-        return res.status(400).json({ message: "필수 정보가 누락되었습니다." });
-    }
-
-    try {
-        console.log(`[출고 통계 요청] 사업소: ${businessLocation}, 부서: ${department}, 연도: ${year}, 월: ${month}`);
-
-        let Output, Material;
-
-        try {
-            Output = createOutputModel(businessLocation, department);
-            const models = createModels(businessLocation, department);
-            Material = models.Material;
-        } catch (modelError) {
-            console.error("모델 생성 오류:", modelError);
-            // 테이블이 존재하지 않거나 모델 생성에 실패한 경우 빈 데이터 반환
-            return res.json({
-                totalOutputAmount: 0,
-                monthlyOutputAmount: 0,
-                monthlyTrend: Array(12).fill(0),
-                recentOutputs: [],
-                outputTop5: []
-            });
-        }
-
-        if (!Material) {
-            console.log("Material 모델을 찾을 수 없습니다.");
-            return res.json({
-                totalOutputAmount: 0,
-                monthlyOutputAmount: 0,
-                monthlyTrend: Array(12).fill(0),
-                recentOutputs: [],
-                outputTop5: []
-            });
-        }
-
-        const startDate = new Date(year, month - 1, 1);
-        const endDate = new Date(year, month, 0);
-
-        // 총 출고 금액 (전체 기간)
-        const totalOutputs = await Output.findAll({
-            attributes: ['quantity', 'date', 'material_id'],
-            raw: true
-        });
-
-        // 자재 정보 조회
-        const materialIds = [...new Set(totalOutputs.map(output => output.material_id))];
-        const materials = await Material.findAll({
-            where: { material_id: materialIds },
-            attributes: ['material_id', 'price', 'name'],
-            raw: true
-        });
-
-        // 자재 정보를 Map으로 변환
-        const materialMap = new Map(materials.map(m => [m.material_id, m]));
-
-        const totalOutputAmount = totalOutputs.reduce((sum, output) => {
-            const material = materialMap.get(output.material_id);
-            return sum + (output.quantity * (material?.price || 0));
-        }, 0);
-
-        // 월 출고 금액
+        // 🔸 월 출고 금액 계산 (선택 월만)
         const monthlyOutputs = await Output.findAll({
             where: {
                 date: {
@@ -336,15 +91,20 @@ router.post("/output", async (req, res) => {
         });
 
         const monthlyOutputAmount = monthlyOutputs.reduce((sum, output) => {
-            const material = materialMap.get(output.material_id);
-            return sum + (output.quantity * (material?.price || 0));
+            const product = productMap.get(output.material_id);
+            const itemAmount = output.quantity * (product?.price || 0);
+            return sum + itemAmount;
         }, 0);
 
-        // 월별 추이
+        console.log(`월 출고 금액: ${monthlyOutputAmount}`);
+
+        // 🔸 월별 추이 계산 (1~12월)
         const monthlyTrend = await Promise.all(
             Array.from({ length: 12 }, (_, i) => i + 1).map(async (m) => {
                 const monthStart = new Date(year, m - 1, 1);
                 const monthEnd = new Date(year, m, 0);
+                monthEnd.setHours(23, 59, 59, 999);
+
                 const monthOutputs = await Output.findAll({
                     where: {
                         date: {
@@ -355,23 +115,41 @@ router.post("/output", async (req, res) => {
                     raw: true
                 });
 
-                return monthOutputs.reduce((sum, output) => {
-                    const material = materialMap.get(output.material_id);
-                    return sum + (output.quantity * (material?.price || 0));
+                const monthAmount = monthOutputs.reduce((sum, output) => {
+                    const product = productMap.get(output.material_id);
+                    return sum + (output.quantity * (product?.price || 0));
                 }, 0);
+
+                return monthAmount;
             })
         );
 
-        // 최근 출고 내역
+        // 🔸 최근 출고 내역 (선택 월 기준 상위 5건)
         const recentOutputs = await Output.findAll({
+            where: {
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
             limit: 5,
             order: [['date', 'DESC']],
             attributes: ['quantity', 'date', 'material_id'],
             raw: true
         });
 
-        // 출고 상위 자재
+        const formattedRecentOutputs = recentOutputs.map(output => ({
+            name: productMap.get(output.material_id)?.name || 'Unknown',
+            quantity: output.quantity,
+            date: output.date
+        }));
+
+        // 🔸 출고 상위 자재 5종 (선택 월 기준)
         const outputTop5 = await Output.findAll({
+            where: {
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            },
             attributes: [
                 'material_id',
                 [sequelize.fn('SUM', sequelize.col('quantity')), 'totalQuantity']
@@ -382,31 +160,29 @@ router.post("/output", async (req, res) => {
             raw: true
         });
 
+        const formattedTop5 = outputTop5.map(item => ({
+            name: productMap.get(item.material_id)?.name || 'Unknown',
+            totalQuantity: item.totalQuantity
+        }));
+
+        // ✅ 최종 응답
         res.json({
-            totalOutputAmount,
-            monthlyOutputAmount,
-            monthlyTrend,
-            recentOutputs: recentOutputs.map(output => ({
-                name: materialMap.get(output.material_id)?.name || 'Unknown',
-                quantity: output.quantity,
-                date: output.date
-            })),
-            outputTop5: outputTop5.map(item => ({
-                name: materialMap.get(item.material_id)?.name || 'Unknown',
-                totalQuantity: item.totalQuantity
-            }))
+            totalOutputAmount,           // 전체 누적 출고 금액
+            cumulativeOutputList,       // 전체 누적 출고 리스트
+            monthlyOutputAmount,        // 월 출고 금액
+            monthlyTrend,              // 월별 추이
+            recentOutputs: formattedRecentOutputs, // 최근 출고 5건
+            outputTop5: formattedTop5   // 출고 상위 5자재
         });
+
     } catch (error) {
         console.error("출고 통계 조회 오류:", error);
-        // 테이블이 존재하지 않거나 기타 오류 발생 시 빈 데이터 반환
-        res.json({
-            totalOutputAmount: 0,
-            monthlyOutputAmount: 0,
-            monthlyTrend: Array(12).fill(0),
-            recentOutputs: [],
-            outputTop5: []
-        });
+        res.status(500).json({ message: error.message || "출고 통계 조회 중 오류가 발생했습니다." });
     }
 });
+
+
+
+
 
 module.exports = router;
