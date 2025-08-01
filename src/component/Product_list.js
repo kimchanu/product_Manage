@@ -189,16 +189,28 @@ function Product_list() {
           />
         </div>
         {/* 일괄 수정 버튼 */}
-        <div className="mb-2 flex gap-2 items-center">
+        <div className="mb-2 flex gap-2 items-center justify-between">
+          <div className="flex gap-2 items-center">
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+              disabled={selectedRows.length === 0 || saveLoading}
+              onClick={() => setModalOpen(true)}
+            >
+              선택 행 일괄 수정
+            </button>
+            {saveError && <span className="text-red-500 ml-2">{saveError}</span>}
+            {saveSuccess && <span className="text-green-600 ml-2">{saveSuccess}</span>}
+          </div>
           <button
-            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-            disabled={selectedRows.length === 0 || saveLoading}
-            onClick={() => setModalOpen(true)}
+            className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+            disabled={!businessLocation || !department}
+            onClick={() => {
+              // 엑셀 저장 로직은 나중에 구현
+              console.log("엑셀 저장 기능");
+            }}
           >
-            선택 행 일괄 수정
+            엑셀 저장하기
           </button>
-          {saveError && <span className="text-red-500 ml-2">{saveError}</span>}
-          {saveSuccess && <span className="text-green-600 ml-2">{saveSuccess}</span>}
         </div>
         {/* 테이블 */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
