@@ -143,36 +143,13 @@ router.post("/", async (req, res) => {
             date: output.date
         }));
 
-        // 🔸 출고 상위 자재 5종 (선택 월 기준)
-        const outputTop5 = await Output.findAll({
-            where: {
-                date: {
-                    [Op.between]: [startDate, endDate]
-                }
-            },
-            attributes: [
-                'material_id',
-                [sequelize.fn('SUM', sequelize.col('quantity')), 'totalQuantity']
-            ],
-            group: ['material_id'],
-            order: [[sequelize.fn('SUM', sequelize.col('quantity')), 'DESC']],
-            limit: 5,
-            raw: true
-        });
-
-        const formattedTop5 = outputTop5.map(item => ({
-            name: productMap.get(item.material_id)?.name || 'Unknown',
-            totalQuantity: item.totalQuantity
-        }));
-
         // ✅ 최종 응답
         res.json({
             totalOutputAmount,           // 전체 누적 출고 금액
             cumulativeOutputList,       // 전체 누적 출고 리스트
             monthlyOutputAmount,        // 월 출고 금액
             monthlyTrend,              // 월별 추이
-            recentOutputs: formattedRecentOutputs, // 최근 출고 5건
-            outputTop5: formattedTop5   // 출고 상위 5자재
+            recentOutputs: formattedRecentOutputs // 최근 출고 5건
         });
 
     } catch (error) {
@@ -180,9 +157,5 @@ router.post("/", async (req, res) => {
         res.status(500).json({ message: error.message || "출고 통계 조회 중 오류가 발생했습니다." });
     }
 });
-
-
-
-
 
 module.exports = router;

@@ -9,22 +9,7 @@ const InputStatistics = () => {
     const [statistics, setStatistics] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-            try {
-                const decodedToken = jwtDecode(token);
-                const businessLocation = decodedToken.business_location.replace('사업소', '');
-                setUserInfo({
-                    name: decodedToken.full_name,
-                    businessLocation: businessLocation,
-                    department: decodedToken.department
-                });
-            } catch (error) {
-                console.error('Token decode error:', error);
-            }
-        }
-    }, []);
+
 
     useEffect(() => {
         if (userInfo) {
@@ -49,7 +34,7 @@ const InputStatistics = () => {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
                 body: JSON.stringify({
-                    businessLocation: userInfo.businessLocation,
+                    businessLocation: userInfo.business_location,
                     department: userInfo.department,
                     year,
                     month
@@ -93,7 +78,7 @@ const InputStatistics = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <User_info />
+            <User_info setUser={setUserInfo} />
 
             <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">입고 통계</h1>
 
@@ -125,7 +110,7 @@ const InputStatistics = () => {
             ) : statistics ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-bold mb-4">총 입고 금액</h2>
+                        <h2 className="text-xl font-bold mb-4">누적 입고 금액</h2>
                         <p className="text-2xl">{formatCurrency(statistics.totalInputAmount)}</p>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow">
@@ -197,19 +182,6 @@ const InputStatistics = () => {
                                     </span>
                                     <span className="text-sm text-gray-500">
                                         {formatDate(input.date)}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-bold mb-4">입고 상위 자재</h2>
-                        <div className="space-y-2">
-                            {statistics.inputTop5.map((item, index) => (
-                                <div key={index} className="flex justify-between items-center">
-                                    <span className="text-sm">{item.name}</span>
-                                    <span className="text-sm font-medium">
-                                        {item.totalQuantity.toLocaleString()} 개
                                     </span>
                                 </div>
                             ))}

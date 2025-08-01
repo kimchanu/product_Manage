@@ -29,7 +29,7 @@ router.post("/login", async (req, res) => {
     // ✅ JWT 토큰 생성
     const authToken = jwt.sign(
       { user_id: user.id, full_name: user.full_name, business_location: user.business_location, department: user.department, admin: user.is_admin },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "your_super_secret_jwt_key_2024",
       { expiresIn: "24h" }
     );
 

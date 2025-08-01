@@ -23,7 +23,7 @@ const Output_Statistics = () => {
 
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/statistics`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/statistics/output`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ const Output_Statistics = () => {
             ) : statistics ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-bold mb-4">총 출고 금액</h2>
+                        <h2 className="text-xl font-bold mb-4">누적 출고 금액</h2>
                         <p className="text-2xl">{formatCurrency(statistics.totalOutputAmount)}</p>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow">
@@ -184,19 +184,7 @@ const Output_Statistics = () => {
                             ))}
                         </div>
                     </div>
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-bold mb-4">출고 상위 자재</h2>
-                        <div className="space-y-2">
-                            {statistics.outputTop5?.map((item, index) => (
-                                <div key={index} className="flex justify-between items-center">
-                                    <span className="text-sm">{item.name || '-'}</span>
-                                    <span className="text-sm font-medium">
-                                        {item.total?.toLocaleString() || '-'} 개
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+
                 </div>
             ) : (
                 <div className="text-center">데이터가 없습니다.</div>

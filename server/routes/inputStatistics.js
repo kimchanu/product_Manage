@@ -32,8 +32,8 @@ router.post("/", async (req, res) => {
         });
         const productMap = new Map(allProducts.map(p => [p.material_id, p]));
 
-        // 🔹 누적 입고 데이터 조회 (해당 월 이전까지의 데이터)
-        const cumulativeEndDate = new Date(year, month - 1, 0); // 해당 월의 마지막 날
+        // 🔹 누적 입고 데이터 조회 (해당 월까지의 데이터)
+        const cumulativeEndDate = new Date(year, month, 0); // 해당 월의 마지막 날
         cumulativeEndDate.setHours(23, 59, 59, 999);
 
         const cumulativeInputs = await Input.findAll({
@@ -47,19 +47,12 @@ router.post("/", async (req, res) => {
             raw: true
         });
 
-        // 🔹 누적 입고 금액 계산 (해당 월 이전까지)
+        // 🔹 누적 입고 금액 계산 (해당 월까지)
         const totalInputAmount = cumulativeInputs.reduce((sum, input) => {
             const product = productMap.get(input.material_id);
             const itemAmount = input.quantity * (product?.price || 0);
             return sum + itemAmount;
         }, 0);
-
-        // 🔹 누적 입고 리스트 생성 (해당 월 이전까지)
-        const cumulativeInputList = cumulativeInputs.map(input => ({
-            name: productMap.get(input.material_id)?.name || 'Unknown',
-            quantity: input.quantity,
-            date: input.date
-        }));
 
         console.log(`총 입고 건수: ${cumulativeInputs.length}, 누적 입고 금액: ${totalInputAmount}`);
 
@@ -127,36 +120,12 @@ router.post("/", async (req, res) => {
             date: input.date
         }));
 
-        // 🔸 입고 상위 자재 5종 (선택 월 기준)
-        const inputTop5 = await Input.findAll({
-            where: {
-                date: {
-                    [Op.between]: [startDate, endDate]
-                }
-            },
-            attributes: [
-                'material_id',
-                [sequelize.fn('SUM', sequelize.col('quantity')), 'totalQuantity']
-            ],
-            group: ['material_id'],
-            order: [[sequelize.fn('SUM', sequelize.col('quantity')), 'DESC']],
-            limit: 5,
-            raw: true
-        });
-
-        const formattedTop5 = inputTop5.map(item => ({
-            name: productMap.get(item.material_id)?.name || 'Unknown',
-            totalQuantity: item.totalQuantity
-        }));
-
         // ✅ 최종 응답
         res.json({
             totalInputAmount,           // 전체 누적 입고 금액
-            cumulativeInputList,       // 전체 누적 입고 리스트
             monthlyInputAmount,        // 월 입고 금액
             monthlyTrend,              // 월별 추이
-            recentInputs: formattedRecentInputs, // 최근 입고 5건
-            inputTop5: formattedTop5   // 입고 상위 5자재
+            recentInputs: formattedRecentInputs // 최근 입고 5건
         });
 
     } catch (error) {

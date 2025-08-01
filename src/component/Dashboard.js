@@ -647,7 +647,7 @@ const Statistics_sub = ({ department }) => {
                 const normalizedLocation = department.replace('사업소', '');
 
                 const promises = ["ITS", "기전", "시설"].map(dept =>
-                    fetch(`${process.env.REACT_APP_API_URL}/api/statistics`, {
+                    fetch(`${process.env.REACT_APP_API_URL}/api/statistics/output`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

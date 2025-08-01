@@ -83,13 +83,15 @@ router.post("/", async (req, res) => {
             categoryMap[upper] = cat;
         });
 
-        const stockMap = {};
+        // 전월재고 계산을 위한 stockMap (전월 말일까지의 누적 재고)
+        const prevStockMap = {};
 
-        const process = (records, type) => {
+        // 전월재고 계산: 전월 말일까지의 모든 입고/출고 데이터로 계산
+        const processPrevStock = (records, type) => {
             records.forEach(item => {
                 const product = item.product;
                 if (!product) {
-                    console.warn(`[${type}] product is null for material_id:`, item.material_id);
+                    console.warn(`[prevStock-${type}] product is null for material_id:`, item.material_id);
                     return;
                 }
 
@@ -111,33 +113,78 @@ router.post("/", async (req, res) => {
 
                 const amount = price * qty;
 
-                switch (type) {
-                    case "prevInput":
-                        resultByCategory[categoryKey].prevStock += amount;
-                        break;
-                    case "prevOutput":
-                        resultByCategory[categoryKey].prevStock -= amount;
-                        break;
-                    case "input":
-                        resultByCategory[categoryKey].input += amount;
-                        break;
-                    case "output":
-                        resultByCategory[categoryKey].output += amount;
-                        break;
+                // 전월재고 계산
+                if (type === "prevInput") {
+                    resultByCategory[categoryKey].prevStock += amount;
+                } else if (type === "prevOutput") {
+                    resultByCategory[categoryKey].prevStock -= amount;
                 }
 
-                if (!stockMap[materialId]) {
-                    stockMap[materialId] = { qty: 0, price, category: categoryKey };
+                // 전월재고 stockMap 업데이트
+                if (!prevStockMap[materialId]) {
+                    prevStockMap[materialId] = { qty: 0, price, category: categoryKey };
                 }
-
-                stockMap[materialId].qty += (type === "input" || type === "prevInput") ? qty : -qty;
+                prevStockMap[materialId].qty += (type === "prevInput") ? qty : -qty;
             });
         };
 
-        process(prevInputs, "prevInput");
-        process(prevOutputs, "prevOutput");
-        process(thisMonthInputs, "input");
-        process(thisMonthOutputs, "output");
+        // 현재 월 데이터 처리를 위한 stockMap
+        const currentStockMap = {};
+
+        const processCurrentMonth = (records, type) => {
+            records.forEach(item => {
+                const product = item.product;
+                if (!product) {
+                    console.warn(`[current-${type}] product is null for material_id:`, item.material_id);
+                    return;
+                }
+
+                const materialId = product.material_id;
+                const price = product.price ?? 0;
+                const qty = item.quantity ?? 0;
+                const rawCategory = product.get("big_category") || "";
+                const upperCategory = rawCategory.trim().toUpperCase();
+                const matchedCategory = categoryMap[upperCategory];
+
+                let categoryKey = null;
+                if (matchedCategory) {
+                    categoryKey = matchedCategory;
+                } else if (categoryMap["기타"]) {
+                    categoryKey = "기타";
+                } else {
+                    return;
+                }
+
+                const amount = price * qty;
+
+                // 현재 월 데이터 처리
+                if (type === "input") {
+                    resultByCategory[categoryKey].input += amount;
+                } else if (type === "output") {
+                    resultByCategory[categoryKey].output += amount;
+                }
+
+                // 현재 월 stockMap 업데이트 (전월재고 + 현재 월 변동)
+                if (!currentStockMap[materialId]) {
+                    // 전월재고에서 시작
+                    const prevStock = prevStockMap[materialId] || { qty: 0, price, category: categoryKey };
+                    currentStockMap[materialId] = {
+                        qty: prevStock.qty,
+                        price,
+                        category: categoryKey
+                    };
+                }
+                currentStockMap[materialId].qty += (type === "input") ? qty : -qty;
+            });
+        };
+
+        // 전월재고 계산
+        processPrevStock(prevInputs, "prevInput");
+        processPrevStock(prevOutputs, "prevOutput");
+
+        // 현재 월 데이터 처리
+        processCurrentMonth(thisMonthInputs, "input");
+        processCurrentMonth(thisMonthOutputs, "output");
 
         // 연간 총 입고 금액 계산 (1월부터 현재 월까지의 누적)
         let yearTotalInputAmount = 0;
@@ -153,10 +200,19 @@ router.post("/", async (req, res) => {
             yearTotalInputAmount += price * qty;
         });
 
-        for (const materialId in stockMap) {
-            const { qty, price, category } = stockMap[materialId];
-            if (qty > 0 && resultByCategory[category]) {
-                resultByCategory[category].remaining += qty * price;
+        // 현재 월 말일 재고 계산 (전월재고 + 현재 월 입고 - 현재 월 출고)
+        // 먼저 모든 카테고리의 재고를 전월재고로 초기화
+        for (const categoryKey in resultByCategory) {
+            resultByCategory[categoryKey].remaining = resultByCategory[categoryKey].prevStock;
+        }
+
+        // 현재 월 변동이 있는 물품들에 대해서만 재고 계산 추가
+        for (const materialId in currentStockMap) {
+            const { qty, price, category } = currentStockMap[materialId];
+            if (resultByCategory[category]) {
+                // 현재 월 변동량 계산 (입고 - 출고)
+                const currentMonthChange = qty * price;
+                resultByCategory[category].remaining += currentMonthChange;
             }
         }
 

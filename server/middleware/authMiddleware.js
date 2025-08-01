@@ -16,7 +16,7 @@ const authMiddleware = (req, res, next) => {
 
   const token = parts[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "your_super_secret_jwt_key_2024");
     req.user = decoded;
     // 개발용: payload 로그
     console.log("JWT payload:", decoded);
