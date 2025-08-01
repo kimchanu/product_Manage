@@ -74,19 +74,21 @@ router.post("/", async (req, res) => {
 
         categories.forEach(cat => {
             const upper = cat.trim().toUpperCase();
-            resultByCategory[cat] = {
-                prevStock: 0,
-                input: 0,
-                output: 0,
-                remaining: 0,
-            };
+            if (cat !== "합 계") { // "합 계"는 초기화하지 않음
+                resultByCategory[cat] = {
+                    prevStock: 0,
+                    input: 0,
+                    output: 0,
+                    remaining: 0,
+                };
+            }
             categoryMap[upper] = cat;
         });
 
         // 전월재고 계산을 위한 stockMap (전월 말일까지의 누적 재고)
         const prevStockMap = {};
 
-        // 전월재고 계산: 전월 말일까지의 모든 입고/출고 데이터로 계산
+        // 전월재고 계산: 전월 말일까지의 모든 입고/출고 데이터로 계산 (수량 단위)
         const processPrevStock = (records, type) => {
             records.forEach(item => {
                 const product = item.product;
@@ -111,16 +113,7 @@ router.post("/", async (req, res) => {
                     return;
                 }
 
-                const amount = price * qty;
-
-                // 전월재고 계산
-                if (type === "prevInput") {
-                    resultByCategory[categoryKey].prevStock += amount;
-                } else if (type === "prevOutput") {
-                    resultByCategory[categoryKey].prevStock -= amount;
-                }
-
-                // 전월재고 stockMap 업데이트
+                // 전월재고 stockMap 업데이트 (수량 단위)
                 if (!prevStockMap[materialId]) {
                     prevStockMap[materialId] = { qty: 0, price, category: categoryKey };
                 }
@@ -157,7 +150,7 @@ router.post("/", async (req, res) => {
 
                 const amount = price * qty;
 
-                // 현재 월 데이터 처리
+                // 현재 월 데이터 처리 (금액 단위)
                 if (type === "input") {
                     resultByCategory[categoryKey].input += amount;
                 } else if (type === "output") {
@@ -178,9 +171,19 @@ router.post("/", async (req, res) => {
             });
         };
 
-        // 전월재고 계산
+        // 전월재고 계산 (수량 단위)
         processPrevStock(prevInputs, "prevInput");
         processPrevStock(prevOutputs, "prevOutput");
+
+        // 전월재고를 금액 단위로 변환
+        for (const materialId in prevStockMap) {
+            const { qty, price, category } = prevStockMap[materialId];
+            if (resultByCategory[category]) {
+                resultByCategory[category].prevStock += qty * price;
+            }
+        }
+
+        console.log('전월재고 계산 결과:', resultByCategory);
 
         // 현재 월 데이터 처리
         processCurrentMonth(thisMonthInputs, "input");
@@ -210,11 +213,15 @@ router.post("/", async (req, res) => {
         for (const materialId in currentStockMap) {
             const { qty, price, category } = currentStockMap[materialId];
             if (resultByCategory[category]) {
-                // 현재 월 변동량 계산 (입고 - 출고)
-                const currentMonthChange = qty * price;
+                // 전월재고 수량 계산
+                const prevStockQty = prevStockMap[materialId]?.qty || 0;
+                // 현재 월 변동량 계산 (현재 월 입고 - 출고)
+                const currentMonthChange = (qty - prevStockQty) * price;
                 resultByCategory[category].remaining += currentMonthChange;
             }
         }
+
+        console.log('최종 재고 계산 결과:', resultByCategory);
 
         const totalExecutedAmount = Object.values(resultByCategory)
             .reduce((acc, cur) => acc + cur.output, 0);
@@ -232,11 +239,13 @@ router.post("/", async (req, res) => {
             remaining: 0,
         };
         for (const categoryKey in resultByCategory) {
-            const item = resultByCategory[categoryKey];
-            totalSummary.prevStock += item.prevStock;
-            totalSummary.input += item.input;
-            totalSummary.output += item.output;
-            totalSummary.remaining += item.remaining;
+            if (categoryKey !== "합 계") { // "합 계" 항목은 제외하고 계산
+                const item = resultByCategory[categoryKey];
+                totalSummary.prevStock += item.prevStock;
+                totalSummary.input += item.input;
+                totalSummary.output += item.output;
+                totalSummary.remaining += item.remaining;
+            }
         }
         resultByCategory["합 계"] = totalSummary;
 
