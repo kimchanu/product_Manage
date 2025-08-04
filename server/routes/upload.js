@@ -17,6 +17,12 @@ router.post("/", async (req, res) => {
   const productTable = `${businessLocation}_${department}_product`;
 
   try {
+    // ✅ 기존 테이블 존재 여부 확인
+    const tableExists = await checkTableExists(inputTable);
+    if (tableExists) {
+      return res.status(400).json({ message: "이미 등록하셨습니다. 저장이 안되었습니다!" });
+    }
+
     // ✅ 테이블 생성
     await createTables(inputTable, outputTable, productTable);
 
@@ -29,6 +35,23 @@ router.post("/", async (req, res) => {
     res.status(500).json({ message: "Server error!" });
   }
 });
+
+// ✅ 테이블 존재 여부 확인 함수
+async function checkTableExists(tableName) {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.query(
+      "SELECT COUNT(*) as count FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?",
+      [tableName]
+    );
+    return rows[0].count > 0;
+  } catch (err) {
+    console.error("❌ Table existence check failed:", err);
+    throw err;
+  } finally {
+    connection.release();
+  }
+}
 
 // ✅ 테이블 생성 함수
 async function createTables(inputTable, outputTable, productTable) {

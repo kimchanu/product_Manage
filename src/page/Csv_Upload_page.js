@@ -65,7 +65,14 @@ function Csv_Upload() {
       });
 
       const result = await response.json();
-      alert(result.message);
+      
+      if (response.ok) {
+        alert(result.message);
+        // 성공 시 입력 필드 초기화
+        setCsvData([]);
+      } else {
+        alert(result.message);
+      }
     } catch (error) {
       console.error("⚠ 서버 요청 실패:", error);
       alert("데이터 저장 중 오류가 발생했습니다.");
