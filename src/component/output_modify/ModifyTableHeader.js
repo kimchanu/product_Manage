@@ -50,22 +50,8 @@ const ModifyTableHeader = ({
                 <th className="px-4 py-2 text-right text-sm">
                     단가
                 </th>
-                <th
-                    className={`px-4 py-2 text-right text-sm cursor-pointer ${batchEditMode === 'output_quantity' ? 'bg-blue-100' : ''}`}
-                    onClick={() => handleHeaderClick('output_quantity')}
-                >
+                <th className="px-4 py-2 text-right text-sm">
                     출고 수량
-                    {batchEditMode === 'output_quantity' && (
-                        <div className="mt-2">
-                            <input
-                                type="number"
-                                value={batchEditValue}
-                                onChange={(e) => setBatchEditValue(e.target.value)}
-                                className="border rounded px-1 py-0.5 text-sm w-24 text-right"
-                                onClick={(e) => e.stopPropagation()}
-                            />
-                        </div>
-                    )}
                 </th>
                 <th
                     className={`px-4 py-2 text-left text-sm cursor-pointer ${batchEditMode === 'date' ? 'bg-blue-100' : ''}`}

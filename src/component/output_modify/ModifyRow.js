@@ -11,6 +11,7 @@ const ModifyRow = ({
     handleEditClick,
     handleSaveClick,
     handleDeleteClick,
+    handleSplitOutput,
     setEditRowIndex,
     setEditedRow
 }) => {
@@ -106,12 +107,20 @@ const ModifyRow = ({
                 )}
             </td>
             <td className="px-4 py-2 text-center w-28">
-                <button
-                    onClick={(e) => { e.stopPropagation(); handleDeleteClick(idx); }}
-                    className="bg-transparent text-black px-2 py-0.5 rounded min-w-[50px] text-sm hover:bg-gray-200 transition"
-                >
-                    삭제
-                </button>
+                <div className="flex flex-col gap-1">
+                    <button
+                        onClick={(e) => { e.stopPropagation(); handleDeleteClick(idx); }}
+                        className="bg-transparent text-black px-2 py-0.5 rounded min-w-[50px] text-sm hover:bg-gray-200 transition"
+                    >
+                        삭제
+                    </button>
+                    <button
+                        onClick={(e) => { e.stopPropagation(); handleSplitOutput(idx); }}
+                        className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded min-w-[50px] text-sm hover:bg-blue-100 transition border border-blue-200"
+                    >
+                        분할
+                    </button>
+                </div>
             </td>
         </tr>
     );

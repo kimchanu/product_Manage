@@ -4,6 +4,7 @@ import ModifyFilters from "./output_modify/ModifyFilters";
 import ModifyTableHeader from "./output_modify/ModifyTableHeader";
 import ModifyRow from "./output_modify/ModifyRow";
 import ModifyBatchEdit from "./output_modify/ModifyBatchEdit";
+import SplitOutputModal from "./output_modify/SplitOutputModal";
 
 const Modify = () => {
   const [materials, setMaterials] = useState([]);
@@ -19,6 +20,9 @@ const Modify = () => {
   const [selectedRows, setSelectedRows] = useState(new Set());
   // 무한 스크롤: 보여줄 자재 개수 상태
   const [visibleCount, setVisibleCount] = useState(20);
+  // 분할 모달 상태
+  const [splitModalOpen, setSplitModalOpen] = useState(false);
+  const [splitTarget, setSplitTarget] = useState(null);
 
   // filteredMaterials를 가장 먼저 선언
   const filteredMaterials = materials.flatMap((material) => {
@@ -70,10 +74,12 @@ const Modify = () => {
       : [];
   });
 
-  // 검색/필터가 바뀌면 visibleCount를 20으로 초기화
+  // 검색/필터가 바뀌면 visibleCount를 20으로 초기화하고 수정 모드 해제
   useEffect(() => {
     setVisibleCount(20);
     setSelectedRows(new Set()); // 검색/필터/데이터 바뀔 때 체크박스 해제
+    setEditRowIndex(null); // 수정 모드 해제
+    setEditedRow({}); // 수정 데이터 초기화
   }, [searchTerm, startDate, endDate, materials]);
 
   // 무한 스크롤 핸들러
@@ -187,7 +193,6 @@ const Modify = () => {
           output_date: editedRow.output_date || target.output_date,
           user_id: editedRow.output_user || target.output_user,
           comment: editedRow.output_comment || target.output_comment,
-          output_quantity: target.output_quantity,
           business_location: user?.business_location,
           department: user?.department
         }),
@@ -238,6 +243,42 @@ const Modify = () => {
     } catch (error) {
       console.error('삭제 중 오류 발생:', error);
       alert(error.message);
+    }
+  };
+
+  // 출고 기록 분할 모달 열기
+  const handleSplitOutput = (index) => {
+    const target = filteredMaterials[index];
+    setSplitTarget(target);
+    setSplitModalOpen(true);
+  };
+
+  // 분할 실행
+  const handleSplitConfirm = async (splitData) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/materials/output/split/${splitTarget.material_id}/${splitTarget.output_id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          splits: splitData,
+          business_location: user?.business_location,
+          department: user?.department
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '출고 기록 분할 중 오류가 발생했습니다.');
+      }
+
+      const result = await response.json();
+      alert(result.message);
+      fetchData(); // 데이터 새로고침
+    } catch (error) {
+      console.error('출고 기록 분할 중 오류 발생:', error);
+      alert(`출고 기록 분할 중 오류가 발생했습니다: ${error.message}`);
     }
   };
 
@@ -302,11 +343,6 @@ const Modify = () => {
           output_date: batchEditMode === 'date' ? batchEditValue : row.output_date,
           user_id: batchEditMode === 'user' ? batchEditValue : row.output_user,
           comment: batchEditMode === 'comment' ? batchEditValue : row.output_comment,
-          material_code: batchEditMode === 'material_code' ? batchEditValue : row.material_code,
-          name: batchEditMode === 'name' ? batchEditValue : row.name,
-          specification: batchEditMode === 'specification' ? batchEditValue : row.specification,
-          price: batchEditMode === 'price' ? Number(batchEditValue) : row.price,
-          output_quantity: batchEditMode === 'output_quantity' ? Number(batchEditValue) : row.output_quantity,
           business_location: user?.business_location,
           department: user?.department
         };
@@ -392,6 +428,7 @@ const Modify = () => {
                         handleEditClick={handleEditClick}
                         handleSaveClick={handleSaveClick}
                         handleDeleteClick={handleDeleteClick}
+                        handleSplitOutput={handleSplitOutput}
                         setEditRowIndex={setEditRowIndex}
                         setEditedRow={setEditedRow}
                       />
@@ -413,6 +450,20 @@ const Modify = () => {
           />
         </div>
       </div>
+
+      {/* 분할 모달 */}
+      {splitTarget && (
+        <SplitOutputModal
+          isOpen={splitModalOpen}
+          onClose={() => {
+            setSplitModalOpen(false);
+            setSplitTarget(null);
+          }}
+          onConfirm={handleSplitConfirm}
+          originalQuantity={splitTarget.output_quantity}
+          originalDate={splitTarget.output_date ? splitTarget.output_date.slice(0, 10) : null}
+        />
+      )}
     </div>
   );
 };
