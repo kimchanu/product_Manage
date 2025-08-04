@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Search_select from "./Selector/Search_select";
 import { FaFilter } from "react-icons/fa";
 import Product_list_edit from "./Product_list_edit";
+import ExcelMaterialReport from "./Excel/ExcelMaterialReport";
 
 function Product_list() {
   const [businessLocation, setBusinessLocation] = useState("");
@@ -201,16 +202,11 @@ function Product_list() {
             {saveError && <span className="text-red-500 ml-2">{saveError}</span>}
             {saveSuccess && <span className="text-green-600 ml-2">{saveSuccess}</span>}
           </div>
-          <button
-            className="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-            disabled={!businessLocation || !department}
-            onClick={() => {
-              // 엑셀 저장 로직은 나중에 구현
-              console.log("엑셀 저장 기능");
-            }}
-          >
-            엑셀 저장하기
-          </button>
+          <ExcelMaterialReport
+            materials={materials}
+            businessLocation={businessLocation}
+            department={department}
+          />
         </div>
         {/* 테이블 */}
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
