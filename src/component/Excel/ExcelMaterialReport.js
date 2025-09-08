@@ -22,9 +22,9 @@ const ExcelMaterialReport = ({ materials, businessLocation, department }) => {
                 return;
             }
 
-            // 데이터 추가 (7행부터)
+            // 데이터 추가 (8행부터)
             materials.forEach((material, index) => {
-                const rowIndex = 7 + index;
+                const rowIndex = 8 + index;
                 const currentStock = (material?.total_input_quantity || 0) - (material?.total_output_quantity || 0);
                 const stockValue = currentStock * (material?.price || 0);
                 const appropriate = material?.appropriate || 0;
@@ -39,13 +39,12 @@ const ExcelMaterialReport = ({ materials, businessLocation, department }) => {
                     material?.name ?? "", // G열: 품명
                     material?.specification ?? "", // H열: 규격
                     material?.manufacturer ?? "", // I열: 제조사
-                    material?.unit ?? "", // J열: 단위
-                    material?.price ?? 0, // K열: 단가
-                    currentStock, // L열: 재고수량
-                    stockValue, // M열: 재고금액
-                    appropriate, // N열: 적정수량
-                    material?.total_input_quantity ?? 0, // O열: 총입고수량
-                    material?.total_output_quantity ?? 0, // P열: 총출고수량
+                    "", // J열: 비움
+                    material?.unit ?? "", // K열: 단위
+                    material?.price ?? 0, // L열: 단가
+                    currentStock, // M열: 재고수량
+                    stockValue, // N열: 재고금액
+                    appropriate, // O열: 적정수량
                 ];
                 worksheet.insertRow(rowIndex, rowData);
 
@@ -58,8 +57,8 @@ const ExcelMaterialReport = ({ materials, businessLocation, department }) => {
                         bottom: { style: 'thin' },
                         right: { style: 'thin' }
                     };
-                    // 단가(11번째), 재고수량(12번째), 재고금액(13번째), 적정수량(14번째), 총입고수량(15번째), 총출고수량(16번째) 셀에 숫자 포맷 적용
-                    if (colNumber >= 11 && colNumber <= 16) {
+                    // 단가(12번째), 재고수량(13번째), 재고금액(14번째), 적정수량(15번째) 셀에 숫자 포맷 적용
+                    if (colNumber >= 12 && colNumber <= 15) {
                         cell.numFmt = '#,##0';
                     }
                 });

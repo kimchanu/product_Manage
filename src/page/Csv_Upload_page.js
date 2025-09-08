@@ -55,7 +55,7 @@ function Csv_Upload() {
     console.log("🔹 서버로 전송할 데이터:", requestData);
 
     try {
-      const response = await fetch("http://localhost:5000/api/upload", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/upload`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ function Csv_Upload() {
       });
 
       const result = await response.json();
-      
+
       if (response.ok) {
         alert(result.message);
         // 성공 시 입력 필드 초기화

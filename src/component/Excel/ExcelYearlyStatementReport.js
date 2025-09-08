@@ -82,11 +82,11 @@ const ExcelYearlyStatementReport = ({ stats, categories, year, month, user, budg
 
             // 연간 예산집행현황 값 입력 (A19, D19, M19, AE19)
             worksheet.getCell("A19").value = "연간";
-            worksheet.getCell("D19").value = budgetAmount;
+            worksheet.getCell("E19").value = budgetAmount;
             worksheet.getCell("M19").value = window.yearlyTotalInput || 0;
-            worksheet.getCell("V19").value = budgetAmount ?
+            worksheet.getCell("AC19").value = budgetAmount ?
                 `${(((window.yearlyTotalInput || 0) / budgetAmount) * 100).toFixed(1)}%` : '0%';
-            worksheet.getCell("AE19").value = (budgetAmount || 0) - (window.yearlyTotalInput || 0);
+            worksheet.getCell("U19").value = (budgetAmount || 0) - (window.yearlyTotalInput || 0);
 
             // 1월부터 6월까지의 월별 데이터 입력
             const monthlyData = stats.monthlyData || {};
