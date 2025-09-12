@@ -1,0 +1,584 @@
+const express = require("express");
+const router = express.Router();
+const { Op } = require("sequelize");
+const { createModels } = require("../models/material");
+
+router.post("/", async (req, res) => {
+    const { businessLocation, department, year, month, budget, categories } = req.body;
+
+    if (!businessLocation || !department || !year || !month || !Array.isArray(categories)) {
+        return res.status(400).json({ message: "필수 정보가 누락되었거나 잘못된 형식입니다." });
+    }
+
+    try {
+        const { Product, Input, Output } = createModels(businessLocation, department);
+
+        const startDate = new Date(year, month - 1, 1); // ex) 5월 1일
+        const endDate = new Date(year, month, 0); // ex) 5월 31일
+        endDate.setHours(23, 59, 59, 999);
+
+        // 전월 말일 계산 (1월의 경우 전년도 12월 말일)
+        let prevEndDate;
+        if (month === 1) {
+            // 1월의 경우 전년도 12월 31일
+            prevEndDate = new Date(year - 1, 11, 31);
+        } else {
+            // 2월~12월의 경우 전월 말일
+            prevEndDate = new Date(year, month - 1, 0);
+        }
+        prevEndDate.setHours(23, 59, 59, 999);
+
+        // 해당년도 1월부터 12월까지의 총 입고 데이터 조회
+        const yearStartDate = new Date(year, 0, 1); // 1월 1일
+        const yearEndDate = new Date(year, 11, 31); // 12월 31일
+        yearEndDate.setHours(23, 59, 59, 999);
+
+        // 선택된 월까지의 누적 입고 데이터 조회 (1월부터 현재 월까지)
+        const cumulativeEndDate = new Date(year, month, 0); // 현재 월 말일
+        cumulativeEndDate.setHours(23, 59, 59, 999);
+
+        const includeProduct = {
+            model: Product,
+            as: "product",
+            attributes: ["material_id", "price", "big_category"],
+        };
+
+        // 1월인 경우 전년도 12월 데이터도 별도로 조회
+        let prevYearInputs = [];
+        let prevYearOutputs = [];
+        
+        if (month === 1) {
+            const prevYear = year - 1;
+            const prevYearEndDate = new Date(prevYear, 11, 31);
+            prevYearEndDate.setHours(23, 59, 59, 999);
+            
+            console.log(`\n🔍 전년도 12월 데이터 별도 조회:`);
+            console.log(`- 전년도: ${prevYear}`);
+            console.log(`- 전년도 12월 말일: ${prevYearEndDate.toISOString()}`);
+            
+            [prevYearInputs, prevYearOutputs] = await Promise.all([
+                Input.findAll({
+                    where: { date: { [Op.lte]: prevYearEndDate } },
+                    attributes: ["material_id", "quantity", "date"],
+                    include: [includeProduct],
+                }),
+                Output.findAll({
+                    where: { date: { [Op.lte]: prevYearEndDate } },
+                    attributes: ["material_id", "quantity", "date"],
+                    include: [includeProduct],
+                }),
+            ]);
+            
+            console.log(`- 전년도 12월 입고 데이터 개수: ${prevYearInputs.length}`);
+            console.log(`- 전년도 12월 출고 데이터 개수: ${prevYearOutputs.length}`);
+        }
+
+        // 전월재고 계산: 전월 말일까지의 입고/출고 데이터만 조회
+        const [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, yearTotalInputs, cumulativeInputs] = await Promise.all([
+            Input.findAll({
+                where: { 
+                    date: { 
+                        [Op.lte]: prevEndDate 
+                    } 
+                },
+                attributes: ["material_id", "quantity", "date"],
+                include: [includeProduct],
+            }),
+            Output.findAll({
+                where: { 
+                    date: { 
+                        [Op.lte]: prevEndDate 
+                    } 
+                },
+                attributes: ["material_id", "quantity", "date"],
+                include: [includeProduct],
+            }),
+            Input.findAll({
+                where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                attributes: ["material_id", "quantity"],
+                include: [includeProduct],
+            }),
+            Output.findAll({
+                where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                attributes: ["material_id", "quantity"],
+                include: [includeProduct],
+            }),
+            Input.findAll({
+                where: { date: { [Op.gte]: yearStartDate, [Op.lte]: yearEndDate } },
+                attributes: ["material_id", "quantity"],
+                include: [includeProduct],
+            }),
+            Input.findAll({
+                where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
+                attributes: ["material_id", "quantity"],
+                include: [includeProduct],
+            }),
+        ]);
+
+        const resultByCategory = {};
+        const normalizedCategories = categories.map(cat => cat.replace(/\s+/g, '').toUpperCase());
+        const categoryMap = {};
+
+        categories.forEach(cat => {
+            const upper = cat.replace(/\s+/g, '').toUpperCase();
+            if (cat !== "합 계") { // "합 계"는 초기화하지 않음
+                resultByCategory[cat] = {
+                    prevStock: 0,
+                    input: 0,
+                    output: 0,
+                    remaining: 0,
+                };
+            }
+            categoryMap[upper] = cat;
+        });
+
+        // 전월재고 계산을 위한 카테고리별 재고 맵
+        const prevStockByCategory = {};
+        
+        // 음수 재고 원인 분석을 위한 자재별 이력 추적
+        const materialHistory = {};
+
+        // 전월재고 계산: 전월 말일까지의 모든 입고/출고 데이터로 계산
+        const processPrevStock = (records, type) => {
+            records.forEach(item => {
+                const product = item.product;
+                if (!product) {
+                    console.warn(`[prevStock-${type}] product is null for material_id:`, item.material_id);
+                    return;
+                }
+
+                const materialId = product.material_id;
+                const price = product.price ?? 0;
+                const qty = item.quantity ?? 0;
+                const rawCategory = product.get("big_category") || "";
+                // big_category가 숫자인 경우 문자열로 변환
+                const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                const matchedCategory = categoryMap[upperCategory];
+
+                let categoryKey = null;
+                if (matchedCategory) {
+                    categoryKey = matchedCategory;
+                } else if (categoryMap["기타"]) {
+                    categoryKey = "기타";
+                } else {
+                    // 매칭되지 않은 카테고리 로그 출력
+                    if (categoryStr && categoryStr.trim() !== '') {
+                        console.log(`매칭되지 않은 카테고리: "${rawCategory}" (${typeof rawCategory}) -> "${categoryStr}" -> "${upperCategory}"`);
+                        console.log(`사용 가능한 카테고리:`, Object.keys(categoryMap));
+                    }
+                    return;
+                }
+
+                // 카테고리별 재고 맵 초기화
+                if (!prevStockByCategory[categoryKey]) {
+                    prevStockByCategory[categoryKey] = {};
+                }
+                if (!prevStockByCategory[categoryKey][materialId]) {
+                    prevStockByCategory[categoryKey][materialId] = { qty: 0, price };
+                }
+
+                // 자재별 이력 추적
+                if (!materialHistory[materialId]) {
+                    materialHistory[materialId] = {
+                        productInfo: product ? {
+                            name: product.name,
+                            material_code: product.material_code,
+                            big_category: product.big_category,
+                            price: product.price
+                        } : null,
+                        inputRecords: [],
+                        outputRecords: [],
+                        totalInput: 0,
+                        totalOutput: 0
+                    };
+                }
+                
+                // 이력 기록
+                const record = {
+                    date: item.date,
+                    quantity: qty,
+                    type: type
+                };
+                
+                if (type === "prevInput") {
+                    materialHistory[materialId].inputRecords.push(record);
+                    materialHistory[materialId].totalInput += qty;
+                } else {
+                    materialHistory[materialId].outputRecords.push(record);
+                    materialHistory[materialId].totalOutput += qty;
+                }
+
+                // 수량 계산 (입고는 +, 출고는 -)
+                const qtyChange = (type === "prevInput") ? qty : -qty;
+                prevStockByCategory[categoryKey][materialId].qty += qtyChange;
+                
+                // 음수 qty 추적
+                if (prevStockByCategory[categoryKey][materialId].qty < 0) {
+                    console.log(`⚠️ 음수 재고 발견:`, {
+                        materialId,
+                        category: categoryKey,
+                        type,
+                        qty,
+                        qtyChange,
+                        totalQty: prevStockByCategory[categoryKey][materialId].qty,
+                        price,
+                        amount: prevStockByCategory[categoryKey][materialId].qty * price,
+                        productInfo: product ? {
+                            name: product.name,
+                            material_code: product.material_code,
+                            big_category: product.big_category
+                        } : null
+                    });
+                }
+            });
+        };
+
+        // 현재 월 데이터 처리
+        const processCurrentMonth = (records, type) => {
+            records.forEach(item => {
+                const product = item.product;
+                if (!product) {
+                    console.warn(`[current-${type}] product is null for material_id:`, item.material_id);
+                    return;
+                }
+
+                const materialId = product.material_id;
+                const price = product.price ?? 0;
+                const qty = item.quantity ?? 0;
+                const rawCategory = product.get("big_category") || "";
+                // big_category가 숫자인 경우 문자열로 변환
+                const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                const matchedCategory = categoryMap[upperCategory];
+
+                let categoryKey = null;
+                if (matchedCategory) {
+                    categoryKey = matchedCategory;
+                } else if (categoryMap["기타"]) {
+                    categoryKey = "기타";
+                } else {
+                    return;
+                }
+
+                const amount = price * qty;
+
+                // 현재 월 데이터 처리 (금액 단위)
+                if (type === "input") {
+                    resultByCategory[categoryKey].input += amount;
+                } else if (type === "output") {
+                    resultByCategory[categoryKey].output += amount;
+                }
+            });
+        };
+
+        // 전월재고 계산
+        console.log(`조회 기간: ${year}년 ${month}월`);
+        console.log(`전월 말일: ${prevEndDate.toISOString()}`);
+        console.log(`전월 입고 데이터 개수: ${prevInputs.length}`);
+        console.log(`전월 출고 데이터 개수: ${prevOutputs.length}`);
+        
+        // 날짜 범위 디버깅
+        console.log(`\n📅 날짜 범위 분석:`);
+        console.log(`- 현재 년도: ${year}`);
+        console.log(`- 현재 월: ${month}`);
+        console.log(`- 전월 말일 계산: ${prevEndDate.toISOString()}`);
+        console.log(`- 전월 말일 로컬: ${prevEndDate.toLocaleString()}`);
+        
+        // 날짜 필터링 조건 확인
+        console.log(`\n🔍 날짜 필터링 조건:`);
+        console.log(`- 입고 데이터 필터: date <= ${prevEndDate.toISOString()}`);
+        console.log(`- 출고 데이터 필터: date <= ${prevEndDate.toISOString()}`);
+        
+        // 실제 조회된 데이터의 날짜 범위 확인
+        if (prevInputs.length > 0) {
+            const inputDates = prevInputs.map(item => item.date).sort();
+            console.log(`- 입고 데이터 날짜 범위: ${inputDates[0]} ~ ${inputDates[inputDates.length - 1]}`);
+        }
+        if (prevOutputs.length > 0) {
+            const outputDates = prevOutputs.map(item => item.date).sort();
+            console.log(`- 출고 데이터 날짜 범위: ${outputDates[0]} ~ ${outputDates[outputDates.length - 1]}`);
+        }
+        
+        // 입고/출고 데이터 샘플 로그 (처음 5개씩)
+        console.log('전월 입고 데이터 샘플:', prevInputs.slice(0, 5).map(item => ({
+            material_id: item.material_id,
+            quantity: item.quantity,
+            date: item.date,
+            product: item.product ? {
+                material_id: item.product.material_id,
+                big_category: item.product.big_category,
+                price: item.product.price
+            } : null
+        })));
+        
+        console.log('전월 출고 데이터 샘플:', prevOutputs.slice(0, 5).map(item => ({
+            material_id: item.material_id,
+            quantity: item.quantity,
+            date: item.date,
+            product: item.product ? {
+                material_id: item.product.material_id,
+                big_category: item.product.big_category,
+                price: item.product.price
+            } : null
+        })));
+        
+        // 특정 자재의 모든 입고/출고 데이터 확인
+        const targetMaterialId = 'f17e8dfe-f032-439e-8014-8b860e40e4ce';
+        const targetInputs = prevInputs.filter(item => item.material_id === targetMaterialId);
+        const targetOutputs = prevOutputs.filter(item => item.material_id === targetMaterialId);
+        
+        // 1월인 경우 전년도 12월 데이터와 비교
+        if (month === 1) {
+            console.log(`\n🔍 1월 특별 분석 - 데이터 비교:`);
+            
+            const targetMaterialId = 'f17e8dfe-f032-439e-8014-8b860e40e4ce';
+            const prevYearTargetInputs = prevYearInputs.filter(item => item.material_id === targetMaterialId);
+            const prevYearTargetOutputs = prevYearOutputs.filter(item => item.material_id === targetMaterialId);
+            
+            console.log(`\n📊 전년도 12월 데이터 (${targetMaterialId}):`);
+            console.log('입고:', prevYearTargetInputs.map(item => ({
+                quantity: item.quantity,
+                date: item.date,
+                product: item.product ? item.product.name : null
+            })));
+            console.log('출고:', prevYearTargetOutputs.map(item => ({
+                quantity: item.quantity,
+                date: item.date,
+                product: item.product ? item.product.name : null
+            })));
+            
+            console.log(`\n📊 현재 조회된 데이터 (${targetMaterialId}):`);
+            console.log('입고:', targetInputs.map(item => ({
+                quantity: item.quantity,
+                date: item.date,
+                product: item.product ? item.product.name : null
+            })));
+            console.log('출고:', targetOutputs.map(item => ({
+                quantity: item.quantity,
+                date: item.date,
+                product: item.product ? item.product.name : null
+            })));
+            
+            console.log(`\n📊 데이터 개수 비교:`);
+            console.log(`- 전년도 12월 입고: ${prevYearTargetInputs.length}개`);
+            console.log(`- 현재 조회 입고: ${targetInputs.length}개`);
+            console.log(`- 전년도 12월 출고: ${prevYearTargetOutputs.length}개`);
+            console.log(`- 현재 조회 출고: ${targetOutputs.length}개`);
+        }
+        
+        console.log(`\n🔍 대상 자재 (${targetMaterialId}) 상세 분석:`);
+        console.log('전월 입고 데이터:', targetInputs.map(item => ({
+            material_id: item.material_id,
+            quantity: item.quantity,
+            date: item.date,
+            product: item.product ? {
+                name: item.product.name,
+                material_code: item.product.material_code,
+                big_category: item.product.big_category,
+                price: item.product.price
+            } : null
+        })));
+        console.log('전월 출고 데이터:', targetOutputs.map(item => ({
+            material_id: item.material_id,
+            quantity: item.quantity,
+            date: item.date,
+            product: item.product ? {
+                name: item.product.name,
+                material_code: item.product.material_code,
+                big_category: item.product.big_category,
+                price: item.product.price
+            } : null
+        })));
+        
+        // 전월 말일 이후의 출고 데이터가 있는지 확인
+        console.log(`\n⚠️ 전월 말일 이후 출고 데이터 확인:`);
+        console.log(`- 전월 말일: ${prevEndDate.toISOString()}`);
+        
+        // 해당 자재의 모든 출고 데이터 조회 (날짜 제한 없이)
+        const allOutputs = await Output.findAll({
+            where: { material_id: targetMaterialId },
+            attributes: ["material_id", "quantity", "date"],
+            include: [includeProduct],
+            order: [['date', 'ASC']]
+        });
+        
+        const futureOutputs = allOutputs.filter(item => new Date(item.date) > prevEndDate);
+        console.log(`- 전월 말일 이후 출고 데이터 개수: ${futureOutputs.length}`);
+        if (futureOutputs.length > 0) {
+            console.log('전월 말일 이후 출고 데이터:', futureOutputs.map(item => ({
+                quantity: item.quantity,
+                date: item.date,
+                isAfterPrevEnd: new Date(item.date) > prevEndDate
+            })));
+        }
+        
+        // 해당 자재의 모든 입고 데이터 조회 (날짜 제한 없이)
+        const allInputs = await Input.findAll({
+            where: { material_id: targetMaterialId },
+            attributes: ["material_id", "quantity", "date"],
+            include: [includeProduct],
+            order: [['date', 'ASC']]
+        });
+        
+        console.log(`\n🔍 해당 자재의 모든 입고 데이터 (날짜 제한 없이):`);
+        console.log(`- 전체 입고 데이터 개수: ${allInputs.length}`);
+        if (allInputs.length > 0) {
+            console.log('전체 입고 데이터:', allInputs.map(item => ({
+                quantity: item.quantity,
+                date: item.date,
+                isBeforePrevEnd: new Date(item.date) <= prevEndDate
+            })));
+        } else {
+            console.log('⚠️ 해당 자재의 입고 데이터가 전혀 없습니다!');
+        }
+        processPrevStock(prevInputs, "prevInput");
+        processPrevStock(prevOutputs, "prevOutput");
+
+        // 전월재고를 금액 단위로 변환하여 resultByCategory에 저장
+        for (const categoryKey in prevStockByCategory) {
+            if (resultByCategory[categoryKey]) {
+                let totalPrevStock = 0;
+                let negativeStockCount = 0;
+                let negativeStockAmount = 0;
+                
+                for (const materialId in prevStockByCategory[categoryKey]) {
+                    const { qty, price } = prevStockByCategory[categoryKey][materialId];
+                    const amount = qty * price;
+                    
+                    if (qty > 0) {
+                        totalPrevStock += amount;
+                    } else if (qty < 0) {
+                        negativeStockCount++;
+                        negativeStockAmount += amount;
+                        console.log(`⚠️ 데이터 정합성 오류: 자재ID ${materialId}, 수량: ${qty}, 금액: ${amount.toLocaleString()}원`);
+                        console.log(`   - 입고 없이 출고만 존재하는 데이터입니다.`);
+                        console.log(`   - 이는 데이터 입력 오류이거나 입고 데이터가 누락된 것입니다.`);
+                        console.log(`   - 전월재고 계산에서 제외됩니다.`);
+                    }
+                }
+                
+                if (negativeStockCount > 0) {
+                    console.log(`📊 ${categoryKey} 카테고리 음수 재고 요약:`, {
+                        음수재고자재수: negativeStockCount,
+                        음수재고총금액: negativeStockAmount.toLocaleString() + '원',
+                        최종계산금액: totalPrevStock.toLocaleString() + '원'
+                    });
+                }
+                
+                resultByCategory[categoryKey].prevStock = totalPrevStock;
+            }
+        }
+
+        console.log('전월재고 계산 결과:', resultByCategory);
+        console.log('카테고리 맵:', categoryMap);
+        console.log('전월재고 상세 데이터:', prevStockByCategory);
+        
+        // 음수 재고가 발생한 자재들의 상세 이력 출력
+        console.log('\n🔍 음수 재고 자재 상세 분석:');
+        for (const materialId in materialHistory) {
+            const history = materialHistory[materialId];
+            const totalStock = history.totalInput - history.totalOutput;
+            
+            if (totalStock < 0) {
+                console.log(`\n📦 자재: ${history.productInfo?.name || 'Unknown'} (ID: ${materialId})`);
+                console.log(`   자재코드: ${history.productInfo?.material_code || 'Unknown'}`);
+                console.log(`   카테고리: ${history.productInfo?.big_category || 'Unknown'}`);
+                console.log(`   단가: ${history.productInfo?.price?.toLocaleString() || 0}원`);
+                console.log(`   총 입고: ${history.totalInput}개`);
+                console.log(`   총 출고: ${history.totalOutput}개`);
+                console.log(`   재고: ${totalStock}개 (음수!)`);
+                console.log(`   입고 이력:`, history.inputRecords.slice(0, 3)); // 최근 3개
+                console.log(`   출고 이력:`, history.outputRecords.slice(0, 3)); // 최근 3개
+                
+                // 입고 데이터가 없는 이유 분석
+                if (history.totalInput === 0) {
+                    console.log(`   ⚠️ 원인 분석: 입고 데이터가 전혀 없습니다.`);
+                    console.log(`   - 가능한 원인:`);
+                    console.log(`     1. 입고 데이터가 누락됨`);
+                    console.log(`     2. 입고 데이터가 다른 테이블에 있음`);
+                    console.log(`     3. 입고 데이터의 날짜가 전월 말일 이후임`);
+                    console.log(`     4. 입고 데이터의 자재ID가 다름`);
+                }
+            }
+        }
+
+        // 현재 월 데이터 처리
+        processCurrentMonth(thisMonthInputs, "input");
+        processCurrentMonth(thisMonthOutputs, "output");
+
+        // 연간 총 입고 금액 계산 (1월부터 현재 월까지의 누적)
+        let yearTotalInputAmount = 0;
+        cumulativeInputs.forEach(item => {
+            const product = item.product;
+            if (!product) {
+                console.warn(`[yearTotalInput] product is null for material_id:`, item.material_id);
+                return;
+            }
+
+            const price = product.price ?? 0;
+            const qty = item.quantity ?? 0;
+            yearTotalInputAmount += price * qty;
+        });
+
+        // 현재 월 말일 재고 계산 (전월재고 + 현재 월 입고 - 현재 월 출고)
+        for (const categoryKey in resultByCategory) {
+            if (categoryKey !== "합 계") {
+                resultByCategory[categoryKey].remaining = 
+                    resultByCategory[categoryKey].prevStock + 
+                    resultByCategory[categoryKey].input - 
+                    resultByCategory[categoryKey].output;
+            }
+        }
+
+        console.log('최종 재고 계산 결과:', resultByCategory);
+
+        const totalExecutedAmount = Object.values(resultByCategory)
+            .reduce((acc, cur) => acc + cur.output, 0);
+
+        let executionRate = null;
+        if (typeof budget === "number" && budget > 0) {
+            executionRate = Number(((totalExecutedAmount / budget) * 100).toFixed(2));
+        }
+
+        // 🔥 합 계 항목 추가
+        const totalSummary = {
+            prevStock: 0,
+            input: 0,
+            output: 0,
+            remaining: 0,
+        };
+        for (const categoryKey in resultByCategory) {
+            if (categoryKey !== "합 계") { // "합 계" 항목은 제외하고 계산
+                const item = resultByCategory[categoryKey];
+                totalSummary.prevStock += item.prevStock;
+                totalSummary.input += item.input;
+                totalSummary.output += item.output;
+                totalSummary.remaining += item.remaining;
+            }
+        }
+        resultByCategory["합 계"] = totalSummary;
+
+        res.json({
+            byCategory: resultByCategory,
+            totalExecutedAmount,
+            executionRate,
+            yearTotalInputAmount,
+        });
+    } catch (err) {
+        console.error("Error processing statement:", err);
+        console.error("Error details:", {
+            message: err.message,
+            stack: err.stack,
+            name: err.name
+        });
+        res.status(500).json({
+            message: "서버 오류",
+            error: err.message,
+            details: err.stack
+        });
+    }
+});
+
+module.exports = router;
+
