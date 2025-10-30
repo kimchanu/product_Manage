@@ -10,12 +10,12 @@ function Nav({ user }) {
   // 카테고리 목록을 user.admin 값에 따라 동적으로 생성
   const baseCategories = [
     { name: "게시판", subCategories: [] },
-    { name: "입고관리", subCategories: ["입고 등록", "입고 현황", "입고 통계"] },
+    { name: "입고관리", subCategories: ["입고 등록",  "입고 현황", "입고 통계"] },
     { name: "자재목록", subCategories: [] },
     { name: "출고관리", subCategories: ["출고 등록", "출고 현황", "출고 통계"] },
     { name: "자재수불명세서대장", subCategories: [] },
   ];
-  const adminCategory = { name: "관리자", subCategories: ["예산", "출고 승인"] };
+  const adminCategory = { name: "관리자", subCategories: ["예산","수동 입력", "출고 승인"] };
   const categories =
     user && Number(user.admin) >= 1
       ? [...baseCategories, adminCategory]
@@ -65,21 +65,23 @@ function Nav({ user }) {
                         to={
                           sub === "입고 등록"
                             ? "/upload"
-                            : sub === "입고 현황"
-                              ? "/input_mod"
-                              : sub === "입고 통계"
-                                ? "/input_statistics"
-                                : sub === "출고 등록"
-                                  ? "/Mat_output_page"
-                                  : sub === "출고 현황"
-                                    ? "/Output_Mod"
-                                    : sub === "예산"
-                                      ? "/Budget"
-                                      : sub === "출고 통계"
-                                        ? "/Output_Statistics_page"
-                                        : sub === "출고 승인"
-                                          ? "/Output_Approve_page"
-                                          : "#"
+                            : sub === "수동 입력"
+                              ? "/Input_manual_page"
+                              : sub === "입고 현황"
+                                ? "/input_mod"
+                                : sub === "입고 통계"
+                                  ? "/input_statistics"
+                                  : sub === "출고 등록"
+                                    ? "/Mat_output_page"
+                                    : sub === "출고 현황"
+                                      ? "/Output_Mod"
+                                      : sub === "예산"
+                                        ? "/Budget"
+                                        : sub === "출고 통계"
+                                          ? "/Output_Statistics_page"
+                                          : sub === "출고 승인"
+                                            ? "/Output_Approve_page"
+                                            : "#"
                         }
                         className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-600 cursor-pointer"
                       >

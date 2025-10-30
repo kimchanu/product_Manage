@@ -17,6 +17,7 @@ import WritePost from './component/Post/WritePost';
 import PostDetail from './component/Post/PostDetail';
 import Budget from "./page/Budget";
 import Output_Approve_page from "./page/Output_Approve_page";
+import Input_manual_page from "./page/Input_manual_page";
 
 const Router = () => {
   return (
@@ -27,6 +28,7 @@ const Router = () => {
           <Route path="/Mat_list_page" element={<Mat_list_page />} />
           <Route path="/mypage" element={<Mypage_page />} />
           <Route path="/upload" element={<Csv_Upload />} />
+          <Route path="/Input_manual_page" element={<Input_manual_page />} />
           <Route path="/Mat_output_page" element={<Mat_output_page />} />
           <Route path="/Output_Mod" element={<Output_Mod />} />
           <Route path="/Statement_page" element={<Statement_page />} />
