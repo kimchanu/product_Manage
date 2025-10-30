@@ -134,4 +134,15 @@ router.get("/", async (req, res) => {
     }
 });
 
+// 모든 예산 전체 조회 API
+router.get("/all", async (req, res) => {
+    try {
+        const budgets = await Budget.findAll({});
+        res.json(budgets); // 전체 row json 그대로 반환
+    } catch (err) {
+        console.error("모든 예산 조회 오류:", err);
+        res.status(500).json({ message: "서버 오류", error: err.message });
+    }
+});
+
 module.exports = router;

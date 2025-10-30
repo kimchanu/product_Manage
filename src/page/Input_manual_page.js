@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import IntegratedInputForm from '../component/input_manual/IntegratedInputForm';
 import useManualInputData from '../component/input_manual/useManualInputData';
 import User_info from '../component/User_info';
+import Header from "../layout/Header";
+import Footer from "../layout/Footer";
 
 function InputManualPage() {
   const [user, setUser] = useState(null);
@@ -21,6 +23,8 @@ function InputManualPage() {
   } = useManualInputData();
 
   return (
+    <div>
+      <Header />
     <div className="min-h-screen bg-gray-50 py-8">
       <User_info setUser={setUser} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -89,6 +93,8 @@ function InputManualPage() {
           </div>
         )}
       </div>
+    </div>
+    <Footer />
     </div>
   );
 }
