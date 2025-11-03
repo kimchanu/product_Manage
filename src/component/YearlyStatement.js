@@ -65,7 +65,7 @@ const YearlyStatement = () => {
             } else if (user.department === "기전") {
                 selectedCategories = ["전기", "기계", "소방", "기타", "합 계"];
             } else if (user.department === "시설") {
-                selectedCategories = ["조경", "시설", "장비", "합 계"];
+                selectedCategories = ["안전", "장비", "시설보수", "조경", "기타", "합 계"];
             }
             setCategories(selectedCategories);
             try {

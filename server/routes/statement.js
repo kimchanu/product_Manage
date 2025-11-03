@@ -580,5 +580,318 @@ router.post("/", async (req, res) => {
     }
 });
 
+// 전파트 월간보고서 엔드포인트
+router.post("/all-part-monthly", async (req, res) => {
+    const { businessLocation, year, month, budget } = req.body;
+
+    if (!businessLocation || !year || !month) {
+        return res.status(400).json({ message: "필수 정보가 누락되었습니다." });
+    }
+
+    try {
+        // ITS, 시설, 기전 부서의 데이터를 각각 조회
+        const departments = ["ITS", "시설", "기전"];
+        const allPartData = {};
+
+        for (const department of departments) {
+            console.log(`\n🔍 [${department}] 부서 데이터 조회 시작`);
+            console.log(`- businessLocation: ${businessLocation}`);
+            console.log(`- department: ${department}`);
+            
+            const { Product, Input, Output } = createModels(businessLocation, department);
+            
+            console.log(`- Product 모델: ${Product.tableName || Product.name}`);
+            console.log(`- Input 모델: ${Input.tableName || Input.name}`);
+            console.log(`- Output 모델: ${Output.tableName || Output.name}`);
+
+            const startDate = new Date(year, month - 1, 1);
+            const endDate = new Date(year, month, 0);
+            endDate.setHours(23, 59, 59, 999);
+
+            let prevEndDate;
+            if (month === 1) {
+                prevEndDate = new Date(year - 1, 11, 31);
+            } else {
+                prevEndDate = new Date(year, month - 1, 0);
+            }
+            prevEndDate.setHours(23, 59, 59, 999);
+
+            const yearStartDate = new Date(year, 0, 1);
+            const yearEndDate = new Date(year, 11, 31);
+            yearEndDate.setHours(23, 59, 59, 999);
+
+            const cumulativeEndDate = new Date(year, month, 0);
+            cumulativeEndDate.setHours(23, 59, 59, 999);
+
+            const includeProduct = {
+                model: Product,
+                as: "product",
+                attributes: ["material_id", "price", "big_category"],
+            };
+
+            const [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, cumulativeInputs] = await Promise.all([
+                Input.findAll({
+                    where: { date: { [Op.lte]: prevEndDate } },
+                    attributes: ["material_id", "quantity", "date"],
+                    include: [includeProduct],
+                }),
+                Output.findAll({
+                    where: { date: { [Op.lte]: prevEndDate } },
+                    attributes: ["material_id", "quantity", "date"],
+                    include: [includeProduct],
+                }),
+                Input.findAll({
+                    where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [includeProduct],
+                }),
+                Output.findAll({
+                    where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [includeProduct],
+                }),
+                Input.findAll({
+                    where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [includeProduct],
+                }),
+            ]);
+            
+            console.log(`✅ [${department}] 데이터 조회 완료:`);
+            console.log(`   - 전월 입고: ${prevInputs.length}건`);
+            console.log(`   - 전월 출고: ${prevOutputs.length}건`);
+            console.log(`   - 당월 입고: ${thisMonthInputs.length}건`);
+            console.log(`   - 당월 출고: ${thisMonthOutputs.length}건`);
+            console.log(`   - 누적 입고: ${cumulativeInputs.length}건`);
+
+            // 부서별 카테고리 정의
+            let departmentCategories = [];
+            if (department === "ITS") {
+                departmentCategories = ["TCS", "FTMS", "전산", "기타"];
+            } else if (department === "시설") {
+                departmentCategories = ["안전", "장비", "시설보수", "조경", "기타"];
+            } else if (department === "기전") {
+                departmentCategories = ["전기", "기계", "소방", "기타"];
+            }
+
+            const normalizedCategories = departmentCategories.map(cat => cat.replace(/\s+/g, '').toUpperCase());
+            const categoryMap = {};
+            departmentCategories.forEach(cat => {
+                const upper = cat.replace(/\s+/g, '').toUpperCase();
+                categoryMap[upper] = cat;
+            });
+
+            const resultByCategory = {};
+            departmentCategories.forEach(cat => {
+                resultByCategory[cat] = {
+                    prevStock: 0,
+                    input: 0,
+                    output: 0,
+                    remaining: 0,
+                };
+            });
+
+            const prevStockByCategory = {};
+
+            const processPrevStock = (records, type) => {
+                records.forEach(item => {
+                    const product = item.product;
+                    if (!product) return;
+
+                    const materialId = product.material_id;
+                    const price = product.price ?? 0;
+                    const qty = item.quantity ?? 0;
+                    const rawCategory = product.get("big_category") || "";
+                    const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                    const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                    const matchedCategory = categoryMap[upperCategory];
+
+                    let categoryKey = null;
+                    if (matchedCategory) {
+                        categoryKey = matchedCategory;
+                    } else if (categoryMap["기타"]) {
+                        categoryKey = "기타";
+                    } else {
+                        return;
+                    }
+
+                    if (!prevStockByCategory[categoryKey]) {
+                        prevStockByCategory[categoryKey] = {};
+                    }
+                    if (!prevStockByCategory[categoryKey][materialId]) {
+                        prevStockByCategory[categoryKey][materialId] = { qty: 0, price };
+                    }
+
+                    const qtyChange = (type === "prevInput") ? qty : -qty;
+                    prevStockByCategory[categoryKey][materialId].qty += qtyChange;
+                });
+            };
+
+            const processCurrentMonth = (records, type) => {
+                records.forEach(item => {
+                    const product = item.product;
+                    if (!product) return;
+
+                    const materialId = product.material_id;
+                    const price = product.price ?? 0;
+                    const qty = item.quantity ?? 0;
+                    const rawCategory = product.get("big_category") || "";
+                    const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                    const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                    const matchedCategory = categoryMap[upperCategory];
+
+                    let categoryKey = null;
+                    if (matchedCategory) {
+                        categoryKey = matchedCategory;
+                    } else if (categoryMap["기타"]) {
+                        categoryKey = "기타";
+                    } else {
+                        return;
+                    }
+
+                    const amount = price * qty;
+
+                    if (type === "input") {
+                        resultByCategory[categoryKey].input += amount;
+                    } else if (type === "output") {
+                        resultByCategory[categoryKey].output += amount;
+                    }
+                });
+            };
+
+            processPrevStock(prevInputs, "prevInput");
+            processPrevStock(prevOutputs, "prevOutput");
+
+            for (const categoryKey in prevStockByCategory) {
+                if (resultByCategory[categoryKey]) {
+                    let totalPrevStock = 0;
+                    for (const materialId in prevStockByCategory[categoryKey]) {
+                        const { qty, price } = prevStockByCategory[categoryKey][materialId];
+                        const amount = qty * price;
+                        if (qty > 0) {
+                            totalPrevStock += amount;
+                        }
+                    }
+                    resultByCategory[categoryKey].prevStock = totalPrevStock;
+                }
+            }
+
+            processCurrentMonth(thisMonthInputs, "input");
+            processCurrentMonth(thisMonthOutputs, "output");
+
+            for (const categoryKey in resultByCategory) {
+                resultByCategory[categoryKey].remaining = 
+                    resultByCategory[categoryKey].prevStock + 
+                    resultByCategory[categoryKey].input - 
+                    resultByCategory[categoryKey].output;
+            }
+
+            let yearTotalInputAmount = 0;
+            cumulativeInputs.forEach(item => {
+                const product = item.product;
+                if (!product) return;
+                const price = product.price ?? 0;
+                const qty = item.quantity ?? 0;
+                yearTotalInputAmount += price * qty;
+            });
+
+            // 각 부서별 합계 계산 (하위 카테고리의 합계)
+            const departmentTotal = {
+                prevStock: 0,
+                input: 0,
+                output: 0,
+                remaining: 0,
+            };
+
+            departmentCategories.forEach(cat => {
+                const data = resultByCategory[cat] || { prevStock: 0, input: 0, output: 0, remaining: 0 };
+                departmentTotal.prevStock += data.prevStock;
+                departmentTotal.input += data.input;
+                departmentTotal.output += data.output;
+                departmentTotal.remaining += data.remaining;
+            });
+
+            console.log(`\n📈 [${department}] 부서별 집계 결과:`);
+            console.log(`   - 카테고리별 데이터:`, JSON.stringify(resultByCategory, null, 2));
+            console.log(`   - 부서 합계:`, departmentTotal);
+            console.log(`   - 연간 입고 금액: ${yearTotalInputAmount.toLocaleString()}원`);
+            
+            allPartData[department] = {
+                byCategory: resultByCategory,
+                total: departmentTotal, // 부서별 합계 추가
+                yearTotalInputAmount
+            };
+        }
+        
+        console.log(`\n🎯 전체 부서 데이터 요약:`);
+        console.log(`   - ITS 데이터 존재:`, !!allPartData["ITS"]);
+        console.log(`   - 시설 데이터 존재:`, !!allPartData["시설"]);
+        console.log(`   - 기전 데이터 존재:`, !!allPartData["기전"]);
+        if (allPartData["ITS"]) {
+            console.log(`   - ITS 합계:`, allPartData["ITS"].total);
+        }
+        if (allPartData["시설"]) {
+            console.log(`   - 시설 합계:`, allPartData["시설"].total);
+        }
+        if (allPartData["기전"]) {
+            console.log(`   - 기전 합계:`, allPartData["기전"].total);
+        }
+
+        // 전파트 월간보고서 구조 생성
+        // 각 부서별 합계는 이미 allPartData[department].total에 저장되어 있음
+        
+        console.log(`\n📋 최종 결과 구조 생성 시작...`);
+        
+        // 최종 결과 구조
+        const resultByCategory = {
+            "ITS": allPartData["ITS"]?.total || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "TCS": allPartData["ITS"]?.byCategory?.["TCS"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "FTMS": allPartData["ITS"]?.byCategory?.["FTMS"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "전산": allPartData["ITS"]?.byCategory?.["전산"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "기타": allPartData["ITS"]?.byCategory?.["기타"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "시설": allPartData["시설"]?.total || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "안전": allPartData["시설"]?.byCategory?.["안전"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "장비": allPartData["시설"]?.byCategory?.["장비"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "시설보수": allPartData["시설"]?.byCategory?.["시설보수"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "조경": allPartData["시설"]?.byCategory?.["조경"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "시설_기타": allPartData["시설"]?.byCategory?.["기타"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "기전": allPartData["기전"]?.total || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "전기": allPartData["기전"]?.byCategory?.["전기"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "기계": allPartData["기전"]?.byCategory?.["기계"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "소방": allPartData["기전"]?.byCategory?.["소방"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "기전_기타": allPartData["기전"]?.byCategory?.["기타"] || { prevStock: 0, input: 0, output: 0, remaining: 0 },
+            "합 계": {
+                prevStock: (allPartData["ITS"]?.total?.prevStock || 0) + (allPartData["시설"]?.total?.prevStock || 0) + (allPartData["기전"]?.total?.prevStock || 0),
+                input: (allPartData["ITS"]?.total?.input || 0) + (allPartData["시설"]?.total?.input || 0) + (allPartData["기전"]?.total?.input || 0),
+                output: (allPartData["ITS"]?.total?.output || 0) + (allPartData["시설"]?.total?.output || 0) + (allPartData["기전"]?.total?.output || 0),
+                remaining: (allPartData["ITS"]?.total?.remaining || 0) + (allPartData["시설"]?.total?.remaining || 0) + (allPartData["기전"]?.total?.remaining || 0),
+            }
+        };
+        
+        console.log(`\n✅ 최종 결과 구조:`, JSON.stringify(resultByCategory, null, 2));
+
+        const totalExecutedAmount = resultByCategory["합 계"].output;
+        let executionRate = null;
+        if (typeof budget === "number" && budget > 0) {
+            executionRate = Number(((totalExecutedAmount / budget) * 100).toFixed(2));
+        }
+
+        const yearTotalInputAmount = (allPartData["ITS"]?.yearTotalInputAmount || 0) + (allPartData["시설"]?.yearTotalInputAmount || 0) + (allPartData["기전"]?.yearTotalInputAmount || 0);
+
+        res.json({
+            byCategory: resultByCategory,
+            totalExecutedAmount,
+            executionRate,
+            yearTotalInputAmount,
+        });
+    } catch (err) {
+        console.error("Error processing all-part monthly statement:", err);
+        res.status(500).json({
+            message: "서버 오류",
+            error: err.message,
+        });
+    }
+});
+
 module.exports = router;
 

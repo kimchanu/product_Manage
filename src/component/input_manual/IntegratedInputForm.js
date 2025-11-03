@@ -58,7 +58,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
           month: new Date().getMonth() + 1,
           categories: department === "ITS" ? ["TCS", "FTMS", "전산", "기타", "합 계"] :
                      department === "기전" ? ["전기", "기계", "소방", "기타", "합 계"] :
-                     ["조경", "시설", "장비", "합 계"]
+                     ["안전", "장비", "시설보수", "조경", "기타", "합 계"]
         })
       });
       

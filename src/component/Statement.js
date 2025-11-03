@@ -59,6 +59,35 @@ const Statement = () => {
         const fetchStatistics = async () => {
             if (!user) return;
 
+            // 전파트 월간보고서인 경우
+            if (reportType === "allPartMonthly") {
+                const selectedCategories = ["ITS", "TCS", "FTMS", "전산", "기타", "시설", "안전", "장비", "시설보수", "조경", "시설_기타", "기전", "전기", "기계", "소방", "기전_기타", "합 계"];
+                setCategories(selectedCategories);
+                
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/statement/all-part-monthly`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            businessLocation: user.business_location,
+                            year,
+                            month,
+                            budget: budgetData?.amount || 0,
+                        }),
+                    });
+
+                    if (!response.ok) throw new Error("통계 데이터를 가져오지 못했습니다");
+
+                    const data = await response.json();
+                    console.log(data);
+                    setStats(data);
+                } catch (err) {
+                    console.error(err);
+                }
+                return;
+            }
+
+            // 기존 월간보고서 로직
             let selectedCategories = [];
 
             if (user.department === "ITS") {
@@ -66,7 +95,7 @@ const Statement = () => {
             } else if (user.department === "기전") {
                 selectedCategories = ["전기", "기계", "소방", "기타", "합 계"];
             } else if (user.department === "시설") {
-                selectedCategories = ["조경", "시설", "장비", "합 계"];
+                selectedCategories = ["안전", "장비", "시설보수", "조경", "기타", "합 계"];
             }
             setCategories(selectedCategories);
             try {
@@ -93,19 +122,40 @@ const Statement = () => {
         };
 
         fetchStatistics();
-    }, [user, year, month]);
+    }, [user, year, month, reportType, budgetData]);
 
     const renderRow = (cat) => {
-        const row = stats.byCategory?.[cat] || {
-            prevStock: 0,
-            input: 0,
-            output: 0,
-            remaining: 0,
+        // 하위 카테고리 합산 헬퍼 (UI 표시용)
+        const sumOf = (keys = []) => {
+            return keys.reduce((acc, key) => {
+                const src = stats.byCategory?.[key] || { prevStock: 0, input: 0, output: 0, remaining: 0 };
+                return {
+                    prevStock: acc.prevStock + (src.prevStock || 0),
+                    input: acc.input + (src.input || 0),
+                    output: acc.output + (src.output || 0),
+                    remaining: acc.remaining + (src.remaining || 0),
+                };
+            }, { prevStock: 0, input: 0, output: 0, remaining: 0 });
         };
+
+        // 전파트 월간보고서에서만 메인 카테고리를 하위 카테고리 합으로 표시
+        const isAllPart = reportType === "allPartMonthly";
+        let row;
+        if (isAllPart && cat === "ITS") {
+            row = sumOf(["TCS", "FTMS", "전산", "기타"]);
+        } else if (isAllPart && cat === "시설") {
+            row = sumOf(["안전", "장비", "시설보수", "조경", "시설_기타"]);
+        } else if (isAllPart && cat === "기전") {
+            row = sumOf(["전기", "기계", "소방", "기전_기타"]);
+        } else {
+            row = stats.byCategory?.[cat] || { prevStock: 0, input: 0, output: 0, remaining: 0 };
+        }
+
+        const displayName = (cat === "시설_기타" || cat === "기전_기타") ? "기타" : cat;
 
         return (
             <tr key={cat}>
-                <td className="border border-black h-12" colSpan={3}>{cat}</td>
+                <td className="border border-black h-12" colSpan={3}>{displayName}</td>
                 <td className="border border-black h-12" colSpan={9}>{row.prevStock.toLocaleString()}</td>
                 <td className="border border-black h-12" colSpan={9}>{row.input.toLocaleString()}</td>
                 <td className="border border-black h-12" colSpan={9}>{row.output.toLocaleString()}</td>
@@ -143,6 +193,7 @@ const Statement = () => {
                             className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="monthly">월간보고서</option>
+                            <option value="allPartMonthly">전파트 월간보고서</option>
                             <option value="partYearly">파트별 연간보고서</option>
                             <option value="allPartYearly">전파트 연간보고서</option>
                         </select>
@@ -170,7 +221,9 @@ const Statement = () => {
             </div>
             <div className="flex items-center justify-center gap-4 mb-6 px-4">
                 <h1 className="text-xl font-bold whitespace-nowrap text-center">
-                    {year}년 {month.toString().padStart(2, "0")}월 자재수불명세서대장
+                    {reportType === "allPartMonthly" 
+                        ? `${year}년 ${month.toString().padStart(2, "0")}월 전파트 자재수불명세서대장`
+                        : `${year}년 ${month.toString().padStart(2, "0")}월 자재수불명세서대장`}
                 </h1>
             </div>
 
@@ -204,7 +257,7 @@ const Statement = () => {
                     </tr>
                     <tr>
                         <td className="border border-black h-10 w-1/4">부서명</td>
-                        <td className="border border-black h-10 w-1/4">{user?.department || '\u00A0'}</td>
+                        <td className="border border-black h-10 w-1/4">{reportType === "allPartMonthly" ? "전체" : (user?.department || '\u00A0')}</td>
                         <td className="border border-black h-10 w-1/4">작성자</td>
                         <td className="border border-black h-10 w-1/4">{user?.name || '\u00A0'}</td>
                     </tr>

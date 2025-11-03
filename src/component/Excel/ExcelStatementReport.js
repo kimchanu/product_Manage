@@ -14,6 +14,11 @@ const ExcelStatementReport = ({ stats, categories, year, month, user, budgetAmou
                 sheetName = "월간보고서";
                 fileName = `자재수불명세서_${year}년${month}월.xlsx`;
                 break;
+            case "allPartMonthly":
+                templateFile = "/Excel_template/전파트 월간보고서.xlsx";
+                sheetName = "전파트월간보고서";
+                fileName = `전파트월간보고서_${year}년${month}월.xlsx`;
+                break;
             case "partYearly":
                 templateFile = "/Excel_template/연간보고서.xlsx";
                 sheetName = "연간보고서";
@@ -41,7 +46,40 @@ const ExcelStatementReport = ({ stats, categories, year, month, user, budgetAmou
         }
 
         // 보고서 유형에 따른 데이터 입력 로직
-        if (reportType === "monthly") {
+        if (reportType === "allPartMonthly") {
+            // 전파트 월간보고서 데이터 입력
+            worksheet.getCell("A2").value = `${year}년 ${month}월 전파트 자재수불명세서대장`;
+            worksheet.getCell("M5").value = `GK-${year.toString().slice(2)}-C-003`;
+            worksheet.getCell("M6").value = "전체";
+            worksheet.getCell("AE5").value = `${year}.${month.toString().padStart(2, "0")}`;
+            worksheet.getCell("AE6").value = user?.name || "";
+
+            // 예산 집행현황 값 입력
+            worksheet.getCell("A19").value = `${month.toString().padStart(2, "0")}월`;
+            worksheet.getCell("D19").value = budgetAmount;
+            worksheet.getCell("M19").value = currentMonthAmount;
+            worksheet.getCell("V19").value = yearTotalInputAmount;
+            worksheet.getCell("AE19").value = remainingAmount;
+
+            // 전파트 월간보고서 데이터 입력 (ITS, TCS, FTMS, 전산, 기타, 시설, 안전, 장비, 시설보수, 조경, 시설_기타, 기전, 전기, 기계, 소방, 기전_기타, 합 계 순서)
+            const allPartCategories = ["ITS", "TCS", "FTMS", "전산", "기타", "시설", "안전", "장비", "시설보수", "조경", "시설_기타", "기전", "전기", "기계", "소방", "기전_기타", "합 계"];
+            allPartCategories.forEach((cat, index) => {
+                const row = stats.byCategory?.[cat] || {
+                    prevStock: 0,
+                    input: 0,
+                    output: 0,
+                    remaining: 0,
+                };
+                const excelRow = 10 + index;
+
+                const displayName = (cat === "시설_기타" || cat === "기전_기타") ? "기타" : cat;
+                worksheet.getCell(`A${excelRow}`).value = displayName;
+                worksheet.getCell(`D${excelRow}`).value = row.prevStock;
+                worksheet.getCell(`M${excelRow}`).value = row.input;
+                worksheet.getCell(`V${excelRow}`).value = row.output;
+                worksheet.getCell(`AE${excelRow}`).value = row.remaining;
+            });
+        } else if (reportType === "monthly") {
             // 월간보고서 데이터 입력
             worksheet.getCell("A2").value = `${year}년 ${month}월 잡자재수불명세서대장`;
             worksheet.getCell("M5").value = `GK-${year.toString().slice(2)}-C-003`;

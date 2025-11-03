@@ -701,7 +701,7 @@ const Statistics_sub = ({ department }) => {
                             month: currentMonth,
                             categories: dept === "ITS" ? ["TCS", "FTMS", "전산", "기타", "합 계"] :
                                 dept === "기전" ? ["전기", "기계", "소방", "기타", "합 계"] :
-                                    ["조경", "시설", "장비", "합 계"]
+                                    ["안전", "장비", "시설보수", "조경", "기타", "합 계"]
                         })
                     }).then(res => res.json())
                 );
