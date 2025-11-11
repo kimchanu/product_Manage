@@ -111,7 +111,7 @@ const Output_Statistics = () => {
                         <p className="text-2xl">{formatCurrency(statistics.totalOutputAmount)}</p>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-bold mb-4">월 출고 금액</h2>
+                        <h2 className="text-xl font-bold mb-4">당월 출고 금액</h2>
                         <p className="text-2xl">{formatCurrency(statistics.monthlyOutputAmount)}</p>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow">
@@ -169,7 +169,7 @@ const Output_Statistics = () => {
                         </div>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-bold mb-4">최근 출고 내역</h2>
+                        <h2 className="text-xl font-bold mb-4">당월 출고 내역</h2>
                         <div className="space-y-2">
                             {statistics.recentOutputs?.filter(output => output.quantity > 0).map((output, index) => (
                                 <div key={index} className="flex justify-between items-center">

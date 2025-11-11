@@ -41,7 +41,7 @@ function useManualInputData() {
   }, []);
 
   // 전체 데이터 저장 (서버로 전송)
-  const saveAllData = useCallback(async (department = 'ITS') => {
+  const saveAllData = useCallback(async (department = 'ITS', businessLocation = null) => {
     if (data.length === 0) {
       setMessage({ type: 'warning', text: '저장할 데이터가 없습니다.' });
       setTimeout(() => setMessage({ type: '', text: '' }), 3000);
@@ -62,7 +62,8 @@ function useManualInputData() {
         body: JSON.stringify({
           items: data,
           type: 'manual_input',
-          department: department
+          department: department,
+          business_location: businessLocation
         })
       });
 

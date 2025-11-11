@@ -79,7 +79,9 @@ const Statement = () => {
                     if (!response.ok) throw new Error("통계 데이터를 가져오지 못했습니다");
 
                     const data = await response.json();
-                    console.log(data);
+                    console.log("전파트 월간보고서 데이터:", data);
+                    console.log("시설_기타 데이터:", data.byCategory?.["시설_기타"]);
+                    console.log("기전_기타 데이터:", data.byCategory?.["기전_기타"]);
                     setStats(data);
                 } catch (err) {
                     console.error(err);
@@ -148,30 +150,41 @@ const Statement = () => {
         } else if (isAllPart && cat === "기전") {
             row = sumOf(["전기", "기계", "소방", "기전_기타"]);
         } else {
+            // 시설_기타, 기전_기타는 서버에서 올바른 키로 전달됨
             row = stats.byCategory?.[cat] || { prevStock: 0, input: 0, output: 0, remaining: 0 };
+            // 디버깅: 기타 카테고리 값 확인
+            if (cat === "시설_기타" || cat === "기전_기타") {
+                console.log(`[${cat}] 원본 데이터:`, stats.byCategory?.[cat], "row:", row);
+            }
         }
 
+        // 표시 이름 결정: 시설_기타, 기전_기타는 "기타"로 표시
         const displayName = (cat === "시설_기타" || cat === "기전_기타") ? "기타" : cat;
+        
+        // 메인 합계 행(ITS/시설/기전)에 연한 빨간 배경색 표시
+        const isMainRow = reportType === "allPartMonthly" && ["ITS", "시설", "기전"].includes(cat);
+        const bgClass = isMainRow ? "bg-red-100" : "";
+        const borderClass = "border border-black";
 
         return (
             <tr key={cat}>
-                <td className="border border-black h-12" colSpan={3}>{displayName}</td>
-                <td className="border border-black h-12" colSpan={9}>{row.prevStock.toLocaleString()}</td>
-                <td className="border border-black h-12" colSpan={9}>{row.input.toLocaleString()}</td>
-                <td className="border border-black h-12" colSpan={9}>{row.output.toLocaleString()}</td>
-                <td className="border border-black h-12" colSpan={9}>{row.remaining.toLocaleString()}</td>
-                <td className="border border-black h-12" colSpan={3}>&nbsp;</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={3}>{displayName}</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.prevStock.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.input.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.output.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.remaining.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={3}>&nbsp;</td>
             </tr>
         );
     };
 
     // 보고서 유형에 따라 다른 컴포넌트 렌더링
+    // 연간보고서는 YearlyStatement 컴포넌트로 처리
     if (reportType === "partYearly" || reportType === "allPartYearly") {
         return <YearlyStatement />;
     }
 
-    // 월간보고서일 때는 기존 Statement 컴포넌트 렌더링
-
+    // 월간보고서와 전파트 월간보고서는 Statement 컴포넌트에서 처리
     return (
         <div className="p-4 mx-20">
             <User_info setUser={setUser} />

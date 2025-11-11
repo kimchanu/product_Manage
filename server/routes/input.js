@@ -183,24 +183,30 @@ router.post("/manual", authMiddleware, async (req, res) => {
     // JWT 토큰에서 사용자 정보 가져오기
     const user = req.user;
     
-    // 사업소명을 코드로 변환
+    // 기본값 설정
+    const { department = "ITS", business_location } = req.body;
+    
+    // 사업소명을 코드로 변환 (요청에서 받은 사업소가 있으면 사용, 없으면 JWT에서 가져옴)
     let business_location_code = "";
-    switch (user.business_location) {
-        case "GK사업소":
-            business_location_code = "GK";
-            break;
-        case "천마사업소":
-            business_location_code = "CM";
-            break;
-        case "을숙도사업소":
-            business_location_code = "ES";
-            break;
-        default:
-            business_location_code = user.business_location;
+    if (business_location) {
+        business_location_code = business_location; // 이미 코드로 전달됨
+    } else {
+        // JWT에서 사업소명을 코드로 변환
+        switch (user.business_location) {
+            case "GK사업소":
+                business_location_code = "GK";
+                break;
+            case "천마사업소":
+                business_location_code = "CM";
+                break;
+            case "을숙도사업소":
+                business_location_code = "ES";
+                break;
+            default:
+                business_location_code = user.business_location;
+        }
     }
 
-    // 기본값 설정
-    const { department = "ITS" } = req.body; // 부서는 요청에서 받아옴
     const defaultValues = {
         comment: "수동 입력",
         date: new Date().toISOString().split('T')[0],

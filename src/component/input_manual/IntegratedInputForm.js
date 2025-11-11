@@ -6,6 +6,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
   const [editingIndex, setEditingIndex] = useState(null);
   const [errors, setErrors] = useState({});
   const [specialNotes, setSpecialNotes] = useState('');
+  const [selectedBusinessLocation, setSelectedBusinessLocation] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('ITS');
   const [purchaseInfo, setPurchaseInfo] = useState({
     purchaseNumber: '',
@@ -22,11 +23,18 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     setFormData(data || []);
   }, [data]);
 
+  // 사용자 정보가 로드되면 기본 사업소 설정
+  useEffect(() => {
+    if (user?.business_location && !selectedBusinessLocation) {
+      setSelectedBusinessLocation(user.business_location);
+    }
+  }, [user]);
+
   // 예산 데이터 가져오기
-  const fetchBudgetData = async (department) => {
-    // 사용자 정보가 없으면 조회하지 않음
-    if (!user?.business_location) {
-      console.log('사용자 정보가 없어서 예산 데이터를 조회하지 않습니다.');
+  const fetchBudgetData = async (department, businessLocation) => {
+    // 사업소가 선택되지 않으면 조회하지 않음
+    if (!businessLocation) {
+      console.log('사업소가 선택되지 않아서 예산 데이터를 조회하지 않습니다.');
       return;
     }
 
@@ -34,15 +42,37 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     try {
       const currentYear = new Date().getFullYear();
       
+      // 사업소 코드를 전체 이름으로 변환
+      const businessLocationMap = {
+        'GK': 'GK사업소',
+        'CM': '천마사업소',
+        'ES': '을숙도사업소'
+      };
+      const businessLocationName = businessLocationMap[businessLocation] || businessLocation;
+      
       // 예산 조회
       const budgetResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/budget?year=${currentYear}`);
       if (!budgetResponse.ok) throw new Error("예산 조회 실패");
       const budgetData = await budgetResponse.json();
       
-      // 해당 부서의 예산 찾기
+      console.log('예산 데이터:', budgetData);
+      console.log('조회 조건 - 사업소 코드:', businessLocation, '사업소 이름:', businessLocationName, '부서:', department);
+      
+      // 해당 사업소와 부서의 예산 찾기 (사업소 이름 또는 코드로 찾기)
       const departmentBudget = budgetData.budget?.find(
-        item => item.department === department
+        item => {
+          const siteMatch = item.site === businessLocationName || 
+                           item.site === businessLocation ||
+                           item.site?.includes(businessLocation) ||
+                           item.site?.toLowerCase().includes(businessLocation.toLowerCase());
+          return siteMatch && item.department === department;
+        }
       );
+      
+      console.log('찾은 예산:', departmentBudget);
+      if (!departmentBudget) {
+        console.warn('예산을 찾을 수 없습니다. 전체 예산 데이터:', budgetData.budget);
+      }
       
       // 연간 총 입고 금액 조회 (기집행액)
       const statementResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/statement`, {
@@ -52,7 +82,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
-          businessLocation: user.business_location,
+          businessLocation: businessLocation,
           department: department,
           year: currentYear,
           month: new Date().getMonth() + 1,
@@ -69,6 +99,8 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
       const executedAmount = statementData.yearTotalInputAmount || 0;
       const currentExecution = 0; // 현재 집행액은 0으로 초기화 (입고 데이터가 저장되면 업데이트)
       const remainingAmount = budget - executedAmount;
+      
+      console.log('예산:', budget, '기집행액:', executedAmount, '잔액:', remainingAmount);
       
       setPurchaseInfo(prev => ({
         ...prev,
@@ -92,10 +124,12 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     }
   };
 
-  // 부서 변경 시 예산 데이터 다시 가져오기
+  // 사업소 또는 부서 변경 시 예산 데이터 다시 가져오기
   useEffect(() => {
-    fetchBudgetData(selectedDepartment);
-  }, [selectedDepartment, user]);
+    if (selectedBusinessLocation) {
+      fetchBudgetData(selectedDepartment, selectedBusinessLocation);
+    }
+  }, [selectedDepartment, selectedBusinessLocation]);
 
   // 새 행 추가
   const addRow = () => {
@@ -226,7 +260,19 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">구매 정보</h3>
           <div className="flex items-center space-x-3">
-            <label className="text-sm font-medium text-gray-700">부서 선택:</label>
+            <label className="text-sm font-medium text-gray-700">사업소 선택:</label>
+            <select
+              value={selectedBusinessLocation}
+              onChange={(e) => setSelectedBusinessLocation(e.target.value)}
+              className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={loadingBudget}
+            >
+              <option value="">선택하세요</option>
+              <option value="GK">GK사업소</option>
+              <option value="CM">천마사업소</option>
+              <option value="ES">을숙도사업소</option>
+            </select>
+            <label className="text-sm font-medium text-gray-700 ml-3">부서 선택:</label>
             <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
@@ -298,7 +344,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
           {formData.length > 0 && (
             <>
               <button
-                onClick={() => onSaveAll(selectedDepartment)}
+                onClick={() => onSaveAll(selectedDepartment, selectedBusinessLocation)}
                 disabled={isLoading}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
               >

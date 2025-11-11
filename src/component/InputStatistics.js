@@ -114,7 +114,7 @@ const InputStatistics = () => {
                         <p className="text-2xl">{formatCurrency(statistics.totalInputAmount)}</p>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-bold mb-4">월 입고 금액</h2>
+                        <h2 className="text-xl font-bold mb-4">당월 입고 금액</h2>
                         <p className="text-2xl">{formatCurrency(statistics.monthlyInputAmount)}</p>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow">
@@ -172,7 +172,7 @@ const InputStatistics = () => {
                         </div>
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow">
-                        <h2 className="text-xl font-bold mb-4">최근 입고 내역</h2>
+                        <h2 className="text-xl font-bold mb-4">당월 입고 내역</h2>
                         <div className="space-y-2">
                             {statistics.recentInputs?.filter(input => input.quantity > 0).map((input, index) => (
                                 <div key={index} className="flex justify-between items-center">

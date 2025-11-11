@@ -266,14 +266,15 @@ const YearlyStatement = () => {
                                 setReportType(newType);
                                 setSearchParams({ type: newType }); // URL 파라미터 업데이트
 
-                                // 월간보고서 선택 시 페이지 새로고침
-                                if (newType === "monthly") {
+                                // 월간보고서 또는 전파트 월간보고서 선택 시 페이지 새로고침하여 Statement 컴포넌트로 이동
+                                if (newType === "monthly" || newType === "allPartMonthly") {
                                     window.location.reload();
                                 }
                             }}
                             className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="monthly">월간보고서</option>
+                            <option value="allPartMonthly">전파트 월간보고서</option>
                             <option value="partYearly">파트별 연간보고서</option>
                             <option value="allPartYearly">전파트 연간보고서</option>
                         </select>

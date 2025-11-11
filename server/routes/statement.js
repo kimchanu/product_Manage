@@ -594,233 +594,263 @@ router.post("/all-part-monthly", async (req, res) => {
         const allPartData = {};
 
         for (const department of departments) {
-            console.log(`\n🔍 [${department}] 부서 데이터 조회 시작`);
-            console.log(`- businessLocation: ${businessLocation}`);
-            console.log(`- department: ${department}`);
-            
-            const { Product, Input, Output } = createModels(businessLocation, department);
-            
-            console.log(`- Product 모델: ${Product.tableName || Product.name}`);
-            console.log(`- Input 모델: ${Input.tableName || Input.name}`);
-            console.log(`- Output 모델: ${Output.tableName || Output.name}`);
+            try {
+                console.log(`\n🔍 [${department}] 부서 데이터 조회 시작`);
+                console.log(`- businessLocation: ${businessLocation}`);
+                console.log(`- department: ${department}`);
+                
+                const { Product, Input, Output } = createModels(businessLocation, department);
+                
+                console.log(`- Product 모델: ${Product.tableName || Product.name}`);
+                console.log(`- Input 모델: ${Input.tableName || Input.name}`);
+                console.log(`- Output 모델: ${Output.tableName || Output.name}`);
 
-            const startDate = new Date(year, month - 1, 1);
-            const endDate = new Date(year, month, 0);
-            endDate.setHours(23, 59, 59, 999);
+                const startDate = new Date(year, month - 1, 1);
+                const endDate = new Date(year, month, 0);
+                endDate.setHours(23, 59, 59, 999);
 
-            let prevEndDate;
-            if (month === 1) {
-                prevEndDate = new Date(year - 1, 11, 31);
-            } else {
-                prevEndDate = new Date(year, month - 1, 0);
-            }
-            prevEndDate.setHours(23, 59, 59, 999);
+                let prevEndDate;
+                if (month === 1) {
+                    prevEndDate = new Date(year - 1, 11, 31);
+                } else {
+                    prevEndDate = new Date(year, month - 1, 0);
+                }
+                prevEndDate.setHours(23, 59, 59, 999);
 
-            const yearStartDate = new Date(year, 0, 1);
-            const yearEndDate = new Date(year, 11, 31);
-            yearEndDate.setHours(23, 59, 59, 999);
+                const yearStartDate = new Date(year, 0, 1);
+                const yearEndDate = new Date(year, 11, 31);
+                yearEndDate.setHours(23, 59, 59, 999);
 
-            const cumulativeEndDate = new Date(year, month, 0);
-            cumulativeEndDate.setHours(23, 59, 59, 999);
+                const cumulativeEndDate = new Date(year, month, 0);
+                cumulativeEndDate.setHours(23, 59, 59, 999);
 
-            const includeProduct = {
-                model: Product,
-                as: "product",
-                attributes: ["material_id", "price", "big_category"],
-            };
+                const includeProduct = {
+                    model: Product,
+                    as: "product",
+                    attributes: ["material_id", "price", "big_category"],
+                };
 
-            const [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, cumulativeInputs] = await Promise.all([
-                Input.findAll({
-                    where: { date: { [Op.lte]: prevEndDate } },
-                    attributes: ["material_id", "quantity", "date"],
-                    include: [includeProduct],
-                }),
-                Output.findAll({
-                    where: { date: { [Op.lte]: prevEndDate } },
-                    attributes: ["material_id", "quantity", "date"],
-                    include: [includeProduct],
-                }),
-                Input.findAll({
-                    where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
-                    attributes: ["material_id", "quantity"],
-                    include: [includeProduct],
-                }),
-                Output.findAll({
-                    where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
-                    attributes: ["material_id", "quantity"],
-                    include: [includeProduct],
-                }),
-                Input.findAll({
-                    where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
-                    attributes: ["material_id", "quantity"],
-                    include: [includeProduct],
-                }),
-            ]);
-            
-            console.log(`✅ [${department}] 데이터 조회 완료:`);
-            console.log(`   - 전월 입고: ${prevInputs.length}건`);
-            console.log(`   - 전월 출고: ${prevOutputs.length}건`);
-            console.log(`   - 당월 입고: ${thisMonthInputs.length}건`);
-            console.log(`   - 당월 출고: ${thisMonthOutputs.length}건`);
-            console.log(`   - 누적 입고: ${cumulativeInputs.length}건`);
+                const [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, cumulativeInputs] = await Promise.all([
+                    Input.findAll({
+                        where: { date: { [Op.lte]: prevEndDate } },
+                        attributes: ["material_id", "quantity", "date"],
+                        include: [includeProduct],
+                    }),
+                    Output.findAll({
+                        where: { date: { [Op.lte]: prevEndDate } },
+                        attributes: ["material_id", "quantity", "date"],
+                        include: [includeProduct],
+                    }),
+                    Input.findAll({
+                        where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                        attributes: ["material_id", "quantity"],
+                        include: [includeProduct],
+                    }),
+                    Output.findAll({
+                        where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                        attributes: ["material_id", "quantity"],
+                        include: [includeProduct],
+                    }),
+                    Input.findAll({
+                        where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
+                        attributes: ["material_id", "quantity"],
+                        include: [includeProduct],
+                    }),
+                ]);
+                
+                console.log(`✅ [${department}] 데이터 조회 완료:`);
+                console.log(`   - 전월 입고: ${prevInputs.length}건`);
+                console.log(`   - 전월 출고: ${prevOutputs.length}건`);
+                console.log(`   - 당월 입고: ${thisMonthInputs.length}건`);
+                console.log(`   - 당월 출고: ${thisMonthOutputs.length}건`);
+                console.log(`   - 누적 입고: ${cumulativeInputs.length}건`);
 
-            // 부서별 카테고리 정의
-            let departmentCategories = [];
-            if (department === "ITS") {
-                departmentCategories = ["TCS", "FTMS", "전산", "기타"];
-            } else if (department === "시설") {
-                departmentCategories = ["안전", "장비", "시설보수", "조경", "기타"];
-            } else if (department === "기전") {
-                departmentCategories = ["전기", "기계", "소방", "기타"];
-            }
+                // 부서별 카테고리 정의
+                let departmentCategories = [];
+                if (department === "ITS") {
+                    departmentCategories = ["TCS", "FTMS", "전산", "기타"];
+                } else if (department === "시설") {
+                    departmentCategories = ["안전", "장비", "시설보수", "조경", "기타"];
+                } else if (department === "기전") {
+                    departmentCategories = ["전기", "기계", "소방", "기타"];
+                }
 
-            const normalizedCategories = departmentCategories.map(cat => cat.replace(/\s+/g, '').toUpperCase());
-            const categoryMap = {};
-            departmentCategories.forEach(cat => {
-                const upper = cat.replace(/\s+/g, '').toUpperCase();
-                categoryMap[upper] = cat;
-            });
+                const normalizedCategories = departmentCategories.map(cat => cat.replace(/\s+/g, '').toUpperCase());
+                const categoryMap = {};
+                departmentCategories.forEach(cat => {
+                    const upper = cat.replace(/\s+/g, '').toUpperCase();
+                    categoryMap[upper] = cat;
+                });
 
-            const resultByCategory = {};
-            departmentCategories.forEach(cat => {
-                resultByCategory[cat] = {
+                const resultByCategory = {};
+                departmentCategories.forEach(cat => {
+                    resultByCategory[cat] = {
+                        prevStock: 0,
+                        input: 0,
+                        output: 0,
+                        remaining: 0,
+                    };
+                });
+
+                const prevStockByCategory = {};
+
+                const processPrevStock = (records, type) => {
+                    records.forEach(item => {
+                        const product = item.product;
+                        if (!product) return;
+
+                        const materialId = product.material_id;
+                        const price = product.price ?? 0;
+                        const qty = item.quantity ?? 0;
+                        const rawCategory = product.get("big_category") || "";
+                        const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                        const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                        const matchedCategory = categoryMap[upperCategory];
+
+                        let categoryKey = null;
+                        if (matchedCategory) {
+                            categoryKey = matchedCategory;
+                        } else if (categoryMap["기타"]) {
+                            categoryKey = "기타";
+                        } else {
+                            return;
+                        }
+
+                        if (!prevStockByCategory[categoryKey]) {
+                            prevStockByCategory[categoryKey] = {};
+                        }
+                        if (!prevStockByCategory[categoryKey][materialId]) {
+                            prevStockByCategory[categoryKey][materialId] = { qty: 0, price };
+                        }
+
+                        const qtyChange = (type === "prevInput") ? qty : -qty;
+                        prevStockByCategory[categoryKey][materialId].qty += qtyChange;
+                    });
+                };
+
+                const processCurrentMonth = (records, type) => {
+                    records.forEach(item => {
+                        const product = item.product;
+                        if (!product) return;
+
+                        const materialId = product.material_id;
+                        const price = product.price ?? 0;
+                        const qty = item.quantity ?? 0;
+                        const rawCategory = product.get("big_category") || "";
+                        const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                        const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                        const matchedCategory = categoryMap[upperCategory];
+
+                        let categoryKey = null;
+                        if (matchedCategory) {
+                            categoryKey = matchedCategory;
+                        } else if (categoryMap["기타"]) {
+                            categoryKey = "기타";
+                        } else {
+                            return;
+                        }
+
+                        const amount = price * qty;
+
+                        if (type === "input") {
+                            resultByCategory[categoryKey].input += amount;
+                        } else if (type === "output") {
+                            resultByCategory[categoryKey].output += amount;
+                        }
+                    });
+                };
+
+                processPrevStock(prevInputs, "prevInput");
+                processPrevStock(prevOutputs, "prevOutput");
+
+                for (const categoryKey in prevStockByCategory) {
+                    if (resultByCategory[categoryKey]) {
+                        let totalPrevStock = 0;
+                        for (const materialId in prevStockByCategory[categoryKey]) {
+                            const { qty, price } = prevStockByCategory[categoryKey][materialId];
+                            const amount = qty * price;
+                            if (qty > 0) {
+                                totalPrevStock += amount;
+                            }
+                        }
+                        resultByCategory[categoryKey].prevStock = totalPrevStock;
+                    }
+                }
+
+                processCurrentMonth(thisMonthInputs, "input");
+                processCurrentMonth(thisMonthOutputs, "output");
+
+                for (const categoryKey in resultByCategory) {
+                    resultByCategory[categoryKey].remaining = 
+                        resultByCategory[categoryKey].prevStock + 
+                        resultByCategory[categoryKey].input - 
+                        resultByCategory[categoryKey].output;
+                }
+
+                let yearTotalInputAmount = 0;
+                cumulativeInputs.forEach(item => {
+                    const product = item.product;
+                    if (!product) return;
+                    const price = product.price ?? 0;
+                    const qty = item.quantity ?? 0;
+                    yearTotalInputAmount += price * qty;
+                });
+
+                // 각 부서별 합계 계산 (하위 카테고리의 합계)
+                const departmentTotal = {
                     prevStock: 0,
                     input: 0,
                     output: 0,
                     remaining: 0,
                 };
-            });
 
-            const prevStockByCategory = {};
-
-            const processPrevStock = (records, type) => {
-                records.forEach(item => {
-                    const product = item.product;
-                    if (!product) return;
-
-                    const materialId = product.material_id;
-                    const price = product.price ?? 0;
-                    const qty = item.quantity ?? 0;
-                    const rawCategory = product.get("big_category") || "";
-                    const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
-                    const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
-                    const matchedCategory = categoryMap[upperCategory];
-
-                    let categoryKey = null;
-                    if (matchedCategory) {
-                        categoryKey = matchedCategory;
-                    } else if (categoryMap["기타"]) {
-                        categoryKey = "기타";
-                    } else {
-                        return;
-                    }
-
-                    if (!prevStockByCategory[categoryKey]) {
-                        prevStockByCategory[categoryKey] = {};
-                    }
-                    if (!prevStockByCategory[categoryKey][materialId]) {
-                        prevStockByCategory[categoryKey][materialId] = { qty: 0, price };
-                    }
-
-                    const qtyChange = (type === "prevInput") ? qty : -qty;
-                    prevStockByCategory[categoryKey][materialId].qty += qtyChange;
+                departmentCategories.forEach(cat => {
+                    const data = resultByCategory[cat] || { prevStock: 0, input: 0, output: 0, remaining: 0 };
+                    departmentTotal.prevStock += data.prevStock;
+                    departmentTotal.input += data.input;
+                    departmentTotal.output += data.output;
+                    departmentTotal.remaining += data.remaining;
                 });
-            };
 
-            const processCurrentMonth = (records, type) => {
-                records.forEach(item => {
-                    const product = item.product;
-                    if (!product) return;
-
-                    const materialId = product.material_id;
-                    const price = product.price ?? 0;
-                    const qty = item.quantity ?? 0;
-                    const rawCategory = product.get("big_category") || "";
-                    const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
-                    const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
-                    const matchedCategory = categoryMap[upperCategory];
-
-                    let categoryKey = null;
-                    if (matchedCategory) {
-                        categoryKey = matchedCategory;
-                    } else if (categoryMap["기타"]) {
-                        categoryKey = "기타";
-                    } else {
-                        return;
-                    }
-
-                    const amount = price * qty;
-
-                    if (type === "input") {
-                        resultByCategory[categoryKey].input += amount;
-                    } else if (type === "output") {
-                        resultByCategory[categoryKey].output += amount;
-                    }
-                });
-            };
-
-            processPrevStock(prevInputs, "prevInput");
-            processPrevStock(prevOutputs, "prevOutput");
-
-            for (const categoryKey in prevStockByCategory) {
-                if (resultByCategory[categoryKey]) {
-                    let totalPrevStock = 0;
-                    for (const materialId in prevStockByCategory[categoryKey]) {
-                        const { qty, price } = prevStockByCategory[categoryKey][materialId];
-                        const amount = qty * price;
-                        if (qty > 0) {
-                            totalPrevStock += amount;
-                        }
-                    }
-                    resultByCategory[categoryKey].prevStock = totalPrevStock;
-                }
-            }
-
-            processCurrentMonth(thisMonthInputs, "input");
-            processCurrentMonth(thisMonthOutputs, "output");
-
-            for (const categoryKey in resultByCategory) {
-                resultByCategory[categoryKey].remaining = 
-                    resultByCategory[categoryKey].prevStock + 
-                    resultByCategory[categoryKey].input - 
-                    resultByCategory[categoryKey].output;
-            }
-
-            let yearTotalInputAmount = 0;
-            cumulativeInputs.forEach(item => {
-                const product = item.product;
-                if (!product) return;
-                const price = product.price ?? 0;
-                const qty = item.quantity ?? 0;
-                yearTotalInputAmount += price * qty;
-            });
-
-            // 각 부서별 합계 계산 (하위 카테고리의 합계)
-            const departmentTotal = {
-                prevStock: 0,
-                input: 0,
-                output: 0,
-                remaining: 0,
-            };
-
-            departmentCategories.forEach(cat => {
-                const data = resultByCategory[cat] || { prevStock: 0, input: 0, output: 0, remaining: 0 };
-                departmentTotal.prevStock += data.prevStock;
-                departmentTotal.input += data.input;
-                departmentTotal.output += data.output;
-                departmentTotal.remaining += data.remaining;
-            });
-
-            console.log(`\n📈 [${department}] 부서별 집계 결과:`);
-            console.log(`   - 카테고리별 데이터:`, JSON.stringify(resultByCategory, null, 2));
-            console.log(`   - 부서 합계:`, departmentTotal);
-            console.log(`   - 연간 입고 금액: ${yearTotalInputAmount.toLocaleString()}원`);
+                console.log(`\n📈 [${department}] 부서별 집계 결과:`);
+                console.log(`   - 카테고리별 데이터:`, JSON.stringify(resultByCategory, null, 2));
+                console.log(`   - 부서 합계:`, departmentTotal);
+                console.log(`   - 연간 입고 금액: ${yearTotalInputAmount.toLocaleString()}원`);
             
-            allPartData[department] = {
-                byCategory: resultByCategory,
-                total: departmentTotal, // 부서별 합계 추가
-                yearTotalInputAmount
-            };
+                allPartData[department] = {
+                    byCategory: resultByCategory,
+                    total: departmentTotal, // 부서별 합계 추가
+                    yearTotalInputAmount
+                };
+            } catch (deptError) {
+                console.error(`\n❌ [${department}] 부서 데이터 처리 중 오류 발생:`, deptError);
+                console.error(`   - 오류 메시지:`, deptError.message);
+                console.error(`   - 스택 트레이스:`, deptError.stack);
+                
+                // 오류 발생 시 빈 데이터로 초기화하여 다음 부서 처리에 영향 없도록 함
+                allPartData[department] = {
+                    byCategory: {},
+                    total: { prevStock: 0, input: 0, output: 0, remaining: 0 },
+                    yearTotalInputAmount: 0
+                };
+                
+                // 부서별 카테고리 정의 (오류 시 빈 카테고리로 초기화)
+                if (department === "ITS") {
+                    ["TCS", "FTMS", "전산", "기타"].forEach(cat => {
+                        allPartData[department].byCategory[cat] = { prevStock: 0, input: 0, output: 0, remaining: 0 };
+                    });
+                } else if (department === "시설") {
+                    ["안전", "장비", "시설보수", "조경", "기타"].forEach(cat => {
+                        allPartData[department].byCategory[cat] = { prevStock: 0, input: 0, output: 0, remaining: 0 };
+                    });
+                } else if (department === "기전") {
+                    ["전기", "기계", "소방", "기타"].forEach(cat => {
+                        allPartData[department].byCategory[cat] = { prevStock: 0, input: 0, output: 0, remaining: 0 };
+                    });
+                }
+                
+                console.log(`   - [${department}] 부서는 빈 데이터로 초기화되어 계속 진행됩니다.`);
+            }
         }
         
         console.log(`\n🎯 전체 부서 데이터 요약:`);
