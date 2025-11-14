@@ -5,9 +5,9 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
   const [formData, setFormData] = useState(data || []);
   const [editingIndex, setEditingIndex] = useState(null);
   const [errors, setErrors] = useState({});
-  const [specialNotes, setSpecialNotes] = useState('');
   const [selectedBusinessLocation, setSelectedBusinessLocation] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('ITS');
+  const [inputDate, setInputDate] = useState(new Date().toISOString().split('T')[0]); // 오늘 날짜를 기본값으로
   const [purchaseInfo, setPurchaseInfo] = useState({
     purchaseNumber: '',
     vatType: '별도',
@@ -58,45 +58,97 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
       console.log('예산 데이터:', budgetData);
       console.log('조회 조건 - 사업소 코드:', businessLocation, '사업소 이름:', businessLocationName, '부서:', department);
       
-      // 해당 사업소와 부서의 예산 찾기 (사업소 이름 또는 코드로 찾기)
+      // 해당 사업소와 부서의 예산 찾기 (다양한 형식의 사업소 이름 매칭)
       const departmentBudget = budgetData.budget?.find(
         item => {
-          const siteMatch = item.site === businessLocationName || 
-                           item.site === businessLocation ||
-                           item.site?.includes(businessLocation) ||
-                           item.site?.toLowerCase().includes(businessLocation.toLowerCase());
-          return siteMatch && item.department === department;
+          // 부서 매칭 확인
+          if (item.department !== department) {
+            return false;
+          }
+          
+          // 사업소 매칭 (다양한 형식 지원)
+          const site = item.site || '';
+          const siteLower = site.toLowerCase();
+          const businessLocationLower = businessLocation.toLowerCase();
+          const businessLocationNameLower = businessLocationName.toLowerCase();
+          
+          // 정확한 매칭
+          if (site === businessLocationName || site === businessLocation) {
+            return true;
+          }
+          
+          // 부분 매칭 (코드가 포함되어 있는지)
+          if (siteLower.includes(businessLocationLower) || businessLocationLower.includes(siteLower)) {
+            return true;
+          }
+          
+          // 사업소 이름이 포함되어 있는지
+          if (siteLower.includes(businessLocationNameLower) || businessLocationNameLower.includes(siteLower)) {
+            return true;
+          }
+          
+          // 사업소 코드 매핑으로 확인
+          const reverseMap = {
+            'gk': ['gk', 'gk사업소'],
+            'cm': ['cm', '천마', '천마사업소'],
+            'es': ['es', '을숙도', '을숙도사업소']
+          };
+          
+          const locationKeys = reverseMap[businessLocationLower] || [];
+          for (const key of locationKeys) {
+            if (siteLower.includes(key)) {
+              return true;
+            }
+          }
+          
+          return false;
         }
       );
       
       console.log('찾은 예산:', departmentBudget);
       if (!departmentBudget) {
-        console.warn('예산을 찾을 수 없습니다. 전체 예산 데이터:', budgetData.budget);
+        console.warn('예산을 찾을 수 없습니다.');
+        console.warn('조회 조건 - 사업소:', businessLocation, businessLocationName, '부서:', department);
+        console.warn('전체 예산 데이터:', budgetData.budget);
+        console.warn('해당 부서의 예산:', budgetData.budget?.filter(item => item.department === department));
       }
       
-      // 연간 총 입고 금액 조회 (기집행액)
-      const statementResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/statement`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify({
-          businessLocation: businessLocation,
-          department: department,
-          year: currentYear,
-          month: new Date().getMonth() + 1,
-          categories: department === "ITS" ? ["TCS", "FTMS", "전산", "기타", "합 계"] :
-                     department === "기전" ? ["전기", "기계", "소방", "기타", "합 계"] :
-                     ["안전", "장비", "시설보수", "조경", "기타", "합 계"]
-        })
-      });
-      
-      if (!statementResponse.ok) throw new Error("집행액 조회 실패");
-      const statementData = await statementResponse.json();
+      // 연간 총 입고 금액 조회 (기집행액) - 테이블이 없어도 예산은 표시해야 함
+      let executedAmount = 0;
+      try {
+        const statementResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/statement`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          },
+          body: JSON.stringify({
+            businessLocation: businessLocation,
+            department: department,
+            year: currentYear,
+            month: new Date().getMonth() + 1,
+            categories: department === "ITS" ? ["TCS", "FTMS", "전산", "기타", "합 계"] :
+                       department === "기전" ? ["전기", "기계", "소방", "기타", "합 계"] :
+                       ["안전", "장비", "시설보수", "조경", "기타", "합 계"]
+          })
+        });
+        
+        if (statementResponse.ok) {
+          const statementData = await statementResponse.json();
+          executedAmount = statementData.yearTotalInputAmount || 0;
+        } else {
+          // 테이블이 없거나 에러가 발생해도 집행액은 0으로 처리
+          const errorData = await statementResponse.json().catch(() => ({}));
+          console.warn('집행액 조회 실패 (테이블이 없을 수 있음):', errorData);
+          executedAmount = 0;
+        }
+      } catch (statementError) {
+        // 집행액 조회 실패해도 예산은 표시
+        console.warn('집행액 조회 중 오류 발생 (테이블이 없을 수 있음):', statementError);
+        executedAmount = 0;
+      }
       
       const budget = departmentBudget ? Number(departmentBudget.amount) : 0;
-      const executedAmount = statementData.yearTotalInputAmount || 0;
       const currentExecution = 0; // 현재 집행액은 0으로 초기화 (입고 데이터가 저장되면 업데이트)
       const remainingAmount = budget - executedAmount;
       
@@ -143,7 +195,6 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
       자재코드: purchaseInfo.purchaseNumber, // 구매번호를 자재코드로 사용
       품명: '',
       규격: '',
-      단위: '',
       단가: '',
       입고수량: '',
       isNew: true
@@ -168,16 +219,33 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     }
   };
 
-  // 전체 삭제 (특이사항 포함)
+  // 전체 삭제
   const handleClearAll = () => {
-    if (window.confirm('모든 데이터와 특이사항을 삭제하시겠습니까?')) {
+    if (window.confirm('모든 데이터를 삭제하시겠습니까?')) {
       onClear();
-      setSpecialNotes('');
+      setInputDate(new Date().toISOString().split('T')[0]); // 날짜를 오늘로 초기화
     }
   };
 
   // 편집 모드 시작
   const startEdit = (index) => {
+    const newData = [...formData];
+    // 단가와 입고수량이 숫자로 저장되어 있으면 포맷팅 적용
+    const updates = {};
+    if (typeof newData[index].단가 === 'number') {
+      updates.단가 = formatNumberInput(newData[index].단가.toString());
+    }
+    if (typeof newData[index].입고수량 === 'number') {
+      updates.입고수량 = formatNumberInput(newData[index].입고수량.toString());
+    }
+    if (Object.keys(updates).length > 0) {
+      newData[index] = {
+        ...newData[index],
+        ...updates
+      };
+      setFormData(newData);
+      onDataChange(newData);
+    }
     setEditingIndex(index);
   };
 
@@ -187,10 +255,46 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     setErrors({});
   };
 
+  // 숫자 포맷팅 (쉼표 추가)
+  const formatNumberInput = (value) => {
+    if (!value) return '';
+    
+    // 숫자가 아닌 문자 제거 (쉼표 제외)
+    let numericValue = value.toString().replace(/[^\d.]/g, '');
+    if (!numericValue) return '';
+    
+    // 소수점이 여러 개인 경우 첫 번째만 유지
+    const dotIndex = numericValue.indexOf('.');
+    if (dotIndex !== -1) {
+      numericValue = numericValue.substring(0, dotIndex + 1) + numericValue.substring(dotIndex + 1).replace(/\./g, '');
+    }
+    
+    // 소수점 처리
+    const parts = numericValue.split('.');
+    const integerPart = parts[0] ? parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
+    const decimalPart = parts[1] ? '.' + parts[1].substring(0, 2) : ''; // 소수점 2자리까지만
+    
+    return integerPart + decimalPart;
+  };
+
+  // 포맷된 숫자를 실제 숫자로 변환 (쉼표 제거)
+  const parseFormattedNumber = (value) => {
+    if (!value) return '';
+    return value.toString().replace(/,/g, '');
+  };
+
   // 입력값 변경
   const handleInputChange = (index, field, value) => {
     const newData = [...formData];
-    newData[index] = { ...newData[index], [field]: value };
+    
+    // 단가와 입고수량 필드는 포맷팅 적용
+    if (field === '단가' || field === '입고수량') {
+      const formattedValue = formatNumberInput(value);
+      newData[index] = { ...newData[index], [field]: formattedValue };
+    } else {
+      newData[index] = { ...newData[index], [field]: value };
+    }
+    
     setFormData(newData);
     onDataChange(newData);
 
@@ -213,13 +317,16 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     if (!row.품명?.trim()) {
       rowErrors[`${index}-품명`] = '품명은 필수입니다.';
     }
-    if (!row.단위?.trim()) {
-      rowErrors[`${index}-단위`] = '단위는 필수입니다.';
-    }
-    if (!row.단가 || isNaN(row.단가) || Number(row.단가) < 0) {
+    
+    // 단가 검증 (쉼표 제거 후 숫자 변환)
+    const 단가Value = parseFormattedNumber(row.단가);
+    if (!단가Value || isNaN(단가Value) || Number(단가Value) < 0) {
       rowErrors[`${index}-단가`] = '단가는 0 이상의 숫자여야 합니다.';
     }
-    if (!row.입고수량 || isNaN(row.입고수량) || Number(row.입고수량) < 0) {
+    
+    // 입고수량 검증 (쉼표 제거 후 숫자 변환)
+    const 입고수량Value = parseFormattedNumber(row.입고수량);
+    if (!입고수량Value || isNaN(입고수량Value) || Number(입고수량Value) < 0) {
       rowErrors[`${index}-입고수량`] = '입고수량은 0 이상의 숫자여야 합니다.';
     }
 
@@ -232,8 +339,8 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     const newData = [...formData];
     newData[index] = {
       ...newData[index],
-      단가: Number(newData[index].단가) || 0,
-      입고수량: Number(newData[index].입고수량) || 0,
+      단가: Number(단가Value) || 0,
+      입고수량: Number(입고수량Value) || 0,
       isNew: false
     };
     setFormData(newData);
@@ -250,7 +357,11 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
 
   // 총합 계산
   const calculateTotal = (field) => {
-    return formData.reduce((sum, item) => sum + (Number(item[field]) || 0), 0);
+    return formData.reduce((sum, item) => {
+      // 포맷된 숫자(쉼표 포함)를 파싱하여 계산
+      const value = parseFloat(parseFormattedNumber(item[field])) || 0;
+      return sum + value;
+    }, 0);
   };
 
   return (
@@ -307,6 +418,16 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
             <span className="w-24 font-medium text-gray-700">부가세구분</span>
             <span className="text-gray-900">{purchaseInfo.vatType}</span>
           </div>
+          <div className="flex items-center">
+            <span className="w-24 font-medium text-gray-700">입고 날짜 *</span>
+            <input
+              type="date"
+              value={inputDate}
+              onChange={(e) => setInputDate(e.target.value)}
+              className="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
           <div className="flex">
             <span className="w-24 font-medium text-gray-700">예산</span>
             <span className="text-gray-900 font-mono">
@@ -344,7 +465,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
           {formData.length > 0 && (
             <>
               <button
-                onClick={() => onSaveAll(selectedDepartment, selectedBusinessLocation)}
+                onClick={() => onSaveAll(selectedDepartment, selectedBusinessLocation, inputDate)}
                 disabled={isLoading}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
               >
@@ -378,7 +499,6 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
               <tr className="bg-gray-200">
                 <th className="border p-2 text-left">품명 *</th>
                 <th className="border p-2 text-left">규격</th>
-                <th className="border p-2 text-center">단위 *</th>
                 <th className="border p-2 text-right">단가 *</th>
                 <th className="border p-2 text-right">입고수량 *</th>
                 <th className="border p-2 text-right">총금액</th>
@@ -388,7 +508,10 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
             <tbody>
               {formData.map((row, index) => {
                 const isEditing = editingIndex === index;
-                const totalAmount = (Number(row.단가) || 0) * (Number(row.입고수량) || 0);
+                // 포맷된 숫자(쉼표 포함)를 파싱하여 계산
+                const 단가 = parseFloat(parseFormattedNumber(row.단가)) || 0;
+                const 입고수량 = parseFloat(parseFormattedNumber(row.입고수량)) || 0;
+                const totalAmount = 단가 * 입고수량;
                 
                 return (
                   <tr key={row.id || index} className={`hover:bg-gray-50 ${isEditing ? 'bg-blue-50' : ''}`}>
@@ -430,42 +553,19 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
                       )}
                     </td>
 
-                    {/* 단위 */}
-                    <td className="border p-1 text-center">
-                      {isEditing ? (
-                        <div>
-                          <input
-                            type="text"
-                            value={row.단위 || ''}
-                            onChange={(e) => handleInputChange(index, '단위', e.target.value)}
-                            className={`w-full px-2 py-1 border rounded text-sm ${
-                              errors[`${index}-단위`] ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            placeholder="단위"
-                          />
-                          {errors[`${index}-단위`] && (
-                            <p className="text-red-500 text-xs mt-1">{errors[`${index}-단위`]}</p>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-sm">{row.단위 || '-'}</span>
-                      )}
-                    </td>
-
                     {/* 단가 */}
                     <td className="border p-1 text-right">
                       {isEditing ? (
                         <div>
                           <input
-                            type="number"
+                            type="text"
                             value={row.단가 || ''}
                             onChange={(e) => handleInputChange(index, '단가', e.target.value)}
-                            min="0"
-                            step="0.01"
-                            className={`w-full px-2 py-1 border rounded text-sm text-right ${
+                            className={`w-full px-2 py-1 border rounded text-sm text-right font-mono ${
                               errors[`${index}-단가`] ? 'border-red-500' : 'border-gray-300'
                             }`}
                             placeholder="0"
+                            inputMode="numeric"
                           />
                           {errors[`${index}-단가`] && (
                             <p className="text-red-500 text-xs mt-1">{errors[`${index}-단가`]}</p>
@@ -481,15 +581,14 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
                       {isEditing ? (
                         <div>
                           <input
-                            type="number"
+                            type="text"
                             value={row.입고수량 || ''}
                             onChange={(e) => handleInputChange(index, '입고수량', e.target.value)}
-                            min="0"
-                            step="0.01"
-                            className={`w-full px-2 py-1 border rounded text-sm text-right ${
+                            className={`w-full px-2 py-1 border rounded text-sm text-right font-mono ${
                               errors[`${index}-입고수량`] ? 'border-red-500' : 'border-gray-300'
                             }`}
                             placeholder="0"
+                            inputMode="numeric"
                           />
                           {errors[`${index}-입고수량`] && (
                             <p className="text-red-500 text-xs mt-1">{errors[`${index}-입고수량`]}</p>
@@ -549,7 +648,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
             </tbody>
             <tfoot>
               <tr className="bg-gray-100 font-semibold">
-                <td className="border p-2 text-right" colSpan="4">
+                <td className="border p-2 text-right" colSpan="3">
                   합계
                 </td>
                 <td className="border p-2 text-right font-mono">
@@ -557,9 +656,11 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
                 </td>
                 <td className="border p-2 text-right font-mono text-blue-600">
                   {formatNumber(
-                    formData.reduce((sum, item) => 
-                      sum + ((Number(item.단가) || 0) * (Number(item.입고수량) || 0)), 0
-                    )
+                    formData.reduce((sum, item) => {
+                      const 단가 = parseFloat(parseFormattedNumber(item.단가)) || 0;
+                      const 입고수량 = parseFloat(parseFormattedNumber(item.입고수량)) || 0;
+                      return sum + (단가 * 입고수량);
+                    }, 0)
                   )}
                 </td>
                 <td className="border p-2"></td>
@@ -574,21 +675,6 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
           총 {formData.length}개 항목
         </div>
       )}
-
-      {/* 특이사항 입력 */}
-      <div className="mt-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          특이사항
-        </label>
-        <textarea
-          value={specialNotes}
-          onChange={(e) => setSpecialNotes(e.target.value)}
-          rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-          placeholder="입고 관련 특이사항이나 메모를 입력하세요..."
-        />
-
-      </div>
     </div>
   );
 }

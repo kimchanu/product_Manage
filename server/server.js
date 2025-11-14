@@ -28,10 +28,11 @@ app.use("/api", register);
 app.use("/api", loginRoute);
 app.use("/api", protectedRoute);
 app.use("/api/upload", uploadRouter);
-app.use("/api/materials", materialRoutes);
-app.use("/api/materials", require("./routes/product_list_edit"));
+// 더 구체적인 경로를 먼저 등록 (순서 중요)
 app.use("/api/materials/output", outputRouter);
 app.use("/api/materials/input", inputRouter);
+app.use("/api/materials", materialRoutes);
+app.use("/api/materials", require("./routes/product_list_edit"));
 app.use("/api/statistics/output", output_statistics);
 app.use("/api/statistics/input", inputStatisticsRouter);
 app.use("/api/statement", statement);

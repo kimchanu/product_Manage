@@ -41,7 +41,7 @@ function useManualInputData() {
   }, []);
 
   // 전체 데이터 저장 (서버로 전송)
-  const saveAllData = useCallback(async (department = 'ITS', businessLocation = null) => {
+  const saveAllData = useCallback(async (department = 'ITS', businessLocation = null, inputDate = null) => {
     if (data.length === 0) {
       setMessage({ type: 'warning', text: '저장할 데이터가 없습니다.' });
       setTimeout(() => setMessage({ type: '', text: '' }), 3000);
@@ -53,7 +53,7 @@ function useManualInputData() {
 
     try {
       // 서버 API 호출
-      const response = await fetch('/api/input/manual', {
+      const response = await fetch('/api/materials/input/manual', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,15 +63,35 @@ function useManualInputData() {
           items: data,
           type: 'manual_input',
           department: department,
-          business_location: businessLocation
+          business_location: businessLocation,
+          date: inputDate || new Date().toISOString().split('T')[0]
         })
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // 응답이 JSON인지 확인
+      const contentType = response.headers.get('content-type');
+      let result;
+      
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json();
+      } else {
+        // HTML 응답인 경우 (에러 페이지 등)
+        const text = await response.text();
+        console.error('서버 응답 (HTML):', text.substring(0, 200));
+        throw new Error(`서버 오류가 발생했습니다. (상태 코드: ${response.status})`);
       }
-
-      const result = await response.json();
+      
+      if (!response.ok) {
+        // 테이블이 없는 경우 특별 처리
+        if (result.error === 'TABLE_NOT_FOUND') {
+          setMessage({ 
+            type: 'error', 
+            text: result.message || '해당 사업소와 부서의 테이블이 존재하지 않습니다. 관리자에게 문의하세요.' 
+          });
+          return;
+        }
+        throw new Error(result.message || `HTTP error! status: ${response.status}`);
+      }
       
       if (result.success) {
         setMessage({ type: 'success', text: `${data.length}개의 데이터가 성공적으로 저장되었습니다.` });
@@ -81,10 +101,19 @@ function useManualInputData() {
       }
     } catch (error) {
       console.error('데이터 저장 오류:', error);
-      setMessage({ 
-        type: 'error', 
-        text: `저장 중 오류가 발생했습니다: ${error.message}` 
-      });
+      
+      // JSON 파싱 오류인 경우
+      if (error instanceof SyntaxError && error.message.includes('JSON')) {
+        setMessage({ 
+          type: 'error', 
+          text: '서버 응답을 처리할 수 없습니다. 서버 오류가 발생했을 수 있습니다. 관리자에게 문의하세요.' 
+        });
+      } else {
+        setMessage({ 
+          type: 'error', 
+          text: `저장 중 오류가 발생했습니다: ${error.message}` 
+        });
+      }
     } finally {
       setIsLoading(false);
       setTimeout(() => setMessage({ type: '', text: '' }), 5000);
