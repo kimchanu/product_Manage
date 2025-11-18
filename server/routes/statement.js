@@ -908,11 +908,19 @@ router.post("/all-part-monthly", async (req, res) => {
 
         const yearTotalInputAmount = (allPartData["ITS"]?.yearTotalInputAmount || 0) + (allPartData["시설"]?.yearTotalInputAmount || 0) + (allPartData["기전"]?.yearTotalInputAmount || 0);
 
+        // 부서별 집행누계 금액
+        const departmentYearTotalInputAmount = {
+            ITS: allPartData["ITS"]?.yearTotalInputAmount || 0,
+            시설: allPartData["시설"]?.yearTotalInputAmount || 0,
+            기전: allPartData["기전"]?.yearTotalInputAmount || 0,
+        };
+
         res.json({
             byCategory: resultByCategory,
             totalExecutedAmount,
             executionRate,
             yearTotalInputAmount,
+            departmentYearTotalInputAmount, // 부서별 집행누계 금액 추가
         });
     } catch (err) {
         console.error("Error processing all-part monthly statement:", err);

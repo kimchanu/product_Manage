@@ -14,6 +14,7 @@ const Statement = () => {
     const [stats, setStats] = useState({});
     const [categories, setCategories] = useState([]);
     const [budgetData, setBudgetData] = useState(null);
+    const [departmentBudgets, setDepartmentBudgets] = useState({}); // 부서별 예산 데이터
     const [reportType, setReportType] = useState(searchParams.get("type") || "monthly"); // URL 파라미터에서 초기값 가져오기
 
     useEffect(() => {
@@ -33,27 +34,48 @@ const Statement = () => {
                     return normalized;
                 };
 
-                const departmentBudget = data.budget?.find(
-                    item => {
-                        const userLocation = normalizeLocation(user.business_location);
-                        const budgetLocation = normalizeLocation(item.site);
-                        return userLocation === budgetLocation && item.department === user.department;
-                    }
-                );
+                // 전파트 월간보고서인 경우 부서별 예산 조회
+                if (reportType === "allPartMonthly") {
+                    const userLocation = normalizeLocation(user.business_location);
+                    const budgets = {};
+                    
+                    ["ITS", "시설", "기전"].forEach(dept => {
+                        const deptBudget = data.budget?.find(
+                            item => {
+                                const budgetLocation = normalizeLocation(item.site);
+                                return userLocation === budgetLocation && item.department === dept;
+                            }
+                        );
+                        budgets[dept] = deptBudget?.amount || 0;
+                    });
+                    
+                    setDepartmentBudgets(budgets);
+                    console.log("부서별 예산:", budgets);
+                } else {
+                    // 기존 로직: 사용자 부서의 예산만 조회
+                    const departmentBudget = data.budget?.find(
+                        item => {
+                            const userLocation = normalizeLocation(user.business_location);
+                            const budgetLocation = normalizeLocation(item.site);
+                            return userLocation === budgetLocation && item.department === user.department;
+                        }
+                    );
 
-                console.log("사용자 정보:", { business_location: user.business_location, department: user.department });
-                console.log("정규화된 위치:", normalizeLocation(user.business_location));
-                console.log("매칭된 예산:", departmentBudget);
+                    console.log("사용자 정보:", { business_location: user.business_location, department: user.department });
+                    console.log("정규화된 위치:", normalizeLocation(user.business_location));
+                    console.log("매칭된 예산:", departmentBudget);
 
-                setBudgetData(departmentBudget || { amount: 0 });
+                    setBudgetData(departmentBudget || { amount: 0 });
+                }
             } catch (err) {
                 console.error("예산 조회 오류:", err);
                 setBudgetData({ amount: 0 });
+                setDepartmentBudgets({});
             }
         };
 
         fetchBudget();
-    }, [user, year]);
+    }, [user, year, reportType]);
 
     useEffect(() => {
         const fetchStatistics = async () => {
@@ -227,7 +249,7 @@ const Statement = () => {
                         budgetAmount={budgetData?.amount || 0}
                         currentMonthAmount={stats.byCategory?.["합 계"]?.input || 0}
                         yearTotalInputAmount={stats.yearTotalInputAmount || 0}
-                        remainingAmount={(budgetData?.amount || 0) - (stats.remaining || 0)}
+                        remainingAmount={(budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)}
                         reportType={reportType} // 추가: 보고서 유형 전달
                     />
                 </div>
@@ -298,7 +320,7 @@ const Statement = () => {
             <h2 className="text-left font-semibold mt-10 mb-2">{year}년 예산집행 현황</h2>
             <div className="text-right text-sm mb-2">(단위 : 원)</div>
 
-            <table className="w-full border border-black text-sm text-center table-fixed">
+            <table className="w-full border border-black text-sm text-center table-fixed mb-20">
                 <thead>
                     <tr className="bg-gray-100">
                         <th className="border border-black" colSpan={3}>구 분</th>
@@ -310,16 +332,40 @@ const Statement = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td className="border border-black h-12" colSpan={3}>
-                            {month.toString().padStart(2, "0")}월
-                        </td>
-                        <td className="border border-black h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
-                        <td className="border border-black h-12" colSpan={9}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
-                        <td className="border border-black h-12" colSpan={9}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
-                        <td className="border border-black h-12" colSpan={9}>{((budgetData?.amount || 0) - (stats.remaining || 0)).toLocaleString()}</td>
-                        <td className="border border-black h-12" colSpan={3}>&nbsp;</td>
-                    </tr>
+                    {reportType === "allPartMonthly" ? (
+                        // 전파트 월간보고서: 부서별로 행 표시
+                        <>
+                            {["ITS", "시설", "기전"].map((dept) => {
+                                const deptBudget = departmentBudgets[dept] || 0;
+                                const deptMonthInput = stats.byCategory?.[dept]?.input || 0;
+                                const deptYearTotalInput = stats.departmentYearTotalInputAmount?.[dept] || 0;
+                                const deptRemaining = deptBudget - deptYearTotalInput;
+                                
+                                return (
+                                    <tr key={dept}>
+                                        <td className="border border-black h-12" colSpan={3}>{dept}</td>
+                                        <td className="border border-black h-12" colSpan={9}>{deptBudget.toLocaleString()}</td>
+                                        <td className="border border-black h-12" colSpan={9}>{deptMonthInput.toLocaleString()}</td>
+                                        <td className="border border-black h-12" colSpan={9}>{deptYearTotalInput.toLocaleString()}</td>
+                                        <td className="border border-black h-12" colSpan={9}>{deptRemaining.toLocaleString()}</td>
+                                        <td className="border border-black h-12" colSpan={3}>&nbsp;</td>
+                                    </tr>
+                                );
+                            })}
+                        </>
+                    ) : (
+                        // 일반 월간보고서: 월별로 행 표시
+                        <tr>
+                            <td className="border border-black h-12" colSpan={3}>
+                                {month.toString().padStart(2, "0")}월
+                            </td>
+                            <td className="border border-black h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
+                            <td className="border border-black h-12" colSpan={9}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
+                            <td className="border border-black h-12" colSpan={9}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
+                            <td className="border border-black h-12" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)).toLocaleString()}</td>
+                            <td className="border border-black h-12" colSpan={3}>&nbsp;</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </div>

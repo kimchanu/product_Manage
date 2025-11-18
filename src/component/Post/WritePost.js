@@ -87,6 +87,25 @@ const WritePost = () => {
         setImages(prev => prev.filter((_, i) => i !== index));
     };
 
+    // 이미지 URL 처리 헬퍼 함수
+    const getImageUrl = (url) => {
+        // 상대 경로인 경우 API URL 추가
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}${url}` : url;
+        }
+        
+        // 절대 경로인 경우, localhost나 127.0.0.1이 포함되어 있으면 REACT_APP_API_URL로 교체
+        if (url.includes('localhost') || url.includes('127.0.0.1')) {
+            if (process.env.REACT_APP_API_URL) {
+                // URL에서 경로 부분만 추출하여 REACT_APP_API_URL과 결합
+                const urlObj = new URL(url);
+                return `${process.env.REACT_APP_API_URL}${urlObj.pathname}${urlObj.search}`;
+            }
+        }
+        
+        return url;
+    };
+
     const insertImageToContent = (imageUrl) => {
         const imageTag = `\n![이미지](${imageUrl})\n`;
         console.log("이미지 태그 삽입:", imageTag);
@@ -99,7 +118,8 @@ const WritePost = () => {
 
         // ![이미지](URL) 패턴을 찾아서 실제 이미지로 변환
         return content.replace(/!\[이미지\]\((.*?)\)/g, (match, url) => {
-            return `<img src="${url}" alt="이미지" style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;" />`;
+            const imageUrl = getImageUrl(url);
+            return `<img src="${imageUrl}" alt="이미지" style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;" />`;
         });
     };
 
@@ -304,7 +324,7 @@ const WritePost = () => {
                                     {images.map((image, index) => (
                                         <div key={index} className="relative border border-gray-200 rounded">
                                             <img
-                                                src={image.url}
+                                                src={getImageUrl(image.url)}
                                                 alt={image.filename}
                                                 className="w-full h-24 object-cover rounded"
                                                 onError={(e) => {

@@ -59,8 +59,19 @@ router.post("/", upload.single('image'), async (req, res) => {
             type: sequelize.QueryTypes.INSERT
         });
 
-        // 이미지 URL 생성
-        const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        // 이미지 URL 생성 - 환경변수 우선, 없으면 요청 호스트 정보 사용
+        let baseUrl;
+        if (process.env.REACT_APP_API_URL) {
+            // 프론트엔드와 동일한 환경변수 사용
+            baseUrl = process.env.REACT_APP_API_URL;
+        } else if (process.env.API_BASE_URL) {
+            baseUrl = process.env.API_BASE_URL;
+        } else {
+            // 환경변수가 없으면 요청 호스트 정보 사용 (프록시 환경 고려)
+            const protocol = req.get('x-forwarded-proto') || req.protocol || 'http';
+            const host = req.get('x-forwarded-host') || req.get('host') || 'localhost:5000';
+            baseUrl = `${protocol}://${host}`;
+        }
         const imageUrl = `${baseUrl}/api/image/${req.file.filename}`;
 
         console.log("이미지 업로드 성공:", {
