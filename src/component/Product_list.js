@@ -16,7 +16,8 @@ function Product_list() {
     big_category: "",
     category: "",
     sub_category: "",
-    currentStock: ""
+    currentStock: "",
+    stockQuantity: ""
   });
   const [showFilter, setShowFilter] = useState({
     material_code: false,
@@ -24,8 +25,15 @@ function Product_list() {
     big_category: false,
     category: false,
     sub_category: false,
-    currentStock: false
+    currentStock: false,
+    stockQuantity: false
   });
+  // 필터 드롭다운 위치 저장 (각 필터별로)
+  const [filterPositions, setFilterPositions] = useState({});
+  const filterButtonRefs = useRef({});
+  // 정렬 상태
+  const [sortField, setSortField] = useState(""); // 정렬할 필드
+  const [sortOrder, setSortOrder] = useState(""); // "asc" 또는 "desc"
   // 체크박스 선택 상태
   const [selectedRows, setSelectedRows] = useState([]); // id 배열
   // 모달 상태
@@ -80,7 +88,7 @@ function Product_list() {
   }, [businessLocation, department]);
 
   // ✅ 검색 필터 처리
-  const filteredMaterials =
+  let filteredMaterials =
     Array.isArray(materials) &&
     materials.filter(
       (material) =>
@@ -97,17 +105,90 @@ function Product_list() {
           (filters.currentStock === "low" &&
             ((material?.total_input_quantity || 0) - (material?.total_output_quantity || 0)) < (material?.appropriate || 0)) ||
           (filters.currentStock === "normal" &&
-            ((material?.total_input_quantity || 0) - (material?.total_output_quantity || 0)) >= (material?.appropriate || 0)))
+            ((material?.total_input_quantity || 0) - (material?.total_output_quantity || 0)) >= (material?.appropriate || 0))) &&
+        (filters.stockQuantity === "" ||
+          (filters.stockQuantity === "zero" &&
+            ((material?.total_input_quantity || 0) - (material?.total_output_quantity || 0)) === 0) ||
+          (filters.stockQuantity === "oneOrMore" &&
+            ((material?.total_input_quantity || 0) - (material?.total_output_quantity || 0)) >= 1))
     );
+
+  // ✅ 정렬 처리
+  if (Array.isArray(filteredMaterials) && sortField && sortOrder) {
+    filteredMaterials = [...filteredMaterials].sort((a, b) => {
+      let aValue = a[sortField] || "";
+      let bValue = b[sortField] || "";
+      
+      // 문자열 비교
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
+      
+      if (sortOrder === "asc") {
+        return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+      } else {
+        return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+      }
+    });
+  }
 
   // 무한 스크롤: 보여줄 자재 개수 상태
   const [visibleCount, setVisibleCount] = useState(20);
 
-  // 검색/필터가 바뀌면 visibleCount를 20으로 초기화
+  // 검색/필터/정렬이 바뀌면 visibleCount를 20으로 초기화
   useEffect(() => {
     setVisibleCount(20);
     setSelectedRows([]); // 검색/필터/데이터 바뀔 때 체크박스 해제
-  }, [searchTerm, filters, materials]);
+  }, [searchTerm, filters, materials, sortField, sortOrder]);
+
+  // 필터 외부 클릭 시 닫기 및 스크롤 시 위치 업데이트
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const isFilterButton = Object.values(filterButtonRefs.current).some(
+        (ref) => ref && ref.contains(event.target)
+      );
+      const isFilterDropdown = event.target.closest('.filter-dropdown');
+      
+      if (!isFilterButton && !isFilterDropdown) {
+        setShowFilter({
+          material_code: false,
+          location: false,
+          big_category: false,
+          category: false,
+          sub_category: false,
+          currentStock: false,
+          stockQuantity: false
+        });
+      }
+    };
+
+    const updateFilterPositions = () => {
+      const newPositions = {};
+      Object.keys(showFilter).forEach(filterKey => {
+        if (showFilter[filterKey] && filterButtonRefs.current[filterKey]) {
+          const buttonRect = filterButtonRefs.current[filterKey].getBoundingClientRect();
+          newPositions[filterKey] = {
+            top: buttonRect.bottom + window.scrollY + 4,
+            left: buttonRect.left + window.scrollX
+          };
+        }
+      });
+      if (Object.keys(newPositions).length > 0) {
+        setFilterPositions(prev => ({ ...prev, ...newPositions }));
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', updateFilterPositions, true);
+    window.addEventListener('resize', updateFilterPositions);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', updateFilterPositions, true);
+      window.removeEventListener('resize', updateFilterPositions);
+    };
+  }, [showFilter]);
 
   // 무한 스크롤 핸들러
   const handleScroll = useCallback((e) => {
@@ -209,7 +290,7 @@ function Product_list() {
           />
         </div>
         {/* 테이블 */}
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="bg-white shadow-md rounded-lg overflow-hidden relative">
           <div className="overflow-x-auto max-h-[710px] overflow-y-auto" onScroll={handleScroll}>
             <table className="min-w-full border-collapse border border-gray-200">
               <thead className="bg-gray-100 sticky top-0 z-10">
@@ -227,111 +308,221 @@ function Product_list() {
                       className={`px-6 py-3 text-sm font-medium text-gray-600 border-r border-gray-200 ${[9, 10, 11].includes(idx) ? "text-right" : "text-left"
                         }`}
                     >
-                      <div className="flex items-center">
+                      <div className="flex items-center relative">
                         {header}
-                        {["자재코드", "위치", "대분류", "중분류", "소분류", "적정수량"].includes(header) && (
+                        {["자재코드", "위치", "대분류", "중분류", "소분류", "재고수량", "적정수량"].includes(header) && (
                           <button
-                            onClick={() => {
+                            ref={(el) => {
                               const filterKey = {
                                 "자재코드": "material_code",
                                 "위치": "location",
                                 "대분류": "big_category",
                                 "중분류": "category",
                                 "소분류": "sub_category",
+                                "재고수량": "stockQuantity",
                                 "적정수량": "currentStock"
                               }[header];
+                              if (el) filterButtonRefs.current[filterKey] = el;
+                            }}
+                            onClick={(e) => {
+                              const filterKey = {
+                                "자재코드": "material_code",
+                                "위치": "location",
+                                "대분류": "big_category",
+                                "중분류": "category",
+                                "소분류": "sub_category",
+                                "재고수량": "stockQuantity",
+                                "적정수량": "currentStock"
+                              }[header];
+                              const buttonRect = e.currentTarget.getBoundingClientRect();
+                              setFilterPositions(prev => ({
+                                ...prev,
+                                [filterKey]: {
+                                  top: buttonRect.bottom + window.scrollY + 4,
+                                  left: buttonRect.left + window.scrollX
+                                }
+                              }));
                               setShowFilter(prev => ({
                                 ...prev,
                                 [filterKey]: !prev[filterKey]
                               }));
                             }}
                             className="ml-1 text-gray-400 hover:text-gray-600"
+                            title="필터"
                           >
                             <FaFilter size={12} />
                           </button>
                         )}
                       </div>
-                      {["자재코드", "위치", "대분류", "중분류", "소분류", "적정수량"].includes(header) && showFilter[{
+                      {["자재코드", "위치", "대분류", "중분류", "소분류", "재고수량", "적정수량"].includes(header) && showFilter[{
                         "자재코드": "material_code",
                         "위치": "location",
                         "대분류": "big_category",
                         "중분류": "category",
                         "소분류": "sub_category",
+                        "재고수량": "stockQuantity",
                         "적정수량": "currentStock"
                       }[header]] && (
-                          <div className="absolute mt-1 w-40 bg-white shadow-lg rounded-md z-20 border border-gray-200">
-                            <div className="p-2 max-h-60 overflow-y-auto">
-                              {header !== "적정수량" ? (
-                                Array.from(new Set(materials.map(item => item[{
-                                  "자재코드": "material_code",
-                                  "위치": "location",
-                                  "대분류": "big_category",
-                                  "중분류": "category",
-                                  "소분류": "sub_category"
-                                }[header]]))).map((value, i) => (
+                          <div 
+                            className="filter-dropdown fixed w-40 bg-white shadow-lg rounded-md z-[9999] border border-gray-200"
+                            style={{
+                              top: `${filterPositions[{
+                                "자재코드": "material_code",
+                                "위치": "location",
+                                "대분류": "big_category",
+                                "중분류": "category",
+                                "소분류": "sub_category",
+                                "재고수량": "stockQuantity",
+                                "적정수량": "currentStock"
+                              }[header]]?.top || 0}px`,
+                              left: `${filterPositions[{
+                                "자재코드": "material_code",
+                                "위치": "location",
+                                "대분류": "big_category",
+                                "중분류": "category",
+                                "소분류": "sub_category",
+                                "재고수량": "stockQuantity",
+                                "적정수량": "currentStock"
+                              }[header]]?.left || 0}px`
+                            }}
+                          >
+                            <div>
+                              {header === "자재코드" && (
+                                <div className="p-2 bg-gray-50 sticky top-0 z-10 border-b border-gray-200">
                                   <div
-                                    key={i}
-                                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                    className={`px-2 py-1 hover:bg-gray-100 cursor-pointer rounded ${sortField === "material_code" && sortOrder === "asc" ? "bg-blue-50 text-blue-600" : ""}`}
                                     onClick={() => {
-                                      setFilters(prev => ({
-                                        ...prev,
-                                        [{
-                                          "자재코드": "material_code",
-                                          "위치": "location",
-                                          "대분류": "big_category",
-                                          "중분류": "category",
-                                          "소분류": "sub_category"
-                                        }[header]]: value
-                                      }));
+                                      setSortField("material_code");
+                                      setSortOrder("asc");
                                       setShowFilter(prev => ({
                                         ...prev,
-                                        [{
-                                          "자재코드": "material_code",
-                                          "위치": "location",
-                                          "대분류": "big_category",
-                                          "중분류": "category",
-                                          "소분류": "sub_category"
-                                        }[header]]: false
+                                        material_code: false
                                       }));
                                     }}
                                   >
-                                    {value || "-"}
+                                    오름차순
                                   </div>
-                                ))
-                              ) : (
-                                <>
                                   <div
-                                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                    className={`px-2 py-1 hover:bg-gray-100 cursor-pointer rounded ${sortField === "material_code" && sortOrder === "desc" ? "bg-blue-50 text-blue-600" : ""}`}
                                     onClick={() => {
-                                      setFilters(prev => ({
-                                        ...prev,
-                                        currentStock: "low"
-                                      }));
+                                      setSortField("material_code");
+                                      setSortOrder("desc");
                                       setShowFilter(prev => ({
                                         ...prev,
-                                        currentStock: false
+                                        material_code: false
                                       }));
                                     }}
                                   >
-                                    재고 부족
+                                    내림차순
                                   </div>
-                                  <div
-                                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => {
-                                      setFilters(prev => ({
-                                        ...prev,
-                                        currentStock: "normal"
-                                      }));
-                                      setShowFilter(prev => ({
-                                        ...prev,
-                                        currentStock: false
-                                      }));
-                                    }}
-                                  >
-                                    재고 정상
-                                  </div>
-                                </>
+                                </div>
                               )}
+                              <div className="p-2 max-h-60 overflow-y-auto">
+                                {header === "재고수량" ? (
+                                  <>
+                                    <div
+                                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                      onClick={() => {
+                                        setFilters(prev => ({
+                                          ...prev,
+                                          stockQuantity: "zero"
+                                        }));
+                                        setShowFilter(prev => ({
+                                          ...prev,
+                                          stockQuantity: false
+                                        }));
+                                      }}
+                                    >
+                                      수량 0
+                                    </div>
+                                    <div
+                                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                      onClick={() => {
+                                        setFilters(prev => ({
+                                          ...prev,
+                                          stockQuantity: "oneOrMore"
+                                        }));
+                                        setShowFilter(prev => ({
+                                          ...prev,
+                                          stockQuantity: false
+                                        }));
+                                      }}
+                                    >
+                                      수량 1 이상
+                                    </div>
+                                  </>
+                                ) : header === "적정수량" ? (
+                                  <>
+                                    <div
+                                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                      onClick={() => {
+                                        setFilters(prev => ({
+                                          ...prev,
+                                          currentStock: "low"
+                                        }));
+                                        setShowFilter(prev => ({
+                                          ...prev,
+                                          currentStock: false
+                                        }));
+                                      }}
+                                    >
+                                      재고 부족
+                                    </div>
+                                    <div
+                                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                      onClick={() => {
+                                        setFilters(prev => ({
+                                          ...prev,
+                                          currentStock: "normal"
+                                        }));
+                                        setShowFilter(prev => ({
+                                          ...prev,
+                                          currentStock: false
+                                        }));
+                                      }}
+                                    >
+                                      재고 정상
+                                    </div>
+                                  </>
+                                ) : (
+                                  Array.from(new Set(materials.map(item => item[{
+                                    "자재코드": "material_code",
+                                    "위치": "location",
+                                    "대분류": "big_category",
+                                    "중분류": "category",
+                                    "소분류": "sub_category"
+                                  }[header]]))).map((value, i) => (
+                                    <div
+                                      key={i}
+                                      className="px-2 py-1 hover:bg-gray-100 cursor-pointer"
+                                      onClick={() => {
+                                        setFilters(prev => ({
+                                          ...prev,
+                                          [{
+                                            "자재코드": "material_code",
+                                            "위치": "location",
+                                            "대분류": "big_category",
+                                            "중분류": "category",
+                                            "소분류": "sub_category"
+                                          }[header]]: value
+                                        }));
+                                        setShowFilter(prev => ({
+                                          ...prev,
+                                          [{
+                                            "자재코드": "material_code",
+                                            "위치": "location",
+                                            "대분류": "big_category",
+                                            "중분류": "category",
+                                            "소분류": "sub_category"
+                                          }[header]]: false
+                                        }));
+                                      }}
+                                    >
+                                      {value || "-"}
+                                    </div>
+                                  ))
+                                )}
+                              </div>
                             </div>
                             <div className="border-t border-gray-200 p-1">
                               <button
@@ -345,6 +536,7 @@ function Product_list() {
                                       "대분류": "big_category",
                                       "중분류": "category",
                                       "소분류": "sub_category",
+                                      "재고수량": "stockQuantity",
                                       "적정수량": "currentStock"
                                     }[header]]: ""
                                   }));
@@ -356,9 +548,15 @@ function Product_list() {
                                       "대분류": "big_category",
                                       "중분류": "category",
                                       "소분류": "sub_category",
+                                      "재고수량": "stockQuantity",
                                       "적정수량": "currentStock"
                                     }[header]]: false
                                   }));
+                                  // 자재코드일 때 정렬도 초기화
+                                  if (header === "자재코드") {
+                                    setSortField("");
+                                    setSortOrder("");
+                                  }
                                 }}
                               >
                                 필터 초기화
