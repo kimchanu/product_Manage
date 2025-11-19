@@ -52,10 +52,6 @@ router.post("/", async (req, res) => {
             const prevYearEndDate = new Date(prevYear, 11, 31);
             prevYearEndDate.setHours(23, 59, 59, 999);
             
-            console.log(`\n🔍 전년도 12월 데이터 별도 조회:`);
-            console.log(`- 전년도: ${prevYear}`);
-            console.log(`- 전년도 12월 말일: ${prevYearEndDate.toISOString()}`);
-            
             [prevYearInputs, prevYearOutputs] = await Promise.all([
                 Input.findAll({
                     where: { date: { [Op.lte]: prevYearEndDate } },
@@ -68,9 +64,6 @@ router.post("/", async (req, res) => {
                     include: [includeProduct],
                 }),
             ]);
-            
-            console.log(`- 전년도 12월 입고 데이터 개수: ${prevYearInputs.length}`);
-            console.log(`- 전년도 12월 출고 데이터 개수: ${prevYearOutputs.length}`);
         }
 
         // 전월재고 계산: 전월 말일까지의 입고/출고 데이터만 조회
@@ -273,165 +266,6 @@ router.post("/", async (req, res) => {
         };
 
         // 전월재고 계산
-        console.log(`조회 기간: ${year}년 ${month}월`);
-        console.log(`전월 말일: ${prevEndDate.toISOString()}`);
-        console.log(`전월 입고 데이터 개수: ${prevInputs.length}`);
-        console.log(`전월 출고 데이터 개수: ${prevOutputs.length}`);
-        
-        // 날짜 범위 디버깅
-        console.log(`\n📅 날짜 범위 분석:`);
-        console.log(`- 현재 년도: ${year}`);
-        console.log(`- 현재 월: ${month}`);
-        console.log(`- 전월 말일 계산: ${prevEndDate.toISOString()}`);
-        console.log(`- 전월 말일 로컬: ${prevEndDate.toLocaleString()}`);
-        
-        // 날짜 필터링 조건 확인
-        console.log(`\n🔍 날짜 필터링 조건:`);
-        console.log(`- 입고 데이터 필터: date <= ${prevEndDate.toISOString()}`);
-        console.log(`- 출고 데이터 필터: date <= ${prevEndDate.toISOString()}`);
-        
-        // 실제 조회된 데이터의 날짜 범위 확인
-        if (prevInputs.length > 0) {
-            const inputDates = prevInputs.map(item => item.date).sort();
-            console.log(`- 입고 데이터 날짜 범위: ${inputDates[0]} ~ ${inputDates[inputDates.length - 1]}`);
-        }
-        if (prevOutputs.length > 0) {
-            const outputDates = prevOutputs.map(item => item.date).sort();
-            console.log(`- 출고 데이터 날짜 범위: ${outputDates[0]} ~ ${outputDates[outputDates.length - 1]}`);
-        }
-        
-        // 입고/출고 데이터 샘플 로그 (처음 5개씩)
-        console.log('전월 입고 데이터 샘플:', prevInputs.slice(0, 5).map(item => ({
-            material_id: item.material_id,
-            quantity: item.quantity,
-            date: item.date,
-            product: item.product ? {
-                material_id: item.product.material_id,
-                big_category: item.product.big_category,
-                price: item.product.price
-            } : null
-        })));
-        
-        console.log('전월 출고 데이터 샘플:', prevOutputs.slice(0, 5).map(item => ({
-            material_id: item.material_id,
-            quantity: item.quantity,
-            date: item.date,
-            product: item.product ? {
-                material_id: item.product.material_id,
-                big_category: item.product.big_category,
-                price: item.product.price
-            } : null
-        })));
-        
-        // 특정 자재의 모든 입고/출고 데이터 확인
-        const targetMaterialId = 'f17e8dfe-f032-439e-8014-8b860e40e4ce';
-        const targetInputs = prevInputs.filter(item => item.material_id === targetMaterialId);
-        const targetOutputs = prevOutputs.filter(item => item.material_id === targetMaterialId);
-        
-        // 1월인 경우 전년도 12월 데이터와 비교
-        if (month === 1) {
-            console.log(`\n🔍 1월 특별 분석 - 데이터 비교:`);
-            
-            const targetMaterialId = 'f17e8dfe-f032-439e-8014-8b860e40e4ce';
-            const prevYearTargetInputs = prevYearInputs.filter(item => item.material_id === targetMaterialId);
-            const prevYearTargetOutputs = prevYearOutputs.filter(item => item.material_id === targetMaterialId);
-            
-            console.log(`\n📊 전년도 12월 데이터 (${targetMaterialId}):`);
-            console.log('입고:', prevYearTargetInputs.map(item => ({
-                quantity: item.quantity,
-                date: item.date,
-                product: item.product ? item.product.name : null
-            })));
-            console.log('출고:', prevYearTargetOutputs.map(item => ({
-                quantity: item.quantity,
-                date: item.date,
-                product: item.product ? item.product.name : null
-            })));
-            
-            console.log(`\n📊 현재 조회된 데이터 (${targetMaterialId}):`);
-            console.log('입고:', targetInputs.map(item => ({
-                quantity: item.quantity,
-                date: item.date,
-                product: item.product ? item.product.name : null
-            })));
-            console.log('출고:', targetOutputs.map(item => ({
-                quantity: item.quantity,
-                date: item.date,
-                product: item.product ? item.product.name : null
-            })));
-            
-            console.log(`\n📊 데이터 개수 비교:`);
-            console.log(`- 전년도 12월 입고: ${prevYearTargetInputs.length}개`);
-            console.log(`- 현재 조회 입고: ${targetInputs.length}개`);
-            console.log(`- 전년도 12월 출고: ${prevYearTargetOutputs.length}개`);
-            console.log(`- 현재 조회 출고: ${targetOutputs.length}개`);
-        }
-        
-        console.log(`\n🔍 대상 자재 (${targetMaterialId}) 상세 분석:`);
-        console.log('전월 입고 데이터:', targetInputs.map(item => ({
-            material_id: item.material_id,
-            quantity: item.quantity,
-            date: item.date,
-            product: item.product ? {
-                name: item.product.name,
-                material_code: item.product.material_code,
-                big_category: item.product.big_category,
-                price: item.product.price
-            } : null
-        })));
-        console.log('전월 출고 데이터:', targetOutputs.map(item => ({
-            material_id: item.material_id,
-            quantity: item.quantity,
-            date: item.date,
-            product: item.product ? {
-                name: item.product.name,
-                material_code: item.product.material_code,
-                big_category: item.product.big_category,
-                price: item.product.price
-            } : null
-        })));
-        
-        // 전월 말일 이후의 출고 데이터가 있는지 확인
-        console.log(`\n⚠️ 전월 말일 이후 출고 데이터 확인:`);
-        console.log(`- 전월 말일: ${prevEndDate.toISOString()}`);
-        
-        // 해당 자재의 모든 출고 데이터 조회 (날짜 제한 없이)
-        const allOutputs = await Output.findAll({
-            where: { material_id: targetMaterialId },
-            attributes: ["material_id", "quantity", "date"],
-            include: [includeProduct],
-            order: [['date', 'ASC']]
-        });
-        
-        const futureOutputs = allOutputs.filter(item => new Date(item.date) > prevEndDate);
-        console.log(`- 전월 말일 이후 출고 데이터 개수: ${futureOutputs.length}`);
-        if (futureOutputs.length > 0) {
-            console.log('전월 말일 이후 출고 데이터:', futureOutputs.map(item => ({
-                quantity: item.quantity,
-                date: item.date,
-                isAfterPrevEnd: new Date(item.date) > prevEndDate
-            })));
-        }
-        
-        // 해당 자재의 모든 입고 데이터 조회 (날짜 제한 없이)
-        const allInputs = await Input.findAll({
-            where: { material_id: targetMaterialId },
-            attributes: ["material_id", "quantity", "date"],
-            include: [includeProduct],
-            order: [['date', 'ASC']]
-        });
-        
-        console.log(`\n🔍 해당 자재의 모든 입고 데이터 (날짜 제한 없이):`);
-        console.log(`- 전체 입고 데이터 개수: ${allInputs.length}`);
-        if (allInputs.length > 0) {
-            console.log('전체 입고 데이터:', allInputs.map(item => ({
-                quantity: item.quantity,
-                date: item.date,
-                isBeforePrevEnd: new Date(item.date) <= prevEndDate
-            })));
-        } else {
-            console.log('⚠️ 해당 자재의 입고 데이터가 전혀 없습니다!');
-        }
         processPrevStock(prevInputs, "prevInput");
         processPrevStock(prevOutputs, "prevOutput");
 
@@ -470,9 +304,9 @@ router.post("/", async (req, res) => {
             }
         }
 
-        console.log('전월재고 계산 결과:', resultByCategory);
-        console.log('카테고리 맵:', categoryMap);
-        console.log('전월재고 상세 데이터:', prevStockByCategory);
+        // console.log('전월재고 계산 결과:', resultByCategory);
+        // console.log('카테고리 맵:', categoryMap);
+        // console.log('전월재고 상세 데이터:', prevStockByCategory);
         
         // 음수 재고가 발생한 자재들의 상세 이력 출력
         console.log('\n🔍 음수 재고 자재 상세 분석:');
@@ -531,7 +365,7 @@ router.post("/", async (req, res) => {
             }
         }
 
-        console.log('최종 재고 계산 결과:', resultByCategory);
+        // console.log('최종 재고 계산 결과:', resultByCategory);
 
         const totalExecutedAmount = Object.values(resultByCategory)
             .reduce((acc, cur) => acc + cur.output, 0);

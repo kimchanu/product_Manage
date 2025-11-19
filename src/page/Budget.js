@@ -83,10 +83,10 @@ function Budget() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                // 각 예산 항목에 year 포함되도록 그대로 보냄
+                // 기존 데이터와 새로 입력한 데이터 모두 전송 (기존 데이터 유지)
                 body: JSON.stringify({
                     year: entry.year,
-                    budget: inputList.map(({ site, department, amount, year }) => ({
+                    budget: [...fetchedList, ...inputList].map(({ site, department, amount, year }) => ({
                         site,
                         department,
                         amount,

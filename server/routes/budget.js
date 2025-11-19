@@ -28,6 +28,10 @@ const Budget = sequelize.define(
             type: Sequelize.BIGINT,
             allowNull: false,
         },
+        var_budget_amount: {
+            type: Sequelize.BIGINT,
+            allowNull: false,
+        },
         createdAt: {
             type: Sequelize.DATE,
             defaultValue: Sequelize.NOW,
@@ -67,29 +71,27 @@ router.post("/", async (req, res) => {
         }
 
         await sequelize.transaction(async (t) => {
-            // 해당 연도 기존 데이터 모두 삭제
-            await Budget.destroy({ where: { year: yearNum }, transaction: t });
-
-            // 새 예산 항목들을 삽입
-            const insertPromises = budget.map(({ site, department, amount }) => {
+            // 각 예산 항목을 upsert (있으면 업데이트, 없으면 생성)
+            const upsertPromises = budget.map(({ site, department, amount }) => {
                 if (!site || !department || amount == null) {
                     throw new Error(
                         "예산 항목에 site, department, amount 필드가 모두 필요합니다."
                     );
                 }
 
-                return Budget.create(
+                return Budget.upsert(
                     {
                         year: yearNum,
                         business_location: site,
                         department,
                         budget_amount: amount,
+                        var_budget_amount: amount,
                     },
                     { transaction: t }
                 );
             });
 
-            await Promise.all(insertPromises);
+            await Promise.all(upsertPromises);
         });
 
         res.json({ message: "예산이 성공적으로 저장되었습니다." });
