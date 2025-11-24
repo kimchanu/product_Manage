@@ -1,7 +1,7 @@
 import React from "react";
 import ExcelJS from "exceljs";
 
-const ExcelStatementReport = ({ stats, categories, year, month, user, budgetAmount, currentMonthAmount, yearTotalInputAmount, remainingAmount, reportType }) => {
+const ExcelStatementReport = ({ stats, categories, year, month, user, budgetAmount, currentMonthAmount, yearTotalInputAmount, remainingAmount, reportType, departmentBudgets, departmentYearTotalInputAmount }) => {
     const exportToExcel = async () => {
         const workbook = new ExcelJS.Workbook();
 
@@ -16,8 +16,8 @@ const ExcelStatementReport = ({ stats, categories, year, month, user, budgetAmou
                 break;
             case "allPartMonthly":
                 templateFile = "/Excel_template/전파트 월간보고서.xlsx";
-                sheetName = "전파트월간보고서";
-                fileName = `전파트월간보고서_${year}년${month}월.xlsx`;
+                sheetName = "전파트 월간보고서";
+                fileName = `전파트 월간보고서_${year}년${month}월.xlsx`;
                 break;
             case "partYearly":
                 templateFile = "/Excel_template/연간보고서.xlsx";
@@ -54,12 +54,39 @@ const ExcelStatementReport = ({ stats, categories, year, month, user, budgetAmou
             worksheet.getCell("AE5").value = `${year}.${month.toString().padStart(2, "0")}`;
             worksheet.getCell("AE6").value = user?.name || "";
 
-            // 예산 집행현황 값 입력
-            worksheet.getCell("A19").value = `${month.toString().padStart(2, "0")}월`;
-            worksheet.getCell("D19").value = budgetAmount;
-            worksheet.getCell("M19").value = currentMonthAmount;
-            worksheet.getCell("V19").value = yearTotalInputAmount;
-            worksheet.getCell("AE19").value = remainingAmount;
+            // 예산 집행현황 값 입력 (부서별로 3개 행: ITS, 시설, 기전)
+            const departments = ["ITS", "시설", "기전"];
+            let totalBudget = 0;
+            let totalMonthInput = 0;
+            let totalYearInput = 0;
+            let totalRemaining = 0;
+
+            departments.forEach((dept, deptIndex) => {
+                const excelRow = 31 + deptIndex; // 31, 32, 33행
+                const deptBudget = departmentBudgets?.[dept] || 0;
+                const deptMonthInput = stats.byCategory?.[dept]?.input || 0;
+                const deptYearTotalInput = departmentYearTotalInputAmount?.[dept] || 0;
+                const deptRemaining = deptBudget - deptYearTotalInput;
+
+                worksheet.getCell(`A${excelRow}`).value = dept;
+                worksheet.getCell(`D${excelRow}`).value = deptBudget;
+                worksheet.getCell(`I${excelRow}`).value = deptMonthInput;
+                worksheet.getCell(`S${excelRow}`).value = deptYearTotalInput;
+                worksheet.getCell(`AC${excelRow}`).value = deptRemaining;
+
+                // 합계 계산
+                totalBudget += deptBudget;
+                totalMonthInput += deptMonthInput;
+                totalYearInput += deptYearTotalInput;
+                totalRemaining += deptRemaining;
+            });
+
+            // 34행에 합계 입력
+            worksheet.getCell("A34").value = "합계";
+            worksheet.getCell("D34").value = totalBudget;
+            worksheet.getCell("I34").value = totalMonthInput;
+            worksheet.getCell("S34").value = totalYearInput;
+            worksheet.getCell("AC34").value = totalRemaining;
 
             // 전파트 월간보고서 데이터 입력 (ITS, TCS, FTMS, 전산, 기타, 시설, 안전, 장비, 시설보수, 조경, 시설_기타, 기전, 전기, 기계, 소방, 기전_기타, 합 계 순서)
             const allPartCategories = ["ITS", "TCS", "FTMS", "전산", "기타", "시설", "안전", "장비", "시설보수", "조경", "시설_기타", "기전", "전기", "기계", "소방", "기전_기타", "합 계"];

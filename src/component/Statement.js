@@ -251,6 +251,8 @@ const Statement = () => {
                         yearTotalInputAmount={stats.yearTotalInputAmount || 0}
                         remainingAmount={(budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)}
                         reportType={reportType} // 추가: 보고서 유형 전달
+                        departmentBudgets={departmentBudgets} // 전파트 월간보고서용 부서별 예산
+                        departmentYearTotalInputAmount={stats.departmentYearTotalInputAmount} // 전파트 월간보고서용 부서별 집행누계
                     />
                 </div>
             </div>

@@ -6,12 +6,19 @@ const SplitOutputModal = ({ isOpen, onClose, onConfirm, originalQuantity, origin
 
     useEffect(() => {
         if (isOpen) {
-            // 기본값으로 원래 수량을 1개씩 분할
-            const defaultSplits = Array.from({ length: originalQuantity }, (_, index) => ({
-                id: index,
-                quantity: 1,
-                date: originalDate || new Date().toISOString().split('T')[0]
-            }));
+            // 기본값으로 2개 행으로 분할 (첫 번째: 1개, 두 번째: 나머지)
+            const defaultSplits = [
+                {
+                    id: 0,
+                    quantity: 1,
+                    date: originalDate || new Date().toISOString().split('T')[0]
+                },
+                {
+                    id: 1,
+                    quantity: Math.max(1, originalQuantity - 1),
+                    date: originalDate || new Date().toISOString().split('T')[0]
+                }
+            ];
             setSplits(defaultSplits);
             setTotalQuantity(originalQuantity);
         }
@@ -49,9 +56,23 @@ const SplitOutputModal = ({ isOpen, onClose, onConfirm, originalQuantity, origin
             return;
         }
 
-        const splitData = splits.map(split => ({
-            quantity: parseInt(split.quantity),
-            date: split.date
+        // 같은 날짜를 가진 항목들을 합치기
+        const mergedSplits = {};
+        splits.forEach(split => {
+            const date = split.date;
+            const quantity = parseInt(split.quantity) || 0;
+            
+            if (mergedSplits[date]) {
+                mergedSplits[date] += quantity;
+            } else {
+                mergedSplits[date] = quantity;
+            }
+        });
+
+        // 합쳐진 데이터를 배열로 변환
+        const splitData = Object.entries(mergedSplits).map(([date, quantity]) => ({
+            quantity: quantity,
+            date: date
         }));
 
         onConfirm(splitData);
