@@ -53,7 +53,8 @@ function useManualInputData() {
 
     try {
       // 서버 API 호출
-      const response = await fetch('/api/materials/input/manual', {
+      const apiUrl = process.env.REACT_APP_API_URL || '';
+      const response = await fetch(`${apiUrl}/api/materials/input/manual`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

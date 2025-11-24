@@ -4,6 +4,10 @@ const { createModels } = require("../models/material");
 const createInputModel = require("../models/InputModel");
 const sequelize = require("../db/sequelize");
 const authMiddleware = require("../middleware/authMiddleware");
+const { v4: uuidv4 } = require('uuid');
+
+// 라우터 로드 확인
+console.log("✅ input.js 라우터 로드됨");
 
 // 입고 저장 API
 router.post("/", async (req, res) => {
@@ -163,15 +167,17 @@ router.delete("/:material_id/:id", async (req, res) => {
 
 // 수동 입고 저장 API (테스트용 GET 라우트 추가)
 router.get("/manual", (req, res) => {
+    console.log("✅ GET /manual 라우트가 호출되었습니다.");
     res.json({ message: "수동 입고 API 엔드포인트가 정상적으로 등록되었습니다." });
 });
 
 // 수동 입고 저장 API
 router.post("/manual", authMiddleware, async (req, res) => {
-    const { items, type } = req.body;
-    console.log("수동 입고 요청:", req.body);
+    console.log("✅ POST /manual 라우트가 호출되었습니다.");
     console.log("요청 URL:", req.originalUrl);
     console.log("요청 메서드:", req.method);
+    const { items, type } = req.body;
+    console.log("수동 입고 요청:", req.body);
     
     if (!Array.isArray(items) || items.length === 0) {
         return res.status(400).json({ 
@@ -253,20 +259,29 @@ router.post("/manual", authMiddleware, async (req, res) => {
                 continue;
             }
 
-            // 항상 새로운 자재 등록 (material_id는 autoIncrement로 자동 생성됨)
+            // 항상 새로운 자재 등록 (material_id는 UUID로 생성)
             let product;
-            let materialId;
+            let materialId = uuidv4(); // UUID 생성
             let materialCode = 자재코드;
             let retryCount = 0;
             const maxRetries = 3;
             
+            // 단가 파싱 (쉼표 제거)
+            const parseFormattedNumber = (value) => {
+                if (!value) return 0;
+                const numStr = value.toString().replace(/,/g, '');
+                return parseFloat(numStr) || 0;
+            };
+            const parsedPrice = parseFormattedNumber(단가);
+            
             while (retryCount < maxRetries) {
                 try {
                     product = await Product.create({
+                        material_id: materialId, // UUID로 생성된 material_id
                         material_code: materialCode, // 자재코드(구매번호)를 material_code에 저장
                         name: 품명 || null,
                         specification: 규격 || null,
-                        price: Number(단가) || 0,
+                        price: parsedPrice, // 파싱된 단가 저장
                         // 나머지 필드들은 NULL로 저장 (location, category, sub_category, manufacturer, supplier, unit, appropriate 등)
                         location: null,
                         category: null,
@@ -276,7 +291,7 @@ router.post("/manual", authMiddleware, async (req, res) => {
                         appropriate: null,
                         big_category: null
                     }, { transaction });
-                    materialId = product.material_id; // 자동 생성된 material_id
+                    console.log(`✅ Product 생성 완료 - material_id: ${materialId}, material_code: ${materialCode}, price: ${parsedPrice}`);
                     break; // 성공하면 루프 종료
                 } catch (createError) {
                     if (createError.original && createError.original.code === 'ER_NO_SUCH_TABLE') {
@@ -294,7 +309,8 @@ router.post("/manual", authMiddleware, async (req, res) => {
                         if (retryCount < maxRetries) {
                             // material_code에 타임스탬프 추가하여 고유값 생성
                             materialCode = `${자재코드}_${Date.now()}_${retryCount}`;
-                            console.warn(`material_code 중복: ${자재코드}, 재시도: ${materialCode}`);
+                            materialId = uuidv4(); // 새로운 UUID 생성
+                            console.warn(`material_code 중복: ${자재코드}, 재시도: ${materialCode}, 새 material_id: ${materialId}`);
                             continue;
                         } else {
                             throw new Error(`material_code 중복으로 자재 등록 실패: ${자재코드}`);
@@ -304,18 +320,28 @@ router.post("/manual", authMiddleware, async (req, res) => {
                 }
             }
 
-            // 입고 기록 저장 (자동 생성된 material_id 사용)
+            // 입고 기록 저장 (UUID material_id 사용)
             let inputRecord;
             try {
+                // 입고수량 파싱 (쉼표 제거)
+                const parseFormattedNumber = (value) => {
+                    if (!value) return 0;
+                    const numStr = value.toString().replace(/,/g, '');
+                    return parseFloat(numStr) || 0;
+                };
+                const parsedQuantity = parseFormattedNumber(입고수량);
+                
+                console.log(`📝 Input 저장 시작 - material_id: ${materialId}, 입고수량: ${parsedQuantity}`);
                 inputRecord = await Input.create({
-                    material_id: materialId, // 자동 생성된 material_id 사용
-                    quantity: Number(입고수량) || 0,
+                    material_id: materialId, // UUID material_id 사용
+                    quantity: parsedQuantity,
                     comment: defaultValues.comment,
                     date: defaultValues.date,
                     department: defaultValues.department,
                     business_location: defaultValues.business_location,
                     user_id: defaultValues.user_id,
                 }, { transaction });
+                console.log(`✅ Input 저장 완료 - id: ${inputRecord.id}, material_id: ${materialId}`);
             } catch (inputError) {
                 if (inputError.original && inputError.original.code === 'ER_NO_SUCH_TABLE') {
                     console.error(`Input 테이블이 존재하지 않습니다: ${defaultValues.business_location}_${defaultValues.department}_input`);

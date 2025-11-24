@@ -21,7 +21,7 @@ function createModels(businessLocation, department) {
   const Product = sequelize.define(
     `${prefix}_product`,
     {
-      material_id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+      material_id: { type: DataTypes.STRING(50), primaryKey: true }, // UUID로 사용
       material_code: { type: DataTypes.STRING, allowNull: false, unique: true }, // 유니크 코드
       name: { type: DataTypes.STRING },
       location: { type: DataTypes.STRING },
@@ -41,7 +41,7 @@ function createModels(businessLocation, department) {
   const Input = sequelize.define(
     `${prefix}_input`,
     {
-      material_id: { type: DataTypes.INTEGER },
+      material_id: { type: DataTypes.STRING(50) },
       quantity: { type: DataTypes.INTEGER },
       comment: { type: DataTypes.TEXT },
       date: { type: DataTypes.DATE },
@@ -56,7 +56,7 @@ function createModels(businessLocation, department) {
   const Output = sequelize.define(
     `${prefix}_output`,
     {
-      material_id: { type: DataTypes.INTEGER },
+      material_id: { type: DataTypes.STRING(50) },
       quantity: { type: DataTypes.INTEGER },
       comment: { type: DataTypes.TEXT },
       date: { type: DataTypes.DATE },
