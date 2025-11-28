@@ -22,7 +22,7 @@ function Nav({ user }) {
       : baseCategories;
 
   return (
-    <nav>
+    <nav style={{ paddingTop: "2rem" }}>
       {/* 이 div는 전체 내비게이션 바의 컨테이너입니다. */}
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         {/* 카테고리들을 감싸는 이 div에 margin-bottom을 추가합니다. */}
@@ -30,7 +30,7 @@ function Nav({ user }) {
           {categories.map((category, idx) => (
             <div
               key={idx}
-              className="text-sm text-gray-700 hover:text-blue-400 px-2 py-1 rounded-md font-medium cursor-pointer relative"
+              className={`text-sm text-gray-700 hover:text-blue-400 px-2 py-1 rounded-md font-bold cursor-pointer relative border border-gray-400 ${idx < categories.length - 1 ? 'border-r-2' : ''}`}
               onMouseEnter={() => setHoveredCategory(category.name)}
               onMouseLeave={() => {
                 timer = setTimeout(() => setHoveredCategory(null), 1000);
@@ -41,13 +41,13 @@ function Nav({ user }) {
               }
             >
               {category.name === "자재수불명세서대장" ? (
-                <Link to="/Statement_page">{category.name}</Link>
+                <Link to="/Statement_page" className="font-bold">{category.name}</Link>
               ) : category.name === "게시판" ? (
-                <Link to="/PostList_page">{category.name}</Link>
+                <Link to="/PostList_page" className="font-bold">{category.name}</Link>
               ) : category.name === "자재목록" ? (
-                <Link to="/Mat_list_page">{category.name}</Link>
+                <Link to="/Mat_list_page" className="font-bold">{category.name}</Link>
               ) : (
-                category.name
+                <span className="font-bold">{category.name}</span>
               )}
 
               {(hoveredCategory === category.name || clickedCategory === category.name) &&
@@ -83,7 +83,7 @@ function Nav({ user }) {
                                             ? "/Output_Approve_page"
                                             : "#"
                         }
-                        className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-600 cursor-pointer"
+                        className="block px-4 py-2 text-gray-800 hover:bg-blue-100 hover:text-blue-600 cursor-pointer font-bold"
                       >
                         {sub}
                       </Link>
@@ -111,7 +111,7 @@ function Header() {
   return (
     <header>
       <User_info setUser={setUser} />
-      <div style={{ display: "flex", alignItems: "center", width: "100%", padding: "0.5rem 1rem 1rem 1rem" }}>
+      <div style={{ display: "flex", alignItems: "center", width: "100%", padding: "3rem 2rem 2rem", borderBottom: "1px solid #000" }}>
         <h1 style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", fontSize: "2rem", fontWeight: "bold", margin: "0.5rem 0 0 0" }}>
           <Link to="/" style={{ color: "inherit", textDecoration: "none" }}>
             잡자재관리시스템

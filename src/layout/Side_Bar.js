@@ -10,7 +10,7 @@ function Sidebar({ onSelectDepartment, selectedDepartment }) {
     const departments = Object.keys(departmentMap);
 
     return (
-        <aside className="w-60 bg-gray-100 h-screen fixed top-[87px] left-0 p-4 overflow-auto shadow-md">
+        <aside className="w-60 bg-gray-100 h-screen fixed top-[175px] left-0 p-4 overflow-auto shadow-md">
             <div className="mb-6 font-semibold text-lg border-b border-gray-300 pb-2">
                 부서
             </div>
