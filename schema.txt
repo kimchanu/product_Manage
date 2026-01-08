@@ -1,0 +1,21 @@
+[
+  "id",
+  "business_location",
+  "department",
+  "user_id",
+  "material_id",
+  "material_code",
+  "location",
+  "big_category",
+  "category",
+  "sub_category",
+  "name",
+  "specification",
+  "manufacturer",
+  "supplier",
+  "unit",
+  "price",
+  "quantity",
+  "date",
+  "comment"
+]
