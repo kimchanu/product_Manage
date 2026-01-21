@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "business_location": "강남사업소",
+  "department": "ITS",
+  "user_id": "최규선",
+  "material_id": "3eea41967ea47b30c61ba1815f86e5ff34cc",
+  "material_code": "GK-ITS-2025-001",
+  "location": null,
+  "big_category": "1",
+  "category": "2",
+  "sub_category": "3",
+  "name": "광케이블 24심",
+  "specification": "24C, 1km",
+  "manufacturer": null,
+  "supplier": null,
+  "unit": null,
+  "price": 120000,
+  "quantity": 6,
+  "date": "2025-12-08T16:17:01.000Z",
+  "comment": "----"
+}

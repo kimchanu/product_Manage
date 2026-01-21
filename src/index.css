@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ (권장) 화면에서도 문서 영역이 너무 넓지 않게 하고 싶으면 사용 */
+.print-sheet {
+    width: 65%;
+    margin: 0 auto;
+}
+
+/* =========================
+   ✅ PRINT (A4 한 장 고정)
+   ========================= */
+@media print {
+
+    /* ✅ 프린터 기본 헤더/푸터 제거는 브라우저 설정이지만,
+     CSS로도 최대한 레이아웃 흔들림 방지 */
+    header,
+    footer,
+    .no-print,
+    nav,
+    aside {
+        display: none !important;
+    }
+
+    /* ✅ A4 + 여백 고정 (핵심) */
+    @page {
+        size: A4 portrait;
+        margin: 8mm;
+        /* 너무 줄이면 프린터가 강제로 늘릴 수 있음 */
+    }
+
+    /* ✅ 브라우저별 색상/레이아웃 안정화 */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-sizing: border-box !important;
+    }
+
+    html,
+    body {
+        width: 210mm !important;
+        height: 297mm !important;
+        background: #fff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* ✅ Tailwind 레이아웃 잔여 여백 제거 */
+    .ml-60 {
+        margin-left: 0 !important;
+    }
+
+    .mx-20 {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* ✅ 출력용 루트 컨테이너 강제 폭/여백 */
+    .print-root {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* ✅ 기존에 style={{width:'65%'}} 같은 것들보다 강하게 덮어쓰기 */
+    .print-sheet {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* ✅ 표/텍스트가 한 장 안에 들어오게 세팅 (핵심) */
+    .print-fit {
+        transform: scale(0.92);
+        /* 0.88~0.95 사이에서 가장 많이 해결됨 */
+        transform-origin: top center;
+    }
+
+    /* ✅ 폰트/행 높이/패딩을 출력용으로 줄여서 세로 길이 확 줄임 */
+    body {
+        font-size: 10px !important;
+        line-height: 1.15 !important;
+    }
+
+    table {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-collapse: collapse !important;
+        page-break-inside: avoid !important;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    /* 혹시 페이지 나눔 발생 시 헤더 반복 */
+    tfoot {
+        display: table-footer-group;
+    }
+
+    tr,
+    td,
+    th {
+        page-break-inside: avoid !important;
+        padding: 2px 4px !important;
+        /* 기존 h-12 같은 것보다 강하게 줄임 */
+    }
+
+    /* ✅ Tailwind h-12/h-10 등이 너무 커서 한 장 넘치는 경우가 많아서 강제 축소 */
+    .h-12 {
+        height: 22px !important;
+    }
+
+    .h-10 {
+        height: 20px !important;
+    }
+
+    .h-16 {
+        height: 28px !important;
+    }
+
+    h1 {
+        font-size: 14px !important;
+        margin: 4px 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    h2 {
+        font-size: 12px !important;
+        margin: 6px 0 4px 0 !important;
+        page-break-after: avoid !important;
+    }
+
+    /* ✅ 아래쪽 여백/큰 마진들 제거 */
+    .mb-20 {
+        margin-bottom: 0 !important;
+    }
+
+    .mb-6 {
+        margin-bottom: 6px !important;
+    }
+
+    .mt-10 {
+        margin-top: 6px !important;
+    }
+}

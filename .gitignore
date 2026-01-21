@@ -1,0 +1,10 @@
+﻿# dependencies
+node_modules/
+**/node_modules/
+
+# media
+*.mov
+*.mp4
+
+# env
+.env
