@@ -310,33 +310,65 @@ const YearlyStatement = () => {
 
             <div className="print-fit">
                 <div className="print-sheet mx-auto">
-                    <div className="flex items-center justify-center gap-4 mb-6 px-4">
-                        <h1 className="text-xl font-bold whitespace-nowrap text-center">
-                            {year}년 {user?.department} 연간보고서
-                        </h1>
+                    {/* 1. 인쇄용 헤더 (화면에서는 숨김, 인쇄 시에만 한 줄 배치) */}
+                    <div className="hidden print:flex relative w-full items-end justify-center mb-10 px-4 min-h-[100px]">
+                        <div className="w-full text-center pr-[260px]">
+                            <h1 className="large-print-title whitespace-nowrap">
+                                {year}년 {user?.department} 연간보고서
+                            </h1>
+                        </div>
+
+                        {/* 결재란 (인쇄 시 우측 하단 고정) */}
+                        <div className="absolute right-0 bottom-0">
+                            <table className="text-sm text-center border border-black min-w-[240px]">
+                                <tbody>
+                                    <tr>
+                                        <td className="border border-black w-12 h-20" rowSpan={2}>결<br />재</td>
+                                        <td className="border border-black w-20 h-8">담당</td>
+                                        <td className="border border-black w-20 h-8"></td>
+                                        <td className="border border-black w-20 h-8">소장</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="border border-black print-signature-cell"></td>
+                                        <td className="border border-black print-signature-cell"></td>
+                                        <td className="border border-black print-signature-cell"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    {/* 결재란 */}
-                    <div className="flex justify-end mb-6 px-4">
-                        <table className="text-sm text-center border border-black">
-                            <tbody>
-                                <tr>
-                                    <td className="border border-black w-16 h-16" rowSpan={2}>결<br />재</td>
-                                    <td className="border border-black w-16 h-8">담당</td>
-                                    <td className="border border-black w-16 h-8"></td>
-                                    <td className="border border-black w-16 h-8"></td>
-                                </tr>
-                                <tr>
-                                    <td className="border border-black h-8"></td>
-                                    <td className="border border-black h-8"></td>
-                                    <td className="border border-black h-8"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    {/* 2. 화면용 헤더 (인쇄 시 숨김, 기존 레이아웃 유지) */}
+                    <div className="print:hidden">
+                        <div className="flex items-center justify-center gap-4 mb-6 px-4">
+                            <h1 className="text-xl font-bold whitespace-nowrap text-center">
+                                {year}년 {user?.department} 연간보고서
+                            </h1>
+                        </div>
+
+                        {/* 결재란 */}
+                        <div className="flex justify-end mb-6 px-4">
+                            <table className="text-sm text-center border border-black">
+                                <tbody>
+                                    <tr>
+                                        <td className="border border-black w-16 h-16" rowSpan={2}>
+                                            결<br />재
+                                        </td>
+                                        <td className="border border-black w-24 h-8">담당</td>
+                                        <td className="border border-black w-24 h-8">소장</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="border border-black h-8"></td>
+                                        <td className="border border-black h-8"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
 
                     {/* 문서 정보 */}
-                    <table className="w-full table-fixed border border-black text-sm text-center mb-6">
+                    <table className="w-full table-fixed border border-black text-sm text-center mb-16 print-margin-doc">
                         <tbody>
                             <tr>
                                 <td className="border border-black h-10 w-1/4">문서번호</td>
@@ -360,8 +392,15 @@ const YearlyStatement = () => {
                     {renderYearlyTables()}
 
                     {/* 연간 예산집행 현황 */}
-                    <h2 className="text-left font-semibold mt-10 mb-2">{year}년 예산집행 현황</h2>
-                    <div className="text-right text-sm mb-2">(단위 : 원)</div>
+                    <div className="flex items-baseline justify-between mt-6 mb-2">
+                        <h2 className="text-left font-semibold text-base">
+                            {year}년 예산집행 현황
+                        </h2>
+                        <div className="text-right text-sm whitespace-nowrap">
+                            (단위 : 원)
+                        </div>
+                    </div>
+
 
                     <table className="w-full border border-black text-sm text-center table-fixed">
                         <thead>

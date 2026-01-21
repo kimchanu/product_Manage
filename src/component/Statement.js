@@ -190,10 +190,10 @@ const Statement = () => {
 
         return (
             <tr key={cat}>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={3}>{displayName}</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={5}>{displayName}</td>
                 <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.prevStock.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.input.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.output.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={8}>{row.input.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} h-12`} colSpan={8}>{row.output.toLocaleString()}</td>
                 <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.remaining.toLocaleString()}</td>
                 <td className={`${borderClass} ${bgClass} h-12`} colSpan={3}>&nbsp;</td>
             </tr>
@@ -266,37 +266,73 @@ const Statement = () => {
 
             <div className="print-fit">
                 <div className="print-sheet mx-auto">
-                    <div className="flex items-center justify-center gap-4 mb-6 px-4">
-                        <h1 className="text-xl font-bold whitespace-nowrap text-center">
-                            {reportType === "allPartMonthly"
-                                ? `${year}년 ${month.toString().padStart(2, "0")}월 전파트 자재수불명세서대장`
-                                : `${year}년 ${month.toString().padStart(2, "0")}월 자재수불명세서대장`}
-                        </h1>
-                    </div>
+                    {/* 1. 인쇄용 헤더 (화면에서는 숨김, 인쇄 시에만 한 줄 배치) */}
+                    <div className="hidden print:flex relative w-full items-end justify-center mb-10 px-4 min-h-[100px]">
+                        <div className="w-full text-center pr-[260px]"> {/* 결재란 자리를 비워주기 위한 패딩 */}
+                            <h1 className="large-print-title whitespace-nowrap">
+                                {reportType === "allPartMonthly"
+                                    ? `${year}년 ${month.toString().padStart(2, "0")}월 자재수불명세서대장`
+                                    : `${year}년 ${month.toString().padStart(2, "0")}월 자재수불명세서대장`}
+                            </h1>
+                        </div>
 
-                    {/* 결재란 */}
-                    <div className="px-4 mb-12">
-                        <div className="flex justify-end">
-                            <table className="text-sm text-center border border-black">
+                        {/* 결재란 (인쇄 시 우측 하단 고정) */}
+                        <div className="absolute right-0 bottom-0">
+                            <table className="text-sm text-center border border-black min-w-[200px]">
                                 <tbody>
                                     <tr>
-                                        <td className="border border-black w-16 h-16" rowSpan={2}>결<br />재</td>
-                                        <td className="border border-black w-16 h-8">담당</td>
-                                        <td className="border border-black w-16 h-8"></td>
-                                        <td className="border border-black w-16 h-8">소장</td>
+                                        <td className="border border-black w-12 h-20" rowSpan={2}>
+                                            결<br />재
+                                        </td>
+                                        <td className="border border-black w-24 h-8">담당</td>
+                                        <td className="border border-black w-24 h-8">소장</td>
                                     </tr>
                                     <tr>
-                                        <td className="border border-black h-8"></td>
-                                        <td className="border border-black h-8"></td>
-                                        <td className="border border-black h-8"></td>
+                                        <td className="border border-black print-signature-cell"></td>
+                                        <td className="border border-black print-signature-cell"></td>
                                     </tr>
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
 
+                    {/* 2. 화면용 헤더 (인쇄 시 숨김, 기존 레이아웃 유지) */}
+                    <div className="print:hidden">
+                        <div className="flex items-center justify-center gap-4 mb-6 px-4">
+                            <h1 className="text-xl font-bold whitespace-nowrap text-center">
+                                {reportType === "allPartMonthly"
+                                    ? `${year}년 ${month.toString().padStart(2, "0")}월 자재수불명세서대장`
+                                    : `${year}년 ${month.toString().padStart(2, "0")}월 자재수불명세서대장`}
+                            </h1>
+                        </div>
+
+                        {/* 결재란 */}
+                        {/* 결재란 */}
+                        <div className="px-4 mb-12">
+                            <div className="flex justify-end">
+                                <table className="text-sm text-center border border-black">
+                                    <tbody>
+                                        <tr>
+                                            <td className="border border-black w-16 h-16" rowSpan={2}>
+                                                결<br />재
+                                            </td>
+                                            <td className="border border-black w-24 h-8">담당</td>
+                                            <td className="border border-black w-24 h-8">소장</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="border border-black h-8"></td>
+                                            <td className="border border-black h-8"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
                     {/* 문서 정보 */}
-                    <table className="table-fixed border border-black text-sm text-center mb-8 w-full">
+                    <table className="table-fixed border border-black text-sm text-center mb-16 print-margin-doc w-full doc-info-table">
                         <tbody>
                             <tr>
                                 <td className="border border-black h-10 w-1/4">문서번호</td>
@@ -314,13 +350,13 @@ const Statement = () => {
                     </table>
 
                     {/* 자재수불명세서 표 */}
-                    <table className="border border-black text-sm text-center table-fixed w-full">
+                    <table className="border border-black text-sm text-center table-fixed w-full statement-table">
                         <thead>
                             <tr className="bg-gray-100">
-                                <th className="border border-black" colSpan={3}>구 분</th>
+                                <th className="border border-black" colSpan={5}>구 분</th>
                                 <th className="border border-black" colSpan={9}>전월재고</th>
-                                <th className="border border-black" colSpan={9}>입 고</th>
-                                <th className="border border-black" colSpan={9}>출 고</th>
+                                <th className="border border-black" colSpan={8}>입 고</th>
+                                <th className="border border-black" colSpan={8}>출 고</th>
                                 <th className="border border-black" colSpan={9}>재 고</th>
                                 <th className="border border-black" colSpan={3}>비 고</th>
                             </tr>
@@ -331,12 +367,18 @@ const Statement = () => {
                     </table>
 
                     {/* 예산집행 현황 */}
-                    <div>
-                        <h2 className="text-left font-semibold mt-10 mb-2">{year}년 예산집행 현황</h2>
-                        <div className="text-right text-sm mb-2">(단위 : 원)</div>
+                    <div className="flex items-baseline justify-between mt-6 mb-2">
+                        <h2 className="text-left font-semibold text-base">
+                            {year}년 예산집행 현황
+                        </h2>
+                        <div className="text-right text-sm whitespace-nowrap">
+                            (단위 : 원)
+                        </div>
                     </div>
 
-                    <table className="border border-black text-sm text-center table-fixed mb-20 w-full">
+
+
+                    <table className="border border-black text-sm text-center table-fixed mb-20 w-full budget-table">
                         <thead>
                             <tr className="bg-gray-100">
                                 <th className="border border-black" colSpan={3}>구 분</th>
