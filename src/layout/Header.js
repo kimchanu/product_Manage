@@ -26,7 +26,11 @@ function Nav({ user }) {
       <div className="w-full px-4 flex items-center justify-center relative">
         <div className="absolute left-10">
           <Link to="/">
-            <img src={mainLogo} alt="Main Logo" className="h-20 w-20" />
+            <img
+              src={mainLogo}
+              alt="Main Logo"
+              className="h-20 w-20 relative -top-[18px] translate-x-[30px]"
+            />
           </Link>
         </div>
         {/* 카테고리들을 감싸는 이 div에 margin-bottom을 추가합니다. */}

@@ -186,16 +186,17 @@ const Statement = () => {
         // 메인 합계 행(ITS/시설/기전)에 연한 빨간 배경색 표시
         const isMainRow = reportType === "allPartMonthly" && ["ITS", "시설", "기전"].includes(cat);
         const bgClass = isMainRow ? "bg-red-100" : "";
+        const fontClass = isMainRow ? "font-bold" : "";
         const borderClass = "border border-black";
 
         return (
             <tr key={cat}>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={5}>{displayName}</td>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.prevStock.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={8}>{row.input.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={8}>{row.output.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={9}>{row.remaining.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} h-12`} colSpan={3}>&nbsp;</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={5}>{displayName}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={9}>{row.prevStock.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={8}>{row.input.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={8}>{row.output.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={9}>{row.remaining.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={3}>&nbsp;</td>
             </tr>
         );
     };

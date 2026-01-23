@@ -183,7 +183,7 @@ const YearlyStatement = () => {
         window.yearlyTotalInput = totalInput;
 
         return (
-            <div className="mb-8">
+            <div className="mb-8 print-root yearly-landscape">
                 {/* 가로로 2개 표 배치 */}
                 <div className="flex gap-8 mb-6">
                     {/* 1~6월 표 */}
@@ -325,11 +325,9 @@ const YearlyStatement = () => {
                                     <tr>
                                         <td className="border border-black w-12 h-20" rowSpan={2}>결<br />재</td>
                                         <td className="border border-black w-20 h-8">담당</td>
-                                        <td className="border border-black w-20 h-8"></td>
                                         <td className="border border-black w-20 h-8">소장</td>
                                     </tr>
                                     <tr>
-                                        <td className="border border-black print-signature-cell"></td>
                                         <td className="border border-black print-signature-cell"></td>
                                         <td className="border border-black print-signature-cell"></td>
                                     </tr>
