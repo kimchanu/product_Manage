@@ -12,7 +12,8 @@ function Search_select({ setBusinessLocation, setDepartment, businessLocation, d
         <option value="GK">GK사업소</option>
         <option value="CM">천마사업소</option>
         <option value="ES">을숙도사업소</option>
-        <option value="GN">강남순환사업소</option>
+        <option value="강남사업소">강남사업소</option>
+        <option value="수원사업소">수원사업소</option>
       </select>
 
       <select

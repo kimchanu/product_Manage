@@ -14,7 +14,7 @@ function User_info({ setUser }) {
       return true; // 토큰 디코딩 실패 시 만료된 것으로 처리
     }
   };
- 
+
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
@@ -37,10 +37,10 @@ function User_info({ setUser }) {
             business_location_code = "GK";
             break;
           case "천마사업소":
-            business_location_code = "CM";
+            business_location_code = "천마사업소";
             break;
           case "을숙도사업소":
-            business_location_code = "ES";
+            business_location_code = "을숙도사업소";
             break;
           default:
             business_location_code = decoded.business_location;

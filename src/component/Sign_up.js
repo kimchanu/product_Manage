@@ -109,7 +109,7 @@ function Sign_up({ isOpen, toggleModal, onSuccess }) {
             name="department"
             value={formData.department}
             onChange={handleChange}
-            options={["ITS", "기전", "시설", "경영지원"]}
+            options={["ITS", "기전", "시설", "관리", "경영지원"]}
           />
 
           <button

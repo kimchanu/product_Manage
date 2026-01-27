@@ -408,7 +408,7 @@ const Statement = () => {
                                                 <td className="border border-black h-12" colSpan={8}>{deptMonthInput.toLocaleString()}</td>
                                                 <td className="border border-black h-12" colSpan={8}>{deptYearTotalInput.toLocaleString()}</td>
                                                 <td className="border border-black h-12 font-bold" colSpan={9}>{deptRemaining.toLocaleString()}</td>
-                                                <td className="border border-black h-12" colSpan={4}>{executionRate}%</td>
+                                                <td className="border border-black h-12 font-bold text-base" colSpan={4}>{executionRate}%</td>
                                             </tr>
                                         );
                                     })}
@@ -423,7 +423,7 @@ const Statement = () => {
                                     <td className="border border-black h-12" colSpan={8}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
                                     <td className="border border-black h-12" colSpan={8}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
                                     <td className="border border-black h-12 font-bold" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)).toLocaleString()}</td>
-                                    <td className="border border-black h-12" colSpan={4}>
+                                    <td className="border border-black h-12 font-bold text-base" colSpan={4}>
                                         {budgetData?.amount > 0
                                             ? (((stats.yearTotalInputAmount || 0) / budgetData.amount) * 100).toFixed(1)
                                             : 0}%

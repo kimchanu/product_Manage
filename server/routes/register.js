@@ -18,12 +18,12 @@ router.post("/register", async (req, res) => {
     return res.status(400).json({ message: "직급이 유효하지 않습니다." });
   }
 
-  const validBusinessLocations = ["GK사업소", "천마사업소", "을숙도사업소"];
+  const validBusinessLocations = ["GK사업소", "천마사업소", "을숙도사업소", "강남사업소", "수원사업소", "본사"];
   if (!validBusinessLocations.includes(business_location)) {
     return res.status(400).json({ message: "사업소가 유효하지 않습니다." });
   }
 
-  const validDepartments = ["ITS", "기전", "시설", "장비"];
+  const validDepartments = ["ITS", "기전", "시설", "관리", "경영지원"];
   if (!validDepartments.includes(department)) {
     return res.status(400).json({ message: "부서가 유효하지 않습니다." });
   }

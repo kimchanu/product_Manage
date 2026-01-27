@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Op } = require("sequelize");
-const { createModels } = require("../models/material");
+const { createModels, ApiMainProduct } = require("../models/material");
 
 router.post("/", async (req, res) => {
     const { businessLocation, department, year, categories } = req.body;
@@ -12,6 +12,24 @@ router.post("/", async (req, res) => {
 
     try {
         const { Product, Input, Output } = createModels(businessLocation, department);
+
+        // 🔹 ApiMainProduct 데이터 조회 (정적 테이블)
+        const locationMap = {
+            'GK': 'GK사업소',
+            'CM': '천마사업소',
+            'ES': '을숙도사업소'
+        };
+        const locationName = locationMap[businessLocation] || businessLocation;
+
+        const apiMainProducts = await ApiMainProduct.findAll({
+            where: {
+                business_location: {
+                    [Op.or]: [businessLocation, locationName]
+                },
+                department: department
+            },
+            raw: true
+        });
 
         const normalizedCategories = categories.map(cat => cat.trim().toUpperCase());
         const categoryMap = {};
@@ -81,6 +99,35 @@ router.post("/", async (req, res) => {
 
         processPrevYear(prevYearInputs, "input");
         processPrevYear(prevYearOutputs, "output");
+
+        // ApiMainProduct의 전년도 데이터 처리 (Initial Stock)
+        apiMainProducts.forEach(item => {
+            const itemDate = new Date(item.date);
+            if (itemDate <= prevYearEndDate) {
+                const materialId = item.material_id || `API_${item.id}`; // material_id가 없으면 임시 ID
+                const price = item.price || 0;
+                const qty = item.quantity || 0;
+
+                const rawCategory = item.big_category || "";
+                const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                const matchedCategory = categoryMap[upperCategory];
+
+                let categoryKey = null;
+                if (matchedCategory) {
+                    categoryKey = matchedCategory;
+                } else if (categoryMap["기타"]) {
+                    categoryKey = "기타";
+                } else {
+                    return;
+                }
+
+                if (!stockMap[materialId]) {
+                    stockMap[materialId] = { qty: 0, price, category: categoryKey };
+                }
+                stockMap[materialId].qty += qty;
+            }
+        });
 
         // 1월부터 12월까지의 월별 데이터 조회
         const monthlyData = {};
@@ -160,6 +207,40 @@ router.post("/", async (req, res) => {
 
             process(monthlyInputs, "input");
             process(monthlyOutputs, "output");
+
+            // ApiMainProduct의 당월 입고 처리
+            apiMainProducts.forEach(item => {
+                const itemDate = new Date(item.date);
+                if (itemDate >= startDate && itemDate <= endDate) {
+                    const price = item.price || 0;
+                    const qty = item.quantity || 0;
+                    const amount = price * qty;
+
+                    const rawCategory = item.big_category || "";
+                    const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                    const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                    const matchedCategory = categoryMap[upperCategory];
+
+                    let categoryKey = null;
+                    if (matchedCategory) {
+                        categoryKey = matchedCategory;
+                    } else if (categoryMap["기타"]) {
+                        categoryKey = "기타";
+                    } else {
+                        return;
+                    }
+
+                    // 월별 데이터 합산 (Inputs only)
+                    monthData[categoryKey].input += amount;
+
+                    // stockMap 업데이트 (remaining 계산용)
+                    const materialId = item.material_id || `API_${item.id}`;
+                    if (!stockMap[materialId]) {
+                        stockMap[materialId] = { qty: 0, price, category: categoryKey };
+                    }
+                    stockMap[materialId].qty += qty;
+                }
+            });
 
             // Statement와 동일한 방식으로 remaining 계산
             for (const materialId in stockMap) {

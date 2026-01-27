@@ -337,175 +337,175 @@ const FacilityBudgetExecutionCard = ({ budgetList, yearTotalInputAmounts }) => {
 };
 
 // 게시판 컴포넌트 추가
-const DashboardPostList = () => {
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+// const DashboardPostList = () => {
+//     const [posts, setPosts] = useState([]);
+//     const [loading, setLoading] = useState(true);
+//     const [error, setError] = useState("");
 
-    useEffect(() => {
-        fetchDashboardPosts();
-    }, []);
+//     useEffect(() => {
+//         fetchDashboardPosts();
+//     }, []);
 
-    const fetchDashboardPosts = async () => {
-        try {
-            setLoading(true);
-            // 공지사항과 최신 글을 우선적으로 가져오기 위해 limit을 늘려서 필터링
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/posts?page=1&limit=10`);
-            const data = await res.json();
+//     const fetchDashboardPosts = async () => {
+//         try {
+//             setLoading(true);
+//             // 공지사항과 최신 글을 우선적으로 가져오기 위해 limit을 늘려서 필터링
+//             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/posts?page=1&limit=10`);
+//             const data = await res.json();
 
-            if (res.ok) {
-                // 공지사항, 중요글, 상단고정 글을 우선적으로 표시하고, 나머지는 최신순으로 정렬
-                const sortedPosts = data.posts.sort((a, b) => {
-                    // 공지사항이 가장 우선
-                    if (a.is_notice && !b.is_notice) return -1;
-                    if (!a.is_notice && b.is_notice) return 1;
+//             if (res.ok) {
+//                 // 공지사항, 중요글, 상단고정 글을 우선적으로 표시하고, 나머지는 최신순으로 정렬
+//                 const sortedPosts = data.posts.sort((a, b) => {
+//                     // 공지사항이 가장 우선
+//                     if (a.is_notice && !b.is_notice) return -1;
+//                     if (!a.is_notice && b.is_notice) return 1;
 
-                    // 중요글이 두 번째 우선
-                    if (a.is_important && !b.is_important) return -1;
-                    if (!a.is_important && b.is_important) return 1;
+//                     // 중요글이 두 번째 우선
+//                     if (a.is_important && !b.is_important) return -1;
+//                     if (!a.is_important && b.is_important) return 1;
 
-                    // 상단고정이 세 번째 우선
-                    if (a.is_top && !b.is_top) return -1;
-                    if (!a.is_top && b.is_top) return 1;
+//                     // 상단고정이 세 번째 우선
+//                     if (a.is_top && !b.is_top) return -1;
+//                     if (!a.is_top && b.is_top) return 1;
 
-                    // 그 외에는 최신순
-                    return new Date(b.created_at) - new Date(a.created_at);
-                });
+//                     // 그 외에는 최신순
+//                     return new Date(b.created_at) - new Date(a.created_at);
+//                 });
 
-                // 상위 5개만 표시
-                setPosts(sortedPosts.slice(0, 5));
-            } else {
-                console.error("게시글 불러오기 실패:", data.error);
-                setError("게시글을 불러올 수 없습니다.");
-            }
-        } catch (err) {
-            console.error("게시글 불러오기 실패:", err);
-            setError("서버에 연결할 수 없습니다.");
-        } finally {
-            setLoading(false);
-        }
-    };
+//                 // 상위 5개만 표시
+//                 setPosts(sortedPosts.slice(0, 5));
+//             } else {
+//                 console.error("게시글 불러오기 실패:", data.error);
+//                 setError("게시글을 불러올 수 없습니다.");
+//             }
+//         } catch (err) {
+//             console.error("게시글 불러오기 실패:", err);
+//             setError("서버에 연결할 수 없습니다.");
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const now = new Date();
-        const isToday = date.getFullYear() === now.getFullYear() &&
-            date.getMonth() === now.getMonth() &&
-            date.getDate() === now.getDate();
-        if (isToday) {
-            return date.toLocaleTimeString('ko-KR', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            });
-        } else {
-            return date.toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            });
-        }
-    };
+//     const formatDate = (dateString) => {
+//         const date = new Date(dateString);
+//         const now = new Date();
+//         const isToday = date.getFullYear() === now.getFullYear() &&
+//             date.getMonth() === now.getMonth() &&
+//             date.getDate() === now.getDate();
+//         if (isToday) {
+//             return date.toLocaleTimeString('ko-KR', {
+//                 hour: '2-digit',
+//                 minute: '2-digit',
+//                 hour12: false
+//             });
+//         } else {
+//             return date.toLocaleDateString('ko-KR', {
+//                 year: 'numeric',
+//                 month: '2-digit',
+//                 day: '2-digit'
+//             });
+//         }
+//     };
 
-    const getCategoryLabel = (category, isNotice, isImportant, isTop) => {
-        if (isNotice) return "공지";
-        if (isImportant) return "중요";
-        if (isTop) return "상단";
-        switch (category) {
-            case "question": return "질문";
-            case "info": return "정보";
-            case "guide": return "가이드";
-            case "trade": return "거래";
-            default: return "일반";
-        }
-    };
+//     const getCategoryLabel = (category, isNotice, isImportant, isTop) => {
+//         if (isNotice) return "공지";
+//         if (isImportant) return "중요";
+//         if (isTop) return "상단";
+//         switch (category) {
+//             case "question": return "질문";
+//             case "info": return "정보";
+//             case "guide": return "가이드";
+//             case "trade": return "거래";
+//             default: return "일반";
+//         }
+//     };
 
-    const getCategoryColor = (category, isNotice, isImportant, isTop) => {
-        if (isNotice) return "bg-blue-100 text-blue-800";
-        if (isImportant) return "bg-red-100 text-red-800";
-        if (isTop) return "bg-yellow-100 text-yellow-800";
-        switch (category) {
-            case "question": return "bg-green-100 text-green-800";
-            case "info": return "bg-purple-100 text-purple-800";
-            case "guide": return "bg-indigo-100 text-indigo-800";
-            case "trade": return "bg-orange-100 text-orange-800";
-            default: return "bg-gray-100 text-gray-800";
-        }
-    };
+//     const getCategoryColor = (category, isNotice, isImportant, isTop) => {
+//         if (isNotice) return "bg-blue-100 text-blue-800";
+//         if (isImportant) return "bg-red-100 text-red-800";
+//         if (isTop) return "bg-yellow-100 text-yellow-800";
+//         switch (category) {
+//             case "question": return "bg-green-100 text-green-800";
+//             case "info": return "bg-purple-100 text-purple-800";
+//             case "guide": return "bg-indigo-100 text-indigo-800";
+//             case "trade": return "bg-orange-100 text-orange-800";
+//             default: return "bg-gray-100 text-gray-800";
+//         }
+//     };
 
-    if (loading) {
-        return (
-            <div className="p-6 bg-white rounded-2xl shadow">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">최신 게시글</h2>
-                <div className="flex justify-center items-center h-64">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                        <p className="text-gray-500 text-sm">게시글을 불러오는 중...</p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+//     if (loading) {
+//         return (
+//             <div className="p-6 bg-white rounded-2xl shadow">
+//                 <h2 className="text-lg font-semibold text-gray-800 mb-4">최신 게시글</h2>
+//                 <div className="flex justify-center items-center h-64">
+//                     <div className="text-center">
+//                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+//                         <p className="text-gray-500 text-sm">게시글을 불러오는 중...</p>
+//                     </div>
+//                 </div>
+//             </div>
+//         );
+//     }
 
-    return (
-        <div className="p-6 bg-white rounded-2xl shadow">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">최신 게시글</h2>
-                <a
-                    href="/PostList_page"
-                    className="text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium"
-                >
-                    전체보기 →
-                </a>
-            </div>
+//     return (
+//         <div className="p-6 bg-white rounded-2xl shadow">
+//             <div className="flex justify-between items-center mb-4">
+//                 <h2 className="text-lg font-semibold text-gray-800">최신 게시글</h2>
+//                 <a
+//                     href="/PostList_page"
+//                     className="text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium"
+//                 >
+//                     전체보기 →
+//                 </a>
+//             </div>
 
-            {error && (
-                <div className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</div>
-            )}
+//             {error && (
+//                 <div className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</div>
+//             )}
 
-            {posts.length === 0 ? (
-                <div className="text-center text-gray-500 py-8">
-                    <div className="text-gray-400 mb-2">📝</div>
-                    작성된 글이 없습니다.
-                </div>
-            ) : (
-                <div className="space-y-2 h-64 overflow-y-auto">
-                    {posts.map((post) => (
-                        <div
-                            key={post.id}
-                            className="p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-all duration-200"
-                            onClick={() => window.location.href = `/posts/${post.id}`}
-                        >
-                            <div className="flex items-start justify-between">
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category, post.is_notice, post.is_important, post.is_top)}`}>
-                                            {getCategoryLabel(post.category, post.is_notice, post.is_important, post.is_top)}
-                                        </span>
-                                        <span className="text-sm text-gray-600 font-medium">{post.author}</span>
-                                    </div>
-                                    <h3 className="text-sm font-medium text-gray-900 truncate leading-tight">
-                                        {post.title}
-                                        {post.comment_count > 0 && (
-                                            <span className="ml-2 text-blue-500 text-xs font-medium">[{post.comment_count}]</span>
-                                        )}
-                                    </h3>
-                                </div>
-                                <div className="flex flex-col items-end gap-1 text-xs text-gray-500 ml-3">
-                                    <span className="font-medium">{formatDate(post.created_at)}</span>
-                                    <div className="flex items-center gap-2">
-                                        <span>조회 {post.view_count}</span>
-                                        <span>추천 {post.like_count}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-};
+//             {posts.length === 0 ? (
+//                 <div className="text-center text-gray-500 py-8">
+//                     <div className="text-gray-400 mb-2">📝</div>
+//                     작성된 글이 없습니다.
+//                 </div>
+//             ) : (
+//                 <div className="space-y-2 h-64 overflow-y-auto">
+//                     {posts.map((post) => (
+//                         <div
+//                             key={post.id}
+//                             className="p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-all duration-200"
+//                             onClick={() => window.location.href = `/posts/${post.id}`}
+//                         >
+//                             <div className="flex items-start justify-between">
+//                                 <div className="flex-1 min-w-0">
+//                                     <div className="flex items-center gap-2 mb-1">
+//                                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category, post.is_notice, post.is_important, post.is_top)}`}>
+//                                             {getCategoryLabel(post.category, post.is_notice, post.is_important, post.is_top)}
+//                                         </span>
+//                                         <span className="text-sm text-gray-600 font-medium">{post.author}</span>
+//                                     </div>
+//                                     <h3 className="text-sm font-medium text-gray-900 truncate leading-tight">
+//                                         {post.title}
+//                                         {post.comment_count > 0 && (
+//                                             <span className="ml-2 text-blue-500 text-xs font-medium">[{post.comment_count}]</span>
+//                                         )}
+//                                     </h3>
+//                                 </div>
+//                                 <div className="flex flex-col items-end gap-1 text-xs text-gray-500 ml-3">
+//                                     <span className="font-medium">{formatDate(post.created_at)}</span>
+//                                     <div className="flex items-center gap-2">
+//                                         <span>조회 {post.view_count}</span>
+//                                         <span>추천 {post.like_count}</span>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                         </div>
+//                     ))}
+//                 </div>
+//             )}
+//         </div>
+//     );
+// };
 
 const Statistics_sub = ({ department }) => {
     const currentYear = new Date().getFullYear();
@@ -747,7 +747,7 @@ const Statistics_sub = ({ department }) => {
                 <OutputByLocationCard outputList={outputByLocation} />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-3">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <ITSBudgetExecutionCard budgetList={budgetList} yearTotalInputAmounts={yearTotalInputAmounts} />
@@ -755,12 +755,12 @@ const Statistics_sub = ({ department }) => {
                         <FacilityBudgetExecutionCard budgetList={budgetList} yearTotalInputAmounts={yearTotalInputAmounts} />
                     </div>
                 </div>
-                <div className="lg:col-span-1 lg:row-span-2" style={{ gridRow: '1 / 3' }}>
+                {/* <div className="lg:col-span-1 lg:row-span-2" style={{ gridRow: '1 / 3' }}>
                     <DashboardPostList />
-                </div>
+                </div> */}
             </div>
 
-            <LineChartCard title={`${department} 예산 추이`} data={budgetTrendData} />
+            {/* <LineChartCard title={`${department} 예산 추이`} data={budgetTrendData} /> */}
             <div className="h-16" />
 
         </main>
