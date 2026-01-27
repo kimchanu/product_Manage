@@ -405,10 +405,10 @@ const YearlyStatement = () => {
                             <tr className="bg-gray-100">
                                 <th className="border border-black" colSpan={3}>구 분</th>
                                 <th className="border border-black" colSpan={9}>예 산</th>
-                                <th className="border border-black" colSpan={9}>연간집행 금액</th>
-                                <th className="border border-black" colSpan={9}>집행률</th>
+                                <th className="border border-black" colSpan={8}>연간집행 금액</th>
+                                <th className="border border-black" colSpan={8}>집행률</th>
                                 <th className="border border-black" colSpan={9}>잔 액</th>
-                                <th className="border border-black" colSpan={3}>비 고</th>
+                                <th className="border border-black" colSpan={4}>비 고</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -417,15 +417,15 @@ const YearlyStatement = () => {
                                     연간
                                 </td>
                                 <td className="border border-black h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
-                                <td className="border border-black h-12" colSpan={9}>{(window.yearlyTotalInput || 0).toLocaleString()}</td>
-                                <td className="border border-black h-12" colSpan={9}>
+                                <td className="border border-black h-12" colSpan={8}>{(window.yearlyTotalInput || 0).toLocaleString()}</td>
+                                <td className="border border-black h-12" colSpan={8}>
                                     {budgetData?.amount ?
                                         `${(((window.yearlyTotalInput || 0) / budgetData.amount) * 100).toFixed(1)}%` :
                                         '0%'
                                     }
                                 </td>
                                 <td className="border border-black h-12" colSpan={9}>{((budgetData?.amount || 0) - (window.yearlyTotalInput || 0)).toLocaleString()}</td>
-                                <td className="border border-black h-12" colSpan={3}>&nbsp;</td>
+                                <td className="border border-black h-12" colSpan={4}>&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>
