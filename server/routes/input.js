@@ -403,4 +403,130 @@ router.post("/manual", authMiddleware, async (req, res) => {
     }
 });
 
+
+
+// api_main_product 저장 API
+router.post("/manual/api-main", authMiddleware, async (req, res) => {
+    console.log("✅ POST /manual/api-main 라우트가 호출되었습니다.");
+    const { items, type } = req.body;
+    console.log("api_main_product 저장 요청:", req.body);
+
+    if (!Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({
+            success: false,
+            message: "저장할 자재 목록이 비어있습니다."
+        });
+    }
+
+    // JWT 토큰에서 사용자 정보 가져오기
+    const user = req.user;
+
+    // 기본값 설정
+    const { department = "ITS", business_location, date } = req.body;
+
+    // 사업소 코드를 이름으로 매핑
+    const businessLocationMap = {
+        'GK': 'GK사업소',
+        'CM': '천마사업소',
+        'ES': '을숙도사업소'
+    };
+
+    // 요청받은 business_location이 코드라면 이름으로 변환 (없으면 그대로 사용)
+    const businessLocationName = businessLocationMap[business_location] || business_location ||
+        (businessLocationMap[user.business_location] || user.business_location);
+
+    const defaultValues = {
+        comment: "수동 입력 API 저장",
+        date: date || new Date().toISOString().split('T')[0],
+        department: department,
+        business_location: businessLocationName,
+        user_id: user.full_name
+    };
+
+    let transaction;
+    // ApiMainProduct 모델 가져오기 (material.js에서 export 필요)
+    const { ApiMainProduct } = require("../models/material");
+
+    try {
+        transaction = await sequelize.transaction();
+        const savedItems = [];
+
+        for (const item of items) {
+            const { 자재코드, 품명, 규격, 단가, 입고수량, 대분류, 중분류, 소분류 } = item;
+
+            if (!자재코드 || !입고수량) {
+                console.warn("필수 정보가 누락된 항목:", item);
+                continue;
+            }
+
+            // 자재코드 생성 로직: 사업소명-부서명-자재코드
+            const constructedMaterialCode = `${defaultValues.business_location}-${defaultValues.department}-${자재코드}`;
+            const materialId = uuidv4();
+
+            // 단가, 수량 파싱
+            const parseFormattedNumber = (value) => {
+                if (!value) return 0;
+                const numStr = value.toString().replace(/,/g, '');
+                return parseFloat(numStr) || 0;
+            };
+            const parsedPrice = parseFormattedNumber(단가);
+            const parsedQuantity = parseFormattedNumber(입고수량);
+
+            await ApiMainProduct.create({
+                material_id: materialId,
+                material_code: constructedMaterialCode, // 조합된 자재코드
+                name: 품명 || null,
+                specification: 규격 || null,
+                price: parsedPrice,
+                quantity: parsedQuantity, // 초기 재고/입고 수량
+
+                // 분류 정보 저장
+                big_category: 대분류 || null,
+                category: 중분류 || null,
+                sub_category: 소분류 || null,
+
+                // 공통 필드
+                business_location: defaultValues.business_location, // "GK사업소" 등 전체 이름
+                department: defaultValues.department,
+                user_id: defaultValues.user_id,
+                date: defaultValues.date,
+                comment: defaultValues.comment,
+
+                // 기타 필드 (기본값 null)
+                location: null,
+                big_category: null,
+                category: null,
+                sub_category: null,
+                manufacturer: null,
+                supplier: null,
+                unit: null
+            }, { transaction });
+
+            savedItems.push({
+                material_code: constructedMaterialCode,
+                name: 품명,
+                quantity: parsedQuantity
+            });
+        }
+
+        await transaction.commit();
+        console.log(`api_main_product 저장 완료: ${savedItems.length}개 항목`);
+
+        return res.status(200).json({
+            success: true,
+            message: `api_main_product에 ${savedItems.length}개의 항목이 저장되었습니다.`
+        });
+
+    } catch (error) {
+        console.error("api_main_product 저장 실패:", error);
+        if (transaction) await transaction.rollback();
+
+        return res.status(500).json({
+            success: false,
+            message: "api_main_product 저장 중 오류가 발생했습니다.",
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading, user }) {
+function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, onClear, isLoading, user }) {
   const [formData, setFormData] = useState(data || []);
   const [editingIndex, setEditingIndex] = useState(null);
   const [errors, setErrors] = useState({});
@@ -41,7 +41,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     setLoadingBudget(true);
     try {
       const currentYear = new Date().getFullYear();
-      
+
       // 사업소 코드를 전체 이름으로 변환
       const businessLocationMap = {
         'GK': 'GK사업소',
@@ -49,15 +49,15 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
         'ES': '을숙도사업소'
       };
       const businessLocationName = businessLocationMap[businessLocation] || businessLocation;
-      
+
       // 예산 조회
       const budgetResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/budget?year=${currentYear}`);
       if (!budgetResponse.ok) throw new Error("예산 조회 실패");
       const budgetData = await budgetResponse.json();
-      
+
       console.log('예산 데이터:', budgetData);
       console.log('조회 조건 - 사업소 코드:', businessLocation, '사업소 이름:', businessLocationName, '부서:', department);
-      
+
       // 해당 사업소와 부서의 예산 찾기 (다양한 형식의 사업소 이름 매칭)
       const departmentBudget = budgetData.budget?.find(
         item => {
@@ -65,46 +65,46 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
           if (item.department !== department) {
             return false;
           }
-          
+
           // 사업소 매칭 (다양한 형식 지원)
           const site = item.site || '';
           const siteLower = site.toLowerCase();
           const businessLocationLower = businessLocation.toLowerCase();
           const businessLocationNameLower = businessLocationName.toLowerCase();
-          
+
           // 정확한 매칭
           if (site === businessLocationName || site === businessLocation) {
             return true;
           }
-          
+
           // 부분 매칭 (코드가 포함되어 있는지)
           if (siteLower.includes(businessLocationLower) || businessLocationLower.includes(siteLower)) {
             return true;
           }
-          
+
           // 사업소 이름이 포함되어 있는지
           if (siteLower.includes(businessLocationNameLower) || businessLocationNameLower.includes(siteLower)) {
             return true;
           }
-          
+
           // 사업소 코드 매핑으로 확인
           const reverseMap = {
             'gk': ['gk', 'gk사업소'],
             'cm': ['cm', '천마', '천마사업소'],
             'es': ['es', '을숙도', '을숙도사업소']
           };
-          
+
           const locationKeys = reverseMap[businessLocationLower] || [];
           for (const key of locationKeys) {
             if (siteLower.includes(key)) {
               return true;
             }
           }
-          
+
           return false;
         }
       );
-      
+
       console.log('찾은 예산:', departmentBudget);
       if (!departmentBudget) {
         console.warn('예산을 찾을 수 없습니다.');
@@ -112,7 +112,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
         console.warn('전체 예산 데이터:', budgetData.budget);
         console.warn('해당 부서의 예산:', budgetData.budget?.filter(item => item.department === department));
       }
-      
+
       // 연간 총 입고 금액 조회 (기집행액) - 테이블이 없어도 예산은 표시해야 함
       let executedAmount = 0;
       try {
@@ -128,11 +128,11 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
             year: currentYear,
             month: new Date().getMonth() + 1,
             categories: department === "ITS" ? ["TCS", "FTMS", "전산", "기타", "합 계"] :
-                       department === "기전" ? ["전기", "기계", "소방", "기타", "합 계"] :
-                       ["안전", "장비", "시설보수", "조경", "기타", "합 계"]
+              department === "기전" ? ["전기", "기계", "소방", "기타", "합 계"] :
+                ["안전", "장비", "시설보수", "조경", "기타", "합 계"]
           })
         });
-        
+
         if (statementResponse.ok) {
           const statementData = await statementResponse.json();
           executedAmount = statementData.yearTotalInputAmount || 0;
@@ -147,13 +147,13 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
         console.warn('집행액 조회 중 오류 발생 (테이블이 없을 수 있음):', statementError);
         executedAmount = 0;
       }
-      
+
       const budget = departmentBudget ? Number(departmentBudget.amount) : 0;
       const currentExecution = 0; // 현재 집행액은 0으로 초기화 (입고 데이터가 저장되면 업데이트)
       const remainingAmount = budget - executedAmount;
-      
+
       console.log('예산:', budget, '기집행액:', executedAmount, '잔액:', remainingAmount);
-      
+
       setPurchaseInfo(prev => ({
         ...prev,
         budget,
@@ -161,7 +161,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
         currentExecution,
         remainingAmount
       }));
-      
+
     } catch (error) {
       console.error('예산 데이터 조회 실패:', error);
       setPurchaseInfo(prev => ({
@@ -258,22 +258,22 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
   // 숫자 포맷팅 (쉼표 추가)
   const formatNumberInput = (value) => {
     if (!value) return '';
-    
+
     // 숫자가 아닌 문자 제거 (쉼표 제외)
     let numericValue = value.toString().replace(/[^\d.]/g, '');
     if (!numericValue) return '';
-    
+
     // 소수점이 여러 개인 경우 첫 번째만 유지
     const dotIndex = numericValue.indexOf('.');
     if (dotIndex !== -1) {
       numericValue = numericValue.substring(0, dotIndex + 1) + numericValue.substring(dotIndex + 1).replace(/\./g, '');
     }
-    
+
     // 소수점 처리
     const parts = numericValue.split('.');
     const integerPart = parts[0] ? parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '';
     const decimalPart = parts[1] ? '.' + parts[1].substring(0, 2) : ''; // 소수점 2자리까지만
-    
+
     return integerPart + decimalPart;
   };
 
@@ -286,7 +286,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
   // 입력값 변경
   const handleInputChange = (index, field, value) => {
     const newData = [...formData];
-    
+
     // 단가와 입고수량 필드는 포맷팅 적용
     if (field === '단가' || field === '입고수량') {
       const formattedValue = formatNumberInput(value);
@@ -294,7 +294,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     } else {
       newData[index] = { ...newData[index], [field]: value };
     }
-    
+
     setFormData(newData);
     onDataChange(newData);
 
@@ -317,13 +317,13 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
     if (!row.품명?.trim()) {
       rowErrors[`${index}-품명`] = '품명은 필수입니다.';
     }
-    
+
     // 단가 검증 (쉼표 제거 후 숫자 변환)
     const 단가Value = parseFormattedNumber(row.단가);
     if (!단가Value || isNaN(단가Value) || Number(단가Value) < 0) {
       rowErrors[`${index}-단가`] = '단가는 0 이상의 숫자여야 합니다.';
     }
-    
+
     // 입고수량 검증 (쉼표 제거 후 숫자 변환)
     const 입고수량Value = parseFormattedNumber(row.입고수량);
     if (!입고수량Value || isNaN(입고수량Value) || Number(입고수량Value) < 0) {
@@ -471,6 +471,15 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
               >
                 {isLoading ? '저장 중...' : '전체 저장'}
               </button>
+              {onSaveToApiMain && (
+                <button
+                  onClick={() => onSaveToApiMain(selectedDepartment, selectedBusinessLocation, inputDate)}
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+                >
+                  {isLoading ? '저장 중...' : 'API 저장'}
+                </button>
+              )}
               <button
                 onClick={handleClearAll}
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -497,6 +506,9 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
           <table className="w-full border-collapse border border-gray-300 text-sm">
             <thead>
               <tr className="bg-gray-200">
+                <th className="border p-2 text-left">대분류</th>
+                <th className="border p-2 text-left">중분류</th>
+                <th className="border p-2 text-left">소분류</th>
                 <th className="border p-2 text-left">품명 *</th>
                 <th className="border p-2 text-left">규격</th>
                 <th className="border p-2 text-right">단가 *</th>
@@ -512,9 +524,54 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
                 const 단가 = parseFloat(parseFormattedNumber(row.단가)) || 0;
                 const 입고수량 = parseFloat(parseFormattedNumber(row.입고수량)) || 0;
                 const totalAmount = 단가 * 입고수량;
-                
+
                 return (
                   <tr key={row.id || index} className={`hover:bg-gray-50 ${isEditing ? 'bg-blue-50' : ''}`}>
+
+                    {/* 대분류 */}
+                    <td className="border p-1">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={row.대분류 || ''}
+                          onChange={(e) => handleInputChange(index, '대분류', e.target.value)}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          placeholder="대분류"
+                        />
+                      ) : (
+                        <span className="text-sm">{row.대분류 || '-'}</span>
+                      )}
+                    </td>
+
+                    {/* 중분류 */}
+                    <td className="border p-1">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={row.중분류 || ''}
+                          onChange={(e) => handleInputChange(index, '중분류', e.target.value)}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          placeholder="중분류"
+                        />
+                      ) : (
+                        <span className="text-sm">{row.중분류 || '-'}</span>
+                      )}
+                    </td>
+
+                    {/* 소분류 */}
+                    <td className="border p-1">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={row.소분류 || ''}
+                          onChange={(e) => handleInputChange(index, '소분류', e.target.value)}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          placeholder="소분류"
+                        />
+                      ) : (
+                        <span className="text-sm">{row.소분류 || '-'}</span>
+                      )}
+                    </td>
 
                     {/* 품명 */}
                     <td className="border p-1">
@@ -524,9 +581,8 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
                             type="text"
                             value={row.품명 || ''}
                             onChange={(e) => handleInputChange(index, '품명', e.target.value)}
-                            className={`w-full px-2 py-1 border rounded text-sm ${
-                              errors[`${index}-품명`] ? 'border-red-500' : 'border-gray-300'
-                            }`}
+                            className={`w-full px-2 py-1 border rounded text-sm ${errors[`${index}-품명`] ? 'border-red-500' : 'border-gray-300'
+                              }`}
                             placeholder="품명"
                           />
                           {errors[`${index}-품명`] && (
@@ -561,9 +617,8 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
                             type="text"
                             value={row.단가 || ''}
                             onChange={(e) => handleInputChange(index, '단가', e.target.value)}
-                            className={`w-full px-2 py-1 border rounded text-sm text-right font-mono ${
-                              errors[`${index}-단가`] ? 'border-red-500' : 'border-gray-300'
-                            }`}
+                            className={`w-full px-2 py-1 border rounded text-sm text-right font-mono ${errors[`${index}-단가`] ? 'border-red-500' : 'border-gray-300'
+                              }`}
                             placeholder="0"
                             inputMode="numeric"
                           />
@@ -584,9 +639,8 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
                             type="text"
                             value={row.입고수량 || ''}
                             onChange={(e) => handleInputChange(index, '입고수량', e.target.value)}
-                            className={`w-full px-2 py-1 border rounded text-sm text-right font-mono ${
-                              errors[`${index}-입고수량`] ? 'border-red-500' : 'border-gray-300'
-                            }`}
+                            className={`w-full px-2 py-1 border rounded text-sm text-right font-mono ${errors[`${index}-입고수량`] ? 'border-red-500' : 'border-gray-300'
+                              }`}
                             placeholder="0"
                             inputMode="numeric"
                           />
@@ -648,7 +702,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onClear, isLoading
             </tbody>
             <tfoot>
               <tr className="bg-gray-100 font-semibold">
-                <td className="border p-2 text-right" colSpan="3">
+                <td className="border p-2 text-right" colSpan="6">
                   합계
                 </td>
                 <td className="border p-2 text-right font-mono">
