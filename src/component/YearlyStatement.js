@@ -5,6 +5,90 @@ import User_info from "./User_info";
 import ExcelYearlyStatementReport from "./Excel/ExcelYearlyStatementReport";
 
 const YearlyStatement = () => {
+    const landscapePrintStyle = `
+@page {
+  size: A4 landscape;
+  margin: 6mm;
+}
+
+@media print {
+  /* ✅ (중요) 전역에서 mm로 고정된 height/overflow를 '해제'해야 빈 페이지가 사라지는 경우가 많음 */
+  html, body {
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* 가운데 정렬 */
+  body {
+    background: #fff !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+  }
+
+  .no-print { display: none !important; }
+
+  .print-root {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* ✅ 스케일/줌으로 맞추기보다, 컨텐츠 폭을 “페이지 안”으로 맞추는 게 안정적 */
+  .print-sheet {
+    width: 285mm !important;   /* 297 - (좌우 margin 6mm*2) = 285mm */
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+
+  /* transform/zoom은 브라우저에 따라 가짜 페이지 만들 때가 있어서 off */
+  .print-fit {
+    transform: none !important;
+    zoom: 1 !important;
+  }
+
+  /* ✅ Yearly는 가로 2표를 반드시 한 줄 */
+  .yearly-landscape .flex {
+    flex-direction: row !important;
+    gap: 6mm !important;
+  }
+
+  /* ✅ “딱 1~2px 넘침”으로 2페이지 생기는 걸 막기 위해 여백을 강제로 줄임 */
+  .mb-20, .mb-16, .mb-12, .mb-10, .mb-8, .mb-6 { margin-bottom: 0 !important; }
+  .mt-10 { margin-top: 4px !important; }
+  .mt-6 { margin-top: 4px !important; }
+
+  /* ✅ 전역에서 table/tr에 걸어둔 page-break-inside: avoid가 ‘빈 페이지’ 원인이 되기도 함
+     → Yearly 출력에 한해 완화 */
+  table {
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+}
+  th, td {
+  border-width: 1px !important;
+}
+
+  /* 혹시 마지막 요소가 break를 유발하면 방지 */
+  .print-sheet { page-break-after: auto !important; break-after: auto !important; }
+}
+  .print-title-wrapper {
+  margin-bottom: 8mm !important; /* 원하는 만큼 6~12mm로 조절 */
+}
+  .print-margin-doc {
+  margin-bottom: 5mm !important; /* 8~14mm 사이로 취향 조절 */
+}
+  .yearly-total-row td {
+  height: 28px !important;     /* 기존 22~24px → 살짝만 증가 */
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+`;
+
+
     const today = new Date();
     const [searchParams, setSearchParams] = useSearchParams();
     const [year, setYear] = useState(today.getFullYear());
@@ -188,9 +272,9 @@ const YearlyStatement = () => {
                 <div className="flex gap-8 mb-6">
                     {/* 1~6월 표 */}
                     <div className="flex-1">
-                        <table className="w-full border border-black text-sm text-center table-fixed">
+                        <table className="w-full border border-black text-sm text-center table-fixed yearly-total-row">
                             <thead>
-                                <tr className="bg-gray-100">
+                                <tr className="bg-gray-100 double-underline yearly-total-row">
                                     <th className="border border-black h-10">월</th>
                                     <th className="border border-black h-10">입고</th>
                                     <th className="border border-black h-10">출고</th>
@@ -203,9 +287,9 @@ const YearlyStatement = () => {
                                     return (
                                         <tr key={data.month}>
                                             <td className="border border-black h-10">{data.month}월</td>
-                                            <td className="border border-black h-10">{data.input.toLocaleString()}</td>
-                                            <td className="border border-black h-10">{data.output.toLocaleString()}</td>
-                                            <td className="border border-black h-10">{data.stock.toLocaleString()}</td>
+                                            <td className="border border-black text-right pr-2 h-10">{data.input.toLocaleString()}</td>
+                                            <td className="border border-black text-right pr-2 h-10">{data.output.toLocaleString()}</td>
+                                            <td className="border border-black text-right pr-2 h-10">{data.stock.toLocaleString()}</td>
                                         </tr>
                                     );
                                 })}
@@ -215,9 +299,9 @@ const YearlyStatement = () => {
 
                     {/* 7~12월 표 + 총합계 */}
                     <div className="flex-1">
-                        <table className="w-full border border-black text-sm text-center table-fixed">
+                        <table className="w-full border border-black text-sm text-center table-fixed yearly-total-row">
                             <thead>
-                                <tr className="bg-gray-100">
+                                <tr className="bg-gray-100 double-underline">
                                     <th className="border border-black h-10">월</th>
                                     <th className="border border-black h-10">입고</th>
                                     <th className="border border-black h-10">출고</th>
@@ -228,17 +312,17 @@ const YearlyStatement = () => {
                                 {secondHalfData.map((data) => (
                                     <tr key={data.month}>
                                         <td className="border border-black h-10">{data.month}월</td>
-                                        <td className="border border-black h-10">{data.input.toLocaleString()}</td>
-                                        <td className="border border-black h-10">{data.output.toLocaleString()}</td>
-                                        <td className="border border-black h-10">{data.stock.toLocaleString()}</td>
+                                        <td className="border border-black text-right pr-2 h-10">{data.input.toLocaleString()}</td>
+                                        <td className="border border-black text-right pr-2 h-10">{data.output.toLocaleString()}</td>
+                                        <td className="border border-black text-right pr-2 h-10">{data.stock.toLocaleString()}</td>
                                     </tr>
                                 ))}
                                 {/* 총합계 행을 7~12월 표 아래에 추가 */}
-                                <tr className="bg-blue-100">
+                                <tr className="bg-blue-100 yearly-total-row">
                                     <td className="border border-black h-10 font-bold">총합계</td>
-                                    <td className="border border-black h-10 font-bold">{totalInput.toLocaleString()}</td>
-                                    <td className="border border-black h-10 font-bold">{totalOutput.toLocaleString()}</td>
-                                    <td className="border border-black h-10 font-bold">{totalStock.toLocaleString()}</td>
+                                    <td className="border border-black text-right pr-2 h-10 font-bold">{totalInput.toLocaleString()}</td>
+                                    <td className="border border-black text-right pr-2 h-10 font-bold">{totalOutput.toLocaleString()}</td>
+                                    <td className="border border-black text-right pr-2 h-10 font-bold">{totalStock.toLocaleString()}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -299,11 +383,26 @@ const YearlyStatement = () => {
                             reportType={reportType}
                         />
                         <button
-                            onClick={() => window.print()}
-                            className="px-4 py-1 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+                            onClick={() => {
+                                const style = document.createElement("style");
+                                style.id = "landscape-print-style";
+                                style.innerHTML = landscapePrintStyle;
+                                document.head.appendChild(style);
+
+                                const cleanup = () => {
+                                    const el = document.getElementById("landscape-print-style");
+                                    if (el) el.remove();
+                                    window.removeEventListener("afterprint", cleanup);
+                                };
+
+                                window.addEventListener("afterprint", cleanup);
+                                window.print();
+                            }}
+                            className="px-4 py-1 bg-green-600 text-white rounded-md text-sm font-medium"
                         >
                             출력하기
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -311,7 +410,7 @@ const YearlyStatement = () => {
             <div className="print-fit">
                 <div className="print-sheet mx-auto">
                     {/* 1. 인쇄용 헤더 (화면에서는 숨김, 인쇄 시에만 한 줄 배치) */}
-                    <div className="hidden print:flex relative w-full items-end justify-center mb-10 px-4 min-h-[100px]">
+                    <div className="hidden print:flex print-title-wrapper relative w-full items-end justify-center mb-10 px-4 min-h-[100px]">
                         <div className="w-full text-center pr-[260px]">
                             <h1 className="large-print-title whitespace-nowrap">
                                 {year}년 {user?.department} 연간보고서
@@ -366,7 +465,7 @@ const YearlyStatement = () => {
                     </div>
 
                     {/* 문서 정보 */}
-                    <table className="w-full table-fixed border border-black text-sm text-center mb-16 print-margin-doc">
+                    <table className="table-fixed border border-black text-sm text-center mb-16 print-margin-doc w-full doc-info-table">
                         <tbody>
                             <tr>
                                 <td className="border border-black h-10 w-1/4">문서번호</td>
@@ -391,9 +490,9 @@ const YearlyStatement = () => {
 
                     {/* 연간 예산집행 현황 */}
                     <div className="flex items-baseline justify-between mt-6 mb-2">
-                        <h2 className="text-left font-semibold text-base">
+                        <h1 className="text-left font-semibold text-base">
                             {year}년 예산집행 현황
-                        </h2>
+                        </h1>
                         <div className="text-right text-sm whitespace-nowrap">
                             (단위 : 원)
                         </div>
@@ -402,29 +501,30 @@ const YearlyStatement = () => {
 
                     <table className="w-full border border-black text-sm text-center table-fixed">
                         <thead>
-                            <tr className="bg-gray-100">
+                            <tr className="bg-gray-100 double-underline yearly-total-row">
                                 <th className="border border-black" colSpan={3}>구 분</th>
                                 <th className="border border-black" colSpan={9}>예 산</th>
                                 <th className="border border-black" colSpan={8}>연간집행 금액</th>
-                                <th className="border border-black" colSpan={8}>집행률</th>
                                 <th className="border border-black" colSpan={9}>잔 액</th>
+                                <th className="border border-black" colSpan={5}>집행률</th>
                                 <th className="border border-black" colSpan={4}>비 고</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td className="border border-black h-12" colSpan={3}>
-                                    연간
+                                    {user?.department}
                                 </td>
-                                <td className="border border-black h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
-                                <td className="border border-black h-12" colSpan={8}>{(window.yearlyTotalInput || 0).toLocaleString()}</td>
-                                <td className="border border-black h-12" colSpan={8}>
+                                <td className="border border-black text-right pr-2 h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
+                                <td className="border border-black text-right pr-2 h-12" colSpan={8}>{(window.yearlyTotalInput || 0).toLocaleString()}</td>
+
+                                <td className="border border-black text-right pr-2 h-12" colSpan={9}>{((budgetData?.amount || 0) - (window.yearlyTotalInput || 0)).toLocaleString()}</td>
+                                <td className="border border-black h-12" colSpan={5}>
                                     {budgetData?.amount ?
                                         `${(((window.yearlyTotalInput || 0) / budgetData.amount) * 100).toFixed(1)}%` :
                                         '0%'
                                     }
                                 </td>
-                                <td className="border border-black h-12" colSpan={9}>{((budgetData?.amount || 0) - (window.yearlyTotalInput || 0)).toLocaleString()}</td>
                                 <td className="border border-black h-12" colSpan={4}>&nbsp;</td>
                             </tr>
                         </tbody>

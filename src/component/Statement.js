@@ -185,7 +185,7 @@ const Statement = () => {
 
         // 메인 합계 행(ITS/시설/기전)에 연한 빨간 배경색 표시
         const isMainRow = reportType === "allPartMonthly" && ["ITS", "시설", "기전"].includes(cat);
-        const bgClass = isMainRow ? "bg-red-100" : "";
+        const bgClass = isMainRow ? "bg-blue-100" : "";
         const fontClass = isMainRow ? "font-bold" : "";
         const borderClass = "border border-black";
 
@@ -353,7 +353,7 @@ const Statement = () => {
                     {/* 자재수불명세서 표 */}
                     <table className="border border-black text-sm text-center table-fixed w-full statement-table">
                         <thead>
-                            <tr className="bg-gray-100">
+                            <tr className="bg-gray-100 double-underline">
                                 <th className="border border-black" colSpan={5}>구 분</th>
                                 <th className="border border-black" colSpan={9}>전월재고</th>
                                 <th className="border border-black" colSpan={8}>입 고</th>
@@ -381,7 +381,7 @@ const Statement = () => {
 
                     <table className="border border-black text-sm text-center table-fixed mb-20 w-full budget-table">
                         <thead>
-                            <tr className="bg-gray-100">
+                            <tr className="bg-gray-100 double-underline">
                                 <th className="border border-black" colSpan={3}>구 분</th>
                                 <th className="border border-black" colSpan={9}>예 산</th>
                                 <th className="border border-black" colSpan={8}>당월집행 금액</th>

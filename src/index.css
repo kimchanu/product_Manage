@@ -284,3 +284,13 @@
         font-size: 10.5px !important;
     }
 }
+
+/* 헤더행 아래 이중 밑줄 */
+.double-underline th {
+    border-bottom: 3px double #000 !important;
+}
+
+/* 혹시 헤더 아래쪽이 겹쳐 보이면 첫 번째 바디 행의 상단선 제거(선택) */
+.double-underline+tr td {
+    border-top: 0 !important;
+}
