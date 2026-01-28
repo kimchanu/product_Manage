@@ -192,10 +192,10 @@ const Statement = () => {
         return (
             <tr key={cat}>
                 <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={5}>{displayName}</td>
-                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={9}>{row.prevStock.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={8}>{row.input.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={8}>{row.output.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={9}>{row.remaining.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-2`} colSpan={9}>{row.prevStock.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-2`} colSpan={8}>{row.input.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-2`} colSpan={8}>{row.output.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-2`} colSpan={9}>{row.remaining.toLocaleString()}</td>
                 <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={3}>&nbsp;</td>
             </tr>
         );
@@ -270,7 +270,7 @@ const Statement = () => {
                     {/* 1. 인쇄용 헤더 (화면에서는 숨김, 인쇄 시에만 한 줄 배치) */}
                     <div className="hidden print:flex relative w-full items-end justify-center mb-10 px-4 min-h-[100px]">
                         <div className="w-full text-center pr-[260px]"> {/* 결재란 자리를 비워주기 위한 패딩 */}
-                            <h1 className="large-print-title whitespace-nowrap">
+                            <h1 className="large-print-title whitespace-nowrap ">
                                 {reportType === "allPartMonthly"
                                     ? `${year}년 ${month.toString().padStart(2, "0")}월 자재수불명세서대장`
                                     : `${year}년 ${month.toString().padStart(2, "0")}월 자재수불명세서대장`}
@@ -369,9 +369,9 @@ const Statement = () => {
 
                     {/* 예산집행 현황 */}
                     <div className="flex items-baseline justify-between mt-6 mb-2">
-                        <h2 className="text-left font-semibold text-base">
+                        <h1 className="text-left font-semibold text-base">
                             {year}년 예산집행 현황
-                        </h2>
+                        </h1>
                         <div className="text-right text-sm whitespace-nowrap">
                             (단위 : 원)
                         </div>
@@ -404,10 +404,10 @@ const Statement = () => {
                                         return (
                                             <tr key={dept}>
                                                 <td className="border border-black h-12" colSpan={3}>{dept}</td>
-                                                <td className="border border-black h-12" colSpan={9}>{deptBudget.toLocaleString()}</td>
-                                                <td className="border border-black h-12" colSpan={8}>{deptMonthInput.toLocaleString()}</td>
-                                                <td className="border border-black h-12" colSpan={8}>{deptYearTotalInput.toLocaleString()}</td>
-                                                <td className="border border-black h-12 font-bold" colSpan={9}>{deptRemaining.toLocaleString()}</td>
+                                                <td className="border border-black h-12 text-right pr-2" colSpan={9}>{deptBudget.toLocaleString()}</td>
+                                                <td className="border border-black h-12 text-right pr-2" colSpan={8}>{deptMonthInput.toLocaleString()}</td>
+                                                <td className="border border-black h-12 text-right pr-2" colSpan={8}>{deptYearTotalInput.toLocaleString()}</td>
+                                                <td className="border border-black h-12 font-bold text-right pr-2" colSpan={9}>{deptRemaining.toLocaleString()}</td>
                                                 <td className="border border-black h-12 font-bold text-base" colSpan={4}>{executionRate}%</td>
                                             </tr>
                                         );
@@ -419,10 +419,10 @@ const Statement = () => {
                                     <td className="border border-black h-12" colSpan={3}>
                                         {month.toString().padStart(2, "0")}월
                                     </td>
-                                    <td className="border border-black h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
-                                    <td className="border border-black h-12" colSpan={8}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
-                                    <td className="border border-black h-12" colSpan={8}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
-                                    <td className="border border-black h-12 font-bold" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)).toLocaleString()}</td>
+                                    <td className="border border-black h-12 text-right pr-2" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
+                                    <td className="border border-black h-12 text-right pr-2" colSpan={8}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
+                                    <td className="border border-black h-12 text-right pr-2" colSpan={8}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
+                                    <td className="border border-black h-12 font-bold text-right pr-2" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)).toLocaleString()}</td>
                                     <td className="border border-black h-12 font-bold text-base" colSpan={4}>
                                         {budgetData?.amount > 0
                                             ? (((stats.yearTotalInputAmount || 0) / budgetData.amount) * 100).toFixed(1)

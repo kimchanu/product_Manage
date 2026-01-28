@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function Sidebar({ onSelectDepartment, selectedDepartment }) {
     const [expandedMenus, setExpandedMenus] = useState({
@@ -14,12 +15,29 @@ function Sidebar({ onSelectDepartment, selectedDepartment }) {
 
     const departmentMap = {
         "GK사업소": "GK사업소",
-        "천마사업소": "CM사업소",
-        "을숙도사업소": "ES사업소",
-        "강남사업소": "GN사업소"
+        "천마사업소": "천마사업소",
+        "을숙도사업소": "을숙도사업소",
+        "강남사업소": "강남사업소",
+        "수원사업소": "수원사업소"
     };
 
     const departments = Object.keys(departmentMap);
+
+    // 토큰에서 사용자 정보 가져오기 및 권한 확인
+    let isRestricted = false;
+    const token = localStorage.getItem("authToken");
+
+    if (token) {
+        try {
+            const decoded = jwtDecode(token);
+            // 사업소가 "본사"이거나 부서가 "관리"인 경우 제한
+            if (decoded.business_location === "본사" || decoded.department === "관리") {
+                isRestricted = true;
+            }
+        } catch (error) {
+            console.error("Token decoding error:", error);
+        }
+    }
 
     return (
         <aside className="w-60 bg-gray-100 h-[calc(100vh-130px)] fixed top-[130px] left-0 p-4 shadow-md flex flex-col pb-6">
@@ -50,8 +68,12 @@ function Sidebar({ onSelectDepartment, selectedDepartment }) {
                         </div>
                         {expandedMenus.input && (
                             <ul className="pl-4 mt-1 space-y-1 text-sm bg-gray-50 rounded py-2">
-                                <li><Link to="/upload" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">입고 등록</Link></li>
-                                <li><Link to="/input_mod" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">입고 현황</Link></li>
+                                {!isRestricted && (
+                                    <>
+                                        <li><Link to="/upload" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">입고 등록</Link></li>
+                                        <li><Link to="/input_mod" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">입고 현황</Link></li>
+                                    </>
+                                )}
                                 <li><Link to="/input_statistics" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">입고 통계</Link></li>
                             </ul>
                         )}
@@ -78,8 +100,12 @@ function Sidebar({ onSelectDepartment, selectedDepartment }) {
                         </div>
                         {expandedMenus.output && (
                             <ul className="pl-4 mt-1 space-y-1 text-sm bg-gray-50 rounded py-2">
-                                <li><Link to="/Mat_output_page" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">출고 등록</Link></li>
-                                <li><Link to="/Output_Mod" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">출고 현황</Link></li>
+                                {!isRestricted && (
+                                    <>
+                                        <li><Link to="/Mat_output_page" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">출고 등록</Link></li>
+                                        <li><Link to="/Output_Mod" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">출고 현황</Link></li>
+                                    </>
+                                )}
                                 <li><Link to="/Output_Statistics_page" className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded">출고 통계</Link></li>
                             </ul>
                         )}
@@ -103,7 +129,7 @@ function Sidebar({ onSelectDepartment, selectedDepartment }) {
                     className="px-2 py-2 rounded cursor-pointer hover:bg-gray-200 flex justify-between items-center font-semibold text-lg text-gray-700"
                     onClick={() => toggleMenu('dept')}
                 >
-                    <span>부서</span>
+                    <span>사업소</span>
                     <span className="text-sm">{expandedMenus.dept ? "▲" : "▼"}</span>
                 </div>
 

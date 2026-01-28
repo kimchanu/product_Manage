@@ -9,6 +9,7 @@ import Budget_Status_Bar from "./Budget_Status_Bar";
 function Product_list() {
   const [businessLocation, setBusinessLocation] = useState("");
   const [department, setDepartment] = useState("");
+  const [loggedInUser, setLoggedInUser] = useState({ location: "", department: "" }); // 로그인한 사용자 정보 저장
   const [searchTerm, setSearchTerm] = useState("");
   const [materials, setMaterials] = useState([]);
   const [errorMessage, setErrorMessage] = useState(""); // ⛑️ 에러 메시지 상태 추가
@@ -66,9 +67,11 @@ function Product_list() {
           // 매핑된 코드가 있으면 사용, 없으면 그대로 사용
           const locationCode = locationMap[decoded.business_location] || decoded.business_location;
           setBusinessLocation(locationCode);
+          setLoggedInUser(prev => ({ ...prev, location: locationCode })); // 로그인한 사용자 사업소 저장
         }
         if (decoded.department) {
           setDepartment(decoded.department);
+          setLoggedInUser(prev => ({ ...prev, department: decoded.department })); // 로그인한 사용자 부서 저장
         }
       } catch (error) {
         console.error("토큰 디코딩 오류:", error);
@@ -348,9 +351,13 @@ function Product_list() {
         <div className="mb-2 flex gap-2 items-center justify-between">
           <div className="flex gap-2 items-center">
             <button
-              className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-              disabled={selectedRows.length === 0 || saveLoading}
+              className={`px-4 py-2 rounded disabled:opacity-50 ${loggedInUser.location === businessLocation && loggedInUser.department === department
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                }`}
+              disabled={selectedRows.length === 0 || saveLoading || loggedInUser.location !== businessLocation || loggedInUser.department !== department}
               onClick={() => setModalOpen(true)}
+              title={loggedInUser.location !== businessLocation || loggedInUser.department !== department ? "타 부서/사업소 자재는 수정할 수 없습니다." : ""}
             >
               선택 행 일괄 수정
             </button>
