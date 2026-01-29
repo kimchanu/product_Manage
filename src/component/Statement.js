@@ -17,6 +17,10 @@ const Statement = () => {
     const [departmentBudgets, setDepartmentBudgets] = useState({}); // 부서별 예산 데이터
     const [reportType, setReportType] = useState(searchParams.get("type") || "allPartMonthly"); // URL 파라미터에서 초기값 가져오기 (기본값 전파트 월간)
 
+    // 사업소 이름 정의 (GK 예외 처리)
+    const businessName = user?.business_location === 'GK' ? 'GK사업소' : user?.business_location;
+
+
     useEffect(() => {
         const fetchBudget = async () => {
             if (!user) return;
@@ -192,10 +196,10 @@ const Statement = () => {
         return (
             <tr key={cat}>
                 <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={5}>{displayName}</td>
-                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-2`} colSpan={9}>{row.prevStock.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-2`} colSpan={8}>{row.input.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-2`} colSpan={8}>{row.output.toLocaleString()}</td>
-                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-2`} colSpan={9}>{row.remaining.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-4`} colSpan={9}>{row.prevStock.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-4`} colSpan={8}>{row.input.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-4`} colSpan={8}>{row.output.toLocaleString()}</td>
+                <td className={`${borderClass} ${bgClass} ${fontClass} h-12 text-right pr-4`} colSpan={9}>{row.remaining.toLocaleString()}</td>
                 <td className={`${borderClass} ${bgClass} ${fontClass} h-12`} colSpan={3}>&nbsp;</td>
             </tr>
         );
@@ -232,6 +236,7 @@ const Statement = () => {
                                 <option value="allPartMonthly">전파트 월간보고서</option>
                                 <option value="monthly">월간보고서</option>
                                 <option value="partYearly">파트별 연간보고서</option>
+                                <option value="allPartYearly">전파트 연간보고서</option>
                             </select>
                         </div>
 
@@ -343,7 +348,7 @@ const Statement = () => {
                             </tr>
                             <tr>
                                 <td className="border border-black h-10 w-1/4">부서명</td>
-                                <td className="border border-black h-10 w-1/4">{reportType === "allPartMonthly" ? "전체" : (user?.department || '\u00A0')}</td>
+                                <td className="border border-black h-10 w-1/4">{reportType === "allPartMonthly" ? businessName : (user?.department || '\u00A0')}</td>
                                 <td className="border border-black h-10 w-1/4">작성자</td>
                                 <td className="border border-black h-10 w-1/4">{user?.name || '\u00A0'}</td>
                             </tr>
@@ -404,10 +409,10 @@ const Statement = () => {
                                         return (
                                             <tr key={dept}>
                                                 <td className="border border-black h-12" colSpan={3}>{dept}</td>
-                                                <td className="border border-black h-12 text-right pr-2" colSpan={9}>{deptBudget.toLocaleString()}</td>
-                                                <td className="border border-black h-12 text-right pr-2" colSpan={8}>{deptMonthInput.toLocaleString()}</td>
-                                                <td className="border border-black h-12 text-right pr-2" colSpan={8}>{deptYearTotalInput.toLocaleString()}</td>
-                                                <td className="border border-black h-12 font-bold text-right pr-2" colSpan={9}>{deptRemaining.toLocaleString()}</td>
+                                                <td className="border border-black h-12 text-right pr-4" colSpan={9}>{deptBudget.toLocaleString()}</td>
+                                                <td className="border border-black h-12 text-right pr-4" colSpan={8}>{deptMonthInput.toLocaleString()}</td>
+                                                <td className="border border-black h-12 text-right pr-4" colSpan={8}>{deptYearTotalInput.toLocaleString()}</td>
+                                                <td className="border border-black h-12 font-bold text-right pr-4" colSpan={9}>{deptRemaining.toLocaleString()}</td>
                                                 <td className="border border-black h-12 font-bold text-base" colSpan={4}>{executionRate}%</td>
                                             </tr>
                                         );
@@ -419,10 +424,10 @@ const Statement = () => {
                                     <td className="border border-black h-12" colSpan={3}>
                                         {month.toString().padStart(2, "0")}월
                                     </td>
-                                    <td className="border border-black h-12 text-right pr-2" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
-                                    <td className="border border-black h-12 text-right pr-2" colSpan={8}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
-                                    <td className="border border-black h-12 text-right pr-2" colSpan={8}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
-                                    <td className="border border-black h-12 font-bold text-right pr-2" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)).toLocaleString()}</td>
+                                    <td className="border border-black h-12 text-right pr-4" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
+                                    <td className="border border-black h-12 text-right pr-4" colSpan={8}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
+                                    <td className="border border-black h-12 text-right pr-4" colSpan={8}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
+                                    <td className="border border-black h-12 font-bold text-right pr-4" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)).toLocaleString()}</td>
                                     <td className="border border-black h-12 font-bold text-base" colSpan={4}>
                                         {budgetData?.amount > 0
                                             ? (((stats.yearTotalInputAmount || 0) / budgetData.amount) * 100).toFixed(1)

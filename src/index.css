@@ -269,6 +269,14 @@
         /* ⬅️ 여기 */
         line-height: 1.25 !important;
     }
+
+    /* ✅ 숫자 컬럼 우측 여백 강제 적용 (pr-4 = 1rem = 16px) */
+    /* Specificity increase to override .statement-table td and .budget-table td */
+    table td.pr-4,
+    table th.pr-4,
+    .pr-4 {
+        padding-right: 1rem !important;
+    }
 }
 
 

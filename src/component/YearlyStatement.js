@@ -97,6 +97,8 @@ const YearlyStatement = () => {
     const [stats, setStats] = useState({});
     const [categories, setCategories] = useState([]);
     const [budgetData, setBudgetData] = useState(null);
+    const [departmentBudgets, setDepartmentBudgets] = useState({}); // 부서별 예산
+    const [departmentStats, setDepartmentStats] = useState({}); // 부서별 집행 실적
     const [reportType, setReportType] = useState(searchParams.get("type") || "partYearly");
 
     useEffect(() => {
@@ -116,19 +118,39 @@ const YearlyStatement = () => {
                     return normalized;
                 };
 
-                const departmentBudget = data.budget?.find(
-                    item => {
-                        const userLocation = normalizeLocation(user.business_location);
-                        const budgetLocation = normalizeLocation(item.site);
-                        return userLocation === budgetLocation && item.department === user.department;
-                    }
-                );
+                const userLocation = normalizeLocation(user.business_location);
 
-                console.log("사용자 정보:", { business_location: user.business_location, department: user.department });
-                console.log("정규화된 위치:", normalizeLocation(user.business_location));
-                console.log("매칭된 예산:", departmentBudget);
+                if (reportType === "allPartYearly") {
+                    // 전파트 연간보고서: ITS, 기전, 시설 예산 합산 및 개별 저장
+                    const departments = ["ITS", "기전", "시설"];
+                    let totalBudget = 0;
+                    const budgets = {};
 
-                setBudgetData(departmentBudget || { amount: 0 });
+                    departments.forEach(dept => {
+                        const deptBudget = data.budget?.find(item => {
+                            const budgetLocation = normalizeLocation(item.site);
+                            return userLocation === budgetLocation && item.department === dept;
+                        });
+                        budgets[dept] = deptBudget?.amount || 0;
+                        totalBudget += (deptBudget?.amount || 0);
+                    });
+
+                    setDepartmentBudgets(budgets);
+                    setBudgetData({ amount: totalBudget });
+                } else {
+                    const departmentBudget = data.budget?.find(
+                        item => {
+                            const budgetLocation = normalizeLocation(item.site);
+                            return userLocation === budgetLocation && item.department === user.department;
+                        }
+                    );
+
+                    console.log("사용자 정보:", { business_location: user.business_location, department: user.department });
+                    console.log("정규화된 위치:", normalizeLocation(user.business_location));
+                    console.log("매칭된 예산:", departmentBudget);
+
+                    setBudgetData(departmentBudget || { amount: 0 });
+                }
             } catch (err) {
                 console.error("예산 조회 오류:", err);
                 setBudgetData({ amount: 0 });
@@ -136,46 +158,136 @@ const YearlyStatement = () => {
         };
 
         fetchBudget();
-    }, [user, year]);
+    }, [user, year, reportType]);
 
     useEffect(() => {
         const fetchStatistics = async () => {
             if (!user) return;
 
             let selectedCategories = [];
+            let departmentsToFetch = [];
 
-            if (user.department === "ITS") {
-                selectedCategories = ["TCS", "FTMS", "전산", "기타", "합 계"];
-            } else if (user.department === "기전") {
-                selectedCategories = ["전기", "기계", "소방", "기타", "합 계"];
-            } else if (user.department === "시설") {
-                selectedCategories = ["안전", "장비", "시설보수", "조경", "기타", "합 계"];
+            if (reportType === "allPartYearly") {
+                departmentsToFetch = ["ITS", "기전", "시설"];
+            } else {
+                departmentsToFetch = [user.department];
             }
-            setCategories(selectedCategories);
-            try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/api/yearlyStatement`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        businessLocation: user.business_location,
-                        department: user.department,
-                        year,
-                        categories: selectedCategories,
-                    }),
+
+            const fetchPromises = departmentsToFetch.map(async (dept) => {
+                let deptCategories = [];
+                if (dept === "ITS") {
+                    deptCategories = ["TCS", "FTMS", "전산", "기타", "합 계"];
+                } else if (dept === "기전") {
+                    deptCategories = ["전기", "기계", "소방", "기타", "합 계"];
+                } else if (dept === "시설") {
+                    deptCategories = ["안전", "장비", "시설보수", "조경", "기타", "합 계"];
+                }
+
+                if (dept === user.department) {
+                    setCategories(deptCategories); // 현재 사용자의 카테고리만 설정
+                }
+
+                try {
+                    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/yearlyStatement`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            businessLocation: user.business_location,
+                            department: dept,
+                            year,
+                            categories: deptCategories,
+                        }),
+                    });
+
+                    if (!response.ok) throw new Error(`통계 데이터를 가져오지 못했습니다 (${dept})`);
+                    return response.json();
+                } catch (err) {
+                    console.error(err);
+                    return null;
+                }
+            });
+
+            const results = await Promise.all(fetchPromises);
+
+            if (reportType === "allPartYearly") {
+                // 데이터 합산
+                const aggregatedMonthlyData = {};
+                const aggregatedYearlyTotals = { "합 계": { input: 0, output: 0, remaining: 0 } };
+                const deptStats = {};
+
+                // 1~12월 초기화
+                for (let m = 1; m <= 12; m++) {
+                    aggregatedMonthlyData[m] = { "전체": { input: 0, output: 0, remaining: 0 } };
+                }
+
+                results.forEach((data, index) => {
+                    const deptName = departmentsToFetch[index];
+                    let deptYearlyInput = 0;
+                    let deptYearlyOutput = 0;
+
+                    // monthlyData 합산
+                    if (data && data.monthlyData) {
+                        Object.entries(data.monthlyData).forEach(([month, catData]) => {
+                            // catData는 { "TCS": {...}, "합 계": {...} } 형태
+                            // 여기서 "합 계" 값을 가져와서 누적하면 됨 (각 파트의 합계가 그 파트의 전체니까)
+                            if (catData["합 계"]) {
+                                /* 
+                                 기존 로직 주의:
+                                 renderYearlyTables 함수는 categories를 순회하며 "합 계"가 아닌 것들을 더해서 totalInput을 계산함.
+                                 그래서 우리는 "전체"라는 키에 각 파트의 "합 계" 값을 누적해줘야 함.
+                                */
+                                const src = catData["합 계"];
+                                const target = aggregatedMonthlyData[month]["전체"];
+
+                                target.input += (src.input || 0);
+                                target.output += (src.output || 0);
+                                // remaining은 단순 합산하면 안됨 (재고니까). 
+                                // 하지만 전년도 이월 재고 + 누적 입고 - 누적 출고 로직이 renderYearlyTables에 있으므로
+                                // 여기서는 input, output만 정확하면 되고,
+                                // 다만 '1월의 전년도 말 재고' 계산을 위해 remaining도 첫달은 필요할 수 있음.
+                                target.remaining += (src.remaining || 0);
+                            }
+                        });
+                    }
+
+                    // yearlyTotals 합산
+                    if (data && data.yearlyTotals && data.yearlyTotals["합 계"]) {
+                        const src = data.yearlyTotals["합 계"];
+                        aggregatedYearlyTotals["합 계"].input += (src.input || 0);
+                        aggregatedYearlyTotals["합 계"].output += (src.output || 0);
+
+                        deptYearlyInput = src.input || 0;
+                        deptYearlyOutput = src.output || 0;
+                    }
+
+                    // 부서별 집행 데이터 저장
+                    deptStats[deptName] = {
+                        input: deptYearlyInput,
+                        output: deptYearlyOutput
+                    };
                 });
 
-                if (!response.ok) throw new Error("통계 데이터를 가져오지 못했습니다");
+                setDepartmentStats(deptStats);
 
-                const data = await response.json();
-                console.log("연간 데이터:", data);
-                setStats(data);
-            } catch (err) {
-                console.error(err);
+                setStats({
+                    monthlyData: aggregatedMonthlyData,
+                    yearlyTotals: aggregatedYearlyTotals
+                });
+                // 전파트 보고서일 경우, categories를 "전체"로 설정하여 renderYearlyTables가 올바르게 동작하도록 함
+                setCategories(["전체", "합 계"]);
+            } else {
+                // 단일 파트 보고서
+                const data = results[0];
+                if (data) {
+                    setStats(data);
+                } else {
+                    setStats({});
+                }
             }
         };
 
         fetchStatistics();
-    }, [user, year]);
+    }, [user, year, reportType]);
 
     // 실제 API 데이터 사용
     const monthlyData = stats.monthlyData || {};
@@ -187,15 +299,17 @@ const YearlyStatement = () => {
 
         // 전년도 말일까지의 재고 계산 (API에서 이미 계산된 remaining 값 사용)
         if (stats.yearlyTotals) {
-            categories.forEach(cat => {
-                if (cat !== "합 계") {
-                    // 첫 번째 월(1월)의 remaining 값을 시작점으로 사용
-                    const firstMonthData = monthlyData[1]?.[cat] || { input: 0, output: 0, remaining: 0 };
-                    // 1월의 remaining에서 1월의 입고를 빼면 전년도 말일까지의 재고
-                    const prevYearStock = firstMonthData.remaining - firstMonthData.input;
-                    cumulativeStock += prevYearStock;
-                }
-            });
+            // reportType이 "allPartYearly"일 경우 categories는 ["전체", "합 계"]가 됨
+            // 이 경우 "전체" 카테고리를 사용
+            const categoryToUse = reportType === "allPartYearly" ? "전체" : categories.find(cat => cat !== "합 계");
+
+            if (categoryToUse) {
+                // 첫 번째 월(1월)의 remaining 값을 시작점으로 사용
+                const firstMonthData = monthlyData[1]?.[categoryToUse] || { input: 0, output: 0, remaining: 0 };
+                // 1월의 remaining에서 1월의 입고를 빼면 전년도 말일까지의 재고
+                const prevYearStock = firstMonthData.remaining - firstMonthData.input;
+                cumulativeStock += prevYearStock;
+            }
         }
 
         // 1~6월 데이터 (전체 카테고리 합계)
@@ -205,12 +319,14 @@ const YearlyStatement = () => {
             let totalOutput = 0;
 
             // 모든 카테고리의 해당 월 데이터 합계
-            categories.forEach(cat => {
-                if (cat !== "합 계") {
-                    const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0, remaining: 0 };
-                    totalInput += monthData.input;
-                    totalOutput += monthData.output;
-                }
+            // reportType이 "allPartYearly"일 경우 categories는 ["전체", "합 계"]가 됨
+            // 이 경우 "전체" 카테고리를 사용
+            const categoryKeys = reportType === "allPartYearly" ? ["전체"] : categories.filter(cat => cat !== "합 계");
+
+            categoryKeys.forEach(cat => {
+                const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0, remaining: 0 };
+                totalInput += monthData.input;
+                totalOutput += monthData.output;
             });
 
             // 누적 재고 계산: 이전 재고 + 입고 - 출고
@@ -233,12 +349,12 @@ const YearlyStatement = () => {
             let totalOutput = 0;
 
             // 모든 카테고리의 해당 월 데이터 합계
-            categories.forEach(cat => {
-                if (cat !== "합 계") {
-                    const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0, remaining: 0 };
-                    totalInput += monthData.input;
-                    totalOutput += monthData.output;
-                }
+            const categoryKeys = reportType === "allPartYearly" ? ["전체"] : categories.filter(cat => cat !== "합 계");
+
+            categoryKeys.forEach(cat => {
+                const monthData = monthlyData[month]?.[cat] || { input: 0, output: 0, remaining: 0 };
+                totalInput += monthData.input;
+                totalOutput += monthData.output;
             });
 
             // 누적 재고 계산: 이전 재고 + 입고 - 출고
@@ -275,7 +391,7 @@ const YearlyStatement = () => {
                         <table className="w-full border border-black text-sm text-center table-fixed yearly-total-row">
                             <thead>
                                 <tr className="bg-gray-100 double-underline yearly-total-row">
-                                    <th className="border border-black h-10">월</th>
+                                    <th className="border border-black h-10">구분</th>
                                     <th className="border border-black h-10">입고</th>
                                     <th className="border border-black h-10">출고</th>
                                     <th className="border border-black h-10">재고</th>
@@ -287,9 +403,9 @@ const YearlyStatement = () => {
                                     return (
                                         <tr key={data.month}>
                                             <td className="border border-black h-10">{data.month}월</td>
-                                            <td className="border border-black text-right pr-2 h-10">{data.input.toLocaleString()}</td>
-                                            <td className="border border-black text-right pr-2 h-10">{data.output.toLocaleString()}</td>
-                                            <td className="border border-black text-right pr-2 h-10">{data.stock.toLocaleString()}</td>
+                                            <td className="border border-black text-right pr-4 h-10">{data.input.toLocaleString()}</td>
+                                            <td className="border border-black text-right pr-4 h-10">{data.output.toLocaleString()}</td>
+                                            <td className="border border-black text-right pr-4 h-10">{data.stock.toLocaleString()}</td>
                                         </tr>
                                     );
                                 })}
@@ -302,7 +418,7 @@ const YearlyStatement = () => {
                         <table className="w-full border border-black text-sm text-center table-fixed yearly-total-row">
                             <thead>
                                 <tr className="bg-gray-100 double-underline">
-                                    <th className="border border-black h-10">월</th>
+                                    <th className="border border-black h-10">구분</th>
                                     <th className="border border-black h-10">입고</th>
                                     <th className="border border-black h-10">출고</th>
                                     <th className="border border-black h-10">재고</th>
@@ -312,17 +428,17 @@ const YearlyStatement = () => {
                                 {secondHalfData.map((data) => (
                                     <tr key={data.month}>
                                         <td className="border border-black h-10">{data.month}월</td>
-                                        <td className="border border-black text-right pr-2 h-10">{data.input.toLocaleString()}</td>
-                                        <td className="border border-black text-right pr-2 h-10">{data.output.toLocaleString()}</td>
-                                        <td className="border border-black text-right pr-2 h-10">{data.stock.toLocaleString()}</td>
+                                        <td className="border border-black text-right pr-4 h-10">{data.input.toLocaleString()}</td>
+                                        <td className="border border-black text-right pr-4 h-10">{data.output.toLocaleString()}</td>
+                                        <td className="border border-black text-right pr-4 h-10">{data.stock.toLocaleString()}</td>
                                     </tr>
                                 ))}
                                 {/* 총합계 행을 7~12월 표 아래에 추가 */}
                                 <tr className="bg-blue-100 yearly-total-row">
                                     <td className="border border-black h-10 font-bold">총합계</td>
-                                    <td className="border border-black text-right pr-2 h-10 font-bold">{totalInput.toLocaleString()}</td>
-                                    <td className="border border-black text-right pr-2 h-10 font-bold">{totalOutput.toLocaleString()}</td>
-                                    <td className="border border-black text-right pr-2 h-10 font-bold">{totalStock.toLocaleString()}</td>
+                                    <td className="border border-black text-right pr-4 h-10 font-bold">{totalInput.toLocaleString()}</td>
+                                    <td className="border border-black text-right pr-4 h-10 font-bold">{totalOutput.toLocaleString()}</td>
+                                    <td className="border border-black text-right pr-4 h-10 font-bold">{totalStock.toLocaleString()}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -331,6 +447,8 @@ const YearlyStatement = () => {
             </div>
         );
     };
+
+    const businessName = user?.business_location === 'GK' ? 'GK사업소' : user?.business_location;
 
     return (
         <div className="p-4 print-root">
@@ -361,6 +479,7 @@ const YearlyStatement = () => {
                                 <option value="allPartMonthly">전파트 월간보고서</option>
                                 <option value="monthly">월간보고서</option>
                                 <option value="partYearly">파트별 연간보고서</option>
+                                <option value="allPartYearly">전파트 연간보고서</option>
                             </select>
                         </div>
 
@@ -413,7 +532,7 @@ const YearlyStatement = () => {
                     <div className="hidden print:flex print-title-wrapper relative w-full items-end justify-center mb-10 px-4 min-h-[100px]">
                         <div className="w-full text-center pr-[260px]">
                             <h1 className="large-print-title whitespace-nowrap">
-                                {year}년 {user?.department} 연간보고서
+                                {year}년 {reportType === "allPartYearly" ? businessName : user?.department} 자재수불 연간보고서
                             </h1>
                         </div>
 
@@ -439,7 +558,7 @@ const YearlyStatement = () => {
                     <div className="print:hidden">
                         <div className="flex items-center justify-center gap-4 mb-6 px-4">
                             <h1 className="text-xl font-bold whitespace-nowrap text-center">
-                                {year}년 {user?.department} 연간보고서
+                                {year}년 {reportType === "allPartYearly" ? businessName : user?.department} 자재수불 연간보고서
                             </h1>
                         </div>
 
@@ -475,7 +594,7 @@ const YearlyStatement = () => {
                             </tr>
                             <tr>
                                 <td className="border border-black h-10 w-1/4">부서명</td>
-                                <td className="border border-black h-10 w-1/4">{user?.department || '\u00A0'}</td>
+                                <td className="border border-black h-10 w-1/4">{reportType === "allPartYearly" ? businessName : user?.department}</td>
                                 <td className="border border-black h-10 w-1/4">작성자</td>
                                 <td className="border border-black h-10 w-1/4">{user?.name || '\u00A0'}</td>
                             </tr>
@@ -511,22 +630,60 @@ const YearlyStatement = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className="border border-black h-12" colSpan={3}>
-                                    {user?.department}
-                                </td>
-                                <td className="border border-black text-right pr-2 h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
-                                <td className="border border-black text-right pr-2 h-12" colSpan={8}>{(window.yearlyTotalInput || 0).toLocaleString()}</td>
+                            {reportType === "allPartYearly" ? (
+                                <>
+                                    {["ITS", "시설", "기전"].map(dept => {
+                                        const budget = departmentBudgets[dept] || 0;
+                                        const yearlyInput = departmentStats[dept]?.input || 0;
+                                        const remaining = budget - yearlyInput;
+                                        const rate = budget > 0 ? ((yearlyInput / budget) * 100).toFixed(1) : 0;
 
-                                <td className="border border-black text-right pr-2 h-12" colSpan={9}>{((budgetData?.amount || 0) - (window.yearlyTotalInput || 0)).toLocaleString()}</td>
-                                <td className="border border-black h-12" colSpan={5}>
-                                    {budgetData?.amount ?
-                                        `${(((window.yearlyTotalInput || 0) / budgetData.amount) * 100).toFixed(1)}%` :
-                                        '0%'
-                                    }
-                                </td>
-                                <td className="border border-black h-12" colSpan={4}>&nbsp;</td>
-                            </tr>
+                                        return (
+                                            <tr key={dept}>
+                                                <td className="border border-black h-12" colSpan={3}>{dept}</td>
+                                                <td className="border border-black text-right pr-4 h-12" colSpan={9}>{budget.toLocaleString()}</td>
+                                                <td className="border border-black text-right pr-4 h-12" colSpan={8}>{yearlyInput.toLocaleString()}</td>
+                                                <td className="border border-black text-right pr-4 h-12" colSpan={9}>{remaining.toLocaleString()}</td>
+                                                <td className="border border-black h-12" colSpan={5}>{rate}%</td>
+                                                <td className="border border-black h-12" colSpan={4}>&nbsp;</td>
+                                            </tr>
+                                        )
+                                    })}
+                                    {/* 합계 행 */}
+                                    <tr className="bg-blue-100 font-bold">
+                                        <td className="border border-black h-12" colSpan={3}>{businessName}</td>
+                                        <td className="border border-black text-right pr-4 h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
+                                        <td className="border border-black text-right pr-4 h-12" colSpan={8}>{(window.yearlyTotalInput || 0).toLocaleString()}</td>
+                                        <td className="border border-black text-right pr-4 h-12" colSpan={9}>
+                                            {((budgetData?.amount || 0) - (window.yearlyTotalInput || 0)).toLocaleString()}
+                                        </td>
+                                        <td className="border border-black h-12" colSpan={5}>
+                                            {budgetData?.amount ?
+                                                `${(((window.yearlyTotalInput || 0) / budgetData.amount) * 100).toFixed(1)}%` :
+                                                '0%'
+                                            }
+                                        </td>
+                                        <td className="border border-black h-12" colSpan={4}>&nbsp;</td>
+                                    </tr>
+                                </>
+                            ) : (
+                                <tr>
+                                    <td className="border border-black h-12" colSpan={3}>
+                                        {user?.department}
+                                    </td>
+                                    <td className="border border-black text-right pr-4 h-12" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
+                                    <td className="border border-black text-right pr-4 h-12" colSpan={8}>{(window.yearlyTotalInput || 0).toLocaleString()}</td>
+
+                                    <td className="border border-black text-right pr-4 h-12" colSpan={9}>{((budgetData?.amount || 0) - (window.yearlyTotalInput || 0)).toLocaleString()}</td>
+                                    <td className="border border-black h-12" colSpan={5}>
+                                        {budgetData?.amount ?
+                                            `${(((window.yearlyTotalInput || 0) / budgetData.amount) * 100).toFixed(1)}%` :
+                                            '0%'
+                                        }
+                                    </td>
+                                    <td className="border border-black h-12" colSpan={4}>&nbsp;</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>

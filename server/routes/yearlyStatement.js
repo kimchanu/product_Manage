@@ -250,6 +250,25 @@ router.post("/", async (req, res) => {
                 }
             }
 
+            // "합 계" 데이터 계산 및 입력
+            if (monthData["합 계"]) {
+                let totalInput = 0;
+                let totalOutput = 0;
+                let totalRemaining = 0;
+
+                Object.keys(monthData).forEach(key => {
+                    if (key !== "합 계") {
+                        totalInput += monthData[key].input;
+                        totalOutput += monthData[key].output;
+                        totalRemaining += monthData[key].remaining;
+                    }
+                });
+
+                monthData["합 계"].input = totalInput;
+                monthData["합 계"].output = totalOutput;
+                monthData["합 계"].remaining = totalRemaining;
+            }
+
             monthlyData[month] = monthData;
         }
 
