@@ -146,6 +146,7 @@ const Statement = () => {
                 setStats(data);
             } catch (err) {
                 console.error(err);
+                setStats({});
             }
         };
 
@@ -424,10 +425,16 @@ const Statement = () => {
                                     <td className="border border-black h-12" colSpan={3}>
                                         {month.toString().padStart(2, "0")}월
                                     </td>
-                                    <td className="border border-black h-12 text-right pr-4" colSpan={9}>{budgetData?.amount?.toLocaleString() || 0}</td>
+                                    <td className="border border-black h-12 text-right pr-4" colSpan={9}>
+                                        {(categories.length > 0 && budgetData?.amount) ? budgetData.amount.toLocaleString() : 0}
+                                    </td>
                                     <td className="border border-black h-12 text-right pr-4" colSpan={8}>{(stats.byCategory?.["합 계"]?.input || 0).toLocaleString()}</td>
                                     <td className="border border-black h-12 text-right pr-4" colSpan={8}>{(stats.yearTotalInputAmount || 0).toLocaleString()}</td>
-                                    <td className="border border-black h-12 font-bold text-right pr-4" colSpan={9}>{((budgetData?.amount || 0) - (stats.yearTotalInputAmount || 0)).toLocaleString()}</td>
+                                    <td className="border border-black h-12 font-bold text-right pr-4" colSpan={9}>
+                                        {(categories.length > 0 && budgetData?.amount)
+                                            ? ((budgetData.amount || 0) - (stats.yearTotalInputAmount || 0)).toLocaleString()
+                                            : 0}
+                                    </td>
                                     <td className="border border-black h-12 font-bold text-base" colSpan={4}>
                                         {budgetData?.amount > 0
                                             ? (((stats.yearTotalInputAmount || 0) / budgetData.amount) * 100).toFixed(1)

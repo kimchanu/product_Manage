@@ -25,42 +25,88 @@ router.post("/", async (req, res) => {
         console.log(`요청: ${year}년 ${month}월`);
         console.log(`해당 월 범위: ${startDate.toISOString()} ~ ${endDate.toISOString()}`);
 
-        // 모든 자재 정보 조회
-        const allProducts = await Product.findAll({
-            attributes: ['material_id', 'price', 'name', 'material_code', 'specification'],
-            raw: true
-        });
-        const productMap = new Map(allProducts.map(p => [p.material_id, p]));
 
-        // 🔹 누적 출고 데이터 조회 (해당 월까지의 데이터)
-        // 해당 월의 마지막 날을 정확히 계산
-        const cumulativeEndDate = new Date(year, month, 0);
-        cumulativeEndDate.setHours(23, 59, 59, 999);
+        // 🔹 1. Local Data 조회 및 초기화
+        let allProducts = [];
+        let cumulativeOutputs = [];
+        let monthlyOutputs = [];
+        let recentOutputs = [];
+        let allOutputsRaw = [];
 
-        console.log(`누적 계산 종료일: ${cumulativeEndDate.toISOString()}`);
-        console.log(`요청: ${year}년 ${month}월, 누적 종료일: ${cumulativeEndDate.getFullYear()}년 ${cumulativeEndDate.getMonth() + 1}월 ${cumulativeEndDate.getDate()}일`);
+        try {
+            // 모든 자재 정보 조회
+            allProducts = await Product.findAll({
+                attributes: ['material_id', 'price', 'name', 'material_code', 'specification'],
+                raw: true
+            });
 
-        // 디버깅을 위해 실제 조회되는 데이터 확인
-        const allOutputsDebug = await Output.findAll({
-            order: [['date', 'ASC']],
-            attributes: ['quantity', 'date', 'material_id'],
-            raw: true
-        });
-        console.log(`전체 출고 데이터 개수: ${allOutputsDebug.length}`);
-        if (allOutputsDebug.length > 0) {
-            console.log(`전체 데이터 날짜 범위: ${allOutputsDebug[0].date} ~ ${allOutputsDebug[allOutputsDebug.length - 1].date}`);
+            // 🔹 누적 출고 데이터 조회 (해당 월까지의 데이터)
+            const cumulativeEndDate = new Date(year, month, 0);
+            cumulativeEndDate.setHours(23, 59, 59, 999);
+
+            console.log(`누적 계산 종료일: ${cumulativeEndDate.toISOString()}`);
+
+            // 디버깅용 로그 (생략 가능하지만 유지)
+            // const allOutputsDebug = ...
+
+            cumulativeOutputs = await Output.findAll({
+                where: {
+                    date: {
+                        [Op.lte]: cumulativeEndDate
+                    }
+                },
+                order: [['date', 'ASC']],
+                attributes: ['quantity', 'date', 'material_id'],
+                raw: true
+            });
+
+            // 🔸 월 출고 금액 계산 (선택 월만)
+            monthlyOutputs = await Output.findAll({
+                where: {
+                    date: {
+                        [Op.between]: [startDate, endDate]
+                    }
+                },
+                attributes: ['quantity', 'date', 'material_id', 'user_id'],
+                raw: true
+            });
+
+            // 🔸 최근 출고 내역 (선택 월 기준 상위 5건)
+            recentOutputs = await Output.findAll({
+                where: {
+                    date: {
+                        [Op.between]: [startDate, endDate]
+                    }
+                },
+                limit: 5,
+                order: [['date', 'DESC']],
+                attributes: ['quantity', 'date', 'material_id', 'user_id'],
+                raw: true
+            });
+
+            if (includeAllOutputs) {
+                allOutputsRaw = await Output.findAll({
+                    where: {
+                        date: {
+                            [Op.between]: [startDate, endDate]
+                        }
+                    },
+                    order: [['date', 'DESC']],
+                    attributes: ['quantity', 'date', 'material_id', 'user_id'],
+                    raw: true
+                });
+            }
+
+        } catch (error) {
+            if (error.original && error.original.code === 'ER_NO_SUCH_TABLE') {
+                console.warn(`⚠️ 테이블이 존재하지 않음 (${department}), Local 데이터 없이 진행`);
+                // 빈 배열 유지
+            } else {
+                throw error;
+            }
         }
 
-        const cumulativeOutputs = await Output.findAll({
-            where: {
-                date: {
-                    [Op.lte]: cumulativeEndDate
-                }
-            },
-            order: [['date', 'ASC']],
-            attributes: ['quantity', 'date', 'material_id'],
-            raw: true
-        });
+        const productMap = new Map(allProducts.map(p => [p.material_id, p]));
 
         // 🔹 누적 출고 금액 계산 (해당 월까지)
         const totalOutputAmount = cumulativeOutputs.reduce((sum, output) => {
@@ -79,17 +125,6 @@ router.post("/", async (req, res) => {
         console.log(`총 출고 건수: ${cumulativeOutputs.length}, 누적 출고 금액: ${totalOutputAmount}`);
         console.log(`누적 데이터 날짜 범위: ${cumulativeOutputs.length > 0 ? cumulativeOutputs[0].date : 'N/A'} ~ ${cumulativeOutputs.length > 0 ? cumulativeOutputs[cumulativeOutputs.length - 1].date : 'N/A'}`);
 
-        // 🔸 월 출고 금액 계산 (선택 월만)
-        const monthlyOutputs = await Output.findAll({
-            where: {
-                date: {
-                    [Op.between]: [startDate, endDate]
-                }
-            },
-            attributes: ['quantity', 'date', 'material_id', 'user_id'],
-            raw: true
-        });
-
         const monthlyOutputAmount = monthlyOutputs.reduce((sum, output) => {
             const product = productMap.get(output.material_id);
             const itemAmount = output.quantity * (product?.price || 0);
@@ -105,15 +140,22 @@ router.post("/", async (req, res) => {
                 const monthEnd = new Date(year, m, 0);
                 monthEnd.setHours(23, 59, 59, 999);
 
-                const monthOutputs = await Output.findAll({
-                    where: {
-                        date: {
-                            [Op.between]: [monthStart, monthEnd]
-                        }
-                    },
-                    attributes: ['quantity', 'material_id'],
-                    raw: true
-                });
+                let monthOutputs = [];
+                try {
+                    monthOutputs = await Output.findAll({
+                        where: {
+                            date: {
+                                [Op.between]: [monthStart, monthEnd]
+                            }
+                        },
+                        attributes: ['quantity', 'material_id'],
+                        raw: true
+                    });
+                } catch (error) {
+                    if (!(error.original && error.original.code === 'ER_NO_SUCH_TABLE')) {
+                        console.error('월별 추이 조회 중 에러 (무시됨):', error.message);
+                    }
+                }
 
                 const monthAmount = monthOutputs.reduce((sum, output) => {
                     const product = productMap.get(output.material_id);
@@ -123,19 +165,6 @@ router.post("/", async (req, res) => {
                 return monthAmount;
             })
         );
-
-        // 🔸 최근 출고 내역 (선택 월 기준 상위 5건)
-        const recentOutputs = await Output.findAll({
-            where: {
-                date: {
-                    [Op.between]: [startDate, endDate]
-                }
-            },
-            limit: 5,
-            order: [['date', 'DESC']],
-            attributes: ['quantity', 'date', 'material_id', 'user_id'],
-            raw: true
-        });
 
         const formattedRecentOutputs = recentOutputs.map(output => {
             const product = productMap.get(output.material_id) || {};
@@ -154,17 +183,6 @@ router.post("/", async (req, res) => {
 
         let allOutputs = undefined;
         if (includeAllOutputs) {
-            const allOutputsRaw = await Output.findAll({
-                where: {
-                    date: {
-                        [Op.between]: [startDate, endDate]
-                    }
-                },
-                order: [['date', 'DESC']],
-                attributes: ['quantity', 'date', 'material_id', 'user_id'],
-                raw: true
-            });
-
             allOutputs = allOutputsRaw.map(output => {
                 const product = productMap.get(output.material_id) || {};
                 const price = product.price || 0;

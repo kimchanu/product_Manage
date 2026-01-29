@@ -177,11 +177,33 @@ const getAllMaterials = async (businessLocation, department) => {
 const updateMaterialField = async (material_id, field, value, businessLocation, department) => {
   try {
     const { Product } = createModels(businessLocation, department);
-    // 동적으로 필드 업데이트
+
+    // 1. Local DB Product 업데이트
     await Product.update(
       { [field]: value },
       { where: { material_id } }
     );
+
+    // 2. Groupware DB (ApiMainProduct) 업데이트
+    const locationMapping = {
+      "GK": "GK사업소",
+      "CM": "천마사업소",
+      "ES": "을숙도사업소",
+      "GN": "강남사업소"
+    };
+    const gwBusinessLocation = locationMapping[businessLocation] || businessLocation;
+
+    await ApiMainProduct.update(
+      { [field]: value },
+      {
+        where: {
+          material_id,
+          business_location: gwBusinessLocation,
+          department
+        }
+      }
+    );
+
     return true;
   } catch (error) {
     console.error("자재 정보 수정 오류:", error);

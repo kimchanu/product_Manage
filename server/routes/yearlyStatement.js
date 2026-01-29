@@ -43,26 +43,38 @@ router.post("/", async (req, res) => {
         const prevYearEndDate = new Date(year - 1, 11, 31); // 전년도 12월 31일
         prevYearEndDate.setHours(23, 59, 59, 999);
 
-        const [prevYearInputs, prevYearOutputs] = await Promise.all([
-            Input.findAll({
-                where: { date: { [Op.lte]: prevYearEndDate } },
-                attributes: ["material_id", "quantity"],
-                include: [{
-                    model: Product,
-                    as: "product",
-                    attributes: ["material_id", "price", "big_category"],
-                }],
-            }),
-            Output.findAll({
-                where: { date: { [Op.lte]: prevYearEndDate } },
-                attributes: ["material_id", "quantity"],
-                include: [{
-                    model: Product,
-                    as: "product",
-                    attributes: ["material_id", "price", "big_category"],
-                }],
-            }),
-        ]);
+        let prevYearInputs = [];
+        let prevYearOutputs = [];
+
+        try {
+            [prevYearInputs, prevYearOutputs] = await Promise.all([
+                Input.findAll({
+                    where: { date: { [Op.lte]: prevYearEndDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [{
+                        model: Product,
+                        as: "product",
+                        attributes: ["material_id", "price", "big_category"],
+                    }],
+                }),
+                Output.findAll({
+                    where: { date: { [Op.lte]: prevYearEndDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [{
+                        model: Product,
+                        as: "product",
+                        attributes: ["material_id", "price", "big_category"],
+                    }],
+                }),
+            ]);
+        } catch (error) {
+            if (error.original && error.original.code === 'ER_NO_SUCH_TABLE') {
+                console.warn(`⚠️ 테이블이 존재하지 않음 (${department}), Local 전년도 데이터 없이 진행`);
+                // 빈 배열 유지
+            } else {
+                throw error;
+            }
+        }
 
         // 전년도 말일까지의 재고 계산을 위한 stockMap
         const stockMap = {};
@@ -137,26 +149,38 @@ router.post("/", async (req, res) => {
             const endDate = new Date(year, month, 0);
             endDate.setHours(23, 59, 59, 999);
 
-            const [monthlyInputs, monthlyOutputs] = await Promise.all([
-                Input.findAll({
-                    where: { date: { [Op.between]: [startDate, endDate] } },
-                    attributes: ["material_id", "quantity"],
-                    include: [{
-                        model: Product,
-                        as: "product",
-                        attributes: ["material_id", "price", "big_category"],
-                    }],
-                }),
-                Output.findAll({
-                    where: { date: { [Op.between]: [startDate, endDate] } },
-                    attributes: ["material_id", "quantity"],
-                    include: [{
-                        model: Product,
-                        as: "product",
-                        attributes: ["material_id", "price", "big_category"],
-                    }],
-                }),
-            ]);
+            let monthlyInputs = [];
+            let monthlyOutputs = [];
+
+            try {
+                [monthlyInputs, monthlyOutputs] = await Promise.all([
+                    Input.findAll({
+                        where: { date: { [Op.between]: [startDate, endDate] } },
+                        attributes: ["material_id", "quantity"],
+                        include: [{
+                            model: Product,
+                            as: "product",
+                            attributes: ["material_id", "price", "big_category"],
+                        }],
+                    }),
+                    Output.findAll({
+                        where: { date: { [Op.between]: [startDate, endDate] } },
+                        attributes: ["material_id", "quantity"],
+                        include: [{
+                            model: Product,
+                            as: "product",
+                            attributes: ["material_id", "price", "big_category"],
+                        }],
+                    }),
+                ]);
+            } catch (error) {
+                if (error.original && error.original.code === 'ER_NO_SUCH_TABLE') {
+                    // 월별 조회 에러는 로그만 남기고 빈 배열로 진행 (계속 진행)
+                    // console.warn(`⚠️ 테이블이 존재하지 않음 (${department}), ${month}월 Local 데이터 없이 진행`);
+                } else {
+                    throw error;
+                }
+            }
 
             // 카테고리별 데이터 처리
             const monthData = {};

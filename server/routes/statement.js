@@ -52,61 +52,80 @@ router.post("/", async (req, res) => {
             const prevYearEndDate = new Date(prevYear, 11, 31);
             prevYearEndDate.setHours(23, 59, 59, 999);
 
-            [prevYearInputs, prevYearOutputs] = await Promise.all([
+            try {
+                [prevYearInputs, prevYearOutputs] = await Promise.all([
+                    Input.findAll({
+                        where: { date: { [Op.lte]: prevYearEndDate } },
+                        attributes: ["material_id", "quantity", "date"],
+                        include: [includeProduct],
+                    }),
+                    Output.findAll({
+                        where: { date: { [Op.lte]: prevYearEndDate } },
+                        attributes: ["material_id", "quantity", "date"],
+                        include: [includeProduct],
+                    }),
+                ]);
+            } catch (error) {
+                if (error.original && error.original.code === 'ER_NO_SUCH_TABLE') {
+                    console.warn(`⚠️ 테이블이 존재하지 않음 (${department}), Local 전년도 데이터 없이 진행`);
+                } else {
+                    throw error;
+                }
+            }
+        }
+
+        // 전월재고 계산: 전월 말일까지의 입고/출고 데이터만 조회
+        let prevInputs = [], prevOutputs = [], thisMonthInputs = [], thisMonthOutputs = [], yearTotalInputs = [], cumulativeInputs = [];
+
+        try {
+            [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, yearTotalInputs, cumulativeInputs] = await Promise.all([
                 Input.findAll({
-                    where: { date: { [Op.lte]: prevYearEndDate } },
+                    where: {
+                        date: {
+                            [Op.lte]: prevEndDate
+                        }
+                    },
                     attributes: ["material_id", "quantity", "date"],
                     include: [includeProduct],
                 }),
                 Output.findAll({
-                    where: { date: { [Op.lte]: prevYearEndDate } },
+                    where: {
+                        date: {
+                            [Op.lte]: prevEndDate
+                        }
+                    },
                     attributes: ["material_id", "quantity", "date"],
                     include: [includeProduct],
                 }),
+                Input.findAll({
+                    where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [includeProduct],
+                }),
+                Output.findAll({
+                    where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [includeProduct],
+                }),
+                Input.findAll({
+                    where: { date: { [Op.gte]: yearStartDate, [Op.lte]: yearEndDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [includeProduct],
+                }),
+                Input.findAll({
+                    where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
+                    attributes: ["material_id", "quantity"],
+                    include: [includeProduct],
+                }),
             ]);
+        } catch (error) {
+            if (error.original && error.original.code === 'ER_NO_SUCH_TABLE') {
+                console.warn(`⚠️ 테이블이 존재하지 않음 (${department}), Local 데이터 없이 진행`);
+                // 빈 배열 유지
+            } else {
+                throw error;
+            }
         }
-
-        // 전월재고 계산: 전월 말일까지의 입고/출고 데이터만 조회
-        const [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, yearTotalInputs, cumulativeInputs] = await Promise.all([
-            Input.findAll({
-                where: {
-                    date: {
-                        [Op.lte]: prevEndDate
-                    }
-                },
-                attributes: ["material_id", "quantity", "date"],
-                include: [includeProduct],
-            }),
-            Output.findAll({
-                where: {
-                    date: {
-                        [Op.lte]: prevEndDate
-                    }
-                },
-                attributes: ["material_id", "quantity", "date"],
-                include: [includeProduct],
-            }),
-            Input.findAll({
-                where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
-                attributes: ["material_id", "quantity"],
-                include: [includeProduct],
-            }),
-            Output.findAll({
-                where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
-                attributes: ["material_id", "quantity"],
-                include: [includeProduct],
-            }),
-            Input.findAll({
-                where: { date: { [Op.gte]: yearStartDate, [Op.lte]: yearEndDate } },
-                attributes: ["material_id", "quantity"],
-                include: [includeProduct],
-            }),
-            Input.findAll({
-                where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
-                attributes: ["material_id", "quantity"],
-                include: [includeProduct],
-            }),
-        ]);
 
         const resultByCategory = {};
         const normalizedCategories = categories.map(cat => cat.replace(/\s+/g, '').toUpperCase());
@@ -143,6 +162,8 @@ router.post("/", async (req, res) => {
             },
             raw: true
         });
+
+        console.log(`[Statement] apiMainProducts found: ${apiMainProducts.length} rows for ${businessLocation}/${department}`);
 
         // ApiMainProduct 처리 함수
         const processApiMainProducts = () => {
@@ -183,6 +204,8 @@ router.post("/", async (req, res) => {
         };
 
         processApiMainProducts();
+
+        console.log('[Statement] After processApiMainProducts:', resultByCategory);
 
 
         // 전월재고 계산을 위한 카테고리별 재고 맵
@@ -413,6 +436,21 @@ router.post("/", async (req, res) => {
                 return;
             }
 
+            // 카테고리 체크
+            const rawCategory = product.get("big_category") || "";
+            const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+            const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+            const matchedCategory = categoryMap[upperCategory];
+
+            let categoryKey = null;
+            if (matchedCategory) {
+                categoryKey = matchedCategory;
+            } else if (categoryMap["기타"]) {
+                categoryKey = "기타";
+            } else {
+                return; // 선택된 카테고리에 해당하지 않으면 제외
+            }
+
             const price = product.price ?? 0;
             const qty = item.quantity ?? 0;
             yearTotalInputAmount += price * qty;
@@ -422,6 +460,21 @@ router.post("/", async (req, res) => {
         apiMainProducts.forEach(item => {
             const itemDate = new Date(item.date);
             if (itemDate >= yearStartDate && itemDate <= cumulativeEndDate) {
+                // 카테고리 체크
+                const rawCategory = item.big_category || "";
+                const categoryStr = typeof rawCategory === 'number' ? rawCategory.toString() : rawCategory;
+                const upperCategory = categoryStr.replace(/\s+/g, '').toUpperCase();
+                const matchedCategory = categoryMap[upperCategory];
+
+                let categoryKey = null;
+                if (matchedCategory) {
+                    categoryKey = matchedCategory;
+                } else if (categoryMap["기타"]) {
+                    categoryKey = "기타";
+                } else {
+                    return; // 선택된 카테고리에 해당하지 않으면 제외
+                }
+
                 const price = item.price || 0;
                 const qty = item.quantity || 0;
                 yearTotalInputAmount += price * qty;
@@ -473,6 +526,17 @@ router.post("/", async (req, res) => {
             yearTotalInputAmount,
         });
     } catch (err) {
+        // 테이블이 없는 경우 (예: 관리 부서) 정상적인 빈 응답 반환
+        if (err.name === 'SequelizeDatabaseError' && err.parent && err.parent.code === 'ER_NO_SUCH_TABLE') {
+            console.log(`⚠️ 테이블이 존재하지 않음 (${department}), 빈 응답 반환`);
+            return res.json({
+                byCategory: {},
+                totalExecutedAmount: 0,
+                executionRate: 0,
+                yearTotalInputAmount: 0,
+            });
+        }
+
         console.error("Error processing statement:", err);
         console.error("Error details:", {
             message: err.message,
@@ -537,33 +601,44 @@ router.post("/all-part-monthly", async (req, res) => {
                     attributes: ["material_id", "price", "big_category"],
                 };
 
-                const [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, cumulativeInputs] = await Promise.all([
-                    Input.findAll({
-                        where: { date: { [Op.lte]: prevEndDate } },
-                        attributes: ["material_id", "quantity", "date"],
-                        include: [includeProduct],
-                    }),
-                    Output.findAll({
-                        where: { date: { [Op.lte]: prevEndDate } },
-                        attributes: ["material_id", "quantity", "date"],
-                        include: [includeProduct],
-                    }),
-                    Input.findAll({
-                        where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
-                        attributes: ["material_id", "quantity"],
-                        include: [includeProduct],
-                    }),
-                    Output.findAll({
-                        where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
-                        attributes: ["material_id", "quantity"],
-                        include: [includeProduct],
-                    }),
-                    Input.findAll({
-                        where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
-                        attributes: ["material_id", "quantity"],
-                        include: [includeProduct],
-                    }),
-                ]);
+                let prevInputs = [], prevOutputs = [], thisMonthInputs = [], thisMonthOutputs = [], cumulativeInputs = [];
+
+                try {
+                    [prevInputs, prevOutputs, thisMonthInputs, thisMonthOutputs, cumulativeInputs] = await Promise.all([
+                        Input.findAll({
+                            where: { date: { [Op.lte]: prevEndDate } },
+                            attributes: ["material_id", "quantity", "date"],
+                            include: [includeProduct],
+                        }),
+                        Output.findAll({
+                            where: { date: { [Op.lte]: prevEndDate } },
+                            attributes: ["material_id", "quantity", "date"],
+                            include: [includeProduct],
+                        }),
+                        Input.findAll({
+                            where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                            attributes: ["material_id", "quantity"],
+                            include: [includeProduct],
+                        }),
+                        Output.findAll({
+                            where: { date: { [Op.gte]: startDate, [Op.lte]: endDate } },
+                            attributes: ["material_id", "quantity"],
+                            include: [includeProduct],
+                        }),
+                        Input.findAll({
+                            where: { date: { [Op.gte]: yearStartDate, [Op.lte]: cumulativeEndDate } },
+                            attributes: ["material_id", "quantity"],
+                            include: [includeProduct],
+                        }),
+                    ]);
+                } catch (error) {
+                    if (error.original && error.original.code === 'ER_NO_SUCH_TABLE') {
+                        console.warn(`⚠️ 테이블이 존재하지 않음 (${department}), Local 데이터 없이 진행`);
+                        // 빈 배열 유지
+                    } else {
+                        throw error;
+                    }
+                }
 
                 console.log(`✅ [${department}] 데이터 조회 완료:`);
                 console.log(`   - 전월 입고: ${prevInputs.length}건`);

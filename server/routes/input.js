@@ -73,8 +73,41 @@ router.put("/:material_id/:id", async (req, res) => {
         return res.status(400).json({ message: "필수 정보가 누락되었습니다." });
     }
 
+    // 사업소명 매핑 (코드 -> 전체 이름)
+    const businessLocationMap = {
+        'GK': 'GK사업소',
+        'CM': '천마사업소',
+        'ES': '을숙도사업소',
+        'GN': '강남사업소'
+    };
+    const businessLocationName = businessLocationMap[business_location] || business_location;
+
+    const { ApiMainProduct } = require("../models/material");
+
     let transaction;
     try {
+        // 1. Groupware ID (gw_*) 처리
+        if (id.startsWith('gw_')) {
+            const gwId = id.replace('gw_', '');
+
+            // ApiMainProduct 업데이트
+            await ApiMainProduct.update({
+                date: input_date,
+                user_id: user_id,
+                comment: comment || null,
+                quantity: input_quantity // 초기 재고 수정
+            }, {
+                where: {
+                    id: gwId,
+                    material_id: material_id,
+                    department: department
+                    // business_location은 체크하지 않거나, 필요 시 추가
+                }
+            });
+            return res.json({ message: "Groupware 입고 정보가 성공적으로 수정되었습니다." });
+        }
+
+        // 2. Local ID 처리
         const Input = createInputModel(business_location, department);
         transaction = await sequelize.transaction();
 
@@ -83,25 +116,41 @@ router.put("/:material_id/:id", async (req, res) => {
             transaction
         });
 
+        // Local Input이 없으면 ApiMainProduct에서 fallback 시도
         if (!input) {
+            console.log(`Local input not found for id ${id}. Trying ApiMainProduct fallback.`);
+            // 트랜잭션 롤백 (Local 조회용)
             await transaction.rollback();
+            transaction = null;
+
+            // ApiMainProduct 업데이트 시도 (id가 gw_가 아니더라도 혹시나 매핑될 수 있으므로, 
+            // 다만 보통 id 체계가 다르므로 rowCount로 확인)
+            // 만약 id가 integer라면 ApiMainProduct의 PK일 수도 있음.
+            // 하지만 여기선 'fallback' 의미로, 만약 Local에 없으면 ApiMainProduct를 수정하라는 요구사항을 
+            // "기존꺼는 기존대로 놔두고 만약 기존께 없으면 api로"라고 해석함.
+
+            // ApiMainProduct는 id가 PK (integer) 인 경우가 많음. 
+            // req.params.id 가 integer로 변환 가능하다면 시도.
+            if (!isNaN(id)) {
+                const [updatedCount] = await ApiMainProduct.update({
+                    date: input_date,
+                    user_id: user_id,
+                    comment: comment || null,
+                    quantity: input_quantity
+                }, {
+                    where: { id: id }
+                });
+
+                if (updatedCount > 0) {
+                    return res.json({ message: "API 자재 정보가 성공적으로 수정되었습니다." });
+                }
+            }
+
             return res.status(404).json({ message: "해당 입고 기록을 찾을 수 없습니다." });
         }
 
-
+        // Local Input 업데이트
         const InputModel = createInputModel(business_location, department);
-
-        // console.log('Updating input record:', {
-        //     id,
-        //     business_location,
-        //     department,
-        //     updateData: {
-        //         date: input_date,
-        //         user_id,
-        //         comment: comment || null,
-        //         quantity: input_quantity || input.quantity
-        //     }
-        // });
 
         const [inputUpdateCount] = await InputModel.update(
             {
