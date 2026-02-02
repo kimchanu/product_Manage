@@ -8,12 +8,19 @@ function Dashboard_page() {
     const [selectedDepartment, setSelectedDepartment] = useState("GK사업소");
 
     return (
-        <div>
+        <div className="min-h-screen flex flex-col">
             <Header />
-            {/* 부서 선택 변경 함수 전달 */}
-            <Sidebar onSelectDepartment={setSelectedDepartment} selectedDepartment={selectedDepartment} />
-            {/* 선택된 부서 전달 */}
-            <Statistics_sub department={selectedDepartment} />
+
+            <div className="flex flex-1 bg-gray-50">
+                <Sidebar
+                    onSelectDepartment={setSelectedDepartment}
+                    selectedDepartment={selectedDepartment}
+                />
+                <main className="flex-1 p-6 overflow-auto">
+                    <Statistics_sub department={selectedDepartment} />
+                </main>
+            </div>
+
             <Footer />
         </div>
     );

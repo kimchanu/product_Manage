@@ -476,10 +476,10 @@ const YearlyStatement = () => {
                                 }}
                                 className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
-                                <option value="allPartMonthly">전파트 월간보고서</option>
-                                <option value="monthly">월간보고서</option>
-                                <option value="partYearly">파트별 연간보고서</option>
-                                <option value="allPartYearly">전파트 연간보고서</option>
+                                <option value="allPartMonthly">1. 전파트 월간보고서</option>
+                                <option value="monthly">2. 월간보고서</option>
+                                <option value="partYearly">3. 파트별 연간보고서</option>
+                                <option value="allPartYearly">4. 전파트 연간보고서</option>
                             </select>
                         </div>
 

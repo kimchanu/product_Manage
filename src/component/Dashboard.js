@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import {
     LineChart,
     Line,
@@ -50,6 +50,52 @@ const StatCard = ({ title, valueList = [], highlight }) => (
         </ul>
     </div>
 );
+
+const YearCompareLineChartCard = ({
+    title,
+    data,
+    xKey = "month",
+    lines, // [{ dataKey, name }]
+    valueFormatter,
+}) => (
+    <div className="p-6 bg-white rounded-2xl shadow">
+        <h2 className="text-lg font-semibold mb-4">{title}</h2>
+        <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey={xKey} />
+                    <YAxis tickFormatter={valueFormatter} />
+                    <Tooltip formatter={(v) => valueFormatter(v)} />
+                    <Legend />
+                    {lines.map((l) => (
+                        <Line
+                            key={l.dataKey}
+                            type="monotone"
+                            dataKey={l.dataKey}
+                            name={l.name}
+                            strokeWidth={2}
+                            dot={false}
+                        />
+                    ))}
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
+    </div>
+);
+
+const siteNameToCode = (siteName) => {
+    if (!siteName) return siteName;
+
+    // ✅ GK만 코드 사용
+    if (siteName === "GK사업소" || siteName === "GK") {
+        return "GK";
+    }
+
+    // ✅ 나머지는 한글 사업소명 그대로
+    return siteName;
+};
+
 
 const ChartCard = ({ title }) => (
     <div className="p-6 bg-white rounded-2xl shadow">
@@ -511,19 +557,37 @@ const Statistics_sub = ({ department }) => {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
 
+    const prevYear = currentYear - 1; // 2025
+    const compareYears = [prevYear, currentYear];
+
     const [budgetList, setBudgetList] = useState([]);
     const [monthlyExpense, setMonthlyExpense] = useState(0);
     const [outputByLocation, setOutputByLocation] = useState([]);
     const [inputByLocation, setInputByLocation] = useState([]);
+
+    const [compareLoading, setCompareLoading] = useState(false);
+    const [compareError, setCompareError] = useState("");
+    const [cumulativeMode, setCumulativeMode] = useState(false); // 누적 토글
+    const [activeDeptTab, setActiveDeptTab] = useState("합 계"); // "합 계" | "ITS" | "시설" | "기전"
+    const compareCacheRef = useRef(new Map());
+    const [yearlyMonthly, setYearlyMonthly] = useState({
+        [prevYear]: [],
+        [currentYear]: [],
+    });
+
     const [yearTotalInputAmounts, setYearTotalInputAmounts] = useState([]);
+
+
+
 
     // 사업소 이름 매핑 (Side_Bar에서 전달되는 값 -> DB에 저장된 값)
     const normalizeSiteName = (site) => {
         const siteMap = {
             "GK사업소": "GK사업소",
-            "CM사업소": "천마사업소",
-            "ES사업소": "을숙도사업소",
-            "GN사업소": "강남순환사업소"
+            "천마사업소": "천마사업소",
+            "을숙도사업소": "을숙도사업소",
+            "수원사업소": "수원사업소",
+            "강남사업소": "강남사업소"
         };
         return siteMap[site] || site;
     };
@@ -737,34 +801,267 @@ const Statistics_sub = ({ department }) => {
         }
     }, [department, currentYear, currentMonth]);
 
+    useEffect(() => {
+        const fetchYearMonthly = async (siteCode, year) => {
+            const cacheKey = `${siteCode}-${year}`;
+            if (compareCacheRef.current.has(cacheKey)) {
+                return compareCacheRef.current.get(cacheKey);
+            }
+
+            const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+            const results = await Promise.all(
+                months.map(async (m) => {
+                    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/statement/all-part-monthly`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                        },
+                        body: JSON.stringify({
+                            businessLocation: siteCode, // ✅ 사업소 코드
+                            year,
+                            month: m,
+                        }),
+                    });
+
+                    const json = await res.json();
+                    if (!res.ok) {
+                        throw new Error(json?.message || `월간 데이터 조회 실패 (${year}-${m})`);
+                    }
+
+                    // byCategory 안에 "합 계", "ITS", "시설", "기전" 키가 존재하는 구조(너가 준 코드 기준)
+                    const by = json?.byCategory || {};
+                    const pick = (key) => ({
+                        input: by?.[key]?.input || 0,
+                        output: by?.[key]?.output || 0,
+                    });
+
+                    return {
+                        month: m,
+                        byDept: {
+                            "합 계": pick("합 계"),
+                            ITS: pick("ITS"),
+                            시설: pick("시설"),
+                            기전: pick("기전"),
+                        },
+                    };
+                })
+            );
+
+            compareCacheRef.current.set(cacheKey, results);
+            return results;
+        };
+
+        const run = async () => {
+            if (!department) return;
+
+            const siteCode = siteNameToCode(department);
+
+            setCompareLoading(true);
+            setCompareError("");
+
+            try {
+                const [dataPrev, dataCurr] = await Promise.all([
+                    fetchYearMonthly(siteCode, prevYear),
+                    fetchYearMonthly(siteCode, currentYear),
+                ]);
+
+                setYearlyMonthly({
+                    [prevYear]: dataPrev,
+                    [currentYear]: dataCurr,
+                });
+            } catch (e) {
+                console.error(e);
+                setCompareError(e?.message || "연도 비교 데이터를 불러오지 못했습니다.");
+                setYearlyMonthly({
+                    [prevYear]: [],
+                    [currentYear]: [],
+                });
+            } finally {
+                setCompareLoading(false);
+            }
+        };
+
+        run();
+    }, [department, prevYear, currentYear]);
+
+    const toCumulative = (arr, getVal) => {
+        let sum = 0;
+        return arr.map((x) => {
+            sum += getVal(x);
+            return sum;
+        });
+    };
+
+    const compareChartData = useMemo(() => {
+        const a = yearlyMonthly[prevYear] || [];
+        const b = yearlyMonthly[currentYear] || [];
+
+        // month 기준으로 합치기
+        const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+        const getFor = (yearArr, m, type) => {
+            const row = yearArr.find((r) => r.month === m);
+            if (!row) return 0;
+            return row.byDept?.[activeDeptTab]?.[type] || 0;
+        };
+
+        const base = months.map((m) => ({
+            month: m,
+            inputPrev: getFor(a, m, "input"),
+            inputCurr: getFor(b, m, "input"),
+            outputPrev: getFor(a, m, "output"),
+            outputCurr: getFor(b, m, "output"),
+        }));
+
+        if (!cumulativeMode) return base;
+
+        // 누적 모드
+        const inputPrevCum = toCumulative(base, (x) => x.inputPrev);
+        const inputCurrCum = toCumulative(base, (x) => x.inputCurr);
+        const outputPrevCum = toCumulative(base, (x) => x.outputPrev);
+        const outputCurrCum = toCumulative(base, (x) => x.outputCurr);
+
+        return base.map((x, idx) => ({
+            ...x,
+            inputPrev: inputPrevCum[idx],
+            inputCurr: inputCurrCum[idx],
+            outputPrev: outputPrevCum[idx],
+            outputCurr: outputCurrCum[idx],
+        }));
+    }, [yearlyMonthly, prevYear, currentYear, cumulativeMode, activeDeptTab]);
+
+
+
     return (
         <main className="ml-60 p-6 space-y-6 bg-gray-50 h-[calc(100vh-4rem)]">
             <h1 className="text-2xl font-bold mb-4">{department || "없음"}</h1>
 
+            {/* ================= 연도별 입고/출고 비교 섹션 (상단 배치) ================= */}
+            <div className="p-6 bg-white rounded-2xl shadow space-y-5">
+
+                {/* 헤더 + 누적 토글 */}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div>
+                        <h2 className="text-lg font-semibold">
+                            {department} 입·출고 금액 비교 ({currentYear - 1} vs {currentYear})
+                        </h2>
+                        <p className="text-sm text-gray-500 mt-1">
+                            {activeDeptTab} 기준 · {cumulativeMode ? "누적(1~월)" : "월별"}
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => setCumulativeMode(v => !v)}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium border transition
+                        ${cumulativeMode
+                                ? "bg-blue-600 text-white border-blue-600"
+                                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                            }`}
+                    >
+                        누적 {cumulativeMode ? "ON" : "OFF"}
+                    </button>
+                </div>
+
+                {/* 부서 탭 */}
+                <div className="flex flex-wrap gap-2">
+                    {["합 계", "ITS", "시설", "기전"].map(tab => (
+                        <button
+                            key={tab}
+                            type="button"
+                            onClick={() => setActiveDeptTab(tab)}
+                            className={`px-4 py-2 rounded-full text-sm border transition
+                            ${activeDeptTab === tab
+                                    ? "bg-blue-100 text-blue-700 border-blue-300 font-semibold"
+                                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                                }`}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </div>
+
+                {/* 로딩 / 에러 */}
+                {compareLoading && (
+                    <div className="text-sm text-gray-500">
+                        연도 비교 데이터를 불러오는 중입니다...
+                    </div>
+                )}
+
+                {compareError && (
+                    <div className="text-sm text-red-600 bg-red-50 p-3 rounded">
+                        {compareError}
+                    </div>
+                )}
+
+                {/* 차트 영역 */}
+                {!compareLoading && !compareError && (
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+                        <YearCompareLineChartCard
+                            title={`입고 금액 (${currentYear - 1} vs ${currentYear})`}
+                            data={compareChartData}
+                            lines={[
+                                { dataKey: "inputPrev", name: `${currentYear - 1} 입고` },
+                                { dataKey: "inputCurr", name: `${currentYear} 입고` },
+                            ]}
+                            valueFormatter={(v) =>
+                                `${Math.round(v).toLocaleString()} 원`
+                            }
+                        />
+
+                        <YearCompareLineChartCard
+                            title={`출고 금액 (${currentYear - 1} vs ${currentYear})`}
+                            data={compareChartData}
+                            lines={[
+                                { dataKey: "outputPrev", name: `${currentYear - 1} 출고` },
+                                { dataKey: "outputCurr", name: `${currentYear} 출고` },
+                            ]}
+                            valueFormatter={(v) =>
+                                `${Math.round(v).toLocaleString()} 원`
+                            }
+                        />
+
+                    </div>
+                )}
+            </div>
+            {/* ================= 연도별 입고/출고 비교 섹션 끝 ================= */}
+
+
+            {/* ================= 요약 카드 (아래로 이동) ================= */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard title={`${department} ${currentYear} 예산`} valueList={budgetList} highlight />
+                <StatCard
+                    title={`${department} ${currentYear} 예산`}
+                    valueList={budgetList}
+                    highlight
+                />
                 <InputByLocationCard inputList={inputByLocation} />
                 <OutputByLocationCard outputList={outputByLocation} />
             </div>
 
+            {/* ================= 예산 집행률 카드 ================= */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-3">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <ITSBudgetExecutionCard budgetList={budgetList} yearTotalInputAmounts={yearTotalInputAmounts} />
-                        <MechanicalBudgetExecutionCard budgetList={budgetList} yearTotalInputAmounts={yearTotalInputAmounts} />
-                        <FacilityBudgetExecutionCard budgetList={budgetList} yearTotalInputAmounts={yearTotalInputAmounts} />
-                    </div>
-                </div>
-                {/* <div className="lg:col-span-1 lg:row-span-2" style={{ gridRow: '1 / 3' }}>
-                    <DashboardPostList />
-                </div> */}
+                <ITSBudgetExecutionCard
+                    budgetList={budgetList}
+                    yearTotalInputAmounts={yearTotalInputAmounts}
+                />
+                <MechanicalBudgetExecutionCard
+                    budgetList={budgetList}
+                    yearTotalInputAmounts={yearTotalInputAmounts}
+                />
+                <FacilityBudgetExecutionCard
+                    budgetList={budgetList}
+                    yearTotalInputAmounts={yearTotalInputAmounts}
+                />
             </div>
 
-            {/* <LineChartCard title={`${department} 예산 추이`} data={budgetTrendData} /> */}
             <div className="h-16" />
-
         </main>
     );
+
+
 };
 
 export default Statistics_sub;

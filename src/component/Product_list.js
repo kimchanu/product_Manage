@@ -134,12 +134,19 @@ function Product_list() {
             return {
               ...material,
               latest_input_date: formattedDate,
-              current_stock: (material?.total_input_quantity || 0) - (material?.total_output_quantity || 0)
+              current_stock: (material?.total_input_quantity || 0) - (material?.total_output_quantity || 0),
+              inventory_value: ((material?.total_input_quantity || 0) - (material?.total_output_quantity || 0)) * (material?.price || 0)
             };
           });
 
-          console.log("서버 응답:", processedResult);
-          setMaterials(processedResult);
+
+          // 중복 제거 (material_id 기준)
+          const uniqueMaterials = Array.from(
+            new Map(processedResult.map(item => [item.material_id, item])).values()
+          );
+
+          console.log("서버 응답:", uniqueMaterials);
+          setMaterials(uniqueMaterials);
         } catch (error) {
           if (ignore) return;
           console.error("서버 요청 오류:", error);
@@ -190,19 +197,26 @@ function Product_list() {
   // ✅ 정렬 처리
   if (Array.isArray(filteredMaterials) && sortField && sortOrder) {
     filteredMaterials = [...filteredMaterials].sort((a, b) => {
-      let aValue = a[sortField] || "";
-      let bValue = b[sortField] || "";
+      let aValue = a[sortField];
+      let bValue = b[sortField];
 
-      // 문자열 비교
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
+      // null 또는 undefined는 빈 문자열로 취급 (단, 0은 그대로 둠)
+      if (aValue === null || aValue === undefined) aValue = "";
+      if (bValue === null || bValue === undefined) bValue = "";
+
+      // 숫자 비교
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
       }
 
+      // 문자열 비교
+      const aString = String(aValue).toLowerCase();
+      const bString = String(bValue).toLowerCase();
+
       if (sortOrder === "asc") {
-        return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+        return aString.localeCompare(bString);
       } else {
-        return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+        return bString.localeCompare(aString);
       }
     });
   }
@@ -352,8 +366,8 @@ function Product_list() {
           <div className="flex gap-2 items-center">
             <button
               className={`px-4 py-2 rounded disabled:opacity-50 ${loggedInUser.location === businessLocation && loggedInUser.department === department
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
                 }`}
               disabled={selectedRows.length === 0 || saveLoading || loggedInUser.location !== businessLocation || loggedInUser.department !== department}
               onClick={() => setModalOpen(true)}
@@ -390,7 +404,7 @@ function Product_list() {
                     >
                       <div className="flex items-center relative">
                         {header}
-                        {["자재코드", "위치", "대분류", "중분류", "소분류", "재고수량", "적정수량", "입고날짜"].includes(header) && (
+                        {["자재코드", "위치", "대분류", "중분류", "소분류", "재고수량", "적정수량", "입고날짜", "단가", "재고금액"].includes(header) && (
                           <button
                             ref={(el) => {
                               const filterKey = {
@@ -401,7 +415,9 @@ function Product_list() {
                                 "소분류": "sub_category",
                                 "재고수량": "stockQuantity",
                                 "적정수량": "currentStock",
-                                "입고날짜": "latest_input_date"
+                                "입고날짜": "latest_input_date",
+                                "단가": "price",
+                                "재고금액": "inventory_value"
                               }[header];
                               if (el) filterButtonRefs.current[filterKey] = el;
                             }}
@@ -414,7 +430,9 @@ function Product_list() {
                                 "소분류": "sub_category",
                                 "재고수량": "stockQuantity",
                                 "적정수량": "currentStock",
-                                "입고날짜": "latest_input_date"
+                                "입고날짜": "latest_input_date",
+                                "단가": "price",
+                                "재고금액": "inventory_value"
                               }[header];
                               const buttonRect = e.currentTarget.getBoundingClientRect();
                               setFilterPositions(prev => ({
@@ -436,7 +454,7 @@ function Product_list() {
                           </button>
                         )}
                       </div>
-                      {["자재코드", "위치", "대분류", "중분류", "소분류", "재고수량", "적정수량", "입고날짜"].includes(header) && showFilter[{
+                      {["자재코드", "위치", "대분류", "중분류", "소분류", "재고수량", "적정수량", "입고날짜", "단가", "재고금액"].includes(header) && showFilter[{
                         "자재코드": "material_code",
                         "위치": "location",
                         "대분류": "big_category",
@@ -444,7 +462,9 @@ function Product_list() {
                         "소분류": "sub_category",
                         "재고수량": "stockQuantity",
                         "적정수량": "currentStock",
-                        "입고날짜": "latest_input_date"
+                        "입고날짜": "latest_input_date",
+                        "단가": "price",
+                        "재고금액": "inventory_value"
                       }[header]] && (
                           <div
                             className="filter-dropdown fixed w-40 bg-white shadow-lg rounded-md z-[9999] border border-gray-200"
@@ -457,7 +477,9 @@ function Product_list() {
                                 "소분류": "sub_category",
                                 "재고수량": "stockQuantity",
                                 "적정수량": "currentStock",
-                                "입고날짜": "latest_input_date"
+                                "입고날짜": "latest_input_date",
+                                "단가": "price",
+                                "재고금액": "inventory_value"
                               }[header]]?.top || 0}px`,
                               left: `${filterPositions[{
                                 "자재코드": "material_code",
@@ -467,12 +489,14 @@ function Product_list() {
                                 "소분류": "sub_category",
                                 "재고수량": "stockQuantity",
                                 "적정수량": "currentStock",
-                                "입고날짜": "latest_input_date"
+                                "입고날짜": "latest_input_date",
+                                "단가": "price",
+                                "재고금액": "inventory_value"
                               }[header]]?.left || 0}px`
                             }}
                           >
                             <div>
-                              {["자재코드", "위치", "대분류", "중분류", "소분류", "재고수량", "적정수량", "입고날짜"].includes(header) && (
+                              {["자재코드", "위치", "대분류", "중분류", "소분류", "재고수량", "적정수량", "입고날짜", "단가", "재고금액"].includes(header) && (
                                 <div className="p-2 bg-gray-50 sticky top-0 z-10 border-b border-gray-200">
                                   <div
                                     className={`px-2 py-1 hover:bg-gray-100 cursor-pointer rounded ${sortField === {
@@ -483,7 +507,9 @@ function Product_list() {
                                       "소분류": "sub_category",
                                       "재고수량": "current_stock",
                                       "적정수량": "appropriate",
-                                      "입고날짜": "latest_input_date"
+                                      "입고날짜": "latest_input_date",
+                                      "단가": "price",
+                                      "재고금액": "inventory_value"
                                     }[header] && sortOrder === "asc" ? "bg-blue-50 text-blue-600" : ""}`}
                                     onClick={() => {
                                       const sortKey = {
@@ -494,7 +520,9 @@ function Product_list() {
                                         "소분류": "sub_category",
                                         "재고수량": "current_stock",
                                         "적정수량": "appropriate",
-                                        "입고날짜": "latest_input_date"
+                                        "입고날짜": "latest_input_date",
+                                        "단가": "price",
+                                        "재고금액": "inventory_value"
                                       }[header];
                                       setSortField(sortKey);
                                       setSortOrder("asc");
@@ -508,7 +536,9 @@ function Product_list() {
                                           "소분류": "sub_category",
                                           "재고수량": "stockQuantity",
                                           "적정수량": "currentStock",
-                                          "입고날짜": "latest_input_date"
+                                          "입고날짜": "latest_input_date",
+                                          "단가": "price",
+                                          "재고금액": "inventory_value"
                                         }[header]]: false
                                       }));
                                     }}
@@ -524,7 +554,9 @@ function Product_list() {
                                       "소분류": "sub_category",
                                       "재고수량": "current_stock",
                                       "적정수량": "appropriate",
-                                      "입고날짜": "latest_input_date"
+                                      "입고날짜": "latest_input_date",
+                                      "단가": "price",
+                                      "재고금액": "inventory_value"
                                     }[header] && sortOrder === "desc" ? "bg-blue-50 text-blue-600" : ""}`}
                                     onClick={() => {
                                       const sortKey = {
@@ -535,7 +567,9 @@ function Product_list() {
                                         "소분류": "sub_category",
                                         "재고수량": "current_stock",
                                         "적정수량": "appropriate",
-                                        "입고날짜": "latest_input_date"
+                                        "입고날짜": "latest_input_date",
+                                        "단가": "price",
+                                        "재고금액": "inventory_value"
                                       }[header];
                                       setSortField(sortKey);
                                       setSortOrder("desc");
@@ -549,7 +583,9 @@ function Product_list() {
                                           "소분류": "sub_category",
                                           "재고수량": "stockQuantity",
                                           "적정수량": "currentStock",
-                                          "입고날짜": "latest_input_date"
+                                          "입고날짜": "latest_input_date",
+                                          "단가": "price",
+                                          "재고금액": "inventory_value"
                                         }[header]]: false
                                       }));
                                     }}
@@ -625,6 +661,10 @@ function Product_list() {
                                       재고 정상
                                     </div>
                                   </>
+                                ) : ["단가", "재고금액"].includes(header) ? (
+                                  <div className="p-2 text-sm text-gray-500 text-center">
+                                    값 필터 없음
+                                  </div>
                                 ) : (
                                   Array.from(new Set(materials.map(item => item[{
                                     "자재코드": "material_code",
@@ -695,7 +735,9 @@ function Product_list() {
                                       "소분류": "sub_category",
                                       "재고수량": "stockQuantity",
                                       "적정수량": "currentStock",
-                                      "입고날짜": "latest_input_date"
+                                      "입고날짜": "latest_input_date",
+                                      "단가": "price",
+                                      "재고금액": "inventory_value"
                                     }[header]]: false
                                   }));
                                   // 정렬 초기화
