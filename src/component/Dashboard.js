@@ -22,7 +22,9 @@ const LineChartCard = ({ title, data }) => (
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="year" />
                     <YAxis tickFormatter={(value) => `${(value / 1_0000).toLocaleString()}만`} />
-                    <Tooltip formatter={(value) => `${value.toLocaleString()} 원`} />
+                    <Tooltip
+                        formatter={(v) => Math.round(v / 1000).toLocaleString()}
+                    />
                     <Legend />
                     <Line type="monotone" dataKey="ITS" stroke="#8884d8" strokeWidth={2} />
                     <Line type="monotone" dataKey="기전" stroke="#82ca9d" strokeWidth={2} />
@@ -55,25 +57,48 @@ const YearCompareLineChartCard = ({
     title,
     data,
     xKey = "month",
-    lines, // [{ dataKey, name }]
-    valueFormatter,
+    lines,
 }) => (
-    <div className="p-6 bg-white rounded-2xl shadow">
+    <div className="p-6 bg-white rounded-2xl shadow relative">
+        {/* 제목 */}
         <h2 className="text-lg font-semibold mb-4">{title}</h2>
+
+        {/* 🔹 단위 표시 (우상단) */}
+        <div className="absolute top-6 right-6 text-xs text-gray-500">
+            단위: 천원
+        </div>
+
         <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
+
                     <XAxis dataKey={xKey} />
-                    <YAxis tickFormatter={valueFormatter} />
-                    <Tooltip formatter={(v) => valueFormatter(v)} />
+
+                    {/* ✅ 숫자만 */}
+                    <YAxis
+                        tickFormatter={(v) =>
+                            Math.round(v / 1000).toLocaleString()
+                        }
+                    />
+
+                    {/* ✅ 숫자만 */}
+                    <Tooltip
+                        formatter={(v) =>
+                            Math.round(v / 1000).toLocaleString()
+                        }
+                    />
+
                     <Legend />
+
                     {lines.map((l) => (
                         <Line
                             key={l.dataKey}
                             type="monotone"
                             dataKey={l.dataKey}
                             name={l.name}
+                            stroke={l.stroke}
+                            strokeDasharray={l.strokeDasharray}
                             strokeWidth={2}
                             dot={false}
                         />
@@ -83,6 +108,15 @@ const YearCompareLineChartCard = ({
         </div>
     </div>
 );
+
+
+const moneyKrwThousandFmt = (v) => {
+    const n = Number(v || 0);
+    const inThousand = Math.round(n / 1000);
+    return `${inThousand.toLocaleString()} 천원`;
+};
+
+
 
 const siteNameToCode = (siteName) => {
     if (!siteName) return siteName;
@@ -238,7 +272,7 @@ const ITSBudgetExecutionCard = ({ budgetList, yearTotalInputAmounts }) => {
     return (
         <div className="p-6 bg-white rounded-2xl shadow">
             <h2 className="text-lg font-semibold mb-4">ITS 예산집행률</h2>
-            <div className="h-48">
+            <div className="h-40">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
@@ -258,10 +292,31 @@ const ITSBudgetExecutionCard = ({ budgetList, yearTotalInputAmounts }) => {
                     </PieChart>
                 </ResponsiveContainer>
             </div>
-            <div className="mt-4 text-center">
-                <div className="text-2xl font-bold text-purple-600">{rate.toFixed(1)}%</div>
-                <div className="text-sm text-gray-500">집행률</div>
+            <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
+                {/* 왼쪽: 예산 */}
+                <div className="text-left">
+                    <div className="text-xs text-gray-500">예산</div>
+                    <div className="font-semibold">
+                        {(itsBudget?.value || 0).toLocaleString()}원
+                    </div>
+                </div>
+
+                {/* 가운데: 퍼센트 */}
+                <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600">
+                        {rate.toFixed(1)}%
+                    </div>
+                </div>
+
+                {/* 오른쪽: 집행액 */}
+                <div className="text-right">
+                    <div className="text-xs text-gray-500">집행액</div>
+                    <div className="font-semibold">
+                        {itsYearTotalInput.toLocaleString()}원
+                    </div>
+                </div>
             </div>
+
         </div>
     );
 };
@@ -296,7 +351,7 @@ const MechanicalBudgetExecutionCard = ({ budgetList, yearTotalInputAmounts }) =>
     return (
         <div className="p-6 bg-white rounded-2xl shadow">
             <h2 className="text-lg font-semibold mb-4">기전 예산집행률</h2>
-            <div className="h-48">
+            <div className="h-40">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
@@ -316,10 +371,31 @@ const MechanicalBudgetExecutionCard = ({ budgetList, yearTotalInputAmounts }) =>
                     </PieChart>
                 </ResponsiveContainer>
             </div>
-            <div className="mt-4 text-center">
-                <div className="text-2xl font-bold text-green-600">{rate.toFixed(1)}%</div>
-                <div className="text-sm text-gray-500">집행률</div>
+            <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
+                {/* 왼쪽: 예산 */}
+                <div className="text-left">
+                    <div className="text-xs text-gray-500">예산</div>
+                    <div className="font-semibold">
+                        {(mechanicalBudget?.value || 0).toLocaleString()}원
+                    </div>
+                </div>
+
+                {/* 가운데: 퍼센트 */}
+                <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600">
+                        {rate.toFixed(1)}%
+                    </div>
+                </div>
+
+                {/* 오른쪽: 집행액 */}
+                <div className="text-right">
+                    <div className="text-xs text-gray-500">집행액</div>
+                    <div className="font-semibold">
+                        {mechanicalYearTotalInput.toLocaleString()}원
+                    </div>
+                </div>
             </div>
+
         </div>
     );
 };
@@ -354,7 +430,7 @@ const FacilityBudgetExecutionCard = ({ budgetList, yearTotalInputAmounts }) => {
     return (
         <div className="p-6 bg-white rounded-2xl shadow">
             <h2 className="text-lg font-semibold mb-4">시설 예산집행률</h2>
-            <div className="h-48">
+            <div className="h-40">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
@@ -374,10 +450,31 @@ const FacilityBudgetExecutionCard = ({ budgetList, yearTotalInputAmounts }) => {
                     </PieChart>
                 </ResponsiveContainer>
             </div>
-            <div className="mt-4 text-center">
-                <div className="text-2xl font-bold text-yellow-600">{rate.toFixed(1)}%</div>
-                <div className="text-sm text-gray-500">집행률</div>
+            <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
+                {/* 왼쪽: 예산 */}
+                <div className="text-left">
+                    <div className="text-xs text-gray-500">예산</div>
+                    <div className="font-semibold">
+                        {(facilityBudget?.value || 0).toLocaleString()}원
+                    </div>
+                </div>
+
+                {/* 가운데: 퍼센트 */}
+                <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600">
+                        {rate.toFixed(1)}%
+                    </div>
+                </div>
+
+                {/* 오른쪽: 집행액 */}
+                <div className="text-right">
+                    <div className="text-xs text-gray-500">집행액</div>
+                    <div className="font-semibold">
+                        {facilityYearTotalInput.toLocaleString()}원
+                    </div>
+                </div>
             </div>
+
         </div>
     );
 };
@@ -894,43 +991,117 @@ const Statistics_sub = ({ department }) => {
         });
     };
 
+    const DEPTS = ["ITS", "시설", "기전"];
+
     const compareChartData = useMemo(() => {
         const a = yearlyMonthly[prevYear] || [];
         const b = yearlyMonthly[currentYear] || [];
 
-        // month 기준으로 합치기
         const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
-        const getFor = (yearArr, m, type) => {
+        // yearArr에서 특정 월/부서/타입(input|output) 값 꺼내기
+        const getVal = (yearArr, m, deptKey, type) => {
             const row = yearArr.find((r) => r.month === m);
             if (!row) return 0;
-            return row.byDept?.[activeDeptTab]?.[type] || 0;
+            return row.byDept?.[deptKey]?.[type] || 0;
         };
 
-        const base = months.map((m) => ({
-            month: m,
-            inputPrev: getFor(a, m, "input"),
-            inputCurr: getFor(b, m, "input"),
-            outputPrev: getFor(a, m, "output"),
-            outputCurr: getFor(b, m, "output"),
-        }));
+        // ✅ 1) 월별 기본 데이터 만들기
+        const base = months.map((m) => {
+            // 🔥 합 계 탭이면: ITS/시설/기전 3개를 동시에 보여주기 위해 키를 더 만든다
+            if (activeDeptTab === "합 계") {
+                const obj = { month: m };
 
+                DEPTS.forEach((d) => {
+                    obj[`inputPrev_${d}`] = getVal(a, m, d, "input");
+                    obj[`inputCurr_${d}`] = getVal(b, m, d, "input");
+                    obj[`outputPrev_${d}`] = getVal(a, m, d, "output");
+                    obj[`outputCurr_${d}`] = getVal(b, m, d, "output");
+                });
+
+                return obj;
+            }
+
+            // 🔥 합계가 아니면: 선택된 탭(ITS/시설/기전) 1개만 기존처럼
+            return {
+                month: m,
+                inputPrev: getVal(a, m, activeDeptTab, "input"),
+                inputCurr: getVal(b, m, activeDeptTab, "input"),
+                outputPrev: getVal(a, m, activeDeptTab, "output"),
+                outputCurr: getVal(b, m, activeDeptTab, "output"),
+            };
+        });
+
+        // ✅ 누적 모드 OFF면 그대로 반환
         if (!cumulativeMode) return base;
 
-        // 누적 모드
-        const inputPrevCum = toCumulative(base, (x) => x.inputPrev);
-        const inputCurrCum = toCumulative(base, (x) => x.inputCurr);
-        const outputPrevCum = toCumulative(base, (x) => x.outputPrev);
-        const outputCurrCum = toCumulative(base, (x) => x.outputCurr);
+        // ✅ 2) 누적 모드로 바꾸기 (키 목록을 누적합)
+        const toCumulativeKeys = (arr, keys) => {
+            const sums = {};
+            keys.forEach((k) => (sums[k] = 0));
 
-        return base.map((x, idx) => ({
-            ...x,
-            inputPrev: inputPrevCum[idx],
-            inputCurr: inputCurrCum[idx],
-            outputPrev: outputPrevCum[idx],
-            outputCurr: outputCurrCum[idx],
-        }));
+            return arr.map((row) => {
+                const next = { ...row };
+                keys.forEach((k) => {
+                    sums[k] += Number(row[k] || 0);
+                    next[k] = sums[k];
+                });
+                return next;
+            });
+        };
+
+        // 합 계 탭이면: 부서별 12개 키 누적 (input/output × 2년 × 3부서 = 12)
+        if (activeDeptTab === "합 계") {
+            const keys = [];
+            DEPTS.forEach((d) => {
+                keys.push(
+                    `inputPrev_${d}`, `inputCurr_${d}`,
+                    `outputPrev_${d}`, `outputCurr_${d}`
+                );
+            });
+            return toCumulativeKeys(base, keys);
+        }
+
+        // 기타 탭이면: 기존 4개 키 누적
+        return toCumulativeKeys(base, ["inputPrev", "inputCurr", "outputPrev", "outputCurr"]);
     }, [yearlyMonthly, prevYear, currentYear, cumulativeMode, activeDeptTab]);
+
+    const yearColors = {
+        prev: "#64748b", // 2025(작년) - slate
+        curr: "#2563eb", // 2026(금년) - blue
+    };
+
+    // 합계 탭에서 부서별 색(요청사항)
+    const deptColors = {
+        ITS: "#8b5cf6",  // purple
+        시설: "#f59e0b", // amber
+        기전: "#10b981", // emerald
+    };
+
+    const inputLines =
+        activeDeptTab === "합 계"
+            ? (["ITS", "시설", "기전"].flatMap((d) => ([
+                // ✅ 2025 먼저(왼쪽/먼저 보이게) + 점선
+                { dataKey: `inputPrev_${d}`, name: `${d} ${prevYear}`, stroke: deptColors[d], strokeDasharray: "6 4" },
+                // ✅ 2026 나중 + 실선
+                { dataKey: `inputCurr_${d}`, name: `${d} ${currentYear}`, stroke: deptColors[d] },
+            ])))
+            : ([
+                { dataKey: "inputPrev", name: `${prevYear} 입고`, stroke: yearColors.prev, strokeDasharray: "6 4" },
+                { dataKey: "inputCurr", name: `${currentYear} 입고`, stroke: yearColors.curr },
+            ]);
+
+    const outputLines =
+        activeDeptTab === "합 계"
+            ? (["ITS", "시설", "기전"].flatMap((d) => ([
+                { dataKey: `outputPrev_${d}`, name: `${d} ${prevYear}`, stroke: deptColors[d], strokeDasharray: "6 4" },
+                { dataKey: `outputCurr_${d}`, name: `${d} ${currentYear}`, stroke: deptColors[d] },
+            ])))
+            : ([
+                { dataKey: "outputPrev", name: `${prevYear} 출고`, stroke: yearColors.prev, strokeDasharray: "6 4" },
+                { dataKey: "outputCurr", name: `${currentYear} 출고`, stroke: yearColors.curr },
+            ]);
+
 
 
 
@@ -1001,27 +1172,17 @@ const Statistics_sub = ({ department }) => {
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
                         <YearCompareLineChartCard
-                            title={`입고 금액 (${currentYear - 1} vs ${currentYear})`}
+                            title={`입고 금액 (${prevYear} vs ${currentYear})`}
                             data={compareChartData}
-                            lines={[
-                                { dataKey: "inputPrev", name: `${currentYear - 1} 입고` },
-                                { dataKey: "inputCurr", name: `${currentYear} 입고` },
-                            ]}
-                            valueFormatter={(v) =>
-                                `${Math.round(v).toLocaleString()} 원`
-                            }
+                            lines={inputLines}
+                            valueFormatter={moneyKrwThousandFmt}
                         />
 
                         <YearCompareLineChartCard
-                            title={`출고 금액 (${currentYear - 1} vs ${currentYear})`}
+                            title={`출고 금액 (${prevYear} vs ${currentYear})`}
                             data={compareChartData}
-                            lines={[
-                                { dataKey: "outputPrev", name: `${currentYear - 1} 출고` },
-                                { dataKey: "outputCurr", name: `${currentYear} 출고` },
-                            ]}
-                            valueFormatter={(v) =>
-                                `${Math.round(v).toLocaleString()} 원`
-                            }
+                            lines={outputLines}
+                            valueFormatter={moneyKrwThousandFmt}
                         />
 
                     </div>
@@ -1029,17 +1190,6 @@ const Statistics_sub = ({ department }) => {
             </div>
             {/* ================= 연도별 입고/출고 비교 섹션 끝 ================= */}
 
-
-            {/* ================= 요약 카드 (아래로 이동) ================= */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard
-                    title={`${department} ${currentYear} 예산`}
-                    valueList={budgetList}
-                    highlight
-                />
-                <InputByLocationCard inputList={inputByLocation} />
-                <OutputByLocationCard outputList={outputByLocation} />
-            </div>
 
             {/* ================= 예산 집행률 카드 ================= */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1056,6 +1206,18 @@ const Statistics_sub = ({ department }) => {
                     yearTotalInputAmounts={yearTotalInputAmounts}
                 />
             </div>
+
+            {/* ================= 요약 카드 (아래로 이동) ================= */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <StatCard
+                    title={`${department} ${currentYear} 예산`}
+                    valueList={budgetList}
+                    highlight
+                />
+                <InputByLocationCard inputList={inputByLocation} />
+                <OutputByLocationCard outputList={outputByLocation} />
+            </div>
+
 
             <div className="h-16" />
         </main>
