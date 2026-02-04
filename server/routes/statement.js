@@ -148,8 +148,6 @@ router.post("/", async (req, res) => {
         // 사업소 이름 매핑 (Code -> Name)
         const locationMap = {
             'GK': 'GK사업소',
-            'CM': '천마사업소',
-            'ES': '을숙도사업소'
         };
         const locationName = locationMap[businessLocation] || businessLocation;
 
@@ -162,8 +160,6 @@ router.post("/", async (req, res) => {
             },
             raw: true
         });
-
-        console.log(`[Statement] apiMainProducts found: ${apiMainProducts.length} rows for ${businessLocation}/${department}`);
 
         // ApiMainProduct 처리 함수
         const processApiMainProducts = () => {
@@ -205,9 +201,6 @@ router.post("/", async (req, res) => {
 
         processApiMainProducts();
 
-        console.log('[Statement] After processApiMainProducts:', resultByCategory);
-
-
         // 전월재고 계산을 위한 카테고리별 재고 맵
         const prevStockByCategory = {};
 
@@ -238,11 +231,6 @@ router.post("/", async (req, res) => {
                 } else if (categoryMap["기타"]) {
                     categoryKey = "기타";
                 } else {
-                    // 매칭되지 않은 카테고리 로그 출력
-                    if (categoryStr && categoryStr.trim() !== '') {
-                        console.log(`매칭되지 않은 카테고리: "${rawCategory}" (${typeof rawCategory}) -> "${categoryStr}" -> "${upperCategory}"`);
-                        console.log(`사용 가능한 카테고리:`, Object.keys(categoryMap));
-                    }
                     return;
                 }
 
@@ -291,21 +279,7 @@ router.post("/", async (req, res) => {
 
                 // 음수 qty 추적
                 if (prevStockByCategory[categoryKey][materialId].qty < 0) {
-                    console.log(`⚠️ 음수 재고 발견:`, {
-                        materialId,
-                        category: categoryKey,
-                        type,
-                        qty,
-                        qtyChange,
-                        totalQty: prevStockByCategory[categoryKey][materialId].qty,
-                        price,
-                        amount: prevStockByCategory[categoryKey][materialId].qty * price,
-                        productInfo: product ? {
-                            name: product.name,
-                            material_code: product.material_code,
-                            big_category: product.big_category
-                        } : null
-                    });
+                    // 음수 재고는 계산에서 제외됨
                 }
             });
         };
@@ -368,19 +342,8 @@ router.post("/", async (req, res) => {
                     } else if (qty < 0) {
                         negativeStockCount++;
                         negativeStockAmount += amount;
-                        console.log(`⚠️ 데이터 정합성 오류: 자재ID ${materialId}, 수량: ${qty}, 금액: ${amount.toLocaleString()}원`);
-                        console.log(`   - 입고 없이 출고만 존재하는 데이터입니다.`);
-                        console.log(`   - 이는 데이터 입력 오류이거나 입고 데이터가 누락된 것입니다.`);
-                        console.log(`   - 전월재고 계산에서 제외됩니다.`);
+                        // 음수 재고는 계산에서 제외됨
                     }
-                }
-
-                if (negativeStockCount > 0) {
-                    console.log(`📊 ${categoryKey} 카테고리 음수 재고 요약:`, {
-                        음수재고자재수: negativeStockCount,
-                        음수재고총금액: negativeStockAmount.toLocaleString() + '원',
-                        최종계산금액: totalPrevStock.toLocaleString() + '원'
-                    });
                 }
 
                 // ApiMainProduct에서 더해진 prevStock에 dynamic calculation 결과 더하기
@@ -388,38 +351,7 @@ router.post("/", async (req, res) => {
             }
         }
 
-        // console.log('전월재고 계산 결과:', resultByCategory);
-        // console.log('카테고리 맵:', categoryMap);
-        // console.log('전월재고 상세 데이터:', prevStockByCategory);
-
-        // 음수 재고가 발생한 자재들의 상세 이력 출력
-        console.log('\n🔍 음수 재고 자재 상세 분석:');
-        for (const materialId in materialHistory) {
-            const history = materialHistory[materialId];
-            const totalStock = history.totalInput - history.totalOutput;
-
-            if (totalStock < 0) {
-                console.log(`\n📦 자재: ${history.productInfo?.name || 'Unknown'} (ID: ${materialId})`);
-                console.log(`   자재코드: ${history.productInfo?.material_code || 'Unknown'}`);
-                console.log(`   카테고리: ${history.productInfo?.big_category || 'Unknown'}`);
-                console.log(`   단가: ${history.productInfo?.price?.toLocaleString() || 0}원`);
-                console.log(`   총 입고: ${history.totalInput}개`);
-                console.log(`   총 출고: ${history.totalOutput}개`);
-                console.log(`   재고: ${totalStock}개 (음수!)`);
-                console.log(`   입고 이력:`, history.inputRecords.slice(0, 3)); // 최근 3개
-                console.log(`   출고 이력:`, history.outputRecords.slice(0, 3)); // 최근 3개
-
-                // 입고 데이터가 없는 이유 분석
-                if (history.totalInput === 0) {
-                    console.log(`   ⚠️ 원인 분석: 입고 데이터가 전혀 없습니다.`);
-                    console.log(`   - 가능한 원인:`);
-                    console.log(`     1. 입고 데이터가 누락됨`);
-                    console.log(`     2. 입고 데이터가 다른 테이블에 있음`);
-                    console.log(`     3. 입고 데이터의 날짜가 전월 말일 이후임`);
-                    console.log(`     4. 입고 데이터의 자재ID가 다름`);
-                }
-            }
-        }
+        // 음수 재고는 계산에서 제외됨
 
         // 현재 월 데이터 처리
         processCurrentMonth(thisMonthInputs, "input");
@@ -491,7 +423,6 @@ router.post("/", async (req, res) => {
             }
         }
 
-        // console.log('최종 재고 계산 결과:', resultByCategory);
 
         const totalExecutedAmount = Object.values(resultByCategory)
             .reduce((acc, cur) => acc + cur.output, 0);
@@ -528,7 +459,6 @@ router.post("/", async (req, res) => {
     } catch (err) {
         // 테이블이 없는 경우 (예: 관리 부서) 정상적인 빈 응답 반환
         if (err.name === 'SequelizeDatabaseError' && err.parent && err.parent.code === 'ER_NO_SUCH_TABLE') {
-            console.log(`⚠️ 테이블이 존재하지 않음 (${department}), 빈 응답 반환`);
             return res.json({
                 byCategory: {},
                 totalExecutedAmount: 0,
@@ -566,15 +496,7 @@ router.post("/all-part-monthly", async (req, res) => {
 
         for (const department of departments) {
             try {
-                console.log(`\n🔍 [${department}] 부서 데이터 조회 시작`);
-                console.log(`- businessLocation: ${businessLocation}`);
-                console.log(`- department: ${department}`);
-
                 const { Product, Input, Output } = createModels(businessLocation, department);
-
-                console.log(`- Product 모델: ${Product.tableName || Product.name}`);
-                console.log(`- Input 모델: ${Input.tableName || Input.name}`);
-                console.log(`- Output 모델: ${Output.tableName || Output.name}`);
 
                 const startDate = new Date(year, month - 1, 1);
                 const endDate = new Date(year, month, 0);
@@ -640,13 +562,6 @@ router.post("/all-part-monthly", async (req, res) => {
                     }
                 }
 
-                console.log(`✅ [${department}] 데이터 조회 완료:`);
-                console.log(`   - 전월 입고: ${prevInputs.length}건`);
-                console.log(`   - 전월 출고: ${prevOutputs.length}건`);
-                console.log(`   - 당월 입고: ${thisMonthInputs.length}건`);
-                console.log(`   - 당월 출고: ${thisMonthOutputs.length}건`);
-                console.log(`   - 누적 입고: ${cumulativeInputs.length}건`);
-
                 // 부서별 카테고리 정의
                 let departmentCategories = [];
                 if (department === "ITS") {
@@ -678,8 +593,6 @@ router.post("/all-part-monthly", async (req, res) => {
                 // 사업소 이름 매핑 (Code -> Name)
                 const locationMap = {
                     'GK': 'GK사업소',
-                    'CM': '천마사업소',
-                    'ES': '을숙도사업소'
                 };
                 const locationName = locationMap[businessLocation] || businessLocation;
 
@@ -856,11 +769,6 @@ router.post("/all-part-monthly", async (req, res) => {
                     departmentTotal.remaining += data.remaining;
                 });
 
-                console.log(`\n📈 [${department}] 부서별 집계 결과:`);
-                console.log(`   - 카테고리별 데이터:`, JSON.stringify(resultByCategory, null, 2));
-                console.log(`   - 부서 합계:`, departmentTotal);
-                console.log(`   - 연간 입고 금액: ${yearTotalInputAmount.toLocaleString()}원`);
-
                 allPartData[department] = {
                     byCategory: resultByCategory,
                     total: departmentTotal, // 부서별 합계 추가
@@ -892,29 +800,11 @@ router.post("/all-part-monthly", async (req, res) => {
                         allPartData[department].byCategory[cat] = { prevStock: 0, input: 0, output: 0, remaining: 0 };
                     });
                 }
-
-                console.log(`   - [${department}] 부서는 빈 데이터로 초기화되어 계속 진행됩니다.`);
             }
-        }
-
-        console.log(`\n🎯 전체 부서 데이터 요약:`);
-        console.log(`   - ITS 데이터 존재:`, !!allPartData["ITS"]);
-        console.log(`   - 시설 데이터 존재:`, !!allPartData["시설"]);
-        console.log(`   - 기전 데이터 존재:`, !!allPartData["기전"]);
-        if (allPartData["ITS"]) {
-            console.log(`   - ITS 합계:`, allPartData["ITS"].total);
-        }
-        if (allPartData["시설"]) {
-            console.log(`   - 시설 합계:`, allPartData["시설"].total);
-        }
-        if (allPartData["기전"]) {
-            console.log(`   - 기전 합계:`, allPartData["기전"].total);
         }
 
         // 전파트 월간보고서 구조 생성
         // 각 부서별 합계는 이미 allPartData[department].total에 저장되어 있음
-
-        console.log(`\n📋 최종 결과 구조 생성 시작...`);
 
         // 최종 결과 구조
         const resultByCategory = {
@@ -941,8 +831,6 @@ router.post("/all-part-monthly", async (req, res) => {
                 remaining: (allPartData["ITS"]?.total?.remaining || 0) + (allPartData["시설"]?.total?.remaining || 0) + (allPartData["기전"]?.total?.remaining || 0),
             }
         };
-
-        console.log(`\n✅ 최종 결과 구조:`, JSON.stringify(resultByCategory, null, 2));
 
         const totalExecutedAmount = resultByCategory["합 계"].output;
         let executionRate = null;

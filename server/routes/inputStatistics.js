@@ -103,8 +103,7 @@ router.post("/", async (req, res) => {
         // 사업소 이름 매핑 (Code -> Name)
         const locationMap = {
             'GK': 'GK사업소',
-            'CM': '천마사업소',
-            'ES': '을숙도사업소'
+
         };
         const locationName = locationMap[businessLocation] || businessLocation;
 

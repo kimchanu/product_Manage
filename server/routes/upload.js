@@ -190,6 +190,93 @@ async function insertDataWithTransaction(inputTable, outputTable, productTable, 
   }
 }
 
+// ✅ 테이블 생성 전용 API
+router.post("/create-tables", async (req, res) => {
+  const { businessLocation, department } = req.body;
+  
+  if (!businessLocation || !department) {
+    return res.status(400).json({ 
+      success: false,
+      message: "사업소와 부서를 선택해주세요!" 
+    });
+  }
+
+  // ✅ 테이블명 동적 생성
+  const inputTable = `${businessLocation}_${department}_input`;
+  const outputTable = `${businessLocation}_${department}_output`;
+  const productTable = `${businessLocation}_${department}_product`;
+
+  try {
+    // ✅ 기존 테이블 존재 여부 확인
+    const tableExists = await checkTableExists(inputTable);
+    if (tableExists) {
+      return res.status(400).json({ 
+        success: false,
+        message: `이미 테이블이 존재합니다. (${inputTable})` 
+      });
+    }
+
+    // ✅ 테이블 생성
+    await createTables(inputTable, outputTable, productTable);
+
+    res.status(200).json({ 
+      success: true,
+      message: `테이블이 성공적으로 생성되었습니다. (${inputTable}, ${outputTable}, ${productTable})` 
+    });
+  } catch (err) {
+    console.error("❌ 테이블 생성 오류:", err);
+    res.status(500).json({ 
+      success: false,
+      message: "테이블 생성 중 오류가 발생했습니다.",
+      error: err.message 
+    });
+  }
+});
+
+// ✅ 테이블 존재 여부 확인 API
+router.post("/check-tables", async (req, res) => {
+  const { businessLocation, department } = req.body;
+  
+  if (!businessLocation || !department) {
+    return res.status(400).json({ 
+      success: false,
+      message: "사업소와 부서를 선택해주세요!" 
+    });
+  }
+
+  const inputTable = `${businessLocation}_${department}_input`;
+  const outputTable = `${businessLocation}_${department}_output`;
+  const productTable = `${businessLocation}_${department}_product`;
+
+  try {
+    const inputExists = await checkTableExists(inputTable);
+    const outputExists = await checkTableExists(outputTable);
+    const productExists = await checkTableExists(productTable);
+
+    res.status(200).json({ 
+      success: true,
+      exists: inputExists && outputExists && productExists,
+      tables: {
+        input: inputExists,
+        output: outputExists,
+        product: productExists
+      },
+      tableNames: {
+        input: inputTable,
+        output: outputTable,
+        product: productTable
+      }
+    });
+  } catch (err) {
+    console.error("❌ 테이블 확인 오류:", err);
+    res.status(500).json({ 
+      success: false,
+      message: "테이블 확인 중 오류가 발생했습니다.",
+      error: err.message 
+    });
+  }
+});
+
 // 데이터 조회 API (테스트용)
 router.get("/", (req, res) => {
   res.status(200).json({ message: "Data retrieved successfully!" });

@@ -17,7 +17,7 @@ function Statement_page() {
             </div>
             <Footer />
         </div>
-    );
+    ); 
 }
 
 

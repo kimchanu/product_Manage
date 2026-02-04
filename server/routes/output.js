@@ -7,7 +7,6 @@ const sequelize = require("../db/sequelize");
 // 출고 저장 API
 router.post("/", async (req, res) => {
   const { materials, comment, date, department, business_location, user_id } = req.body;
-  // console.log(req.body);
   if (!Array.isArray(materials) || materials.length === 0) {
     return res.status(400).json({ message: "출고 자재 목록이 비어있습니다." });
   }
@@ -29,10 +28,7 @@ router.post("/", async (req, res) => {
 
       // 2. ApiMainProduct Sum (Groupware Initial Stock)
       const locationMapping = {
-        "GK": "GK사업소",
-        "CM": "천마사업소",
-        "ES": "을숙도사업소",
-        "GN": "강남사업소"
+        "GK": "GK사업소"
       };
       const gwBusinessLocation = locationMapping[business_location] || business_location;
 
@@ -68,9 +64,6 @@ router.post("/", async (req, res) => {
       );
     }
 
-    // console.log(`출고자: ${user_id}, 부서: ${department}, 장소: ${business_location}`);
-    // console.log(`출고일: ${date}, 코멘트: ${comment}`);
-
     await transaction.commit();
     return res.status(200).json({ message: "출고가 성공적으로 저장되었습니다." });
   } catch (error) {
@@ -90,9 +83,6 @@ router.put("/:material_id/:id", async (req, res) => {
     output_quantity,
     department, business_location,
   } = req.body;
-
-  // console.log('Received update request for id:', id);
-  // console.log('Update data:', req.body);
 
   if (!output_date || !user_id) {
     return res.status(400).json({ message: "필수 정보가 누락되었습니다." });
@@ -118,18 +108,6 @@ router.put("/:material_id/:id", async (req, res) => {
     const outputDepartment = output.department;
     const OutputModel = createOutputModel(outputBusinessLocation, outputDepartment);
 
-    // console.log('Updating output record:', {
-    //   id,
-    //   business_location: outputBusinessLocation,
-    //   department: outputDepartment,
-    //   updateData: {
-    //     date: output_date,
-    //     user_id,
-    //     comment: comment || null,
-    //     quantity: output_quantity || output.quantity
-    //   }
-    // });
-
     // 출고 정보 수정
     const [outputUpdateCount] = await OutputModel.update(
       {
@@ -145,12 +123,10 @@ router.put("/:material_id/:id", async (req, res) => {
     );
 
     if (outputUpdateCount === 0) {
-      // console.warn(`No rows updated for id ${id}. Data might be identical.`);
-      // throw new Error('출고 정보 업데이트 실패'); // Don't throw for idempotent updates
+      // Don't throw for idempotent updates
     }
 
     await transaction.commit();
-    // console.log('Update completed successfully for id:', id);
     res.json({ message: "출고 정보가 성공적으로 수정되었습니다." });
   } catch (error) {
     if (transaction) await transaction.rollback();
@@ -246,10 +222,7 @@ router.post("/split/:material_id/:id", async (req, res) => {
 
     // 3-2. ApiMainProduct Logic
     const locationMapping = {
-      "GK": "GK사업소",
-      "CM": "천마사업소",
-      "ES": "을숙도사업소",
-      "GN": "강남사업소"
+      "GK": "GK사업소"
     };
     const gwBusinessLocation = locationMapping[business_location] || business_location;
 
@@ -296,9 +269,6 @@ router.post("/split/:material_id/:id", async (req, res) => {
     }
 
     await transaction.commit();
-
-    // console.log(`출고 기록 분할 완료: ${originalOutput.quantity}개 → ${splits.length}개 분할`);
-    // console.log(`분할된 기록들:`, splits);
 
     return res.status(200).json({
       message: "출고 기록이 성공적으로 분할되었습니다.",

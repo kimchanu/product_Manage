@@ -42,13 +42,8 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, o
     try {
       const currentYear = new Date().getFullYear();
 
-      // 사업소 코드를 전체 이름으로 변환
-      const businessLocationMap = {
-        'GK': 'GK사업소',
-        'CM': '천마사업소',
-        'ES': '을숙도사업소'
-      };
-      const businessLocationName = businessLocationMap[businessLocation] || businessLocation;
+      // 사업소 코드를 전체 이름으로 변환 (GK만 변환, 나머지는 그대로 사용)
+      const businessLocationName = businessLocation === 'GK' ? 'GK사업소' : businessLocation;
 
       // 예산 조회
       const budgetResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/budget?year=${currentYear}`);
@@ -87,16 +82,21 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, o
             return true;
           }
 
-          // 사업소 코드 매핑으로 확인
+          // 사업소 코드 매핑으로 확인 (GK만 변환, 나머지는 그대로)
           const reverseMap = {
-            'gk': ['gk', 'gk사업소'],
-            'cm': ['cm', '천마', '천마사업소'],
-            'es': ['es', '을숙도', '을숙도사업소']
+            'gk': ['gk', 'gk사업소']
           };
 
           const locationKeys = reverseMap[businessLocationLower] || [];
-          for (const key of locationKeys) {
-            if (siteLower.includes(key)) {
+          if (locationKeys.length > 0) {
+            for (const key of locationKeys) {
+              if (siteLower.includes(key)) {
+                return true;
+              }
+            }
+          } else {
+            // GK가 아닌 경우 원본 이름으로 직접 매칭
+            if (siteLower.includes(businessLocationLower) || businessLocationLower.includes(siteLower)) {
               return true;
             }
           }
@@ -380,8 +380,10 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, o
             >
               <option value="">선택하세요</option>
               <option value="GK">GK사업소</option>
-              <option value="CM">천마사업소</option>
-              <option value="ES">을숙도사업소</option>
+              <option value="천마사업소">천마사업소</option>
+              <option value="을숙도사업소">을숙도사업소</option>
+              <option value="강남사업소">강남사업소</option>
+              <option value="수원사업소">수원사업소</option>
             </select>
             <label className="text-sm font-medium text-gray-700 ml-3">부서 선택:</label>
             <select

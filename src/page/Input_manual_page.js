@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import IntegratedInputForm from '../component/input_manual/IntegratedInputForm';
 import useManualInputData from '../component/input_manual/useManualInputData';
+import TableCreator from '../component/input_manual/TableCreator';
 import User_info from '../component/User_info';
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
@@ -70,6 +71,11 @@ function InputManualPage() {
               </div>
             </div>
           )}
+
+          {/* DB 테이블 생성 */}
+          <div className="mb-8">
+            <TableCreator user={user} />
+          </div>
 
           {/* 통합 입력 폼 */}
           <div className="mb-8">

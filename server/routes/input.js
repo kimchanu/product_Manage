@@ -6,13 +6,9 @@ const sequelize = require("../db/sequelize");
 const authMiddleware = require("../middleware/authMiddleware");
 const { v4: uuidv4 } = require('uuid');
 
-// 라우터 로드 확인
-console.log("✅ input.js 라우터 로드됨");
-
 // 입고 저장 API
 router.post("/", async (req, res) => {
     const { materials, comment, date, department, business_location, user_id } = req.body;
-    console.log(req.body);
     if (!Array.isArray(materials) || materials.length === 0) {
         return res.status(400).json({ message: "입고 자재 목록이 비어있습니다." });
     }
@@ -41,9 +37,6 @@ router.post("/", async (req, res) => {
                 { transaction }
             );
         }
-
-        console.log(`입고자: ${user_id}, 부서: ${department}, 장소: ${business_location}`);
-        console.log(`입고일: ${date}, 코멘트: ${comment}`);
 
         await transaction.commit();
         return res.status(200).json({ message: "입고가 성공적으로 저장되었습니다." });
@@ -75,10 +68,7 @@ router.put("/:material_id/:id", async (req, res) => {
 
     // 사업소명 매핑 (코드 -> 전체 이름)
     const businessLocationMap = {
-        'GK': 'GK사업소',
-        'CM': '천마사업소',
-        'ES': '을숙도사업소',
-        'GN': '강남사업소'
+        'GK': 'GK사업소'
     };
     const businessLocationName = businessLocationMap[business_location] || business_location;
 
@@ -118,7 +108,6 @@ router.put("/:material_id/:id", async (req, res) => {
 
         // Local Input이 없으면 ApiMainProduct에서 fallback 시도
         if (!input) {
-            console.log(`Local input not found for id ${id}. Trying ApiMainProduct fallback.`);
             // 트랜잭션 롤백 (Local 조회용)
             await transaction.rollback();
             transaction = null;
@@ -170,7 +159,6 @@ router.put("/:material_id/:id", async (req, res) => {
         }
 
         await transaction.commit();
-        console.log('Update completed successfully for id:', id);
         res.json({ message: "입고 정보가 성공적으로 수정되었습니다." });
     } catch (error) {
         if (transaction) await transaction.rollback();
@@ -216,17 +204,12 @@ router.delete("/:material_id/:id", async (req, res) => {
 
 // 수동 입고 저장 API (테스트용 GET 라우트 추가)
 router.get("/manual", (req, res) => {
-    console.log("✅ GET /manual 라우트가 호출되었습니다.");
     res.json({ message: "수동 입고 API 엔드포인트가 정상적으로 등록되었습니다." });
 });
 
 // 수동 입고 저장 API
 router.post("/manual", authMiddleware, async (req, res) => {
-    console.log("✅ POST /manual 라우트가 호출되었습니다.");
-    console.log("요청 URL:", req.originalUrl);
-    console.log("요청 메서드:", req.method);
     const { items, type } = req.body;
-    console.log("수동 입고 요청:", req.body);
 
     if (!Array.isArray(items) || items.length === 0) {
         return res.status(400).json({
@@ -340,7 +323,6 @@ router.post("/manual", authMiddleware, async (req, res) => {
                         appropriate: null,
                         big_category: null
                     }, { transaction });
-                    console.log(`✅ Product 생성 완료 - material_id: ${materialId}, material_code: ${materialCode}, price: ${parsedPrice}`);
                     break; // 성공하면 루프 종료
                 } catch (createError) {
                     if (createError.original && createError.original.code === 'ER_NO_SUCH_TABLE') {
@@ -380,7 +362,6 @@ router.post("/manual", authMiddleware, async (req, res) => {
                 };
                 const parsedQuantity = parseFormattedNumber(입고수량);
 
-                console.log(`📝 Input 저장 시작 - material_id: ${materialId}, 입고수량: ${parsedQuantity}`);
                 inputRecord = await Input.create({
                     material_id: materialId, // UUID material_id 사용
                     quantity: parsedQuantity,
@@ -390,7 +371,6 @@ router.post("/manual", authMiddleware, async (req, res) => {
                     business_location: defaultValues.business_location,
                     user_id: defaultValues.user_id,
                 }, { transaction });
-                console.log(`✅ Input 저장 완료 - id: ${inputRecord.id}, material_id: ${materialId}`);
             } catch (inputError) {
                 if (inputError.original && inputError.original.code === 'ER_NO_SUCH_TABLE') {
                     console.error(`Input 테이블이 존재하지 않습니다: ${defaultValues.business_location}_${defaultValues.department}_input`);
@@ -415,7 +395,6 @@ router.post("/manual", authMiddleware, async (req, res) => {
 
         await transaction.commit();
 
-        console.log(`수동 입고 완료: ${savedItems.length}개 항목`);
         return res.status(200).json({
             success: true,
             message: `${savedItems.length}개의 자재가 성공적으로 입고되었습니다.`,
@@ -456,9 +435,7 @@ router.post("/manual", authMiddleware, async (req, res) => {
 
 // api_main_product 저장 API
 router.post("/manual/api-main", authMiddleware, async (req, res) => {
-    console.log("✅ POST /manual/api-main 라우트가 호출되었습니다.");
     const { items, type } = req.body;
-    console.log("api_main_product 저장 요청:", req.body);
 
     if (!Array.isArray(items) || items.length === 0) {
         return res.status(400).json({
@@ -475,9 +452,7 @@ router.post("/manual/api-main", authMiddleware, async (req, res) => {
 
     // 사업소 코드를 이름으로 매핑
     const businessLocationMap = {
-        'GK': 'GK사업소',
-        'CM': '천마사업소',
-        'ES': '을숙도사업소'
+        'GK': 'GK사업소'
     };
 
     // 요청받은 business_location이 코드라면 이름으로 변환 (없으면 그대로 사용)
@@ -559,7 +534,6 @@ router.post("/manual/api-main", authMiddleware, async (req, res) => {
         }
 
         await transaction.commit();
-        console.log(`api_main_product 저장 완료: ${savedItems.length}개 항목`);
 
         return res.status(200).json({
             success: true,
