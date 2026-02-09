@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import User_info from "./User_info";
 import { jwtDecode } from "jwt-decode";
 
-const InputStatistics = () => {
+const InputStatistics = ({ selectedBusinessLocation, selectedDept }) => {
     const [userInfo, setUserInfo] = useState(null);
     const [year, setYear] = useState(new Date().getFullYear());
     const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -12,21 +12,24 @@ const InputStatistics = () => {
     const [showAllModal, setShowAllModal] = useState(false);
     const [loadingAll, setLoadingAll] = useState(false);
 
-
+    // 실제 사용할 사업소와 부서 결정: 선택된 값이 있으면 그것을 사용, 없으면 userInfo 사용
+    const currentBusinessLocation = selectedBusinessLocation || userInfo?.business_location;
+    const currentDepartment = selectedDept || userInfo?.department;
 
     useEffect(() => {
-        if (userInfo) {
+        if (userInfo && currentBusinessLocation && currentDepartment) {
             console.log('Current userInfo:', userInfo);
+            console.log('Current businessLocation:', currentBusinessLocation);
+            console.log('Current department:', currentDepartment);
             fetchStatistics();
         }
-    }, [userInfo, year, month]);
+    }, [userInfo, year, month, currentBusinessLocation, currentDepartment]);
 
     const fetchStatistics = async () => {
-        if (!userInfo) {
-            console.log('userInfo is null or undefined');
+        if (!userInfo || !currentBusinessLocation || !currentDepartment) {
+            console.log('userInfo, businessLocation, or department is null or undefined');
             return;
         }
-
 
         setLoading(true);
         try {
@@ -37,8 +40,8 @@ const InputStatistics = () => {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
                 body: JSON.stringify({
-                    businessLocation: userInfo.business_location,
-                    department: userInfo.department,
+                    businessLocation: currentBusinessLocation,
+                    department: currentDepartment,
                     year,
                     month,
                     includeAllInputs: false
@@ -66,7 +69,7 @@ const InputStatistics = () => {
     };
 
     const fetchAllInputs = async () => {
-        if (!userInfo) return;
+        if (!userInfo || !currentBusinessLocation || !currentDepartment) return;
         setLoadingAll(true);
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/statistics/input`, {
@@ -76,8 +79,8 @@ const InputStatistics = () => {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
                 body: JSON.stringify({
-                    businessLocation: userInfo.business_location,
-                    department: userInfo.department,
+                    businessLocation: currentBusinessLocation,
+                    department: currentDepartment,
                     year,
                     month,
                     includeAllInputs: true

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-function Sidebar({ onSelectDepartment, selectedDepartment }) {
+function Sidebar({ onSelectDepartment, selectedDepartment, onSelectDept, selectedDept }) {
     const [expandedMenus, setExpandedMenus] = useState({
         input: false,
         output: false,
@@ -22,6 +22,9 @@ function Sidebar({ onSelectDepartment, selectedDepartment }) {
     };
 
     const departments = Object.keys(departmentMap);
+    
+    // 부서 목록
+    const deptList = ["ITS", "기전", "시설"];
 
     // 토큰에서 사용자 정보 가져오기 및 권한 확인
     let isRestricted = false;
@@ -135,21 +138,51 @@ function Sidebar({ onSelectDepartment, selectedDepartment }) {
 
                 {/* Dropdown List - Expands Below, Pushing Header Up due to flex layout */}
                 {expandedMenus.dept && (
-                    <ul className="mt-1 space-y-1 bg-white border border-gray-200 rounded shadow-sm py-1">
-                        {departments.map((displayName) => (
-                            <li
-                                key={displayName}
-                                onClick={() => {
-                                    onSelectDepartment && onSelectDepartment(departmentMap[displayName]);
-                                    toggleMenu('dept'); // Close menu after selection
-                                }}
-                                className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 ${selectedDepartment === departmentMap[displayName] ? "bg-blue-100 font-bold text-blue-700" : "text-gray-700"
-                                    }`}
-                            >
-                                {displayName}
-                            </li>
-                        ))}
-                    </ul>
+                    <div className="mt-1 space-y-1">
+                        {/* 사업소 목록 */}
+                        <ul className="bg-white border border-gray-200 rounded shadow-sm py-1">
+                            {departments.map((displayName) => (
+                                <li
+                                    key={displayName}
+                                    onClick={() => {
+                                        const location = departmentMap[displayName];
+                                        onSelectDepartment && onSelectDepartment(location);
+                                        // 부서 선택 초기화
+                                        if (onSelectDept) {
+                                            onSelectDept(null);
+                                        }
+                                    }}
+                                    className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 ${selectedDepartment === departmentMap[displayName] ? "bg-blue-100 font-bold text-blue-700" : "text-gray-700"
+                                        }`}
+                                >
+                                    {displayName}
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        {/* 선택된 사업소가 있을 때 부서 목록 표시 */}
+                        {selectedDepartment ? (
+                            <div className="mt-2">
+                                <div className="px-2 py-1 text-xs font-semibold text-gray-600 mb-1">
+                                    부서
+                                </div>
+                                <ul className="bg-white border border-gray-200 rounded shadow-sm py-1">
+                                    {deptList.map((dept) => (
+                                        <li
+                                            key={dept}
+                                            onClick={() => {
+                                                onSelectDept && onSelectDept(dept);
+                                            }}
+                                            className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 ${selectedDept === dept ? "bg-blue-100 font-bold text-blue-700" : "text-gray-700"
+                                                }`}
+                                        >
+                                            {dept}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : null}
+                    </div>
                 )}
             </div>
         </aside>

@@ -5,7 +5,7 @@ import User_info from "./User_info";
 import ExcelStatementReport from "./Excel/ExcelStatementReport";
 import YearlyStatement from "./YearlyStatement";
 
-const Statement = () => {
+const Statement = ({ selectedBusinessLocation }) => {
     const today = new Date();
     const [searchParams, setSearchParams] = useSearchParams();
     const [year, setYear] = useState(today.getFullYear());
@@ -17,13 +17,16 @@ const Statement = () => {
     const [departmentBudgets, setDepartmentBudgets] = useState({}); // 부서별 예산 데이터
     const [reportType, setReportType] = useState(searchParams.get("type") || "allPartMonthly"); // URL 파라미터에서 초기값 가져오기 (기본값 전파트 월간)
 
+    // 실제 사용할 사업소 결정: 선택된 사업소가 있으면 그것을 사용, 없으면 user의 사업소 사용
+    const currentBusinessLocation = selectedBusinessLocation || user?.business_location;
+    
     // 사업소 이름 정의 (GK 예외 처리)
-    const businessName = user?.business_location === 'GK' ? 'GK사업소' : user?.business_location;
+    const businessName = currentBusinessLocation === 'GK' ? 'GK사업소' : currentBusinessLocation;
 
 
     useEffect(() => {
         const fetchBudget = async () => {
-            if (!user) return;
+            if (!user || !currentBusinessLocation) return;
 
             try {
                 const response = await fetch(`${process.env.REACT_APP_API_URL}/api/budget?year=${year}`);
@@ -40,14 +43,14 @@ const Statement = () => {
 
                 // 전파트 월간보고서인 경우 부서별 예산 조회
                 if (reportType === "allPartMonthly") {
-                    const userLocation = normalizeLocation(user.business_location);
+                    const locationToUse = normalizeLocation(currentBusinessLocation);
                     const budgets = {};
 
                     ["ITS", "시설", "기전"].forEach(dept => {
                         const deptBudget = data.budget?.find(
                             item => {
                                 const budgetLocation = normalizeLocation(item.site);
-                                return userLocation === budgetLocation && item.department === dept;
+                                return locationToUse === budgetLocation && item.department === dept;
                             }
                         );
                         budgets[dept] = deptBudget?.amount || 0;
@@ -57,16 +60,16 @@ const Statement = () => {
                     console.log("부서별 예산:", budgets);
                 } else {
                     // 기존 로직: 사용자 부서의 예산만 조회
+                    const locationToUse = normalizeLocation(currentBusinessLocation);
                     const departmentBudget = data.budget?.find(
                         item => {
-                            const userLocation = normalizeLocation(user.business_location);
                             const budgetLocation = normalizeLocation(item.site);
-                            return userLocation === budgetLocation && item.department === user.department;
+                            return locationToUse === budgetLocation && item.department === user.department;
                         }
                     );
 
-                    console.log("사용자 정보:", { business_location: user.business_location, department: user.department });
-                    console.log("정규화된 위치:", normalizeLocation(user.business_location));
+                    console.log("사용자 정보:", { business_location: currentBusinessLocation, department: user.department });
+                    console.log("정규화된 위치:", normalizeLocation(currentBusinessLocation));
                     console.log("매칭된 예산:", departmentBudget);
 
                     setBudgetData(departmentBudget || { amount: 0 });
@@ -79,11 +82,11 @@ const Statement = () => {
         };
 
         fetchBudget();
-    }, [user, year, reportType]);
+    }, [user, year, reportType, currentBusinessLocation]);
 
     useEffect(() => {
         const fetchStatistics = async () => {
-            if (!user) return;
+            if (!user || !currentBusinessLocation) return;
 
             // 전파트 월간보고서인 경우
             if (reportType === "allPartMonthly") {
@@ -95,7 +98,7 @@ const Statement = () => {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            businessLocation: user.business_location,
+                            businessLocation: currentBusinessLocation,
                             year,
                             month,
                             budget: budgetData?.amount || 0,
@@ -131,7 +134,7 @@ const Statement = () => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        businessLocation: user.business_location,
+                        businessLocation: currentBusinessLocation,
                         department: user.department,
                         year,
                         month,
@@ -151,7 +154,7 @@ const Statement = () => {
         };
 
         fetchStatistics();
-    }, [user, year, month, reportType, budgetData]);
+    }, [user, year, month, reportType, budgetData, currentBusinessLocation]);
 
     const renderRow = (cat) => {
         // 하위 카테고리 합산 헬퍼 (UI 표시용)

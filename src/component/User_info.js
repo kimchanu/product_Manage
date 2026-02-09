@@ -36,12 +36,6 @@ function User_info({ setUser }) {
           case "GK사업소":
             business_location_code = "GK";
             break;
-          case "천마사업소":
-            business_location_code = "천마사업소";
-            break;
-          case "을숙도사업소":
-            business_location_code = "을숙도사업소";
-            break;
           default:
             business_location_code = decoded.business_location;
         }

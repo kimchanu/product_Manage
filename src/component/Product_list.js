@@ -20,7 +20,7 @@ function Product_list() {
     category: "",
     sub_category: "",
     currentStock: "",
-    stockQuantity: "",
+    stockQuantity: "oneOrMore",
     latest_input_date: ""
   });
   const [showFilter, setShowFilter] = useState({
