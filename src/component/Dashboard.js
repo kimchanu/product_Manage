@@ -1106,8 +1106,8 @@ const Statistics_sub = ({ department }) => {
 
 
     return (
-        <main className="ml-60 p-6 space-y-6 bg-gray-50 h-[calc(100vh-4rem)]">
-            <h1 className="text-2xl font-bold mb-4">{department || "없음"}</h1>
+        <main className="p-6 space-y-6 bg-gray-50 h-[calc(100vh-4rem)]">
+  <h1 className="text-2xl font-bold mb-4">{department || "없음"}</h1>
 
             {/* ================= 연도별 입고/출고 비교 섹션 (상단 배치) ================= */}
             <div className="p-6 bg-white rounded-2xl shadow space-y-5">

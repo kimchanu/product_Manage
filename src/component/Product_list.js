@@ -55,9 +55,7 @@ function Product_list() {
     // 사업소 이름 -> 코드 매핑
     const locationMap = {
       "GK사업소": "GK",
-      "천마사업소": "CM",
-      "을숙도사업소": "ES",
-      "강남순환사업소": "GN"
+
     };
 
     if (token) {

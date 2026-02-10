@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import mainLogo from "../image/main_logo.png";
 
-function Sidebar({ onSelectDepartment, selectedDepartment, onSelectDept, selectedDept }) {
+function Sidebar({ onSelectDepartment, selectedDepartment, onSelectDept, selectedDept,open = true,onToggle, }) {
     const [expandedMenus, setExpandedMenus] = useState({
         input: false,
         output: false,
@@ -43,7 +44,15 @@ function Sidebar({ onSelectDepartment, selectedDepartment, onSelectDept, selecte
     }
 
     return (
-        <aside className="w-60 bg-gray-100 h-[calc(100vh-130px)] fixed top-[130px] left-0 p-4 shadow-md flex flex-col pb-6">
+        <div className="relative">
+<aside className="w-60 bg-gray-100 p-4 shadow-md flex flex-col pb-6 sticky top-[130px] h-[calc(100vh-130px)] overflow-auto">
+            <Link to="/" className="fixed left-10 top-4 z-[60]">
+  <img
+    src={mainLogo}
+    alt="Main Logo"
+    className="h-20 w-41 relative -top-[-10px] translate-x-[-45px]"
+  />
+</Link>
             {/* 메뉴 네비게이션 섹션 */}
             <div className="flex-1 overflow-auto bg-gray-100 no-scrollbar">
                 <div className="mb-6 font-semibold text-lg border-b border-gray-300 pb-2">
@@ -186,6 +195,26 @@ function Sidebar({ onSelectDepartment, selectedDepartment, onSelectDept, selecte
                 )}
             </div>
         </aside>
+        {/* ✅ 사이드바 오른쪽 '중앙' 토글 버튼 */}
+      <button
+      type="button"
+      onClick={onToggle}
+      className="
+        absolute top-1/2 -right-3 -translate-y-1/2
+        w-6 h-12
+        bg-gray-200 border border-gray-300
+        rounded-r-md
+        flex items-center justify-center
+        hover:bg-gray-300
+        shadow
+      "
+      aria-label={open ? "사이드바 숨기기" : "사이드바 열기"}
+    >
+      <span className="text-sm font-bold">
+        {open ? "◀" : "▶"}
+      </span>
+    </button>
+  </div>
     );
 }
 

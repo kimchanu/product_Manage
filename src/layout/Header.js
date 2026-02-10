@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import User_info from "../component/User_info";
-import mainLogo from "../image/main_logo.png";
 
 function Nav({ user }) {
   const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -24,15 +23,7 @@ function Nav({ user }) {
     <nav style={{ paddingTop: "2rem" }}>
       {/* 이 div는 전체 내비게이션 바의 컨테이너입니다. */}
       <div className="w-full px-4 flex items-center justify-center relative">
-        <div className="absolute left-10">
-          <Link to="/">
-            <img
-              src={mainLogo}
-              alt="Main Logo"
-              className="h-20 w-20 relative -top-[18px] translate-x-[30px]"
-            />
-          </Link>
-        </div>
+
         {/* 카테고리들을 감싸는 이 div에 margin-bottom을 추가합니다. */}
         <div className="flex w-3/4 border-y border-gray-300 mb-3 text-center">
           {categories.map((category, idx) => (
