@@ -30,7 +30,7 @@ function Statement_page() {
                     onSelectDepartment={handleDepartmentSelect}
                     selectedDepartment={selectedDepartment}
                 />
-                <div className="flex-1 ml-60 p-4">
+                <div className="flex-1 p-4">
                     <Statement selectedBusinessLocation={convertLocationToCode(selectedDepartment)} />
                 </div>
             </div>

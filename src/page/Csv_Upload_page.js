@@ -101,7 +101,7 @@ function Csv_Upload() {
       <Header />
       <div className="flex flex-1">
         <Sidebar />
-        <div className="flex-1 ml-60 p-4">
+        <div className="flex-1 p-4">
           {/* 사업소 & 부서 선택 */}
           <Search_select
             setBusinessLocation={setBusinessLocation}
