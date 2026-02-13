@@ -1,0 +1,20 @@
+.app-footer {
+  background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 -6px 20px rgba(15, 23, 42, 0.06);
+}
+
+.app-footer-text {
+  color: #6b7280;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.app-footer-link {
+  color: #334155;
+  font-weight: 700;
+}
+
+.app-footer-link:hover {
+  color: #111827;
+}

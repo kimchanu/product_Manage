@@ -18,6 +18,7 @@ import PostDetail from './component/Post/PostDetail';
 import Budget from "./page/Budget";
 import Output_Approve_page from "./page/Output_Approve_page";
 import Input_manual_page from "./page/Input_manual_page";
+import Main_page from "./page/Main_page";
 
 const Router = () => {
   return (
@@ -36,7 +37,8 @@ const Router = () => {
           <Route path="/PostList_page" element={<PostList_page />} />
           <Route path="/input_mod" element={<Input_Mod />} />
           <Route path="/input_statistics" element={<Input_Statistics />} />
-          <Route path="/" element={<Dashboard_page />} />
+          <Route path="/" element={<Main_page />} />
+          <Route path="/dashboard" element={<Dashboard_page />} />
           <Route path="/statistics/input" element={<Input_Statistics />} />
           <Route path="/statistics/output" element={<Statistics />} />
           <Route path="/WritePost" element={<WritePost />} />

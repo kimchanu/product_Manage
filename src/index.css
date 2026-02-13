@@ -2,19 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ✅ (권장) 화면에서도 문서 영역이 너무 넓지 않게 하고 싶으면 사용 */
+:root {
+    --ui-bg: #fbfbfa;
+    --ui-bg-accent: #f3f3f1;
+    --ui-surface: #ffffff;
+    --ui-text: #1f2937;
+    --ui-muted: #6b7280;
+    --ui-border: #e5e7eb;
+    --ui-primary: #334155;
+    --ui-primary-soft: #e5e7eb;
+    --ui-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+html,
+body,
+#root {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    color: var(--ui-text);
+    font-family: "Pretendard", "Noto Sans KR", "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at 85% -10%, var(--ui-bg-accent) 0%, rgba(243, 243, 241, 0) 48%),
+        var(--ui-bg);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+}
+
+a {
+    color: inherit;
+}
+
+input,
+select,
+textarea {
+    border: 1px solid var(--ui-border);
+    background: #fff;
+    color: var(--ui-text);
+    border-radius: 10px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--ui-primary);
+    box-shadow: 0 0 0 3px var(--ui-primary-soft);
+}
+
+button {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th {
+    background: #f9fafb;
+    color: #1e293b;
+}
+
+th,
+td {
+    border-color: #e2e8f0;
+}
+
+/* ??(沅뚯옣) ?붾㈃?먯꽌??臾몄꽌 ?곸뿭???덈Т ?볦? ?딄쾶 ?섍퀬 ?띠쑝硫??ъ슜 */
 .print-sheet {
     width: 65%;
     margin: 0 auto;
 }
 
 /* =========================
-   ✅ PRINT (A4 한 장 고정)
+   ??PRINT (A4 ????怨좎젙)
    ========================= */
 @media print {
 
-    /* ✅ 프린터 기본 헤더/푸터 제거는 브라우저 설정이지만,
-     CSS로도 최대한 레이아웃 흔들림 방지 */
+    /* ???꾨┛??湲곕낯 ?ㅻ뜑/?명꽣 ?쒓굅??釉뚮씪?곗? ?ㅼ젙?댁?留?
+     CSS濡쒕룄 理쒕????덉씠?꾩썐 ?붾뱾由?諛⑹? */
     header,
     footer,
     .no-print,
@@ -23,14 +97,14 @@
         display: none !important;
     }
 
-    /* ✅ A4 + 여백 고정 (핵심) */
+    /* ??A4 + ?щ갚 怨좎젙 (?듭떖) */
     @page {
         size: A4 portrait;
         margin: 8mm;
-        /* 너무 줄이면 프린터가 강제로 늘릴 수 있음 */
+        /* ?덈Т 以꾩씠硫??꾨┛?곌? 媛뺤젣濡??섎┫ ???덉쓬 */
     }
 
-    /* ✅ 브라우저별 색상/레이아웃 안정화 */
+    /* ??釉뚮씪?곗?蹂??됱긽/?덉씠?꾩썐 ?덉젙??*/
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -47,7 +121,7 @@
         overflow: hidden !important;
     }
 
-    /* ✅ Tailwind 레이아웃 잔여 여백 제거 */
+    /* ??Tailwind ?덉씠?꾩썐 ?붿뿬 ?щ갚 ?쒓굅 */
     .ml-60 {
         margin-left: 0 !important;
     }
@@ -57,14 +131,14 @@
         margin-right: 0 !important;
     }
 
-    /* ✅ 출력용 루트 컨테이너 강제 폭/여백 */
+    /* ??異쒕젰??猷⑦듃 而⑦뀒?대꼫 媛뺤젣 ???щ갚 */
     .print-root {
         width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
     }
 
-    /* ✅ 기존에 style={{width:'65%'}} 같은 것들보다 강하게 덮어쓰기 */
+    /* ??湲곗〈??style={{width:'65%'}} 媛숈? 寃껊뱾蹂대떎 媛뺥븯寃???뼱?곌린 */
     .print-sheet {
         width: 100% !important;
         margin: 0 !important;
@@ -72,7 +146,7 @@
 
 
 
-    /* ✅ 폰트/행 높이/패딩을 출력용으로 줄여서 세로 길이 확 줄임 */
+    /* ???고듃/???믪씠/?⑤뵫??異쒕젰?⑹쑝濡?以꾩뿬???몃줈 湲몄씠 ??以꾩엫 */
     body {
         font-size: 10px !important;
         line-height: 1.15 !important;
@@ -94,7 +168,7 @@
         display: table-header-group;
     }
 
-    /* 혹시 페이지 나눔 발생 시 헤더 반복 */
+    /* ?뱀떆 ?섏씠吏 ?섎닎 諛쒖깮 ???ㅻ뜑 諛섎났 */
     tfoot {
         display: table-footer-group;
     }
@@ -106,7 +180,7 @@
         padding: 2px 4px !important;
     }
 
-    /* 결재란 전용 서명칸 높이 (인쇄 시 서명 가능하도록) */
+    /* 寃곗옱? ?꾩슜 ?쒕챸移??믪씠 (?몄뇙 ???쒕챸 媛?ν븯?꾨줉) */
     @media print {
         .print-signature-cell {
             height: 70px !important;
@@ -115,7 +189,7 @@
     }
 
 
-    /* ✅ Tailwind h-12/h-10 등이 너무 커서 한 장 넘치는 경우가 많아서 강제 축소 */
+    /* ??Tailwind h-12/h-10 ?깆씠 ?덈Т 而ㅼ꽌 ?????섏튂??寃쎌슦媛 留롮븘??媛뺤젣 異뺤냼 */
     .h-12 {
         height: 22px !important;
     }
@@ -139,9 +213,9 @@
         justify-content: space-between;
         align-items: baseline;
         margin-top: 14px;
-        /* ⬅ 위 테이블과 간격 */
+        /* 燧????뚯씠釉붽낵 媛꾧꺽 */
         margin-bottom: 6px;
-        /* ⬅ 헤더와 아래 표 간격 */
+        /* 燧??ㅻ뜑? ?꾨옒 ??媛꾧꺽 */
     }
 
     .budget-title {
@@ -150,22 +224,22 @@
 
     .budget-unit {
         font-size: 0.875rem;
-        /* tailwind text-sm 정도 */
+        /* tailwind text-sm ?뺣룄 */
     }
 
     @media print {
         .budget-header {
             margin-top: 10px !important;
-            /* 인쇄는 좀 타이트하게 */
+            /* ?몄뇙??醫 ??댄듃?섍쾶 */
             margin-bottom: 4px !important;
         }
 
         .budget-title {
             font-size: 13px !important;
-            /* 기존 h2(12px)보다 살짝 ↑ */
+            /* 湲곗〈 h2(12px)蹂대떎 ?댁쭩 ??*/
             font-weight: 700 !important;
             margin: 0 !important;
-            /* 기존 h2 margin 영향 제거 */
+            /* 湲곗〈 h2 margin ?곹뼢 ?쒓굅 */
         }
 
         .budget-unit {
@@ -207,7 +281,7 @@
         page-break-after: avoid !important;
     }
 
-    /* ✅ 아래쪽 여백/큰 마진들 제거 */
+    /* ???꾨옒履??щ갚/??留덉쭊???쒓굅 */
     .mb-20 {
         margin-bottom: 0 !important;
     }
@@ -224,7 +298,7 @@
 @media print {
     .doc-info-table td {
         height: 30px !important;
-        /* 기존 20px → 여유 */
+        /* 湲곗〈 20px ???ъ쑀 */
         padding-top: 6px !important;
         padding-bottom: 6px !important;
         vertical-align: middle !important;
@@ -239,10 +313,10 @@
     }
 }
 
-/* 웹 + 인쇄 공통 */
+/* ??+ ?몄뇙 怨듯넻 */
 .doc-info-table td {
     height: 36px;
-    /* 웹에서 보기 좋은 높이 */
+    /* ?뱀뿉??蹂닿린 醫뗭? ?믪씠 */
     padding: 8px 6px;
     vertical-align: middle;
 }
@@ -258,7 +332,7 @@
     .statement-table td {
         padding: 4px 6px !important;
         height: 35px !important;
-        /* ⬅️ 여기 */
+        /* 燧낉툘 ?ш린 */
         line-height: 1.25 !important;
     }
 
@@ -266,11 +340,11 @@
     .budget-table td {
         padding: 4px 6px !important;
         height: 35px !important;
-        /* ⬅️ 여기 */
+        /* 燧낉툘 ?ш린 */
         line-height: 1.25 !important;
     }
 
-    /* ✅ 숫자 컬럼 우측 여백 강제 적용 (pr-4 = 1rem = 16px) */
+    /* ???レ옄 而щ읆 ?곗륫 ?щ갚 媛뺤젣 ?곸슜 (pr-4 = 1rem = 16px) */
     /* Specificity increase to override .statement-table td and .budget-table td */
     table td.pr-4,
     table th.pr-4,
@@ -293,12 +367,12 @@
     }
 }
 
-/* 헤더행 아래 이중 밑줄 */
+/* ?ㅻ뜑???꾨옒 ?댁쨷 諛묒쨪 */
 .double-underline th {
     border-bottom: 3px double #000 !important;
 }
 
-/* 혹시 헤더 아래쪽이 겹쳐 보이면 첫 번째 바디 행의 상단선 제거(선택) */
+/* ?뱀떆 ?ㅻ뜑 ?꾨옒履쎌씠 寃뱀퀜 蹂댁씠硫?泥?踰덉㎏ 諛붾뵒 ?됱쓽 ?곷떒???쒓굅(?좏깮) */
 .double-underline+tr td {
     border-top: 0 !important;
 }
