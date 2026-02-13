@@ -23,7 +23,7 @@ function Dashboard_page() {
           />
         )}
 
-        <main className="flex-1 p-6 overflow-auto border relative">
+        <main className="flex-1 p-6 border relative">
           {/* ✅ Sidebar가 닫혔을 때, 왼쪽 중앙에 '열기' 버튼 표시 */}
           {!sidebarOpen && (
             <button

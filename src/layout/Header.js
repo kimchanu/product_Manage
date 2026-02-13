@@ -116,6 +116,7 @@ function Header() {
       </Link>
       <User_info setUser={setUser} />
       <div className="header-top-row">
+        <Nav user={user} />
         <div className="header-user-actions">
           {user ? (
             <>
@@ -136,7 +137,6 @@ function Header() {
           )}
         </div>
       </div>
-      <Nav user={user} />
     </header>
   );
 }

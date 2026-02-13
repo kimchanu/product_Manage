@@ -15,7 +15,7 @@ import main8 from "../image/main8.jpg";
 
 function Main_page() {
   const navigate = useNavigate();
-  
+
   // 이미지 배열
   const images = [main1, main2, main3, main4, main5, main6, main7, main8];
 
@@ -34,6 +34,7 @@ function Main_page() {
     {
       id: 1,
       title: "대시보드",
+      description: "사업소 입출고 현황 및 통계를\n한눈에 확인할 수 있습니다.",
       path: "/dashboard",
       icon: (
         <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,6 +45,7 @@ function Main_page() {
     {
       id: 2,
       title: "출고등록",
+      description: "현장의 자재 출고 내역을\n손쉽게 등록하고 관리합니다.",
       path: "/Mat_output_page",
       icon: (
         <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,6 +56,7 @@ function Main_page() {
     {
       id: 3,
       title: "자재수불명세서대장",
+      description: "기간별 자재 입출고 및\n재고 현황을 상세히 조회합니다.",
       path: "/Statement_page",
       icon: (
         <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,15 +77,15 @@ function Main_page() {
       {/* 대문 사진 영역 */}
       <div className="w-full h-80 md:h-[450px] lg:h-[650px] relative overflow-hidden">
         {/* 배경 이미지 */}
-        <img 
-          src={images[currentImageIndex]} 
-          alt={`메인 이미지 ${currentImageIndex + 1}`} 
+        <img
+          src={images[currentImageIndex]}
+          alt={`메인 이미지 ${currentImageIndex + 1}`}
           className="w-full h-full object-cover transition-opacity duration-1000"
         />
-        
+
         {/* 오버레이 */}
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        
+
         {/* 텍스트 오버레이 */}
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="text-center text-white px-4">
@@ -101,11 +104,10 @@ function Main_page() {
             <button
               key={index}
               onClick={() => setCurrentImageIndex(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentImageIndex
-                  ? "w-8 bg-white"
-                  : "w-2 bg-white bg-opacity-50 hover:bg-opacity-75"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${index === currentImageIndex
+                ? "w-8 bg-white"
+                : "w-2 bg-white bg-opacity-50 hover:bg-opacity-75"
+                }`}
               aria-label={`이미지 ${index + 1}로 이동`}
             />
           ))}
@@ -116,21 +118,26 @@ function Main_page() {
       <div className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">주요 메뉴</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
             {menuItems.map((item) => (
               <div
                 key={item.id}
                 onClick={() => handleMenuClick(item.path)}
-                className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 p-8 text-center border border-gray-200 hover:border-blue-500"
+                className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 p-6 border border-gray-200 hover:border-blue-500 flex flex-col justify-between"
               >
-                <div className="flex flex-col items-center justify-center space-y-4">
-                  <div className="text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
+                <div className="flex flex-row items-start space-x-4">
+                  <div className="flex-shrink-0 text-blue-600 group-hover:text-blue-700 transition-colors duration-300">
                     {item.icon}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
-                    {item.title}
-                  </h3>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors duration-300 mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-500 text-sm whitespace-pre-line group-hover:text-gray-600 transition-colors duration-300 leading-relaxed break-keep">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
