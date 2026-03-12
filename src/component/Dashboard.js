@@ -479,176 +479,6 @@ const FacilityBudgetExecutionCard = ({ budgetList, yearTotalInputAmounts }) => {
     );
 };
 
-// 게시판 컴포넌트 추가
-// const DashboardPostList = () => {
-//     const [posts, setPosts] = useState([]);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState("");
-
-//     useEffect(() => {
-//         fetchDashboardPosts();
-//     }, []);
-
-//     const fetchDashboardPosts = async () => {
-//         try {
-//             setLoading(true);
-//             // 공지사항과 최신 글을 우선적으로 가져오기 위해 limit을 늘려서 필터링
-//             const res = await fetch(`${process.env.REACT_APP_API_URL}/api/posts?page=1&limit=10`);
-//             const data = await res.json();
-
-//             if (res.ok) {
-//                 // 공지사항, 중요글, 상단고정 글을 우선적으로 표시하고, 나머지는 최신순으로 정렬
-//                 const sortedPosts = data.posts.sort((a, b) => {
-//                     // 공지사항이 가장 우선
-//                     if (a.is_notice && !b.is_notice) return -1;
-//                     if (!a.is_notice && b.is_notice) return 1;
-
-//                     // 중요글이 두 번째 우선
-//                     if (a.is_important && !b.is_important) return -1;
-//                     if (!a.is_important && b.is_important) return 1;
-
-//                     // 상단고정이 세 번째 우선
-//                     if (a.is_top && !b.is_top) return -1;
-//                     if (!a.is_top && b.is_top) return 1;
-
-//                     // 그 외에는 최신순
-//                     return new Date(b.created_at) - new Date(a.created_at);
-//                 });
-
-//                 // 상위 5개만 표시
-//                 setPosts(sortedPosts.slice(0, 5));
-//             } else {
-//                 console.error("게시글 불러오기 실패:", data.error);
-//                 setError("게시글을 불러올 수 없습니다.");
-//             }
-//         } catch (err) {
-//             console.error("게시글 불러오기 실패:", err);
-//             setError("서버에 연결할 수 없습니다.");
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     const formatDate = (dateString) => {
-//         const date = new Date(dateString);
-//         const now = new Date();
-//         const isToday = date.getFullYear() === now.getFullYear() &&
-//             date.getMonth() === now.getMonth() &&
-//             date.getDate() === now.getDate();
-//         if (isToday) {
-//             return date.toLocaleTimeString('ko-KR', {
-//                 hour: '2-digit',
-//                 minute: '2-digit',
-//                 hour12: false
-//             });
-//         } else {
-//             return date.toLocaleDateString('ko-KR', {
-//                 year: 'numeric',
-//                 month: '2-digit',
-//                 day: '2-digit'
-//             });
-//         }
-//     };
-
-//     const getCategoryLabel = (category, isNotice, isImportant, isTop) => {
-//         if (isNotice) return "공지";
-//         if (isImportant) return "중요";
-//         if (isTop) return "상단";
-//         switch (category) {
-//             case "question": return "질문";
-//             case "info": return "정보";
-//             case "guide": return "가이드";
-//             case "trade": return "거래";
-//             default: return "일반";
-//         }
-//     };
-
-//     const getCategoryColor = (category, isNotice, isImportant, isTop) => {
-//         if (isNotice) return "bg-blue-100 text-blue-800";
-//         if (isImportant) return "bg-red-100 text-red-800";
-//         if (isTop) return "bg-yellow-100 text-yellow-800";
-//         switch (category) {
-//             case "question": return "bg-green-100 text-green-800";
-//             case "info": return "bg-purple-100 text-purple-800";
-//             case "guide": return "bg-indigo-100 text-indigo-800";
-//             case "trade": return "bg-orange-100 text-orange-800";
-//             default: return "bg-gray-100 text-gray-800";
-//         }
-//     };
-
-//     if (loading) {
-//         return (
-//             <div className="p-6 bg-white rounded-2xl shadow">
-//                 <h2 className="text-lg font-semibold text-gray-800 mb-4">최신 게시글</h2>
-//                 <div className="flex justify-center items-center h-64">
-//                     <div className="text-center">
-//                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-//                         <p className="text-gray-500 text-sm">게시글을 불러오는 중...</p>
-//                     </div>
-//                 </div>
-//             </div>
-//         );
-//     }
-
-//     return (
-//         <div className="p-6 bg-white rounded-2xl shadow">
-//             <div className="flex justify-between items-center mb-4">
-//                 <h2 className="text-lg font-semibold text-gray-800">최신 게시글</h2>
-//                 <a
-//                     href="/PostList_page"
-//                     className="text-sm text-blue-600 hover:text-blue-800 transition-colors font-medium"
-//                 >
-//                     전체보기 →
-//                 </a>
-//             </div>
-
-//             {error && (
-//                 <div className="text-red-500 text-sm mb-4 bg-red-50 p-2 rounded">{error}</div>
-//             )}
-
-//             {posts.length === 0 ? (
-//                 <div className="text-center text-gray-500 py-8">
-//                     <div className="text-gray-400 mb-2">📝</div>
-//                     작성된 글이 없습니다.
-//                 </div>
-//             ) : (
-//                 <div className="space-y-2 h-64 overflow-y-auto">
-//                     {posts.map((post) => (
-//                         <div
-//                             key={post.id}
-//                             className="p-3 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-all duration-200"
-//                             onClick={() => window.location.href = `/posts/${post.id}`}
-//                         >
-//                             <div className="flex items-start justify-between">
-//                                 <div className="flex-1 min-w-0">
-//                                     <div className="flex items-center gap-2 mb-1">
-//                                         <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(post.category, post.is_notice, post.is_important, post.is_top)}`}>
-//                                             {getCategoryLabel(post.category, post.is_notice, post.is_important, post.is_top)}
-//                                         </span>
-//                                         <span className="text-sm text-gray-600 font-medium">{post.author}</span>
-//                                     </div>
-//                                     <h3 className="text-sm font-medium text-gray-900 truncate leading-tight">
-//                                         {post.title}
-//                                         {post.comment_count > 0 && (
-//                                             <span className="ml-2 text-blue-500 text-xs font-medium">[{post.comment_count}]</span>
-//                                         )}
-//                                     </h3>
-//                                 </div>
-//                                 <div className="flex flex-col items-end gap-1 text-xs text-gray-500 ml-3">
-//                                     <span className="font-medium">{formatDate(post.created_at)}</span>
-//                                     <div className="flex items-center gap-2">
-//                                         <span>조회 {post.view_count}</span>
-//                                         <span>추천 {post.like_count}</span>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     ))}
-//                 </div>
-//             )}
-//         </div>
-//     );
-// };
 
 const Statistics_sub = ({ department }) => {
     const currentYear = new Date().getFullYear();
@@ -676,6 +506,65 @@ const Statistics_sub = ({ department }) => {
 
 
 
+
+    const [chartViewMode, setChartViewMode] = useState("input"); // "input" | "output"
+
+    // 차트 데이터 가공 (LineChart에 들어갈 구조)
+    const { linesPrev, linesCurr } = useMemo(() => {
+        const makeLines = (yearSuffix) => [
+            {
+                dataKey: chartViewMode === "input" ? `input${yearSuffix}_ITS` : `output${yearSuffix}_ITS`,
+                name: "ITS",
+                stroke: "#8884d8",
+            },
+            {
+                dataKey: chartViewMode === "input" ? `input${yearSuffix}_기전` : `output${yearSuffix}_기전`,
+                name: "기전",
+                stroke: "#82ca9d",
+            },
+            {
+                dataKey: chartViewMode === "input" ? `input${yearSuffix}_시설` : `output${yearSuffix}_시설`,
+                name: "시설",
+                stroke: "#ffc658",
+            },
+        ];
+
+        return {
+            linesPrev: makeLines("Prev"),
+            linesCurr: makeLines("Curr"),
+        };
+    }, [chartViewMode]);
+
+    // chartViewMode에 따른 데이터 키 매핑 (좌/우 차트용)
+    const chartLines = useMemo(() => {
+        if (activeDeptTab === "합 계") {
+            return {
+                left: [
+                    { dataKey: `${chartViewMode}Prev_ITS`, name: "ITS", stroke: "#8884d8" },
+                    { dataKey: `${chartViewMode}Prev_기전`, name: "기전", stroke: "#82ca9d" },
+                    { dataKey: `${chartViewMode}Prev_시설`, name: "시설", stroke: "#ffc658" },
+                ],
+                right: [
+                    { dataKey: `${chartViewMode}Curr_ITS`, name: "ITS", stroke: "#8884d8" },
+                    { dataKey: `${chartViewMode}Curr_기전`, name: "기전", stroke: "#82ca9d" },
+                    { dataKey: `${chartViewMode}Curr_시설`, name: "시설", stroke: "#ffc658" },
+                ]
+            };
+        } else {
+            // 개별 부서 탭
+            const colorMap = { "ITS": "#8884d8", "기전": "#82ca9d", "시설": "#ffc658" };
+            const color = colorMap[activeDeptTab] || "#8884d8";
+
+            return {
+                left: [
+                    { dataKey: `${chartViewMode}Prev`, name: activeDeptTab, stroke: color },
+                ],
+                right: [
+                    { dataKey: `${chartViewMode}Curr`, name: activeDeptTab, stroke: color },
+                ]
+            };
+        }
+    }, [activeDeptTab, chartViewMode]);
 
     // 사업소 이름 매핑 (Side_Bar에서 전달되는 값 -> DB에 저장된 값)
     const normalizeSiteName = (site) => {
@@ -905,49 +794,32 @@ const Statistics_sub = ({ department }) => {
                 return compareCacheRef.current.get(cacheKey);
             }
 
-            const months = Array.from({ length: 12 }, (_, i) => i + 1);
+            try {
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/statement/yearly-trend`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                    },
+                    body: JSON.stringify({
+                        businessLocation: siteCode,
+                        year,
+                    }),
+                });
 
-            const results = await Promise.all(
-                months.map(async (m) => {
-                    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/statement/all-part-monthly`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                        },
-                        body: JSON.stringify({
-                            businessLocation: siteCode, // ✅ 사업소 코드
-                            year,
-                            month: m,
-                        }),
-                    });
+                if (!res.ok) {
+                    throw new Error(`연간 데이터 조회 실패 (${year})`);
+                }
 
-                    const json = await res.json();
-                    if (!res.ok) {
-                        throw new Error(json?.message || `월간 데이터 조회 실패 (${year}-${m})`);
-                    }
+                const json = await res.json();
+                // json is array of 12 months: [{ month: 1, byDept: { ... } }, ...]
 
-                    // byCategory 안에 "합 계", "ITS", "시설", "기전" 키가 존재하는 구조(너가 준 코드 기준)
-                    const by = json?.byCategory || {};
-                    const pick = (key) => ({
-                        input: by?.[key]?.input || 0,
-                        output: by?.[key]?.output || 0,
-                    });
-
-                    return {
-                        month: m,
-                        byDept: {
-                            "합 계": pick("합 계"),
-                            ITS: pick("ITS"),
-                            시설: pick("시설"),
-                            기전: pick("기전"),
-                        },
-                    };
-                })
-            );
-
-            compareCacheRef.current.set(cacheKey, results);
-            return results;
+                compareCacheRef.current.set(cacheKey, json);
+                return json;
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
         };
 
         const run = async () => {
@@ -1107,37 +979,65 @@ const Statistics_sub = ({ department }) => {
 
     return (
         <main className="p-6 space-y-6 bg-gray-50 h-[calc(100vh-4rem)]">
-  <h1 className="text-2xl font-bold mb-4">{department || "없음"}</h1>
+            <h1 className="text-2xl font-bold mb-4">{department || "없음"}</h1>
 
             {/* ================= 연도별 입고/출고 비교 섹션 (상단 배치) ================= */}
             <div className="p-6 bg-white rounded-2xl shadow space-y-5">
 
-                {/* 헤더 + 누적 토글 */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                {/* 헤더 + 누적/입출고 토글 */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                     <div>
                         <h2 className="text-lg font-semibold">
-                            {department} 입·출고 금액 비교 ({currentYear - 1} vs {currentYear})
+                            {department} {chartViewMode === "input" ? "입고" : "출고"} 금액 현황
                         </h2>
                         <p className="text-sm text-gray-500 mt-1">
                             {activeDeptTab} 기준 · {cumulativeMode ? "누적(1~월)" : "월별"}
                         </p>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={() => setCumulativeMode(v => !v)}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium border transition
+                    <div className="flex gap-2">
+                        {/* 입/출고 토글 버튼 */}
+                        <div className="flex bg-gray-100 p-1 rounded-lg">
+                            <button
+                                type="button"
+                                onClick={() => setChartViewMode("input")}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition
+                                ${chartViewMode === "input"
+                                        ? "bg-white text-blue-600 shadow-sm"
+                                        : "text-gray-500 hover:text-gray-700"
+                                    }`}
+                            >
+                                입고
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setChartViewMode("output")}
+                                className={`px-4 py-2 rounded-md text-sm font-medium transition
+                                ${chartViewMode === "output"
+                                        ? "bg-white text-red-600 shadow-sm"
+                                        : "text-gray-500 hover:text-gray-700"
+                                    }`}
+                            >
+                                출고
+                            </button>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => setCumulativeMode(v => !v)}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium border transition
                         ${cumulativeMode
-                                ? "bg-blue-600 text-white border-blue-600"
-                                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                            }`}
-                    >
-                        누적 {cumulativeMode ? "ON" : "OFF"}
-                    </button>
+                                    ? "bg-blue-600 text-white border-blue-600"
+                                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                                }`}
+                        >
+                            누적 {cumulativeMode ? "ON" : "OFF"}
+                        </button>
+                    </div>
                 </div>
 
                 {/* 부서 탭 */}
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mb-6">
                     {["합 계", "ITS", "시설", "기전"].map(tab => (
                         <button
                             key={tab}
@@ -1172,24 +1072,22 @@ const Statistics_sub = ({ department }) => {
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
                         <YearCompareLineChartCard
-                            title={`입고 금액 (${prevYear} vs ${currentYear})`}
+                            title={`${prevYear}년 ${chartViewMode === "input" ? "입고" : "출고"} 금액`}
                             data={compareChartData}
-                            lines={inputLines}
+                            lines={chartLines.left}
                             valueFormatter={moneyKrwThousandFmt}
                         />
 
                         <YearCompareLineChartCard
-                            title={`출고 금액 (${prevYear} vs ${currentYear})`}
+                            title={`${currentYear}년 ${chartViewMode === "input" ? "입고" : "출고"} 금액`}
                             data={compareChartData}
-                            lines={outputLines}
+                            lines={chartLines.right}
                             valueFormatter={moneyKrwThousandFmt}
                         />
 
                     </div>
                 )}
             </div>
-            {/* ================= 연도별 입고/출고 비교 섹션 끝 ================= */}
-
 
             {/* ================= 예산 집행률 카드 ================= */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1218,12 +1116,9 @@ const Statistics_sub = ({ department }) => {
                 <OutputByLocationCard outputList={outputByLocation} />
             </div>
 
-
             <div className="h-16" />
         </main>
     );
-
-
 };
 
 export default Statistics_sub;

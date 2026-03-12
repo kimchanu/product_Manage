@@ -863,5 +863,190 @@ router.post("/all-part-monthly", async (req, res) => {
     }
 });
 
+// 연간 입/출고 추세 일괄 조회 (Dashboard 용)
+router.post("/yearly-trend", async (req, res) => {
+    const { businessLocation, year } = req.body;
+
+    if (!businessLocation || !year) {
+        return res.status(400).json({ message: "필수 정보가 누락되었습니다." });
+    }
+
+    try {
+        const departments = ["ITS", "시설", "기전"];
+
+        // 1. 사업소 정규화
+        const locationMap = {
+            'GK': 'GK사업소',
+            // 필요 시 추가
+        };
+        const locationName = locationMap[businessLocation] || businessLocation;
+
+        // 2. 날짜 범위 설정 (1월 1일 ~ 12월 31일)
+        const yearStartDate = new Date(year, 0, 1);
+        const yearEndDate = new Date(year, 11, 31);
+        yearEndDate.setHours(23, 59, 59, 999);
+
+        // 3. 전년도 말일 (기초 재고 계산용)
+        const prevYearEndDate = new Date(year - 1, 11, 31);
+        prevYearEndDate.setHours(23, 59, 59, 999);
+
+        // 결과 저장 구조 초기화
+        // trend[month - 1] = { month: m, byDept: { ITS: { input: 0, output: 0 }, ... } }
+        const trend = Array.from({ length: 12 }, (_, i) => ({
+            month: i + 1,
+            byDept: {
+                "ITS": { input: 0, output: 0 },
+                "시설": { input: 0, output: 0 },
+                "기전": { input: 0, output: 0 },
+                "합 계": { input: 0, output: 0 }
+            }
+        }));
+
+        // 각 부서별로 데이터 조회 및 집계
+        for (const department of departments) {
+            try {
+                const { Product, Input, Output } = createModels(businessLocation, department);
+
+                // Product 정보 미리 로드 (가격 정보 필요)
+                // 메모리 효율을 위해 필요한 필드만 조회
+                const allProducts = await Product.findAll({
+                    attributes: ['material_id', 'price'],
+                    raw: true
+                });
+                const productMap = new Map();
+                allProducts.forEach(p => {
+                    productMap.set(p.material_id, p.price || 0);
+                });
+
+                // -----------------------------------------------------
+                // ApiMainProduct Price Info (for Local Outputs referencing API products)
+                // -----------------------------------------------------
+                try {
+                    const apiProductsPrices = await ApiMainProduct.findAll({
+                        attributes: ['material_id', 'price'],
+                        where: {
+                            business_location: {
+                                [Op.or]: [businessLocation, locationName]
+                            },
+                            department: department
+                        },
+                        raw: true
+                    });
+                    apiProductsPrices.forEach(p => {
+                        // Local Product takes precedence, but if acceptable, overwrite or set if missing.
+                        // Usually API product ID should be unique or match.
+                        // Here we set if not exists, or update.
+                        if (!productMap.has(p.material_id)) {
+                            productMap.set(p.material_id, p.price || 0);
+                        }
+                    });
+                } catch (apiErr) {
+                    console.warn(`ApiMainProduct price fetch failed for ${department} (ignored):`, apiErr.message);
+                }
+
+                // -----------------------------------------------------
+                // Local Input Data (1월 ~ 12월)
+                // -----------------------------------------------------
+                let localInputs = [];
+                try {
+                    localInputs = await Input.findAll({
+                        where: {
+                            date: {
+                                [Op.gte]: yearStartDate,
+                                [Op.lte]: yearEndDate
+                            }
+                        },
+                        attributes: ['material_id', 'quantity', 'date'],
+                        raw: true
+                    });
+                } catch (err) {
+                    if (err.parent && err.parent.code === 'ER_NO_SUCH_TABLE') {
+                        // 테이블 없으면 pass
+                    } else {
+                        throw err;
+                    }
+                }
+
+                localInputs.forEach(item => {
+                    const m = new Date(item.date).getMonth(); // 0~11
+                    const price = productMap.get(item.material_id) || 0;
+                    const amount = item.quantity * price;
+
+                    trend[m].byDept[department].input += amount;
+                    trend[m].byDept["합 계"].input += amount;
+                });
+
+                // -----------------------------------------------------
+                // Local Output Data (1월 ~ 12월)
+                // -----------------------------------------------------
+                let localOutputs = [];
+                try {
+                    localOutputs = await Output.findAll({
+                        where: {
+                            date: {
+                                [Op.gte]: yearStartDate,
+                                [Op.lte]: yearEndDate
+                            }
+                        },
+                        attributes: ['material_id', 'quantity', 'date'],
+                        raw: true
+                    });
+                } catch (err) {
+                    if (err.parent && err.parent.code === 'ER_NO_SUCH_TABLE') {
+                        // pass
+                    } else {
+                        throw err;
+                    }
+                }
+
+                localOutputs.forEach(item => {
+                    const m = new Date(item.date).getMonth(); // 0~11
+                    const price = productMap.get(item.material_id) || 0;
+                    const amount = item.quantity * price;
+
+                    trend[m].byDept[department].output += amount;
+                    trend[m].byDept["합 계"].output += amount;
+                });
+
+                // -----------------------------------------------------
+                // ApiMainProduct Data (Input Only) (1월 ~ 12월)
+                // -----------------------------------------------------
+                const apiInputs = await ApiMainProduct.findAll({
+                    where: {
+                        business_location: {
+                            [Op.or]: [businessLocation, locationName]
+                        },
+                        department: department,
+                        date: {
+                            [Op.gte]: yearStartDate,
+                            [Op.lte]: yearEndDate
+                        }
+                    },
+                    attributes: ['price', 'quantity', 'date'],
+                    raw: true
+                });
+
+                apiInputs.forEach(item => {
+                    const m = new Date(item.date).getMonth(); // 0~11
+                    const amount = (item.quantity || 0) * (item.price || 0);
+
+                    trend[m].byDept[department].input += amount;
+                    trend[m].byDept["합 계"].input += amount;
+                });
+
+            } catch (deptErr) {
+                console.error(`Error processing department ${department}:`, deptErr.message);
+                // Continue to next department
+            }
+        }
+
+        res.json(trend);
+
+    } catch (error) {
+        console.error("Error processing yearly trend:", error);
+        res.status(500).json({ message: "서버 오류", error: error.message });
+    }
+});
+
 module.exports = router;
 

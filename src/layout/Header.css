@@ -15,14 +15,14 @@
 .header-logo-link {
   position: absolute;
   left: 1.5rem;
-  top: 0.5rem;
+  top: 0.1rem;
   z-index: 10;
   display: flex;
   align-items: center;
 }
 
 .header-logo-img {
-  height: 5rem;
+  height: 4.2rem;
   width: auto;
   object-fit: contain;
 }
@@ -32,8 +32,9 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.9rem 1.4rem;
-  padding-left: 12rem; /* 로고 공간 확보 */
+  padding: 1.525rem 1.4rem;
+  padding-left: 12rem;
+  /* 로고 공간 확보 */
 }
 
 .header-user-actions {
@@ -45,7 +46,8 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(4px);
-  margin-left: auto; /* 우측 정렬을 확실하게 하기 위해 */
+  margin-left: auto;
+  /* 우측 정렬을 확실하게 하기 위해 */
 }
 
 .header-user-name {
@@ -87,40 +89,51 @@
   padding: 0;
   flex: 1;
   display: flex;
-  justify-content: center; /* 가운데 정렬 */
+  justify-content: center;
+  /* 가운데 정렬 */
 }
 
 .header-nav-inner {
-  width: auto; /* width 100% 제거 */
+  width: auto;
+  /* width 100% 제거 */
   display: flex;
   justify-content: center;
   padding: 0;
 }
 
 .header-category-wrap {
-  width: auto; /* 고정 width 제거 */
+  width: auto;
+  /* 고정 width 제거 */
   min-width: unset;
   display: flex;
   text-align: center;
-  border: 0; /* 테두리 제거 (선택사항, 디자인에 따라 다름. 상단바 행에 어울리게) */
-  background: transparent; /* 배경 투명하게 */
+  border: 0;
+  /* 테두리 제거 (선택사항, 디자인에 따라 다름. 상단바 행에 어울리게) */
+  background: transparent;
+  /* 배경 투명하게 */
   overflow: visible;
 }
 
 .header-category-item {
-  flex: 0 0 auto; /* 자동으로 늘어나지 않게 */
+  flex: 0 0 auto;
+  /* 자동으로 늘어나지 않게 */
   position: relative;
   cursor: pointer;
   color: #1f2937;
   font-weight: 900;
-  font-size: clamp(1rem, 1.5vw, 1.1rem); /* 폰트 사이즈 약간 줄임 */
+  font-size: clamp(1.3125rem, 1.9vw, 1.4125rem);
+  /* 폰트 사이즈 약간 줄임 */
   line-height: 1.25;
   letter-spacing: 0.02em;
-  text-shadow: none; /* 그림자 제거 */
-  padding: 0.5rem 1rem; /* 패딩 조정 */
-  border-right: 0; /* 구분선 제거 */
+  text-shadow: none;
+  /* 그림자 제거 */
+  padding: 0.5rem 1rem;
+  /* 패딩 조정 */
+  border-right: 0;
+  /* 구분선 제거 */
   transition: 0.2s ease;
-  border-radius: 8px; /* 호버 시 둥글게 */
+  border-radius: 8px;
+  /* 호버 시 둥글게 */
 }
 
 .header-category-item a,
@@ -170,7 +183,7 @@
 @media (max-width: 900px) {
   .header-logo-link {
     left: 0.8rem;
-    top: 0.3rem;
+    top: 0rem;
   }
 
   .header-logo-img {
@@ -178,8 +191,9 @@
   }
 
   .header-top-row {
-    padding: 0.7rem 0.8rem 0;
-    padding-left: 8rem; /* 모바일에서 로고 공간 조정 */
+    padding: 1rem 0.8rem 0.3rem;
+    padding-left: 8rem;
+    /* 모바일에서 로고 공간 조정 */
   }
 
   .header-user-actions {
@@ -192,7 +206,7 @@
   }
 
   .header-category-item {
-    font-size: 1.08rem;
+    font-size: 1.3925rem;
     padding: 0.6rem 0.32rem;
     letter-spacing: 0.01em;
   }

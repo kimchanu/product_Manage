@@ -106,7 +106,36 @@ router.post("/", async (req, res) => {
             }
         }
 
-        const productMap = new Map(allProducts.map(p => [p.material_id, p]));
+        const { ApiMainProduct } = require("../models/material"); // Ensure this is imported if not already, or use the one I will add at top
+
+        const locationMapping = {
+            "GK": "GK사업소"
+        };
+        const locationName = locationMapping[businessLocation] || businessLocation;
+
+        let apiProducts = [];
+        try {
+            apiProducts = await ApiMainProduct.findAll({
+                attributes: ['material_id', 'price', 'name', 'material_code', 'specification'],
+                where: {
+                    business_location: {
+                        [Op.or]: [businessLocation, locationName]
+                    },
+                    department: department
+                },
+                raw: true
+            });
+        } catch (error) {
+            console.warn("ApiMainProduct 조회 실패 (무시됨):", error.message);
+        }
+
+        const productMap = new Map();
+
+        // 1. ApiMainProduct 데이터로 초기화
+        apiProducts.forEach(p => productMap.set(p.material_id, p));
+
+        // 2. Local Product 데이터로 덮어쓰기 (Local 우선)
+        allProducts.forEach(p => productMap.set(p.material_id, p));
 
         // 🔹 누적 출고 금액 계산 (해당 월까지)
         const totalOutputAmount = cumulativeOutputs.reduce((sum, output) => {

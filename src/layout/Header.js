@@ -55,7 +55,7 @@ function Nav({ user }) {
               }
             >
               {idx === 0 ? (
-                <Link to="/" className="font-bold">
+                <Link to="/Mat_list_page" className="font-bold">
                   {category.name}
                 </Link>
               ) : category.name === "Null" ? (
