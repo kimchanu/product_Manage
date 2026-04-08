@@ -4,6 +4,71 @@ const { createModels, ApiMainProduct } = require("../models/material");
 const createOutputModel = require("../models/OutputModel");
 const sequelize = require("../db/sequelize");
 
+const locationMapping = {
+  GK: "GK사업소",
+};
+
+const getNormalizedDateString = (dateValue) => {
+  if (!dateValue) return null;
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toISOString().slice(0, 10);
+};
+
+const getEarliestInputDate = async ({ material_id, business_location, department, Input }) => {
+  const gwBusinessLocation = locationMapping[business_location] || business_location;
+
+  const [localEarliest, groupwareEarliest] = await Promise.all([
+    Input.min("date", { where: { material_id } }),
+    ApiMainProduct.min("date", {
+      where: {
+        material_id,
+        business_location: gwBusinessLocation,
+        department,
+      },
+    }),
+  ]);
+
+  const normalizedDates = [localEarliest, groupwareEarliest]
+    .map(getNormalizedDateString)
+    .filter(Boolean)
+    .sort();
+
+  return normalizedDates[0] || null;
+};
+
+const validateOutputDateNotBeforeInput = async ({
+  material_id,
+  outputDate,
+  business_location,
+  department,
+  Input,
+}) => {
+  const normalizedOutputDate = getNormalizedDateString(outputDate);
+  if (!normalizedOutputDate) {
+    throw new Error("출고 날짜 형식이 올바르지 않습니다.");
+  }
+
+  const earliestInputDate = await getEarliestInputDate({
+    material_id,
+    business_location,
+    department,
+    Input,
+  });
+
+  if (!earliestInputDate) {
+    throw new Error(`자재 ID ${material_id}의 입고 이력이 없어 출고 날짜를 저장할 수 없습니다.`);
+  }
+
+  if (normalizedOutputDate < earliestInputDate) {
+    throw new Error(
+      `자재 ID ${material_id}의 출고일(${normalizedOutputDate})은 최초 입고일(${earliestInputDate})보다 빠를 수 없습니다.`
+    );
+  }
+
+  return earliestInputDate;
+};
+
 // 출고 저장 API
 router.post("/", async (req, res) => {
   const { materials, comment, date, department, business_location, user_id } = req.body;
@@ -22,14 +87,19 @@ router.post("/", async (req, res) => {
     for (const mat of materials) {
       const { material_id, outputQty } = mat;
 
+      await validateOutputDateNotBeforeInput({
+        material_id,
+        outputDate: date,
+        business_location,
+        department,
+        Input,
+      });
+
       // 입력 수량 확인
       // 1. Local Input Sum
       const localInputSum = await Input.sum("quantity", { where: { material_id } });
 
       // 2. ApiMainProduct Sum (Groupware Initial Stock)
-      const locationMapping = {
-        "GK": "GK사업소"
-      };
       const gwBusinessLocation = locationMapping[business_location] || business_location;
 
       const gwInputSum = await ApiMainProduct.sum("quantity", {
@@ -69,7 +139,7 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.error("출고 저장 실패:", error);
     await transaction.rollback();
-    return res.status(500).json({ message: "출고 저장 중 오류가 발생했습니다.", error: error.message });
+    return res.status(400).json({ message: error.message || "출고 저장 중 오류가 발생했습니다." });
   }
 });
 
@@ -107,6 +177,15 @@ router.put("/:material_id/:id", async (req, res) => {
     const outputBusinessLocation = output.business_location;
     const outputDepartment = output.department;
     const OutputModel = createOutputModel(outputBusinessLocation, outputDepartment);
+    const { Input } = createModels(outputBusinessLocation, outputDepartment);
+
+    await validateOutputDateNotBeforeInput({
+      material_id,
+      outputDate: output_date,
+      business_location: outputBusinessLocation,
+      department: outputDepartment,
+      Input,
+    });
 
     // 출고 정보 수정
     const [outputUpdateCount] = await OutputModel.update(
@@ -131,7 +210,7 @@ router.put("/:material_id/:id", async (req, res) => {
   } catch (error) {
     if (transaction) await transaction.rollback();
     console.error("출고 수정 실패:", error);
-    res.status(500).json({ message: error.message || "출고 수정 중 오류가 발생했습니다." });
+    res.status(400).json({ message: error.message || "출고 수정 중 오류가 발생했습니다." });
   }
 });
 
@@ -221,9 +300,6 @@ router.post("/split/:material_id/:id", async (req, res) => {
     const localInputSum = await Input.sum("quantity", { where: { material_id } });
 
     // 3-2. ApiMainProduct Logic
-    const locationMapping = {
-      "GK": "GK사업소"
-    };
     const gwBusinessLocation = locationMapping[business_location] || business_location;
 
     const gwInputSum = await ApiMainProduct.sum("quantity", {
@@ -255,6 +331,14 @@ router.post("/split/:material_id/:id", async (req, res) => {
     // 5. 새로운 출고 기록들 추가
     const newOutputs = [];
     for (const split of splits) {
+      await validateOutputDateNotBeforeInput({
+        material_id,
+        outputDate: split.date,
+        business_location: originalOutput.business_location,
+        department: originalOutput.department,
+        Input,
+      });
+
       const newOutput = await OutputModel.create({
         material_id,
         quantity: split.quantity,
@@ -280,9 +364,8 @@ router.post("/split/:material_id/:id", async (req, res) => {
   } catch (error) {
     if (transaction) await transaction.rollback();
     console.error("출고 기록 분할 실패:", error);
-    return res.status(500).json({
-      message: "출고 기록 분할 중 오류가 발생했습니다.",
-      error: error.message
+    return res.status(400).json({
+      message: error.message || "출고 기록 분할 중 오류가 발생했습니다.",
     });
   }
 });
@@ -302,10 +385,19 @@ router.put("/batch-update", async (req, res) => {
   let transaction;
   try {
     const OutputModel = createOutputModel(business_location, department);
+    const { Input } = createModels(business_location, department);
     transaction = await sequelize.transaction();
 
     for (const update of updates) {
-      const { id, output_date, user_id, comment, quantity } = update;
+      const { id, material_id, output_date, user_id, comment, quantity } = update;
+
+      await validateOutputDateNotBeforeInput({
+        material_id,
+        outputDate: output_date,
+        business_location,
+        department,
+        Input,
+      });
 
       await OutputModel.update(
         {
@@ -326,7 +418,7 @@ router.put("/batch-update", async (req, res) => {
   } catch (error) {
     if (transaction) await transaction.rollback();
     console.error("일괄 수정 실패:", error);
-    res.status(500).json({ message: "일괄 수정 중 오류가 발생했습니다.", error: error.message });
+    res.status(400).json({ message: error.message || "일괄 수정 중 오류가 발생했습니다." });
   }
 });
 

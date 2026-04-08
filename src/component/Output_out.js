@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import User_info from "./User_info";
 
+const normalizeDate = (value) => {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toISOString().slice(0, 10);
+};
+
 const MaterialOutputPage = () => {
   const [materials, setMaterials] = useState([]);
   const [selectedMaterials, setSelectedMaterials] = useState([]);
@@ -133,6 +140,21 @@ const MaterialOutputPage = () => {
   const handleSave = async () => {
     if (!date || !comment) {
       alert("출고일자와 사유를 모두 입력해주세요.");
+      return;
+    }
+
+    const outputDate = normalizeDate(date);
+    const invalidMaterial = selectedMaterials.find((mat) => {
+      const earliestInputDate = normalizeDate(mat.earliest_input_date);
+      return earliestInputDate && outputDate && outputDate < earliestInputDate;
+    });
+
+    if (invalidMaterial) {
+      alert(
+        `${invalidMaterial.name}의 출고일(${outputDate})은 최초 입고일(${normalizeDate(
+          invalidMaterial.earliest_input_date
+        )})보다 빠를 수 없습니다.`
+      );
       return;
     }
 

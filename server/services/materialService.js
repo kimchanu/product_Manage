@@ -82,6 +82,12 @@ const getAllMaterials = async (businessLocation, department) => {
     const formattedLocalProducts = localProducts.map((product) => {
       const inputs = product.inputs || [];
       const outputs = product.outputs || [];
+      const earliestInputDate = inputs.length > 0
+        ? inputs
+          .map((input) => input.date)
+          .filter(Boolean)
+          .sort((a, b) => new Date(a) - new Date(b))[0]
+        : null;
 
       const totalInput = inputs.reduce((sum, input) => sum + (input.quantity || 0), 0);
       const totalOutput = outputs.reduce((sum, output) => sum + (output.quantity || 0), 0);
@@ -105,6 +111,7 @@ const getAllMaterials = async (businessLocation, department) => {
         total_input_quantity: totalInput,
         total_output_quantity: totalOutput,
         stock,
+        earliest_input_date: earliestInputDate,
         inputs,
         outputs,
         source: "local",
@@ -152,6 +159,7 @@ const getAllMaterials = async (businessLocation, department) => {
         total_input_quantity: totalInput,
         total_output_quantity: totalOutput,
         stock,
+        earliest_input_date: p.date || null,
         inputs,
         outputs,
         source: "groupware",

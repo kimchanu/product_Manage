@@ -6,6 +6,13 @@ import ModifyRow from "./output_modify/ModifyRow";
 import ModifyBatchEdit from "./output_modify/ModifyBatchEdit";
 import SplitOutputModal from "./output_modify/SplitOutputModal";
 
+const normalizeDate = (value) => {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toISOString().slice(0, 10);
+};
+
 const Modify = () => {
   const [materials, setMaterials] = useState([]);
   const [user, setUser] = useState(null);
@@ -47,6 +54,7 @@ const Modify = () => {
           remaining_price: remainingPrice,
           output_id: output.id,
           material_id: material.material_id,
+          earliest_input_date: material.earliest_input_date,
           location: material.location,
           big_category: material.big_category,
           category: material.category,
@@ -212,6 +220,16 @@ const Modify = () => {
 
   const handleSaveClick = async (index) => {
     const target = filteredMaterials[index];
+    const nextOutputDate = normalizeDate(editedRow.output_date || target.output_date);
+    const earliestInputDate = normalizeDate(target.earliest_input_date);
+
+    if (earliestInputDate && nextOutputDate && nextOutputDate < earliestInputDate) {
+      alert(
+        `${target.name}의 출고일(${nextOutputDate})은 최초 입고일(${earliestInputDate})보다 빠를 수 없습니다.`
+      );
+      return;
+    }
+
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/materials/output/${target.material_id}/${target.output_id}`, {
         method: 'PUT',
@@ -284,6 +302,19 @@ const Modify = () => {
 
   // 분할 실행
   const handleSplitConfirm = async (splitData) => {
+    const earliestInputDate = normalizeDate(splitTarget?.earliest_input_date);
+    const invalidSplit = splitData.find((split) => {
+      const splitDate = normalizeDate(split.date);
+      return earliestInputDate && splitDate && splitDate < earliestInputDate;
+    });
+
+    if (invalidSplit) {
+      alert(
+        `${splitTarget.name}의 출고일(${normalizeDate(invalidSplit.date)})은 최초 입고일(${earliestInputDate})보다 빠를 수 없습니다.`
+      );
+      return;
+    }
+
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/materials/output/split/${splitTarget.material_id}/${splitTarget.output_id}`, {
         method: 'POST',
@@ -370,6 +401,15 @@ const Modify = () => {
       const updates = rowsToUpdate.map(row => {
         if (!row.output_id) {
           throw new Error('출고 ID가 없습니다.');
+        }
+
+        const nextOutputDate = normalizeDate(batchEditMode === 'date' ? batchEditValue : row.output_date);
+        const earliestInputDate = normalizeDate(row.earliest_input_date);
+
+        if (earliestInputDate && nextOutputDate && nextOutputDate < earliestInputDate) {
+          throw new Error(
+            `${row.name}의 출고일(${nextOutputDate})은 최초 입고일(${earliestInputDate})보다 빠를 수 없습니다.`
+          );
         }
 
         return {
