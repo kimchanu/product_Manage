@@ -24,9 +24,9 @@ function Sidebar({
   const departmentMap = {
     "\u0047\u004B\uC0AC\uC5C5\uC18C": "\u0047\u004B\uC0AC\uC5C5\uC18C",
     "\uCC9C\uB9C8\uC0AC\uC5C5\uC18C": "\uCC9C\uB9C8\uC0AC\uC5C5\uC18C",
-    "\uC2E0\uC218\uC0AC\uC5C5\uC18C": "\uC2E0\uC218\uC0AC\uC5C5\uC18C",
+    "\uC744\uC219\uB3C4\uC0AC\uC5C5\uC18C": "\uC744\uC219\uB3C4\uC0AC\uC5C5\uC18C",
     "\uAC15\uB0A8\uC0AC\uC5C5\uC18C": "\uAC15\uB0A8\uC0AC\uC5C5\uC18C",
-    "\uC11C\uC6D0\uC0AC\uC5C5\uC18C": "\uC11C\uC6D0\uC0AC\uC5C5\uC18C",
+    "\uC218\uC6D0\uC0AC\uC5C5\uC18C": "\uC218\uC6D0\uC0AC\uC5C5\uC18C",
   };
 
   const departments = Object.keys(departmentMap);
@@ -58,6 +58,15 @@ function Sidebar({
           </div>
 
           <ul className="sidebar-menu-list space-y-2 mb-8">
+            <li>
+              <Link
+                to="/dashboard"
+                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
+              >
+                {"\uB300\uC2DC\uBCF4\uB4DC"}
+              </Link>
+            </li>
+
             <li>
               <Link
                 to="/PostList_page"
@@ -168,6 +177,15 @@ function Sidebar({
                 className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
               >
                 {"\uC790\uC7AC\uC218\uBD88\uBA85\uC138\uC11C"}
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/predictions"
+                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
+              >
+                {"\uC608\uCE21 \uBD84\uC11D"}
               </Link>
             </li>
           </ul>

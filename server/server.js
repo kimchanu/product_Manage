@@ -18,6 +18,7 @@ const postRouter = require("./routes/post");
 const imageUploadRouter = require("./routes/imageUpload");
 const videoUploadRouter = require("./routes/videoUpload");
 const userRoutes = require("./routes/user");
+const predictionRouter = require("./routes/prediction");
 
 const app = express();
 
@@ -66,6 +67,7 @@ app.use("/api", outputApproveRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/image", imageUploadRouter);
 app.use("/api/video", videoUploadRouter);
+app.use("/api/predictions", predictionRouter);
 
 // 라우트 등록 확인 로그
 console.log("✅ 라우트 등록 완료:");
