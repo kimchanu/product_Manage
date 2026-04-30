@@ -25,6 +25,16 @@ const moneyFormatter = (value) =>
     maximumFractionDigits: 0,
   });
 
+function parseNotes(notes) {
+  if (!notes) return null;
+
+  try {
+    return JSON.parse(notes);
+  } catch {
+    return null;
+  }
+}
+
 function PredictionCenter() {
   const [businessLocation, setBusinessLocation] = useState("GK");
   const [department, setDepartment] = useState("ITS");
@@ -47,7 +57,7 @@ function PredictionCenter() {
         const query = new URLSearchParams({
           businessLocation,
           department,
-          limit: "24",
+          limit: "100",
         });
 
         const apiBase = process.env.REACT_APP_API_URL || "";
@@ -108,29 +118,30 @@ function PredictionCenter() {
   );
 
   const hasHistoryData = useMemo(
-    () =>
-      chartData.some(
-        (row) => row.inputAmount !== 0 || row.outputAmount !== 0
-      ),
+    () => chartData.some((row) => row.inputAmount !== 0 || row.outputAmount !== 0),
     [chartData]
   );
 
-  const summaryCards = useMemo(() => {
-    const latestMonth = [...summary]
-      .sort((a, b) => String(b.target_month).localeCompare(String(a.target_month)))
-      .slice(0, 2);
+  const amountSummaryCards = useMemo(() => {
+    const filtered = summary.filter(
+      (item) =>
+        item.target_type === "input_amount" || item.target_type === "output_amount"
+    );
 
-    return latestMonth.map((item) => ({
-      id: `${item.target_type}-${item.target_month}`,
-      title:
-        item.target_type === "input_amount"
-          ? "다음 달 예상 입고금액"
-          : "다음 달 예상 출고금액",
-      month: item.target_month,
-      predictedTotal: Number(item.predicted_total || 0),
-      actualTotal: Number(item.actual_total || 0),
-      predictionCount: Number(item.prediction_count || 0),
-    }));
+    return filtered
+      .sort((a, b) => String(b.target_month).localeCompare(String(a.target_month)))
+      .slice(0, 2)
+      .map((item) => ({
+        id: `${item.target_type}-${item.target_month}`,
+        title:
+          item.target_type === "input_amount"
+            ? "다음 달 예상 입고금액"
+            : "다음 달 예상 출고금액",
+        month: item.target_month,
+        predictedTotal: Number(item.predicted_total || 0),
+        actualTotal: Number(item.actual_total || 0),
+        predictionCount: Number(item.prediction_count || 0),
+      }));
   }, [summary]);
 
   const selectedCoverage = useMemo(
@@ -143,6 +154,28 @@ function PredictionCenter() {
     [coverage, businessLocation, department]
   );
 
+  const materialPredictions = useMemo(
+    () =>
+      predictionList
+        .filter((item) => item.target_type === "output_material_amount")
+        .map((item) => ({
+          ...item,
+          parsedNotes: parseNotes(item.notes),
+        }))
+        .sort((a, b) => Number(b.predicted_value) - Number(a.predicted_value))
+        .slice(0, 10),
+    [predictionList]
+  );
+
+  const amountPredictions = useMemo(
+    () =>
+      predictionList.filter(
+        (item) =>
+          item.target_type === "input_amount" || item.target_type === "output_amount"
+      ),
+    [predictionList]
+  );
+
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -150,7 +183,7 @@ function PredictionCenter() {
           <div>
             <h1 className="text-2xl font-semibold text-slate-900">예측 분석</h1>
             <p className="mt-2 text-sm text-slate-600">
-              최근 16개월 입출고 이력과 저장된 예측 결과를 확인합니다.
+              최근 16개월 입출고 이력을 기반으로 금액 예측과 예상 사용 자재를 함께 확인합니다.
             </p>
           </div>
 
@@ -188,7 +221,7 @@ function PredictionCenter() {
         </div>
 
         <div className="mt-4 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
-          Python 배치 스크립트: <code>python server/python/generate_predictions.py</code>
+          Python 배치 실행: <code>cd server && npm run predict:baseline</code>
         </div>
       </div>
 
@@ -215,7 +248,7 @@ function PredictionCenter() {
             {historyMeta?.confidenceLevel || "-"}
           </p>
           <p className="mt-2 text-sm text-slate-600">
-            12개월 이상이면 보통, 24개월 이상이면 높음으로 분류합니다.
+            현재 월은 제외하고 완료된 월 기준으로 예측합니다.
           </p>
         </div>
 
@@ -234,16 +267,10 @@ function PredictionCenter() {
       </div>
 
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">
-              데이터 존재 현황
-            </h2>
-            <p className="mt-1 text-sm text-slate-600">
-              어떤 사업소와 부서 조합에 실제 월별 이력이 있는지 한 번에 확인합니다.
-            </p>
-          </div>
-        </div>
+        <h2 className="text-lg font-semibold text-slate-900">데이터 존재 현황</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          어떤 사업소와 부서 조합에 실제 월별 이력이 있는지 한 번에 확인합니다.
+        </p>
 
         <div className="mt-5 overflow-x-auto">
           <table className="min-w-full text-sm">
@@ -273,9 +300,7 @@ function PredictionCenter() {
                   >
                     <td className="px-3 py-3">{item.businessLocation}</td>
                     <td className="px-3 py-3">{item.department}</td>
-                    <td className="px-3 py-3">
-                      {item.hasData ? "있음" : "없음"}
-                    </td>
+                    <td className="px-3 py-3">{item.hasData ? "있음" : "없음"}</td>
                     <td className="px-3 py-3">{item.activeMonths}</td>
                     <td className="px-3 py-3">
                       {item.latestActiveMonth
@@ -293,7 +318,7 @@ function PredictionCenter() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        {summaryCards.map((card) => (
+        {amountSummaryCards.map((card) => (
           <div
             key={card.id}
             className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"
@@ -311,14 +336,67 @@ function PredictionCenter() {
       </div>
 
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">월별 이력 추세</h2>
-            <p className="mt-1 text-sm text-slate-600">
-              최근 16개월의 실제 입고금액과 출고금액을 비교합니다.
-            </p>
-          </div>
+        <h2 className="text-lg font-semibold text-slate-900">예상 사용 자재</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          최근 사용 패턴을 바탕으로 다음 달에 사용될 가능성이 높은 자재를 금액 기준으로 정렬했습니다.
+        </p>
+
+        <div className="mt-5 overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 text-left text-slate-500">
+                <th className="px-3 py-3">자재명</th>
+                <th className="px-3 py-3">자재코드</th>
+                <th className="px-3 py-3">예상 수량</th>
+                <th className="px-3 py-3">단가</th>
+                <th className="px-3 py-3">예상 금액</th>
+                <th className="px-3 py-3">대상월</th>
+              </tr>
+            </thead>
+            <tbody>
+              {materialPredictions.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="px-3 py-8 text-center text-slate-400">
+                    저장된 자재 예측이 없습니다. 배치를 다시 실행해 주세요.
+                  </td>
+                </tr>
+              ) : (
+                materialPredictions.map((item) => (
+                  <tr key={item.id} className="border-b border-slate-100">
+                    <td className="px-3 py-3">
+                      {item.parsedNotes?.materialName || item.material_id || "-"}
+                    </td>
+                    <td className="px-3 py-3">
+                      {item.parsedNotes?.materialCode || "-"}
+                    </td>
+                    <td className="px-3 py-3">
+                      {Number(item.parsedNotes?.predictedQuantity || 0).toLocaleString(
+                        "ko-KR",
+                        { maximumFractionDigits: 2 }
+                      )}
+                    </td>
+                    <td className="px-3 py-3">
+                      {moneyFormatter(item.parsedNotes?.unitPrice || 0)}원
+                    </td>
+                    <td className="px-3 py-3">
+                      {moneyFormatter(item.predicted_value)}원
+                    </td>
+                    <td className="px-3 py-3">
+                      {String(item.target_month).slice(0, 7)}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
+      </div>
+
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-slate-900">월별 이력 추세</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          최근 16개월의 실제 입고금액과 출고금액을 비교합니다.
+        </p>
 
         <div className="mt-6 h-80">
           {loading ? (
@@ -363,14 +441,10 @@ function PredictionCenter() {
       </div>
 
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">월별 이력 표</h2>
-            <p className="mt-1 text-sm text-slate-600">
-              차트 아래에서 같은 데이터를 숫자로 바로 확인할 수 있습니다.
-            </p>
-          </div>
-        </div>
+        <h2 className="text-lg font-semibold text-slate-900">월별 이력 표</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          차트 아래에서 같은 데이터를 숫자로 바로 확인할 수 있습니다.
+        </p>
 
         <div className="mt-5 overflow-x-auto">
           <table className="min-w-full text-sm">
@@ -399,9 +473,9 @@ function PredictionCenter() {
       </div>
 
       <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-900">예측 결과 목록</h2>
+        <h2 className="text-lg font-semibold text-slate-900">금액 예측 결과</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Python 배치가 저장한 최근 예측값과 실제 반영 상태를 확인할 수 있습니다.
+          Python 배치가 저장한 입고금액/출고금액 예측 결과입니다.
         </p>
 
         <div className="mt-5 overflow-x-auto">
@@ -419,14 +493,14 @@ function PredictionCenter() {
               </tr>
             </thead>
             <tbody>
-              {predictionList.length === 0 ? (
+              {amountPredictions.length === 0 ? (
                 <tr>
                   <td colSpan="8" className="px-3 py-8 text-center text-slate-400">
-                    저장된 예측 결과가 없습니다. Python 배치를 먼저 실행해주세요.
+                    저장된 금액 예측이 없습니다. 배치를 다시 실행해 주세요.
                   </td>
                 </tr>
               ) : (
-                predictionList.map((item) => (
+                amountPredictions.map((item) => (
                   <tr key={item.id} className="border-b border-slate-100">
                     <td className="px-3 py-3">{item.target_type}</td>
                     <td className="px-3 py-3">{String(item.base_month).slice(0, 7)}</td>

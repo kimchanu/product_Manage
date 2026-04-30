@@ -214,6 +214,106 @@ async function fetchHistoryData(businessLocation, department, monthsBack) {
   };
 }
 
+router.get("/material-usage", async (req, res) => {
+  const { businessLocation, department } = req.query;
+  const monthsBack = Math.min(Math.max(Number(req.query.monthsBack || 6), 1), 24);
+  const limit = Math.min(Math.max(Number(req.query.limit || 10), 1), 50);
+
+  if (!businessLocation || !department) {
+    return res.status(400).json({
+      message: "businessLocation과 department가 필요합니다.",
+    });
+  }
+
+  try {
+    createModels(businessLocation, department);
+
+    const startDate = new Date();
+    startDate.setDate(1);
+    startDate.setMonth(startDate.getMonth() - (monthsBack - 1));
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date();
+    endDate.setMonth(endDate.getMonth() + 1, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    const outputTable = `${businessLocation}_${department}_output`;
+    const productTable = `${businessLocation}_${department}_product`;
+
+    const [rows] = await ApiMainProduct.sequelize
+      .query(
+        `
+        SELECT
+          o.material_id,
+          o.quantity,
+          o.date,
+          p.name,
+          p.price,
+          p.material_code
+        FROM \`${outputTable}\` o
+        LEFT JOIN \`${productTable}\` p
+          ON p.material_id = o.material_id
+        WHERE o.date BETWEEN :startDate AND :endDate
+        ORDER BY o.date ASC
+        `,
+        {
+          replacements: { startDate, endDate },
+        }
+      )
+      .catch((error) => {
+        if (error.original && error.original.code === "ER_NO_SUCH_TABLE") {
+          return [[]];
+        }
+        throw error;
+      });
+
+    const materialMap = new Map();
+
+    rows.forEach((row) => {
+      const materialId = row.material_id;
+      if (!materialId) return;
+
+      const month = normalizeMonth(new Date(row.date).toISOString().slice(0, 10));
+      const quantity = Number(row.quantity || 0);
+      const price = Number(row.price || 0);
+
+      if (!materialMap.has(materialId)) {
+        materialMap.set(materialId, {
+          materialId,
+          materialName: row.name || null,
+          materialCode: row.material_code || null,
+          unitPrice: price,
+          totalQuantity: 0,
+          totalAmount: 0,
+          monthly: {},
+        });
+      }
+
+      const target = materialMap.get(materialId);
+      target.totalQuantity += quantity;
+      target.totalAmount += quantity * price;
+      target.monthly[month] = (target.monthly[month] || 0) + quantity;
+    });
+
+    const materials = Array.from(materialMap.values())
+      .sort((a, b) => b.totalAmount - a.totalAmount)
+      .slice(0, limit);
+
+    res.json({
+      businessLocation,
+      department,
+      monthsBack,
+      materials,
+    });
+  } catch (error) {
+    console.error("Prediction material usage error:", error);
+    res.status(500).json({
+      message: "자재 사용 이력 조회 중 오류가 발생했습니다.",
+      error: error.message,
+    });
+  }
+});
+
 router.post("/bulk", async (req, res) => {
   const { predictions } = req.body;
 
