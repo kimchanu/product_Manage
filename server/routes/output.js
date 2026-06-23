@@ -3,6 +3,7 @@ const router = express.Router();
 const { createModels, ApiMainProduct } = require("../models/material");
 const createOutputModel = require("../models/OutputModel");
 const sequelize = require("../db/sequelize");
+const { assertPeriodUnlocked } = require("../services/statementApprovalService");
 
 const locationMapping = {
   GK: "GK사업소",
@@ -84,6 +85,13 @@ router.post("/", async (req, res) => {
   const transaction = await Input.sequelize.transaction();
 
   try {
+    await assertPeriodUnlocked({
+      businessLocation: business_location,
+      department,
+      date,
+      actionLabel: "등록",
+    });
+
     for (const mat of materials) {
       const { material_id, outputQty } = mat;
 
@@ -177,7 +185,21 @@ router.put("/:material_id/:id", async (req, res) => {
     const outputBusinessLocation = output.business_location;
     const outputDepartment = output.department;
     const OutputModel = createOutputModel(outputBusinessLocation, outputDepartment);
+
     const { Input } = createModels(outputBusinessLocation, outputDepartment);
+
+    await assertPeriodUnlocked({
+      businessLocation: outputBusinessLocation,
+      department: outputDepartment,
+      date: output.date,
+      actionLabel: "수정",
+    });
+    await assertPeriodUnlocked({
+      businessLocation: outputBusinessLocation,
+      department: outputDepartment,
+      date: output_date,
+      actionLabel: "수정",
+    });
 
     await validateOutputDateNotBeforeInput({
       material_id,
@@ -238,6 +260,13 @@ router.delete("/:material_id/:id", async (req, res) => {
     const outputDepartment = output.department;
     const OutputModel = createOutputModel(outputBusinessLocation, outputDepartment);
 
+    await assertPeriodUnlocked({
+      businessLocation: outputBusinessLocation,
+      department: outputDepartment,
+      date: output.date,
+      actionLabel: "삭제",
+    });
+
     // 출고 기록 삭제
     await OutputModel.destroy({
       where: { material_id, id },
@@ -285,6 +314,13 @@ router.post("/split/:material_id/:id", async (req, res) => {
       return res.status(404).json({ message: "해당 출고 기록을 찾을 수 없습니다." });
     }
 
+    await assertPeriodUnlocked({
+      businessLocation: originalOutput.business_location,
+      department: originalOutput.department,
+      date: originalOutput.date,
+      actionLabel: "분할",
+    });
+
     // 2. 분할된 수량의 합이 원래 수량과 일치하는지 확인
     const totalSplitQuantity = splits.reduce((sum, split) => sum + split.quantity, 0);
     if (totalSplitQuantity !== originalOutput.quantity) {
@@ -331,6 +367,13 @@ router.post("/split/:material_id/:id", async (req, res) => {
     // 5. 새로운 출고 기록들 추가
     const newOutputs = [];
     for (const split of splits) {
+      await assertPeriodUnlocked({
+        businessLocation: originalOutput.business_location,
+        department: originalOutput.department,
+        date: split.date,
+        actionLabel: "분할",
+      });
+
       await validateOutputDateNotBeforeInput({
         material_id,
         outputDate: split.date,
@@ -390,6 +433,28 @@ router.put("/batch-update", async (req, res) => {
 
     for (const update of updates) {
       const { id, material_id, output_date, user_id, comment, quantity } = update;
+
+      const existingOutput = await OutputModel.findOne({
+        where: { id },
+        transaction,
+      });
+
+      if (!existingOutput) {
+        throw new Error("수정 대상 출고 기록을 찾을 수 없습니다.");
+      }
+
+      await assertPeriodUnlocked({
+        businessLocation: existingOutput.business_location,
+        department: existingOutput.department,
+        date: existingOutput.date,
+        actionLabel: "수정",
+      });
+      await assertPeriodUnlocked({
+        businessLocation: existingOutput.business_location,
+        department: existingOutput.department,
+        date: output_date,
+        actionLabel: "수정",
+      });
 
       await validateOutputDateNotBeforeInput({
         material_id,

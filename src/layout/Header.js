@@ -17,7 +17,7 @@ function Nav({ user }) {
 
   const adminCategory = {
     name: "\uAD00\uB9AC\uC790",
-    subCategories: ["\uC608\uC0B0", "\uC218\uB3D9 \uC785\uB825", "\uCD9C\uACE0 \uC2B9\uC778"],
+    subCategories: ["\uAD00\uB9AC\uC790 \uD398\uC774\uC9C0", "\uC608\uC0B0", "\uC218\uB3D9 \uC785\uB825"],
   };
 
   const categories =
@@ -26,6 +26,7 @@ function Nav({ user }) {
       : baseCategories;
 
   const subCategoryRouteMap = {
+    "\uAD00\uB9AC\uC790 \uD398\uC774\uC9C0": "/admin",
     "\uC785\uACE0 \uB4F1\uB85D": "/upload",
     "\uC218\uB3D9 \uC785\uB825": "/Input_manual_page",
     "\uC785\uACE0 \uD604\uD669": "/input_mod",
@@ -34,7 +35,6 @@ function Nav({ user }) {
     "\uCD9C\uACE0 \uD604\uD669": "/Output_Mod",
     "\uC608\uC0B0": "/Budget",
     "\uCD9C\uACE0 \uD1B5\uACC4": "/Output_Statistics_page",
-    "\uCD9C\uACE0 \uC2B9\uC778": "/Output_Approve_page",
   };
 
   return (

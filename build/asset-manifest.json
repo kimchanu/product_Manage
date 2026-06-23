@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.2cac396d.css",
-    "main.js": "/static/js/main.fc5a6d25.js",
+    "main.css": "/static/css/main.7d39c45f.css",
+    "main.js": "/static/js/main.7a64aebf.js",
     "static/media/main1.jpg": "/static/media/main1.9278709f9b1fa75515ff.jpg",
     "static/media/main3.jpg": "/static/media/main3.2fe65f67ec7e92f8f107.jpg",
     "static/media/main4.jpg": "/static/media/main4.d5fb5f16694a39f9baa5.jpg",
@@ -10,13 +10,15 @@
     "static/media/main8.jpg": "/static/media/main8.a60a495cf2c7d3b6b4d7.jpg",
     "static/media/main7.JPG": "/static/media/main7.65bf713e157e7a1579b2.JPG",
     "static/media/main6.JPG": "/static/media/main6.4df2b853d50aa0bbaaf1.JPG",
+    "static/media/irasutoya-worker.png": "/static/media/irasutoya-worker.3a7fea1d1023ea75a862.png",
     "static/media/main_logo.png": "/static/media/main_logo.091b2a3f3e0b82669329.png",
+    "static/media/irasutoya-safety-mark.png": "/static/media/irasutoya-safety-mark.5839dfb2269028ee42b7.png",
     "index.html": "/index.html",
-    "main.2cac396d.css.map": "/static/css/main.2cac396d.css.map",
-    "main.fc5a6d25.js.map": "/static/js/main.fc5a6d25.js.map"
+    "main.7d39c45f.css.map": "/static/css/main.7d39c45f.css.map",
+    "main.7a64aebf.js.map": "/static/js/main.7a64aebf.js.map"
   },
   "entrypoints": [
-    "static/css/main.2cac396d.css",
-    "static/js/main.fc5a6d25.js"
+    "static/css/main.7d39c45f.css",
+    "static/js/main.7a64aebf.js"
   ]
 }

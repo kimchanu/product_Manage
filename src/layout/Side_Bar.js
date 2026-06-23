@@ -182,6 +182,15 @@ function Sidebar({
 
             <li>
               <Link
+                to="/statement-approvals"
+                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
+              >
+                {"\uC804\uC790\uACB0\uC7AC"}
+              </Link>
+            </li>
+
+            <li>
+              <Link
                 to="/predictions"
                 className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
               >

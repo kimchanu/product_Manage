@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Header from "../../layout/Header";
 import Footer from "../../layout/Footer";
 
 const WritePost = () => {
+    const { id } = useParams();
+    const isEditMode = Boolean(id);
+    const navigate = useNavigate();
+
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [author, setAuthor] = useState("");
+    const [authorId, setAuthorId] = useState(null);
     const [isNotice, setIsNotice] = useState(false);
     const [isImportant, setIsImportant] = useState(false);
     const [isTop, setIsTop] = useState(false);
@@ -19,26 +24,90 @@ const WritePost = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [showPreview, setShowPreview] = useState(false);
-    const navigate = useNavigate();
 
-    // 사용자 정보 가져오기
     useEffect(() => {
         const token = localStorage.getItem("authToken");
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                setAuthor(decoded.full_name);
-            } catch (error) {
-                console.error("토큰 디코딩 오류:", error);
-                setError("사용자 정보를 가져올 수 없습니다.");
-            }
-        } else {
+        if (!token) {
             setError("로그인이 필요합니다.");
+            return;
+        }
+
+        try {
+            const decoded = jwtDecode(token);
+            setAuthor(decoded.full_name || "");
+            setAuthorId(decoded.user_id || null);
+        } catch (decodeError) {
+            console.error("Token decode error:", decodeError);
+            setError("사용자 정보를 불러오지 못했습니다.");
         }
     }, []);
 
+    useEffect(() => {
+        if (!isEditMode) return;
+
+        const fetchPost = async () => {
+            try {
+                setLoading(true);
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/api/posts/${id}`, {
+                    headers: {
+                        "x-skip-view-count": "true",
+                    },
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || "게시글을 불러오지 못했습니다.");
+                }
+
+                setTitle(data.title || "");
+                setContent(data.content || "");
+                setCategory(data.category || "general");
+                setIsNotice(Boolean(data.is_notice));
+                setIsImportant(Boolean(data.is_important));
+                setIsTop(Boolean(data.is_top));
+            } catch (err) {
+                setError(err.message || "게시글을 불러오는 중 오류가 발생했습니다.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPost();
+    }, [id, isEditMode]);
+
+    const getMediaUrl = (url) => {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            return process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}${url}` : url;
+        }
+
+        if ((url.includes("localhost") || url.includes("127.0.0.1")) && process.env.REACT_APP_API_URL) {
+            const urlObj = new URL(url);
+            return `${process.env.REACT_APP_API_URL}${urlObj.pathname}${urlObj.search}`;
+        }
+
+        return url;
+    };
+
+    const renderContent = (currentContent) => {
+        if (!currentContent) return "";
+
+        let rendered = currentContent;
+
+        rendered = rendered.replace(/!\[.*?\]\((.*?)\)/g, (_, url) => {
+            const imageUrl = getMediaUrl(url);
+            return `<img src="${imageUrl}" alt="image" style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;" />`;
+        });
+
+        rendered = rendered.replace(/\[동영상\]\((.*?)\)/g, (_, url) => {
+            const videoUrl = getMediaUrl(url);
+            return `<video controls style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;"><source src="${videoUrl}" type="video/mp4">브라우저가 동영상을 지원하지 않습니다.</video>`;
+        });
+
+        return rendered;
+    };
+
     const handleImageUpload = async (e) => {
-        const files = Array.from(e.target.files);
+        const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
         setUploading(true);
@@ -48,49 +117,45 @@ const WritePost = () => {
             const uploadedImages = [];
 
             for (const file of files) {
-                if (file.size > 20 * 1024 * 1024) { // 20MB 제한
-                    setError("이미지 파일은 각각 최대 20MB 업로드 가능합니다.");
+                if (file.size > 20 * 1024 * 1024) {
+                    setError("이미지 파일은 각각 최대 20MB까지 업로드 가능합니다.");
                     continue;
                 }
 
                 const formData = new FormData();
-                formData.append('image', file);
+                formData.append("image", file);
 
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/image`, {
-                    method: 'POST',
+                    method: "POST",
                     body: formData,
                 });
 
-                if (res.ok) {
-                    const data = await res.json();
-                    console.log("이미지 업로드 응답:", data);
-                    uploadedImages.push({
-                        id: data.id,
-                        url: data.url,
-                        filename: file.name
-                    });
-                } else {
+                if (!res.ok) {
                     const errorData = await res.json();
-                    console.error("이미지 업로드 실패:", errorData);
+                    console.error("Image upload failed:", errorData);
                     setError("이미지 업로드에 실패했습니다.");
+                    continue;
                 }
+
+                const data = await res.json();
+                uploadedImages.push({
+                    id: data.id,
+                    url: data.url,
+                    filename: file.name,
+                });
             }
 
-            setImages(prev => [...prev, ...uploadedImages]);
+            setImages((prev) => [...prev, ...uploadedImages]);
         } catch (err) {
-            console.error("이미지 업로드 실패:", err);
+            console.error("Image upload failed:", err);
             setError("이미지 업로드 중 오류가 발생했습니다.");
         } finally {
             setUploading(false);
         }
     };
 
-    const removeImage = (index) => {
-        setImages(prev => prev.filter((_, i) => i !== index));
-    };
-
     const handleVideoUpload = async (e) => {
-        const files = Array.from(e.target.files);
+        const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
         setUploadingVideo(true);
@@ -100,109 +165,64 @@ const WritePost = () => {
             const uploadedVideos = [];
 
             for (const file of files) {
-                if (file.size > 200 * 1024 * 1024) { // 200MB 제한
-                    setError("동영상 파일은 각각 최대 200MB 업로드 가능합니다.");
+                if (file.size > 200 * 1024 * 1024) {
+                    setError("동영상 파일은 각각 최대 200MB까지 업로드 가능합니다.");
                     continue;
                 }
 
                 const formData = new FormData();
-                formData.append('video', file);
+                formData.append("video", file);
 
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/video`, {
-                    method: 'POST',
+                    method: "POST",
                     body: formData,
                 });
 
-                if (res.ok) {
-                    const data = await res.json();
-                    console.log("동영상 업로드 응답:", data);
-                    uploadedVideos.push({
-                        id: data.id,
-                        url: data.url,
-                        filename: file.name
-                    });
-                } else {
+                if (!res.ok) {
                     const errorData = await res.json();
-                    console.error("동영상 업로드 실패:", errorData);
+                    console.error("Video upload failed:", errorData);
                     setError("동영상 업로드에 실패했습니다.");
+                    continue;
                 }
+
+                const data = await res.json();
+                uploadedVideos.push({
+                    id: data.id,
+                    url: data.url,
+                    filename: file.name,
+                });
             }
 
-            setVideos(prev => [...prev, ...uploadedVideos]);
+            setVideos((prev) => [...prev, ...uploadedVideos]);
         } catch (err) {
-            console.error("동영상 업로드 실패:", err);
+            console.error("Video upload failed:", err);
             setError("동영상 업로드 중 오류가 발생했습니다.");
         } finally {
             setUploadingVideo(false);
         }
     };
 
+    const removeImage = (index) => {
+        setImages((prev) => prev.filter((_, i) => i !== index));
+    };
+
     const removeVideo = (index) => {
-        setVideos(prev => prev.filter((_, i) => i !== index));
-    };
-
-    // 이미지 URL 처리 헬퍼 함수
-    const getImageUrl = (url) => {
-        // 상대 경로인 경우 API URL 추가
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            return process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}${url}` : url;
-        }
-        
-        // 절대 경로인 경우, localhost나 127.0.0.1이 포함되어 있으면 REACT_APP_API_URL로 교체
-        if (url.includes('localhost') || url.includes('127.0.0.1')) {
-            if (process.env.REACT_APP_API_URL) {
-                // URL에서 경로 부분만 추출하여 REACT_APP_API_URL과 결합
-                const urlObj = new URL(url);
-                return `${process.env.REACT_APP_API_URL}${urlObj.pathname}${urlObj.search}`;
-            }
-        }
-        
-        return url;
-    };
-
-    // 동영상 URL 처리 헬퍼 함수
-    const getVideoUrl = (url) => {
-        return getImageUrl(url); // 동일한 로직 사용
+        setVideos((prev) => prev.filter((_, i) => i !== index));
     };
 
     const insertImageToContent = (imageUrl) => {
-        const imageTag = `\n![이미지](${imageUrl})\n`;
-        console.log("이미지 태그 삽입:", imageTag);
-        setContent(prev => prev + imageTag);
+        setContent((prev) => `${prev}\n![이미지](${imageUrl})\n`);
     };
 
     const insertVideoToContent = (videoUrl) => {
-        const videoTag = `\n[동영상](${videoUrl})\n`;
-        console.log("동영상 태그 삽입:", videoTag);
-        setContent(prev => prev + videoTag);
-    };
-
-    // 내용에서 이미지 태그와 동영상 태그를 실제 미디어로 렌더링
-    const renderContent = (content) => {
-        if (!content) return '';
-
-        let rendered = content;
-
-        // ![이미지](URL) 패턴을 찾아서 실제 이미지로 변환
-        rendered = rendered.replace(/!\[이미지\]\((.*?)\)/g, (match, url) => {
-            const imageUrl = getImageUrl(url);
-            return `<img src="${imageUrl}" alt="이미지" style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;" />`;
-        });
-
-        // [동영상](URL) 패턴을 찾아서 실제 동영상으로 변환
-        rendered = rendered.replace(/\[동영상\]\((.*?)\)/g, (match, url) => {
-            const videoUrl = getVideoUrl(url);
-            return `<video controls style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;"><source src="${videoUrl}" type="video/mp4">브라우저가 동영상 태그를 지원하지 않습니다.</video>`;
-        });
-
-        return rendered;
+        setContent((prev) => `${prev}\n[동영상](${videoUrl})\n`);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!title.trim() || !content.trim() || !author.trim()) {
-            setError("제목, 내용, 작성자를 모두 입력해주세요.");
+            setError("제목, 내용, 작성자를 모두 입력해 주세요.");
             return;
         }
 
@@ -210,34 +230,40 @@ const WritePost = () => {
         setError("");
 
         try {
-            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/posts`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: title.trim(),
-                    content: content.trim(),
-                    author: author.trim(),
-                    category: category,
-                    images: images.map(img => img.id),
-                    videos: videos.map(vid => vid.id),
-                    is_notice: isNotice,
-                    is_important: isImportant,
-                    is_top: isTop
-                }),
-            });
+            const authToken = localStorage.getItem("authToken");
+            const res = await fetch(
+                `${process.env.REACT_APP_API_URL}/api/posts${isEditMode ? `/${id}` : ""}`,
+                {
+                    method: isEditMode ? "PUT" : "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+                    },
+                    body: JSON.stringify({
+                        title: title.trim(),
+                        content: content.trim(),
+                        author: author.trim(),
+                        author_id: authorId,
+                        category,
+                        images: images.map((img) => img.id),
+                        videos: videos.map((vid) => vid.id),
+                        is_notice: isNotice,
+                        is_important: isImportant,
+                        is_top: isTop,
+                    }),
+                }
+            );
 
             const data = await res.json();
 
             if (res.ok) {
-                alert("게시글이 성공적으로 작성되었습니다!");
-                navigate("/PostList_page");
+                alert(isEditMode ? "게시글이 수정되었습니다." : "게시글이 작성되었습니다.");
+                navigate(isEditMode ? `/posts/${id}` : "/PostList_page");
             } else {
-                setError(data.error || "게시글 작성에 실패했습니다.");
+                setError(data.error || `게시글 ${isEditMode ? "수정" : "작성"}에 실패했습니다.`);
             }
         } catch (err) {
-            console.error("글 작성 실패:", err);
+            console.error("Post submit failed:", err);
             setError("네트워크 오류가 발생했습니다.");
         } finally {
             setLoading(false);
@@ -249,9 +275,10 @@ const WritePost = () => {
             <Header />
             <div className="max-w-4xl mx-auto p-4">
                 <div className="bg-white border border-gray-300">
-                    {/* 상단 헤더 */}
                     <div className="bg-gray-100 border-b border-gray-300 px-4 py-3">
-                        <h2 className="text-lg font-semibold text-gray-800">글쓰기</h2>
+                        <h2 className="text-lg font-semibold text-gray-800">
+                            {isEditMode ? "게시글 수정" : "글쓰기"}
+                        </h2>
                     </div>
 
                     {error && (
@@ -261,7 +288,6 @@ const WritePost = () => {
                     )}
 
                     <form onSubmit={handleSubmit} className="p-4 space-y-4">
-                        {/* 말머리 선택 */}
                         <div className="border-b border-gray-200 pb-4">
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 말머리
@@ -309,12 +335,11 @@ const WritePost = () => {
                                         onChange={(e) => setCategory(e.target.value)}
                                         className="mr-2"
                                     />
-                                    <span className="text-sm">가이드/팁</span>
+                                    <span className="text-sm">가이드</span>
                                 </label>
                             </div>
                         </div>
 
-                        {/* 제목 입력 */}
                         <div>
                             <input
                                 type="text"
@@ -327,14 +352,12 @@ const WritePost = () => {
                             />
                         </div>
 
-                        {/* 작성자 정보 */}
                         <div className="bg-gray-50 p-3 border border-gray-200">
                             <div className="flex items-center justify-between text-sm">
                                 <span className="text-gray-600">작성자: {author}</span>
                             </div>
                         </div>
 
-                        {/* 본문 입력 */}
                         <div>
                             <div className="flex justify-between items-center mb-2">
                                 <label className="block text-sm font-medium text-gray-700">
@@ -360,13 +383,12 @@ const WritePost = () => {
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
                                     className="w-full px-3 py-2 border border-gray-300 focus:border-blue-500 focus:outline-none resize-none"
-                                    placeholder="내용을 입력하세요"
+                                    placeholder="내용을 입력해 주세요."
                                     required
                                 />
                             )}
                         </div>
 
-                        {/* 이미지 업로드 */}
                         <div className="border-t border-gray-200 pt-4">
                             <div className="mb-3">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -384,28 +406,26 @@ const WritePost = () => {
                                     />
                                     <label
                                         htmlFor="image-upload"
-                                        className={`px-4 py-2 border border-gray-300 text-gray-700 cursor-pointer hover:bg-gray-50 ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className={`px-4 py-2 border border-gray-300 text-gray-700 cursor-pointer hover:bg-gray-50 ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
                                     >
                                         {uploading ? "업로드 중..." : "이미지 선택"}
                                     </label>
                                     <span className="text-sm text-gray-500">
-                                        이미지 파일은 각각 최대 20MB 업로드 가능합니다.
+                                        이미지 파일은 각각 최대 20MB까지 업로드 가능합니다.
                                     </span>
                                 </div>
                             </div>
 
-                            {/* 업로드된 이미지 목록 */}
                             {images.length > 0 && (
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                                     {images.map((image, index) => (
                                         <div key={index} className="relative border border-gray-200 rounded">
                                             <img
-                                                src={getImageUrl(image.url)}
+                                                src={getMediaUrl(image.url)}
                                                 alt={image.filename}
                                                 className="w-full h-24 object-cover rounded"
                                                 onError={(e) => {
-                                                    console.error("이미지 로드 실패:", image.url);
-                                                    e.target.style.display = 'none';
+                                                    e.target.style.display = "none";
                                                 }}
                                             />
                                             <button
@@ -413,7 +433,7 @@ const WritePost = () => {
                                                 onClick={() => removeImage(index)}
                                                 className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
                                             >
-                                                ×
+                                                x
                                             </button>
                                             <div className="p-2">
                                                 <p className="text-xs text-gray-600 truncate">{image.filename}</p>
@@ -431,7 +451,6 @@ const WritePost = () => {
                             )}
                         </div>
 
-                        {/* 동영상 업로드 */}
                         <div className="border-t border-gray-200 pt-4">
                             <div className="mb-3">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -449,36 +468,32 @@ const WritePost = () => {
                                     />
                                     <label
                                         htmlFor="video-upload"
-                                        className={`px-4 py-2 border border-gray-300 text-gray-700 cursor-pointer hover:bg-gray-50 ${uploadingVideo ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        className={`px-4 py-2 border border-gray-300 text-gray-700 cursor-pointer hover:bg-gray-50 ${uploadingVideo ? "opacity-50 cursor-not-allowed" : ""}`}
                                     >
                                         {uploadingVideo ? "업로드 중..." : "동영상 선택"}
                                     </label>
                                     <span className="text-sm text-gray-500">
-                                        동영상 파일은 각각 최대 200MB 업로드 가능합니다.
+                                        동영상 파일은 각각 최대 200MB까지 업로드 가능합니다.
                                     </span>
                                 </div>
                             </div>
 
-                            {/* 업로드된 동영상 목록 */}
                             {videos.length > 0 && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {videos.map((video, index) => (
                                         <div key={index} className="relative border border-gray-200 rounded">
                                             <video
-                                                src={getVideoUrl(video.url)}
+                                                src={getMediaUrl(video.url)}
                                                 className="w-full h-32 object-cover rounded"
                                                 controls={false}
                                                 preload="metadata"
-                                                onError={(e) => {
-                                                    console.error("동영상 로드 실패:", video.url);
-                                                }}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => removeVideo(index)}
                                                 className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
                                             >
-                                                ×
+                                                x
                                             </button>
                                             <div className="p-2">
                                                 <p className="text-xs text-gray-600 truncate">{video.filename}</p>
@@ -496,7 +511,6 @@ const WritePost = () => {
                             )}
                         </div>
 
-                        {/* 공지사항 옵션 */}
                         <div className="border-t border-gray-200 pt-4">
                             <div className="space-y-2">
                                 <label className="flex items-center">
@@ -538,12 +552,10 @@ const WritePost = () => {
                             </div>
                         </div>
 
-                        {/* 하단 안내문 */}
                         <div className="bg-yellow-50 border border-yellow-200 p-3 text-sm text-gray-600">
-                            음란물, 차별, 비하, 혐오 및 초상권, 저작권 침해 게시물은 민, 형사상의 책임을 질 수 있습니다.
+                            비방, 혐오, 저작권 침해 게시물은 정책에 따라 제한될 수 있습니다.
                         </div>
 
-                        {/* 버튼 영역 */}
                         <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                             <div className="text-sm text-gray-500">
                                 <span className="text-red-500">*</span> 필수 입력 항목
@@ -551,7 +563,7 @@ const WritePost = () => {
                             <div className="flex space-x-2">
                                 <button
                                     type="button"
-                                    onClick={() => navigate("/PostList_page")}
+                                    onClick={() => navigate(isEditMode ? `/posts/${id}` : "/PostList_page")}
                                     className="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50"
                                     disabled={loading}
                                 >
@@ -562,7 +574,7 @@ const WritePost = () => {
                                     className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
                                     disabled={loading}
                                 >
-                                    {loading ? "작성 중..." : "등록"}
+                                    {loading ? (isEditMode ? "수정 중..." : "작성 중...") : (isEditMode ? "수정" : "등록")}
                                 </button>
                             </div>
                         </div>

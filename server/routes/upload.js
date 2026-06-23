@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db"); // DB 연결 파일 추가
+const { assertPeriodUnlocked } = require("../services/statementApprovalService");
 
 router.post("/", async (req, res) => {
   const dataSize = Buffer.byteLength(JSON.stringify(req.body), "utf8") / (1024 * 1024); // MB 변환
@@ -17,6 +18,14 @@ router.post("/", async (req, res) => {
   const productTable = `${businessLocation}_${department}_product`;
 
   try {
+    const lastYear = new Date().getFullYear() - 1;
+    const defaultDate = new Date(lastYear, 11, 31);
+    await assertPeriodUnlocked({
+      businessLocation,
+      department,
+      date: defaultDate,
+      actionLabel: "등록",
+    });
     // ✅ 기존 테이블 존재 여부 확인
     const tableExists = await checkTableExists(inputTable);
     if (tableExists) {

@@ -4,6 +4,7 @@ import DateSelector from "./Selector/DateSelector";
 import User_info from "./User_info";
 import ExcelStatementReport from "./Excel/ExcelStatementReport";
 import YearlyStatement from "./YearlyStatement";
+import StatementApprovalPanel from "./StatementApprovalPanel";
 
 const Statement = ({ selectedBusinessLocation }) => {
     const today = new Date();
@@ -220,6 +221,14 @@ const Statement = ({ selectedBusinessLocation }) => {
         <div className="p-4 print-root">
             <div className="no-print mx-20">
                 <User_info setUser={setUser} />
+                <StatementApprovalPanel
+                    user={user}
+                    businessLocation={currentBusinessLocation}
+                    department={user?.department}
+                    year={year}
+                    month={month}
+                    reportType={reportType}
+                />
                 <div className="flex justify-end mb-2">
                     <div className="flex items-center gap-4">
                         {/* 보고서 유형 선택 셀렉션 */}

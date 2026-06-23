@@ -13,12 +13,13 @@ const statement = require("./routes/statement");
 const yearlyStatement = require("./routes/yearlyStatement");
 const inputRouter = require("./routes/input");
 const budgetRouter = require("./routes/budget");
-const outputApproveRouter = require("./routes/output_approve");
 const postRouter = require("./routes/post");
 const imageUploadRouter = require("./routes/imageUpload");
 const videoUploadRouter = require("./routes/videoUpload");
 const userRoutes = require("./routes/user");
 const predictionRouter = require("./routes/prediction");
+const adminRouter = require("./routes/admin");
+const statementApprovalRouter = require("./routes/statementApproval");
 
 const app = express();
 
@@ -61,13 +62,14 @@ console.log("✅ inputRouter 등록됨: /api/materials/input");
 app.use("/api/statistics/output", output_statistics);
 app.use("/api/statistics/input", inputStatisticsRouter);
 app.use("/api/statement", statement);
+app.use("/api/statement/approval", statementApprovalRouter);
 app.use("/api/yearlyStatement", yearlyStatement);
 app.use("/api/budget", budgetRouter);
-app.use("/api", outputApproveRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/image", imageUploadRouter);
 app.use("/api/video", videoUploadRouter);
 app.use("/api/predictions", predictionRouter);
+app.use("/api/admin", adminRouter);
 
 // 라우트 등록 확인 로그
 console.log("✅ 라우트 등록 완료:");
