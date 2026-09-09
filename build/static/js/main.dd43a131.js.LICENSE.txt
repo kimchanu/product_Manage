@@ -32,6 +32,8 @@ License: MIT
 
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
+/*! sheetjs (C) 2013-present SheetJS -- http://sheetjs.com */
+
 /**
        * Character class utilities for XML NS 1.0 edition 3.
        *
