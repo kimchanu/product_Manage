@@ -1,24 +1,5 @@
-import React, { useState } from "react";
-import Product_list from "../component/Product_list";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
-import Sidebar from "../layout/Side_Bar";
-
-function Mat_list_page() {
-
-    return (
-        <div className="flex flex-col min-h-screen">
-            <Header />
-            <div className="flex flex-1">
-                <Sidebar />
-                <div className="flex-1 p-4">
-                    <Product_list />
-                </div>
-            </div>
-            <Footer />
-        </div>
-    );
+import WorkspaceLayout from '../layout/WorkspaceLayout';
+import ProductList from '../component/Product_list';
+export default function MaterialListPage() {
+  return <WorkspaceLayout title="자재목록" className="ws-materials-page"><ProductList /></WorkspaceLayout>;
 }
-
-
-export default Mat_list_page;

@@ -348,9 +348,9 @@ function Product_list() {
         businessLocation={businessLocation}
         department={department}
       />
-      <div className="p-4 w-4/5 mx-auto">
+      <div>
         {/* 검색창 */}
-        <div className="mb-4 flex space-x-4">
+        <div className="ws-filter-toolbar">
           <input
             type="text"
             placeholder="자재코드, 이름, 대분류, 소분류 또는 규격 입력"
@@ -360,7 +360,7 @@ function Product_list() {
           />
         </div>
         {/* 일괄 수정 버튼 */}
-        <div className="mb-2 flex gap-2 items-center justify-between">
+        <div className="mb-3 flex flex-wrap gap-2 items-center justify-between">
           <div className="flex gap-2 items-center">
             <button
               className={`px-4 py-2 rounded disabled:opacity-50 ${loggedInUser.location === businessLocation && loggedInUser.department === department
@@ -383,7 +383,7 @@ function Product_list() {
           />
         </div>
         {/* 테이블 */}
-        <div className="bg-white shadow-md rounded-lg overflow-hidden relative">
+        <div className="ws-table-frame relative">
           <div className="overflow-x-auto max-h-[650px] overflow-y-auto" onScroll={handleScroll}>
             <table className="min-w-full border-collapse border border-gray-200">
               <thead className="bg-gray-100 sticky top-0 z-10">

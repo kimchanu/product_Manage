@@ -193,9 +193,12 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
     try {
-        const { title, content, author, author_id, category, is_notice, is_important, is_top } = req.body;
+        const { title, content, category, is_notice, is_important, is_top } = req.body;
+        const author = req.user.full_name;
+        const author_id = req.user.user_id;
+        const isAdmin = Number(req.user.admin || 0) >= 1;
 
         if (!title || !content || !author) {
             return res.status(400).json({ error: "제목, 내용, 작성자를 모두 입력해 주세요." });
@@ -213,9 +216,9 @@ router.post("/", async (req, res) => {
                     author,
                     author_id || null,
                     category || "general",
-                    is_notice || 0,
-                    is_important || 0,
-                    is_top || 0,
+                    isAdmin ? Number(Boolean(is_notice)) : 0,
+                    isAdmin ? Number(Boolean(is_important)) : 0,
+                    isAdmin ? Number(Boolean(is_top)) : 0,
                 ],
                 type: sequelize.QueryTypes.INSERT,
             }
@@ -242,7 +245,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
         }
 
         const posts = await sequelize.query(
-            "SELECT author_id, author FROM post WHERE id = ? AND is_deleted = 0",
+            "SELECT author_id, author, is_notice, is_important, is_top FROM post WHERE id = ? AND is_deleted = 0",
             { replacements: [id], type: sequelize.QueryTypes.SELECT }
         );
 
@@ -266,7 +269,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
             WHERE id = ? AND is_deleted = 0
             `,
             {
-                replacements: [title, content, category || "general", is_notice || 0, is_important || 0, is_top || 0, id],
+                replacements: [title, content, category || "general", isAdmin ? Number(Boolean(is_notice)) : post.is_notice, isAdmin ? Number(Boolean(is_important)) : post.is_important, isAdmin ? Number(Boolean(is_top)) : post.is_top, id],
                 type: sequelize.QueryTypes.UPDATE,
             }
         );

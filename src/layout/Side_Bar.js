@@ -1,267 +1,47 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import "./Side_Bar.css";
+import React, { useEffect, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import { FiBox, FiGrid, FiMessageSquare, FiDownload, FiUpload, FiFileText, FiEdit,
+  FiChevronDown, FiSettings, FiDollarSign, FiUser } from 'react-icons/fi';
+import './Side_Bar.css';
 
-function Sidebar({
-  onSelectDepartment,
-  selectedDepartment,
-  onSelectDept,
-  selectedDept,
-  open = true,
-  onToggle,
-}) {
-  const [expandedMenus, setExpandedMenus] = useState({
-    input: false,
-    output: false,
-    dept: false,
-  });
-
-  const toggleMenu = (menu) => {
-    setExpandedMenus((prev) => ({ ...prev, [menu]: !prev[menu] }));
-  };
-
-  const departmentMap = {
-    "\u0047\u004B\uC0AC\uC5C5\uC18C": "\u0047\u004B\uC0AC\uC5C5\uC18C",
-    "\uCC9C\uB9C8\uC0AC\uC5C5\uC18C": "\uCC9C\uB9C8\uC0AC\uC5C5\uC18C",
-    "\uC744\uC219\uB3C4\uC0AC\uC5C5\uC18C": "\uC744\uC219\uB3C4\uC0AC\uC5C5\uC18C",
-    "\uAC15\uB0A8\uC0AC\uC5C5\uC18C": "\uAC15\uB0A8\uC0AC\uC5C5\uC18C",
-    "\uC218\uC6D0\uC0AC\uC5C5\uC18C": "\uC218\uC6D0\uC0AC\uC5C5\uC18C",
-  };
-
-  const departments = Object.keys(departmentMap);
-  const deptList = ["ITS", "\uAE30\uC804", "\uC2DC\uC124"];
-
-  let isRestricted = false;
-  const token = localStorage.getItem("authToken");
-
-  if (token) {
-    try {
-      const decoded = jwtDecode(token);
-      if (
-        decoded.business_location === "\uBCF8\uC0AC" ||
-        decoded.department === "\uAD00\uB9AC"
-      ) {
-        isRestricted = true;
-      }
-    } catch (error) {
-      console.error("Token decoding error:", error);
-    }
-  }
-
-  return (
-    <div className="sidebar-root relative">
-      <aside className="sidebar-panel w-60 p-4 flex flex-col pb-6 sticky top-[130px] h-[calc(100vh-130px)] overflow-auto">
-        <div className="sidebar-scroll flex-1 overflow-auto no-scrollbar">
-          <div className="sidebar-menu-title mb-6 font-semibold text-lg border-b pb-2">
-            {"\uBA54\uB274"}
-          </div>
-
-          <ul className="sidebar-menu-list space-y-2 mb-8">
-            <li>
-              <Link
-                to="/dashboard"
-                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
-              >
-                {"\uB300\uC2DC\uBCF4\uB4DC"}
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/PostList_page"
-                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
-              >
-                {"\uAC8C\uC2DC\uD310"}
-              </Link>
-            </li>
-
-            <li>
-              <div
-                className="px-2 py-1 rounded cursor-pointer hover:bg-gray-200 flex justify-between items-center"
-                onClick={() => toggleMenu("input")}
-              >
-                <span>{"\uC785\uACE0\uAD00\uB9AC"}</span>
-                <span className="text-sm">{expandedMenus.input ? "\u25B2" : "\u25BC"}</span>
-              </div>
-
-              {expandedMenus.input && (
-                <ul className="pl-4 mt-1 space-y-1 text-sm bg-gray-50 rounded py-2">
-                  {!isRestricted && (
-                    <>
-                      <li>
-                        <Link
-                          to="/upload"
-                          className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded"
-                        >
-                          {"\uC785\uACE0 \uB4F1\uB85D"}
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/input_mod"
-                          className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded"
-                        >
-                          {"\uC785\uACE0 \uD604\uD669"}
-                        </Link>
-                      </li>
-                    </>
-                  )}
-                  <li>
-                    <Link
-                      to="/input_statistics"
-                      className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded"
-                    >
-                      {"\uC785\uACE0 \uD1B5\uACC4"}
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-
-            <li>
-              <Link
-                to="/Mat_list_page"
-                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
-              >
-                {"\uC790\uC7AC\uBAA9\uB85D"}
-              </Link>
-            </li>
-
-            <li>
-              <div
-                className="px-2 py-1 rounded cursor-pointer hover:bg-gray-200 flex justify-between items-center"
-                onClick={() => toggleMenu("output")}
-              >
-                <span>{"\uCD9C\uACE0\uAD00\uB9AC"}</span>
-                <span className="text-sm">{expandedMenus.output ? "\u25B2" : "\u25BC"}</span>
-              </div>
-
-              {expandedMenus.output && (
-                <ul className="pl-4 mt-1 space-y-1 text-sm bg-gray-50 rounded py-2">
-                  {!isRestricted && (
-                    <>
-                      <li>
-                        <Link
-                          to="/Mat_output_page"
-                          className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded"
-                        >
-                          {"\uCD9C\uACE0 \uB4F1\uB85D"}
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          to="/Output_Mod"
-                          className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded"
-                        >
-                          {"\uCD9C\uACE0 \uD604\uD669"}
-                        </Link>
-                      </li>
-                    </>
-                  )}
-                  <li>
-                    <Link
-                      to="/Output_Statistics_page"
-                      className="block px-2 py-1 hover:text-blue-600 hover:bg-blue-50 rounded"
-                    >
-                      {"\uCD9C\uACE0 \uD1B5\uACC4"}
-                    </Link>
-                  </li>
-                </ul>
-              )}
-            </li>
-
-            <li>
-              <Link
-                to="/Statement_page"
-                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
-              >
-                {"\uC790\uC7AC\uC218\uBD88\uBA85\uC138\uC11C"}
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/statement-approvals"
-                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
-              >
-                {"\uC804\uC790\uACB0\uC7AC"}
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/predictions"
-                className="block px-2 py-1 rounded cursor-pointer hover:bg-gray-200"
-              >
-                {"\uC608\uCE21 \uBD84\uC11D"}
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="mt-auto pt-2 border-t border-gray-300 mb-8">
-          <div
-            className="px-2 py-2 rounded cursor-pointer hover:bg-gray-200 flex justify-between items-center font-semibold text-lg text-gray-700"
-            onClick={() => toggleMenu("dept")}
-          >
-            <span>{"\uC0AC\uC5C5\uC18C"}</span>
-            <span className="text-sm">{expandedMenus.dept ? "\u25B2" : "\u25BC"}</span>
-          </div>
-
-          {expandedMenus.dept && (
-            <div className="mt-1 space-y-1">
-              <ul className="bg-white border border-gray-200 rounded shadow-sm py-1">
-                {departments.map((displayName) => (
-                  <li
-                    key={displayName}
-                    onClick={() => {
-                      const location = departmentMap[displayName];
-                      onSelectDepartment && onSelectDepartment(location);
-                      if (onSelectDept) onSelectDept(null);
-                    }}
-                    className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 ${
-                      selectedDepartment === departmentMap[displayName]
-                        ? "bg-blue-100 font-bold text-blue-700"
-                        : "text-gray-700"
-                    }`}
-                  >
-                    {displayName}
-                  </li>
-                ))}
-              </ul>
-
-              {selectedDepartment ? (
-                <div className="mt-2">
-                  <div className="px-2 py-1 text-xs font-semibold text-gray-600 mb-1">
-                    {"\uBD80\uC11C"}
-                  </div>
-                  <ul className="bg-white border border-gray-200 rounded shadow-sm py-1">
-                    {deptList.map((dept) => (
-                      <li
-                        key={dept}
-                        onClick={() => {
-                          onSelectDept && onSelectDept(dept);
-                        }}
-                        className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 ${
-                          selectedDept === dept
-                            ? "bg-blue-100 font-bold text-blue-700"
-                            : "text-gray-700"
-                        }`}
-                      >
-                        {dept}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-            </div>
-          )}
-        </div>
-      </aside>
-
+export default function Sidebar({ onSelectDepartment, selectedDepartment, onSelectDept, selectedDept }) {
+  const { pathname } = useLocation();
+  const [expanded, setExpanded] = useState({ input: true, output: true });
+  let user = {};
+  try { user = jwtDecode(localStorage.getItem('authToken')); } catch { /* Route guard handles missing tokens. */ }
+  const restricted = user.business_location === '본사' || user.department === '관리';
+  const isAdmin = Number(user.admin || 0) >= 1;
+  useEffect(() => {
+    if (['/upload', '/input_mod', '/input_statistics', '/Input_manual_page', '/statistics/input'].includes(pathname)) setExpanded((prev) => ({ ...prev, input: true }));
+    if (['/Mat_output_page', '/Output_Mod', '/Output_Statistics_page', '/statistics/output'].includes(pathname)) setExpanded((prev) => ({ ...prev, output: true }));
+  }, [pathname]);
+  const item = (to, label, Icon, child = false) => <NavLink key={to} to={to} className={({ isActive }) => `ws-nav-link ${child ? 'ws-nav-child' : ''} ${isActive ? 'active' : ''}`}><Icon /><span>{label}</span></NavLink>;
+  const group = (key, label, Icon, children) => <div className="ws-nav-group"><button className="ws-nav-group-title" aria-expanded={expanded[key]} onClick={() => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))}><Icon /><span>{label}</span><FiChevronDown className={expanded[key] ? 'expanded' : ''} /></button>{expanded[key] && <div>{children}</div>}</div>;
+  return <aside className="sidebar-panel">
+    <div className="sidebar-menu-title"><FiBox /><span>자재관리</span></div>
+    <nav className="sidebar-menu-list" aria-label="업무 메뉴">
+      {item('/dashboard', '대시보드', FiGrid)}
+      {item('/PostList_page', '게시판', FiMessageSquare)}
+      {group('input', '입고관리', FiDownload, <>
+        {!restricted && item('/upload', '입고 등록', FiDownload, true)}
+        {!restricted && item('/input_mod', '입고 현황', FiFileText, true)}
+        {item('/input_statistics', '입고 통계', FiGrid, true)}
+      </>)}
+      {item('/Mat_list_page', '자재목록', FiBox)}
+      {group('output', '출고관리', FiUpload, <>
+        {!restricted && item('/Mat_output_page', '출고 등록', FiUpload, true)}
+        {!restricted && item('/Output_Mod', '출고 현황', FiFileText, true)}
+        {item('/Output_Statistics_page', '출고 통계', FiGrid, true)}
+      </>)}
+      {item('/Statement_page', '자재수불명세서', FiFileText)}
+      {item('/statement-approvals', '전자결재', FiEdit)}
+      {isAdmin && <div className="ws-nav-admin">{item('/admin', '관리자', FiSettings)}{item('/Budget', '예산 관리', FiDollarSign)}{item('/Input_manual_page', '수동 입고', FiEdit)}</div>}
+      {item('/mypage', '마이페이지', FiUser)}
+    </nav>
+    <div className="ws-sidebar-context">
+      <label>사업소{onSelectDepartment ? <select aria-label="사업소" value={selectedDepartment || (user.business_location === 'GK' ? 'GK사업소' : user.business_location) || ''} onChange={(e) => { onSelectDepartment(e.target.value); onSelectDept?.(null); }}><option value="">사업소 선택</option>{['GK사업소', '천마사업소', '을숙도사업소', '강남사업소', '수원사업소', '본사'].map((site) => <option key={site}>{site}</option>)}</select> : <span>{user.business_location || '-'}</span>}</label>
+      {onSelectDept ? <label>부서<select aria-label="부서" value={selectedDept || ''} onChange={(e) => onSelectDept(e.target.value || null)}><option value="">내 부서</option>{['ITS', '시설', '기전'].map((dept) => <option key={dept}>{dept}</option>)}</select></label> : <label>부서<span>{user.department || '-'}</span></label>}
     </div>
-  );
+  </aside>;
 }
-
-export default Sidebar;

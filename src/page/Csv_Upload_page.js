@@ -1,6 +1,4 @@
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
-import Sidebar from "../layout/Side_Bar";
+import WorkspaceLayout from "../layout/WorkspaceLayout";
 import React, { useEffect, useMemo, useState } from "react";
 import Search_select from "../component/Selector/Search_select";
 import ExcelUpload from "../component/Excel/ExcelUpload";
@@ -124,16 +122,11 @@ function Csv_Upload() {
   const totalOutputs = uploadInfo?.outputTotal || 0;
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar />
-      <div className="flex flex-1 flex-col">
-        <Header />
-        <main className="flex-1 px-8 py-8">
-          <div className="mx-auto max-w-6xl space-y-6">
+    <WorkspaceLayout title="입고 등록" className="ws-upload-page">
+          <div className="ws-upload-content">
             <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-blue-600">Excel Upload</p>
                   <h1 className="mt-1 text-2xl font-bold text-slate-900">자재 원시데이터 업로드</h1>
                   <p className="mt-2 text-sm text-slate-500">
                     이월 누계는 전년도 12월 31일로, 1~12월 입출고는 선택한 기준 연도의 월말일로 반영됩니다.
@@ -164,8 +157,8 @@ function Csv_Upload() {
                   <Search_select
                     setBusinessLocation={setBusinessLocation}
                     setDepartment={setDepartment}
-                    defaultBusinessLocation={businessLocation}
-                    defaultDepartment={department}
+                    businessLocation={businessLocation}
+                    department={department}
                   />
                 </div>
               </div>
@@ -241,10 +234,7 @@ function Csv_Upload() {
               </button>
             </div>
           </div>
-        </main>
-        <Footer />
-      </div>
-    </div>
+    </WorkspaceLayout>
   );
 }
 

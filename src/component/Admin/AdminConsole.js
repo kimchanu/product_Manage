@@ -75,7 +75,7 @@ function AdminConsole() {
 
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      throw new Error(data.error || "관리자 요청 처리 중 오류가 발생했습니다.");
+      throw new Error(data.error || data.message || "관리자 요청 처리 중 오류가 발생했습니다.");
     }
     return data;
   };
@@ -135,7 +135,7 @@ function AdminConsole() {
       try {
         setLoading(true);
         setError("");
-        await Promise.all([
+        const results = await Promise.allSettled([
           loadOverview(),
           loadUsers(""),
           loadApprovalSettings("GK"),
@@ -144,6 +144,8 @@ function AdminConsole() {
           loadNotices(),
           loadPopups(),
         ]);
+        const failures = results.filter((result) => result.status === 'rejected');
+        if (failures.length) setError([...new Set(failures.map((result) => result.reason.message))].join(' '));
       } catch (err) {
         setError(err.message);
       } finally {
@@ -314,8 +316,11 @@ function AdminConsole() {
   };
 
   const handlePopupSubmit = async () => {
+    if (!popupForm.title.trim() || !popupForm.content.trim()) { setError('팝업 제목과 내용을 입력해 주세요.'); return; }
+    if (popupForm.start_date && popupForm.end_date && popupForm.start_date > popupForm.end_date) { setError('종료 일시는 시작 일시 이후여야 합니다.'); return; }
     try {
       setSaving(true);
+      setError('');
       const method = selectedPopup ? "PUT" : "POST";
       const path = selectedPopup ? `/api/admin/popups/${selectedPopup.id}` : "/api/admin/popups";
 
@@ -376,13 +381,6 @@ function AdminConsole() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <section className="rounded-3xl bg-gradient-to-r from-slate-900 via-cyan-900 to-teal-800 p-8 text-white shadow-xl">
-        <p className="text-sm uppercase tracking-[0.25em] text-cyan-200">Admin Console</p>
-        <h1 className="mt-3 text-3xl font-bold">운영 관리자 페이지</h1>
-        <p className="mt-3 max-w-3xl text-sm text-slate-100/90">
-          회원, 게시판, 공지사항, 팝업을 한 곳에서 확인하고 바로 수정할 수 있습니다.
-        </p>
-      </section>
 
       {error && (
         <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -402,17 +400,13 @@ function AdminConsole() {
         </div>
       ) : (
         <>
-          <div className="flex flex-wrap gap-2">
+          <div className="ws-tabs">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 type="button"
+                aria-pressed={activeTab === tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                  activeTab === tab.key
-                    ? "bg-slate-900 text-white shadow"
-                    : "border border-slate-200 bg-white text-slate-700 hover:border-slate-400"
-                }`}
               >
                 {tab.label}
               </button>
@@ -428,7 +422,7 @@ function AdminConsole() {
               users={users}
               userSearch={userSearch}
               setUserSearch={setUserSearch}
-              loadUsers={loadUsers}
+              loadUsers={(search) => loadUsers(search).catch((err) => setError(err.message))}
               selectedUser={selectedUser}
               setSelectedUser={setSelectedUser}
               handleUserSave={handleUserSave}
@@ -454,7 +448,7 @@ function AdminConsole() {
               posts={posts}
               postSearch={postSearch}
               setPostSearch={setPostSearch}
-              loadPosts={loadPosts}
+              loadPosts={(search) => loadPosts(search).catch((err) => setError(err.message))}
               selectedPost={selectedPost}
               setSelectedPost={setSelectedPost}
               handlePostSave={handlePostSave}

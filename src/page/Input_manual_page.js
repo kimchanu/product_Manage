@@ -3,8 +3,7 @@ import IntegratedInputForm from '../component/input_manual/IntegratedInputForm';
 import useManualInputData from '../component/input_manual/useManualInputData';
 import TableCreator from '../component/input_manual/TableCreator';
 import User_info from '../component/User_info';
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
+import WorkspaceLayout from "../layout/WorkspaceLayout";
 
 function InputManualPage() {
   const [user, setUser] = useState(null);
@@ -25,11 +24,10 @@ function InputManualPage() {
   } = useManualInputData();
 
   return (
-    <div>
-      <Header />
-      <div className="min-h-screen bg-gray-50 py-8">
+    <WorkspaceLayout title="수동 입고" className="ws-manual-page">
+      <div className="ws-page-body">
         <User_info setUser={setUser} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div>
           {/* 페이지 헤더 */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900">입고 데이터 입력</h1>
@@ -101,8 +99,7 @@ function InputManualPage() {
           )}
         </div>
       </div>
-      <Footer />
-    </div>
+    </WorkspaceLayout>
   );
 }
 

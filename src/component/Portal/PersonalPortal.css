@@ -1,0 +1,63 @@
+.portal-grid { display: grid; grid-template-columns: minmax(210px, 1fr) minmax(380px, 2.3fr) minmax(230px, 1.05fr); gap: 12px; align-items: start; }
+.portal-grid > *, .portal-left, .portal-center, .portal-right { min-width: 0; display: grid; gap: 12px; }
+.portal-section { border: 1px solid #cdd3d9; background: white; min-width: 0; }
+.portal-section > header { min-height: 36px; display: flex; align-items: center; gap: 12px; padding: 0 12px; background: #eff1f3; border-bottom: 1px solid #cdd3d9; }
+.portal-section h2 { font-size: 12px; font-weight: 600; color: #303a44; white-space: nowrap; margin: 0; }
+.portal-section > header > a { margin-left: auto; display: flex; align-items: center; gap: 2px; font-size: 10px; color: #7c8894; white-space: nowrap; }
+.portal-profile { display: flex; align-items: center; gap: 14px; padding: 22px 16px; }
+.portal-avatar { width: 52px; height: 56px; background: #eff3f6; border: 1px solid #dce3e9; display: grid; place-items: center; color: #8296a6; flex-shrink: 0; }
+.portal-avatar svg { width: 30px; height: 30px; }
+.portal-profile strong { font-size: 14px; }
+.portal-profile p { color: #87929b; font-size: 11px; margin: 5px 0; }
+.portal-profile a { color: #426699; display: flex; align-items: center; font-size: 11px; }
+.portal-counters { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #e4e8ec; }
+.portal-counters a { display: flex; justify-content: space-between; align-items: center; padding: 12px; font-size: 11px; gap: 5px; }
+.portal-counters a + a { border-left: 1px solid #e4e8ec; }
+.portal-counters strong { color: #426699; font-size: 16px; }
+.portal-banner { position: relative; height: 136px; overflow: hidden; background: #eff4f7; }
+.portal-banner img { width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
+.portal-banner > div { position: absolute; inset: 0 auto 0 0; width: 39%; background: #f3f7f9ee; padding: 24px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+.portal-banner span { font-size: 11px; color: #5d8096; }
+.portal-banner strong { font-size: 22px; color: #345677; word-break: keep-all; overflow-wrap: anywhere; }
+.portal-shortcuts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid #cdd3d9; min-height: 60px; }
+.portal-shortcuts a { display: flex; justify-content: center; align-items: center; gap: 9px; padding: 17px 7px; font-size: 12px; }
+.portal-shortcuts a + a { border-left: 1px solid #e3e7eb; }
+.portal-shortcuts svg { width: 22px; height: 22px; color: #4d78a5; flex-shrink: 0; }
+.portal-shortcuts a:hover, .portal-work-links a:hover { background: #f0f5f9; color: #426699; }
+.portal-tabs { display: flex; align-self: stretch; }
+.portal-tabs button { padding: 0 10px; border-bottom: 2px solid transparent; color: #85909a; font-size: 11px; }
+.portal-tabs button[aria-pressed=true] { color: #426699; border-bottom-color: #426699; background: white; }
+.portal-rows { padding: 5px 12px; margin: 0; list-style: none; }
+.portal-rows li + li { border-top: 1px dotted #dfe4e8; }
+.portal-rows a { display: flex; align-items: center; gap: 8px; height: 38px; min-width: 0; }
+.portal-row-title { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; }
+.portal-rows a:hover .portal-row-title { color: #426699; text-decoration: underline; }
+.portal-rows time { margin-left: auto; font-size: 10px; white-space: nowrap; color: #89959f; }
+.portal-row-tag { color: #438a80; font-size: 10px; white-space: nowrap; }
+.portal-empty { padding: 30px 12px; text-align: center; color: #939da5; font-size: 11px; }
+.portal-load-error { color: #a45b57; font-size: 11px; }
+.portal-work-links { display: grid; }
+.portal-work-links a { padding: 13px 15px; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.portal-work-links a + a { border-top: 1px solid #edf0f2; }
+.portal-work-links svg { color: #6b879f; }
+.portal-work-links svg:last-child { margin-left: auto; color: #a8b1ba; }
+.portal-calendar-toolbar { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px; }
+.portal-calendar-toolbar strong { min-width: 74px; text-align: center; }
+.portal-calendar-toolbar > button:last-child { font-size: 10px; color: #8493a0; }
+.portal-calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); padding: 0 12px 14px; }
+.portal-calendar > * { height: 30px; display: grid; place-items: center; font-size: 11px; font-weight: 400; }
+.portal-calendar b { background: #f2f4f6; color: #7b8792; }
+.portal-calendar > :nth-child(7n + 1) { color: #ba706c; }
+.portal-calendar > :nth-child(7n) { color: #5b82ad; }
+.portal-calendar .outside { opacity: .35; }
+.portal-calendar .today { background: #426699; color: white; }
+.portal-task-form { display: flex; gap: 6px; padding: 12px; border-bottom: 1px solid #edf0f2; }
+.portal-task-form input { flex: 1; width: 0; border: 1px solid #cdd3d9; }
+.portal-tasks { margin: 0; padding: 0 10px; max-height: 240px; overflow: auto; }
+.portal-tasks li { display: flex; align-items: center; gap: 4px; border-bottom: 1px dotted #e0e4e8; }
+.portal-tasks label { display: flex; align-items: center; flex: 1; gap: 8px; min-width: 0; padding: 8px 0; }
+.portal-tasks span { overflow-wrap: anywhere; font-size: 12px; }
+.portal-tasks .done { text-decoration: line-through; color: #99a2aa; }
+.portal-popup-content { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; margin-bottom: 16px; }
+@media (max-width: 1150px) { .portal-grid { grid-template-columns: 230px minmax(0, 1fr); } .portal-right { grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; } }
+@media (max-width: 720px) { .portal-grid { grid-template-columns: minmax(0, 1fr); } .portal-center { grid-row: 2; } .portal-left { grid-template-columns: minmax(0, 1fr); } .portal-left > :nth-child(2), .portal-left > :nth-child(3) { display: none; } .portal-right { grid-column: auto; grid-template-columns: minmax(0, 1fr); } .portal-banner { height: 112px; } .portal-banner > div { width: 48%; padding: 14px; } .portal-banner strong { font-size: 18px; } .portal-shortcuts a { flex-direction: column; font-size: 11px; gap: 6px; padding: 12px 4px; } .portal-section > header { gap: 5px; padding: 0 9px; } .portal-tabs button { padding: 0 7px; } }

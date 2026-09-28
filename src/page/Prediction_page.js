@@ -1,22 +1,5 @@
-import React from "react";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
-import Sidebar from "../layout/Side_Bar";
-import PredictionCenter from "../component/PredictionCenter";
-
-function PredictionPage() {
-  return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-6">
-          <PredictionCenter />
-        </main>
-      </div>
-      <Footer />
-    </div>
-  );
+import WorkspaceLayout from '../layout/WorkspaceLayout';
+import PredictionCenter from '../component/PredictionCenter';
+export default function PredictionPage() {
+  return <WorkspaceLayout title="예측 분석"><PredictionCenter /></WorkspaceLayout>;
 }
-
-export default PredictionPage;

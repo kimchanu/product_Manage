@@ -1,18 +1,5 @@
-import React from "react";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
-import AdminConsole from "../component/Admin/AdminConsole";
-
-function Admin_page() {
-  return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header />
-      <main className="flex-1 px-4 py-6 md:px-6 lg:px-8">
-        <AdminConsole />
-      </main>
-      <Footer />
-    </div>
-  );
+import WorkspaceLayout from '../layout/WorkspaceLayout';
+import AdminConsole from '../component/Admin/AdminConsole';
+export default function AdminPage() {
+  return <WorkspaceLayout title="관리자" className="ws-admin-page"><AdminConsole /></WorkspaceLayout>;
 }
-
-export default Admin_page;

@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { Sequelize } = require("sequelize");
 const sequelize = require("../db/sequelize");
+const authMiddleware = require('../middleware/authMiddleware');
+const { normalizeBudgetSite, budgetYear, validateBudget, fail } = require('../services/budgetValidation');
 
 // 예산 모델 정의
 const Budget = sequelize.define(
@@ -55,49 +57,28 @@ const Budget = sequelize.define(
 );
 
 // 예산 저장 API
-router.post("/", async (req, res) => {
-    const { year, budget } = req.body; // budget은 배열 [{ site, department, amount }]
-
-    if (!year || !budget || !Array.isArray(budget)) {
-        return res.status(400).json({
-            message: "필수 정보가 누락되었거나 형식이 올바르지 않습니다.",
-        });
-    }
-
+router.post("/", authMiddleware, async (req, res) => {
+    if (!(Number(req.user.admin || 0) >= 1)) return res.status(403).json({ message: '예산 저장은 관리자만 가능합니다.' });
     try {
-        const yearNum = Number(year);
-        if (isNaN(yearNum)) {
-            return res.status(400).json({ message: "연도는 숫자여야 합니다." });
-        }
-
+        const { year, budget } = validateBudget(req.body);
         await sequelize.transaction(async (t) => {
-            // 각 예산 항목을 upsert (있으면 업데이트, 없으면 생성)
-            const upsertPromises = budget.map(({ site, department, amount }) => {
-                if (!site || !department || amount == null) {
-                    throw new Error(
-                        "예산 항목에 site, department, amount 필드가 모두 필요합니다."
-                    );
+            const current = await Budget.findAll({ where: { year }, transaction: t, lock: t.LOCK.UPDATE });
+            for (const item of budget) {
+                const matches = current.filter((row) => normalizeBudgetSite(row.business_location) === item.site && row.department === item.department);
+                if (matches.length > 1) fail(`${item.site} ${item.department}에 중복 예산이 있습니다.`, 409);
+                const existing = matches[0];
+                if (item.hasExpected && (existing ? Number(existing.budget_amount) : null) !== item.expectedAmount) {
+                    fail(`${item.site} ${item.department} 예산이 다른 작업에서 변경되었습니다. 새로고침 후 확인해 주세요.`, 409);
                 }
-
-                return Budget.upsert(
-                    {
-                        year: yearNum,
-                        business_location: site,
-                        department,
-                        budget_amount: amount,
-                        var_budget_amount: amount,
-                    },
-                    { transaction: t }
-                );
-            });
-
-            await Promise.all(upsertPromises);
+                await Budget.upsert({ ...(existing ? { id: existing.id } : {}), year,
+                    business_location: existing?.business_location || item.site, department: item.department,
+                    budget_amount: item.amount, var_budget_amount: item.amount }, { transaction: t });
+            }
         });
-
-        res.json({ message: "예산이 성공적으로 저장되었습니다." });
+        res.json({ message: '예산이 저장되었습니다.', year, budget: budget.map(({ site, department, amount }) => ({ site, department, amount, year })) });
     } catch (err) {
         console.error("예산 저장 오류:", err);
-        res.status(500).json({ message: "서버 오류", error: err.message });
+        res.status(err.status || 500).json({ message: err.status ? err.message : '예산을 저장하지 못했습니다. 다시 시도해 주세요.' });
     }
 });
 
@@ -110,10 +91,7 @@ router.get("/", async (req, res) => {
     }
 
     try {
-        const yearNum = Number(year);
-        if (isNaN(yearNum)) {
-            return res.status(400).json({ message: "연도는 숫자여야 합니다." });
-        }
+        const yearNum = budgetYear(year);
 
         // 해당 연도 모든 예산 조회
         const budgets = await Budget.findAll({
@@ -123,7 +101,7 @@ router.get("/", async (req, res) => {
 
         // 프론트가 기대하는 배열 형태로 변환
         const result = budgets.map((item) => ({
-            site: item.business_location,
+            site: normalizeBudgetSite(item.business_location),
             department: item.department,
             amount: Number(item.budget_amount),
             year: yearNum,
@@ -132,7 +110,7 @@ router.get("/", async (req, res) => {
         res.json({ year: yearNum, budget: result });
     } catch (err) {
         console.error("예산 조회 오류:", err);
-        res.status(500).json({ message: "서버 오류", error: err.message });
+        res.status(err.status || 500).json({ message: err.status ? err.message : '예산을 불러오지 못했습니다.' });
     }
 });
 

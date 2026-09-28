@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import Header from "../../layout/Header";
-import Footer from "../../layout/Footer";
+import WorkspaceLayout from "../../layout/WorkspaceLayout";
+import PostContent from './PostContent';
 
 const PostDetail = () => {
     const { id } = useParams();
@@ -173,37 +173,6 @@ const PostDetail = () => {
         });
     };
 
-    const getMediaUrl = (url) => {
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-            return process.env.REACT_APP_API_URL ? `${process.env.REACT_APP_API_URL}${url}` : url;
-        }
-
-        if ((url.includes("localhost") || url.includes("127.0.0.1")) && process.env.REACT_APP_API_URL) {
-            const urlObj = new URL(url);
-            return `${process.env.REACT_APP_API_URL}${urlObj.pathname}${urlObj.search}`;
-        }
-
-        return url;
-    };
-
-    const renderContent = (content) => {
-        if (!content) return "";
-
-        let renderedContent = content;
-
-        renderedContent = renderedContent.replace(/!\[.*?\]\((.*?)\)/g, (_, url) => {
-            const imageUrl = getMediaUrl(url);
-            return `<img src="${imageUrl}" alt="image" style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;" />`;
-        });
-
-        renderedContent = renderedContent.replace(/\[동영상\]\((.*?)\)/g, (_, url) => {
-            const videoUrl = getMediaUrl(url);
-            return `<video controls style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;"><source src="${videoUrl}" type="video/mp4">브라우저가 동영상을 지원하지 않습니다.</video>`;
-        });
-
-        return renderedContent;
-    };
-
     const canManagePost = useMemo(() => {
         if (!post || !userId) return false;
 
@@ -215,8 +184,7 @@ const PostDetail = () => {
 
     if (loading) {
         return (
-            <div>
-                <Header />
+            <WorkspaceLayout title="게시글" className="ws-posts-page">
                 <div className="p-4 max-w-4xl mx-auto">
                     <div className="bg-white p-8 rounded-2xl shadow space-y-4">
                         <div className="flex justify-center">
@@ -224,15 +192,13 @@ const PostDetail = () => {
                         </div>
                     </div>
                 </div>
-                <Footer />
-            </div>
+            </WorkspaceLayout>
         );
     }
 
     if (error) {
         return (
-            <div>
-                <Header />
+            <WorkspaceLayout title="게시글" className="ws-posts-page">
                 <div className="p-4 max-w-4xl mx-auto">
                     <div className="bg-white p-8 rounded-2xl shadow space-y-4">
                         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
@@ -246,17 +212,15 @@ const PostDetail = () => {
                         </button>
                     </div>
                 </div>
-                <Footer />
-            </div>
+            </WorkspaceLayout>
         );
     }
 
     if (!post) return null;
 
     return (
-        <div>
-            <Header />
-            <div className="p-4 max-w-4xl mx-auto">
+        <WorkspaceLayout title="게시글" className="ws-posts-page">
+            <div className="ws-post-editor">
                 <div className="bg-white p-8 rounded-2xl shadow space-y-8">
                     <div className="flex items-start justify-between border-b pb-4">
                         <div>
@@ -308,7 +272,7 @@ const PostDetail = () => {
                     </div>
 
                     <div className="text-gray-800 min-h-[120px] text-base leading-relaxed px-2">
-                        <div dangerouslySetInnerHTML={{ __html: renderContent(post.content) }} />
+                        <PostContent content={post.content} />
                     </div>
 
                     <div className="flex justify-center gap-8 border-t pt-6">
@@ -390,8 +354,7 @@ const PostDetail = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
-        </div>
+        </WorkspaceLayout>
     );
 };
 

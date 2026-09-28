@@ -199,7 +199,7 @@ const MaterialOutputPage = () => {
   };
 
   return (
-    <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="ws-output-columns">
       <User_info setUser={setUser} />
 
       <div>
@@ -249,7 +249,7 @@ const MaterialOutputPage = () => {
 
       <div>
         <h2 className="text-xl font-bold mb-2">출고 대상</h2>
-        <table className="w-full border text-sm mb-4">
+        <div className="ws-scroll"><table className="w-full border text-sm mb-4">
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-2">품명</th>
@@ -324,7 +324,7 @@ const MaterialOutputPage = () => {
           </tbody>
         </table>
 
-        <div className="mb-4">
+        </div><div className="mb-4">
           <textarea
             placeholder="✍️ 출고 사유 또는 코멘트"
             className="w-full border p-2 mb-2"

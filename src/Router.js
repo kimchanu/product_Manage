@@ -1,6 +1,6 @@
 import Login_page from "./page/Login_page";
 import Mat_list_page from "./page/Mat_list_page";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoute from "./component/PrivateRoute";
 import Mypage_page from "./page/Mypage_page";
 import Csv_Upload from "./page/Csv_Upload_page";
@@ -12,13 +12,11 @@ import PostList_page from "./page/PostList_page";
 import Dashboard_page from "./page/Dashboard_page";
 import Input_Mod from "./page/Input_Mod";
 import Input_Statistics from "./page/Input_Statistics";
-import Statistics from "./component/Output_Statistics";
 import WritePost from "./component/Post/WritePost";
 import PostDetail from "./component/Post/PostDetail";
 import Budget from "./page/Budget";
 import Input_manual_page from "./page/Input_manual_page";
 import Main_page from "./page/Main_page";
-import PredictionPage from "./page/Prediction_page";
 import Admin_page from "./page/Admin_page";
 import Statement_Approval_page from "./page/Statement_Approval_page";
 
@@ -43,9 +41,9 @@ const Router = () => {
           <Route path="/input_statistics" element={<Input_Statistics />} />
           <Route path="/" element={<Main_page />} />
           <Route path="/dashboard" element={<Dashboard_page />} />
-          <Route path="/predictions" element={<PredictionPage />} />
+          <Route path="/predictions" element={<Navigate to="/dashboard" replace />} />
           <Route path="/statistics/input" element={<Input_Statistics />} />
-          <Route path="/statistics/output" element={<Statistics />} />
+          <Route path="/statistics/output" element={<Output_Statistics_page />} />
           <Route path="/WritePost" element={<WritePost />} />
           <Route path="/posts/:id/edit" element={<WritePost />} />
           <Route path="/posts/:id" element={<PostDetail />} />

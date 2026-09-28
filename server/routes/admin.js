@@ -37,6 +37,23 @@ const normalizeDateTime = (value) => {
   return String(value).replace("T", " ");
 };
 
+const validatePopup = (req, res, next) => {
+  const { title, content, start_date, end_date, link_url } = req.body;
+  if (typeof title !== 'string' || !title.trim() || typeof content !== 'string' || !content.trim()) {
+    return res.status(400).json({ error: '팝업 제목과 내용을 입력해 주세요.' });
+  }
+  const start = start_date ? new Date(start_date).getTime() : null;
+  const end = end_date ? new Date(end_date).getTime() : null;
+  if (Number.isNaN(start) || Number.isNaN(end) || (start !== null && end !== null && start > end)) {
+    return res.status(400).json({ error: '팝업 게시 기간을 확인해 주세요.' });
+  }
+  if (link_url) {
+    try { if (!['http:', 'https:'].includes(new URL(link_url, 'http://localhost').protocol)) throw new Error(); }
+    catch { return res.status(400).json({ error: '올바른 링크 URL을 입력해 주세요.' }); }
+  }
+  next();
+};
+
 const getUsersOrderColumn = async () => {
   const [rows] = await db.query(
     `
@@ -59,7 +76,21 @@ const getUsersOrderColumn = async () => {
   return "id";
 };
 
-router.use(authMiddleware, requireAdmin);
+router.use(authMiddleware);
+
+router.get('/popups/active', async (req, res) => {
+  try {
+    await ensurePopupTable();
+    const [popups] = await db.query(`SELECT id, title, content, link_url, updated_at FROM admin_popup
+      WHERE is_active = 1 AND (start_date IS NULL OR start_date <= NOW())
+      AND (end_date IS NULL OR end_date >= NOW()) ORDER BY priority DESC, id DESC`);
+    res.json({ popups });
+  } catch (error) {
+    res.status(500).json({ error: '팝업 공지를 불러오지 못했습니다.' });
+  }
+});
+
+router.use(requireAdmin);
 
 router.get("/overview", async (req, res) => {
   try {
@@ -448,7 +479,7 @@ router.get("/popups", async (req, res) => {
   }
 });
 
-router.post("/popups", async (req, res) => {
+router.post("/popups", validatePopup, async (req, res) => {
   try {
     await ensurePopupTable();
 
@@ -492,7 +523,7 @@ router.post("/popups", async (req, res) => {
   }
 });
 
-router.put("/popups/:id", async (req, res) => {
+router.put("/popups/:id", validatePopup, async (req, res) => {
   try {
     await ensurePopupTable();
 

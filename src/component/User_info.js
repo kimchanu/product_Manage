@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { jwtDecode } from "jwt-decode";
 
 function User_info({ setUser }) {
-  const [userInfo, setUserInfo] = useState(null);
 
   // 토큰 만료 체크 함수
   const isTokenExpired = (token) => {
@@ -41,15 +40,13 @@ function User_info({ setUser }) {
         }
 
         const userData = {
-          user_id: decoded.id,
+          user_id: decoded.user_id || decoded.id,
           name: decoded.full_name,
           business_location: business_location_code,
           department: decoded.department,
           admin: decoded.admin
         };
 
-        console.log("Processed user data:", userData);
-        setUserInfo(userData);
         if (setUser) {
           setUser(userData);
         }

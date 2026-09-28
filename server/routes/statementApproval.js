@@ -13,6 +13,7 @@ const {
 const router = express.Router();
 
 router.use(authMiddleware);
+router.use('/workspace', require('./approvalWorkspace'));
 
 const parseUserId = (value) => Number(value || 0);
 

@@ -14,8 +14,8 @@ const statusLabelMap = {
   approved: "결재완료",
 };
 
-function StatementApprovalCenter({ selectedBusinessLocation }) {
-  const [user, setUser] = useState(null);
+function StatementApprovalCenter({ selectedBusinessLocation, user: providedUser }) {
+  const [loadedUser, setLoadedUser] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [status, setStatus] = useState("all");
   const [selectedDepartment, setSelectedDepartment] = useState("");
@@ -26,6 +26,7 @@ function StatementApprovalCenter({ selectedBusinessLocation }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  const user = providedUser || loadedUser;
   const token = localStorage.getItem("authToken");
   const businessLocation = selectedBusinessLocation || user?.business_location || "";
 
@@ -173,7 +174,7 @@ function StatementApprovalCenter({ selectedBusinessLocation }) {
 
   return (
     <div className="space-y-6">
-      <User_info setUser={setUser} />
+      {!providedUser && <User_info setUser={setLoadedUser} />}
 
       <section className="rounded-2xl border border-slate-200 bg-white px-5 py-5 shadow-sm">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">

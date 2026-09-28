@@ -1,19 +1,5 @@
-import React, { useState } from "react";
-import Mypage from "../component/Mypage";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
-
-function Mypage_page() {
-
-    return (
-      <div>
-          <Header />
-          <Mypage />
-          <Footer />
-      </div>
-  );
-  }
-  
-  
-  export default Mypage_page;
-  
+import WorkspaceLayout from '../layout/WorkspaceLayout';
+import Mypage from '../component/Mypage';
+export default function MyPage() {
+  return <WorkspaceLayout title="마이페이지" className="ws-profile-page"><Mypage /></WorkspaceLayout>;
+}

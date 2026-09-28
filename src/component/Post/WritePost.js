@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import Header from "../../layout/Header";
-import Footer from "../../layout/Footer";
+import WorkspaceLayout from "../../layout/WorkspaceLayout";
+import PostContent from './PostContent';
 
 const WritePost = () => {
     const { id } = useParams();
@@ -13,6 +13,8 @@ const WritePost = () => {
     const [content, setContent] = useState("");
     const [author, setAuthor] = useState("");
     const [authorId, setAuthorId] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [editReady, setEditReady] = useState(!isEditMode);
     const [isNotice, setIsNotice] = useState(false);
     const [isImportant, setIsImportant] = useState(false);
     const [isTop, setIsTop] = useState(false);
@@ -35,7 +37,8 @@ const WritePost = () => {
         try {
             const decoded = jwtDecode(token);
             setAuthor(decoded.full_name || "");
-            setAuthorId(decoded.user_id || null);
+            setAuthorId(decoded.user_id || decoded.id || null);
+            setIsAdmin(Number(decoded.admin || 0) >= 1);
         } catch (decodeError) {
             console.error("Token decode error:", decodeError);
             setError("사용자 정보를 불러오지 못했습니다.");
@@ -48,6 +51,7 @@ const WritePost = () => {
         const fetchPost = async () => {
             try {
                 setLoading(true);
+                setEditReady(false);
                 const res = await fetch(`${process.env.REACT_APP_API_URL}/api/posts/${id}`, {
                     headers: {
                         "x-skip-view-count": "true",
@@ -65,6 +69,7 @@ const WritePost = () => {
                 setIsNotice(Boolean(data.is_notice));
                 setIsImportant(Boolean(data.is_important));
                 setIsTop(Boolean(data.is_top));
+                setEditReady(true);
             } catch (err) {
                 setError(err.message || "게시글을 불러오는 중 오류가 발생했습니다.");
             } finally {
@@ -86,24 +91,6 @@ const WritePost = () => {
         }
 
         return url;
-    };
-
-    const renderContent = (currentContent) => {
-        if (!currentContent) return "";
-
-        let rendered = currentContent;
-
-        rendered = rendered.replace(/!\[.*?\]\((.*?)\)/g, (_, url) => {
-            const imageUrl = getMediaUrl(url);
-            return `<img src="${imageUrl}" alt="image" style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;" />`;
-        });
-
-        rendered = rendered.replace(/\[동영상\]\((.*?)\)/g, (_, url) => {
-            const videoUrl = getMediaUrl(url);
-            return `<video controls style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;"><source src="${videoUrl}" type="video/mp4">브라우저가 동영상을 지원하지 않습니다.</video>`;
-        });
-
-        return rendered;
     };
 
     const handleImageUpload = async (e) => {
@@ -220,6 +207,7 @@ const WritePost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (loading || uploading || uploadingVideo || !editReady) return;
 
         if (!title.trim() || !content.trim() || !author.trim()) {
             setError("제목, 내용, 작성자를 모두 입력해 주세요.");
@@ -241,7 +229,7 @@ const WritePost = () => {
                     },
                     body: JSON.stringify({
                         title: title.trim(),
-                        content: content.trim(),
+                        content: [content.trim(), ...images.filter((image) => !content.includes(image.url)).map((image) => `![이미지](${image.url})`), ...videos.filter((video) => !content.includes(video.url)).map((video) => `[동영상](${video.url})`)].join('\n'),
                         author: author.trim(),
                         author_id: authorId,
                         category,
@@ -271,9 +259,8 @@ const WritePost = () => {
     };
 
     return (
-        <div>
-            <Header />
-            <div className="max-w-4xl mx-auto p-4">
+        <WorkspaceLayout title={isEditMode ? '게시글 수정' : '글쓰기'} className="ws-posts-page">
+            <div className="ws-post-editor">
                 <div className="bg-white border border-gray-300">
                     <div className="bg-gray-100 border-b border-gray-300 px-4 py-3">
                         <h2 className="text-lg font-semibold text-gray-800">
@@ -374,7 +361,7 @@ const WritePost = () => {
 
                             {showPreview ? (
                                 <div className="w-full px-3 py-2 border border-gray-300 bg-white min-h-[400px] text-base leading-relaxed">
-                                    <div dangerouslySetInnerHTML={{ __html: renderContent(content) }} />
+                                    <PostContent content={content} />
                                 </div>
                             ) : (
                                 <textarea
@@ -511,7 +498,7 @@ const WritePost = () => {
                             )}
                         </div>
 
-                        <div className="border-t border-gray-200 pt-4">
+                        {isAdmin && <div className="border-t border-gray-200 pt-4">
                             <div className="space-y-2">
                                 <label className="flex items-center">
                                     <input
@@ -550,11 +537,7 @@ const WritePost = () => {
                                     </>
                                 )}
                             </div>
-                        </div>
-
-                        <div className="bg-yellow-50 border border-yellow-200 p-3 text-sm text-gray-600">
-                            비방, 혐오, 저작권 침해 게시물은 정책에 따라 제한될 수 있습니다.
-                        </div>
+                        </div>}
 
                         <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                             <div className="text-sm text-gray-500">
@@ -572,7 +555,7 @@ const WritePost = () => {
                                 <button
                                     type="submit"
                                     className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
-                                    disabled={loading}
+                                    disabled={loading || uploading || uploadingVideo || !editReady}
                                 >
                                     {loading ? (isEditMode ? "수정 중..." : "작성 중...") : (isEditMode ? "수정" : "등록")}
                                 </button>
@@ -581,8 +564,7 @@ const WritePost = () => {
                     </form>
                 </div>
             </div>
-            <Footer />
-        </div>
+        </WorkspaceLayout>
     );
 };
 

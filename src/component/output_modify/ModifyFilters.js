@@ -12,7 +12,7 @@ const ModifyFilters = ({
     handleViewAll
 }) => {
     return (
-        <div className="mb-4 flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0">
+        <div className="ws-filter-toolbar">
             <div className="flex items-center space-x-2">
                 <label className="text-sm font-medium text-gray-700">시작일</label>
                 <input
@@ -57,4 +57,4 @@ const ModifyFilters = ({
     );
 };
 
-export default ModifyFilters; 
+export default ModifyFilters;

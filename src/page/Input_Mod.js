@@ -1,22 +1,5 @@
-import React from "react";
-import InputModify from "../component/InputModify";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
-import Sidebar from "../layout/Side_Bar";
-
-function Input_Mod() {
-    return (
-        <div className="flex flex-col min-h-screen">
-            <Header />
-            <div className="flex flex-1">
-                <Sidebar />
-                <div className="flex-1 p-4">
-                    <InputModify />
-                </div>
-            </div>
-            <Footer />
-        </div>
-    );
+import WorkspaceLayout from '../layout/WorkspaceLayout';
+import InputModify from '../component/InputModify';
+export default function InputModifyPage() {
+  return <WorkspaceLayout title="입고 현황"><InputModify /></WorkspaceLayout>;
 }
-
-export default Input_Mod;
