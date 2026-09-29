@@ -1,9 +1,10 @@
+import { normalizeUserLocation, toApprovalLocation, normalizeLocation } from '../../utils/businessLocation';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { FiUser, FiChevronLeft, FiChevronRight, FiEdit, FiInbox, FiSend, FiUsers, FiBox, FiDownload, FiUpload, FiGrid, FiPlus, FiTrash2, FiExternalLink } from 'react-icons/fi';
 import WorkspaceDialog from '../WorkspaceDialog';
-import { documentTitle, normalizeLocation } from '../Approval/approvalApi';
+import { documentTitle } from '../Approval/approvalApi';
 import bridge from '../../image/main1.jpg';
 import './PersonalPortal.css';
 import InventorySummary from '../Statistics/InventorySummary';
@@ -13,7 +14,7 @@ const shortcuts = [['compose', '기안작성', FiEdit], ['pending', '미결문�
 const workLinks = [['/dashboard', '대시보드', FiGrid], ['/Mat_list_page', '자재목록', FiBox], ['/upload', '입고 등록', FiDownload], ['/Mat_output_page', '출고 등록', FiUpload]];
 
 export default function PersonalPortal({ businessLocation }) {
-  const user = useMemo(() => { try { return jwtDecode(localStorage.getItem('authToken')); } catch { return {}; } }, []);
+  const user = useMemo(() => { try { return normalizeUserLocation(jwtDecode(localStorage.getItem('authToken'))); } catch { return {}; } }, []);
   const [data, setData] = useState({});
   const [errors, setErrors] = useState({});
   const [boardTab, setBoardTab] = useState('all');
@@ -25,7 +26,7 @@ export default function PersonalPortal({ businessLocation }) {
   useEffect(() => {
     const controller = new AbortController();
     setData({}); setErrors({});
-    const paths = { board: '/api/posts?limit=5', mine: '/api/user/activity', docs: `/api/statement/approval/workspace/documents?businessLocation=${encodeURIComponent(location)}`, popups: '/api/admin/popups/active' };
+    const paths = { board: '/api/posts?limit=5', mine: '/api/user/activity', docs: `/api/statement/approval/workspace/documents?businessLocation=${encodeURIComponent(toApprovalLocation(location))}`, popups: '/api/admin/popups/active' };
     Object.entries(paths).forEach(async ([key, path]) => {
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}${path}`, { signal: controller.signal, headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } });
@@ -65,7 +66,7 @@ export default function PersonalPortal({ businessLocation }) {
         <PortalSection title="업무 바로가기"><nav className="portal-work-links">{workLinks.map(([to, label, Icon]) => <Link key={to} to={to}><Icon />{label}<FiChevronRight /></Link>)}</nav></PortalSection>
       </aside>
       <div className="portal-center">
-        <div className="portal-banner"><img src={bridge} alt="사업소 전경" /><div><span>KOINFRA</span><strong>{businessLocation || user.business_location || '자재관리'}</strong></div></div>
+        <div className="portal-banner"><img src={bridge} alt="사업소 전경" /><div><span>KOINFRA</span><strong>{location || '자재관리'}</strong></div></div>
         <nav className="portal-shortcuts" aria-label="전자결재 바로가기">{shortcuts.map(([folder, label, Icon]) => <Link key={folder} to={`/statement-approvals?${folder === 'compose' ? 'compose=1' : `folder=${folder}`}`}><Icon /><span>{label}</span></Link>)}</nav>
         <InventorySummary defaultSite={user.business_location} />
         <PortalSection title="게시판" to="/PostList_page" tabs={<PortalTabs value={boardTab} onChange={setBoardTab} items={[['all', '최근 글'], ['notice', '공지']]} />}>

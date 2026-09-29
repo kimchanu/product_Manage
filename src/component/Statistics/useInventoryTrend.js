@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { normalizeLocation, reportLocation } from '../Approval/approvalApi';
+import { normalizeLocation, reportLocation } from '../../utils/businessLocation';
 import { normalizeTrend } from './statisticsModel';
 
 export default function useInventoryTrend(site, year, detailed = false, includeBudget = detailed) {
   const [revision, setRevision] = useState(0);
   const [state, setState] = useState({ loading: true, current: null, previous: null, budget: null, error: '', previousError: '', budgetError: '' });
-  const siteCode = normalizeLocation(site);
-  const key = `${siteCode}:${year}:${detailed}:${includeBudget}:${revision}`;
+  const siteName = normalizeLocation(site);
+  const key = `${siteName}:${year}:${detailed}:${includeBudget}:${revision}`;
   useEffect(() => {
     const controller = new AbortController();
     const initial = { key, loading: true, current: null, previous: null, budget: null, error: '', previousError: '', budgetError: '' };
@@ -18,12 +18,12 @@ export default function useInventoryTrend(site, year, detailed = false, includeB
       if (!response.ok) throw new Error(data.message || `조회 실패 (${response.status})`);
       return data;
     };
-    const trend = async (selectedYear) => normalizeTrend(await request('/api/statement/yearly-trend', { method: 'POST', body: JSON.stringify({ businessLocation: reportLocation(siteCode), year: selectedYear }) }));
+    const trend = async (selectedYear) => normalizeTrend(await request('/api/statement/yearly-trend', { method: 'POST', body: JSON.stringify({ businessLocation: reportLocation(siteName), year: selectedYear }) }));
     const run = async () => {
       const requests = [trend(year), detailed ? trend(year - 1) : Promise.resolve(null),
         includeBudget ? request(`/api/budget?year=${year}`).then((data) => {
         if (!Array.isArray(data.budget)) throw new Error('예산 응답 형식이 올바르지 않습니다.');
-        return data.budget.filter((item) => normalizeLocation(item.site) === siteCode);
+        return data.budget.filter((item) => normalizeLocation(item.site) === siteName);
       }) : Promise.resolve(null)];
       const results = await Promise.allSettled(requests);
       if (controller.signal.aborted) return;
@@ -37,6 +37,6 @@ export default function useInventoryTrend(site, year, detailed = false, includeB
     };
     run();
     return () => controller.abort();
-  }, [key, siteCode, year, detailed, includeBudget]);
+  }, [key, siteName, year, detailed, includeBudget]);
   return { ...(state.key === key ? state : { loading: true, current: null, previous: null, budget: null, error: '' }), refresh: () => setRevision((value) => value + 1) };
 }

@@ -1,3 +1,4 @@
+import { reportLocation } from '../utils/businessLocation';
 import React, { useState, useEffect } from "react";
 import User_info from "./User_info";
 import { jwtDecode } from "jwt-decode";
@@ -40,7 +41,7 @@ const InputStatistics = ({ selectedBusinessLocation, selectedDept }) => {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
                 body: JSON.stringify({
-                    businessLocation: currentBusinessLocation,
+                    businessLocation: reportLocation(currentBusinessLocation, selectedBusinessLocation ? undefined : userInfo?.apiBusinessLocation),
                     department: currentDepartment,
                     year,
                     month,
@@ -79,7 +80,7 @@ const InputStatistics = ({ selectedBusinessLocation, selectedDept }) => {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
                 body: JSON.stringify({
-                    businessLocation: currentBusinessLocation,
+                    businessLocation: reportLocation(currentBusinessLocation, selectedBusinessLocation ? undefined : userInfo?.apiBusinessLocation),
                     department: currentDepartment,
                     year,
                     month,

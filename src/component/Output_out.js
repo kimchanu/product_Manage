@@ -1,3 +1,4 @@
+import { reportLocation } from '../utils/businessLocation';
 import React, { useState, useEffect } from "react";
 import User_info from "./User_info";
 
@@ -33,7 +34,7 @@ const MaterialOutputPage = () => {
           "Authorization": `Bearer ${localStorage.getItem("authToken")}`
         },
         body: JSON.stringify({
-          businessLocation: user.business_location,
+          businessLocation: reportLocation(user.business_location, user?.apiBusinessLocation),
           department: user.department,
         }),
       });
@@ -168,7 +169,7 @@ const MaterialOutputPage = () => {
       comment,
       date,
       department: user?.department,
-      business_location: user?.business_location,
+      business_location: reportLocation(user?.business_location, user?.apiBusinessLocation),
       user_id: user?.name,
     };
 

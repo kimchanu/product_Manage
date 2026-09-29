@@ -1,3 +1,4 @@
+import { businessLocations, normalizeLocation, reportLocation } from '../../utils/businessLocation';
 import React, { useState } from 'react';
 
 function TableCreator({ user }) {
@@ -10,7 +11,7 @@ function TableCreator({ user }) {
   // 사용자 정보가 로드되면 기본 사업소 설정
   React.useEffect(() => {
     if (user?.business_location && !selectedBusinessLocation) {
-      setSelectedBusinessLocation(user.business_location);
+      setSelectedBusinessLocation(normalizeLocation(user.business_location));
     }
   }, [user]);
 
@@ -30,7 +31,7 @@ function TableCreator({ user }) {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
-          businessLocation: selectedBusinessLocation,
+          businessLocation: reportLocation(selectedBusinessLocation),
           department: selectedDepartment
         })
       });
@@ -68,7 +69,7 @@ function TableCreator({ user }) {
       return;
     }
 
-    if (!window.confirm(`다음 테이블들을 생성하시겠습니까?\n- ${selectedBusinessLocation}_${selectedDepartment}_input\n- ${selectedBusinessLocation}_${selectedDepartment}_output\n- ${selectedBusinessLocation}_${selectedDepartment}_product`)) {
+    if (!window.confirm(`다음 테이블들을 생성하시겠습니까?\n- ${reportLocation(selectedBusinessLocation)}_${selectedDepartment}_input\n- ${reportLocation(selectedBusinessLocation)}_${selectedDepartment}_output\n- ${reportLocation(selectedBusinessLocation)}_${selectedDepartment}_product`)) {
       return;
     }
 
@@ -83,7 +84,7 @@ function TableCreator({ user }) {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
-          businessLocation: selectedBusinessLocation,
+          businessLocation: reportLocation(selectedBusinessLocation),
           department: selectedDepartment
         })
       });
@@ -121,11 +122,7 @@ function TableCreator({ user }) {
             disabled={isCreating}
           >
             <option value="">선택하세요</option>
-            <option value="GK">GK사업소</option>
-            <option value="천마사업소">천마사업소</option>
-            <option value="을숙도사업소">을숙도사업소</option>
-            <option value="강남사업소">강남사업소</option>
-            <option value="수원사업소">수원사업소</option>
+            {businessLocations.map(name => <option key={name} value={name}>{name}</option>)}
           </select>
           <label className="text-sm font-medium text-gray-700 ml-3">부서 선택:</label>
           <select

@@ -1,3 +1,4 @@
+import { reportLocation } from '../../utils/businessLocation';
 import React, { useState, useEffect, useCallback } from "react";
 import User_info from "../User_info";
 import useInputModifyData from "./useInputModifyData";
@@ -98,7 +99,7 @@ const InputModify = () => {
                     user_id: editedRow.input_user || target.input_user,
                     comment: editedRow.input_comment || target.input_comment,
                     input_quantity: target.input_quantity,
-                    business_location: user.business_location,
+                    business_location: reportLocation(user.business_location, user?.apiBusinessLocation),
                     department: user.department,
                 }),
             });
@@ -123,7 +124,7 @@ const InputModify = () => {
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/api/materials/input/${target.material_id}/${target.input_id}`, {
                 body: JSON.stringify({
-                    business_location: user?.business_location,
+                    business_location: reportLocation(user?.business_location, user?.apiBusinessLocation),
                     department: user?.department
                 }),
                 headers: { 'Content-Type': 'application/json' },
@@ -176,7 +177,7 @@ const InputModify = () => {
                     user_id: batchEditMode === 'user' ? batchEditValue : row.input_user,
                     comment: batchEditMode === 'comment' ? batchEditValue : row.input_comment,
                     input_quantity: batchEditMode === 'input_quantity' ? Number(batchEditValue) : row.input_quantity,
-                    business_location: user?.business_location,
+                    business_location: reportLocation(user?.business_location, user?.apiBusinessLocation),
                     department: user?.department
                 };
                 return fetch(`${process.env.REACT_APP_API_URL}/api/materials/input/${row.material_id}/${row.input_id}`, {

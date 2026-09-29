@@ -1,3 +1,4 @@
+import { reportLocation, normalizeLocation } from '../utils/businessLocation';
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import DateSelector from "./Selector/DateSelector";
@@ -19,9 +20,10 @@ const Statement = ({ selectedBusinessLocation }) => {
 
     // 실제 사용할 사업소 결정: 선택된 사업소가 있으면 그것을 사용, 없으면 user의 사업소 사용
     const currentBusinessLocation = selectedBusinessLocation || user?.business_location;
+    const requestBusinessLocation = reportLocation(currentBusinessLocation, selectedBusinessLocation ? undefined : user?.apiBusinessLocation);
     
-    // 사업소 이름 정의 (GK 예외 처리)
-    const businessName = currentBusinessLocation === 'GK' ? 'GK사업소' : currentBusinessLocation;
+    // 화면용 사업소 이름
+    const businessName = normalizeLocation(currentBusinessLocation);
 
 
     useEffect(() => {
@@ -33,13 +35,6 @@ const Statement = ({ selectedBusinessLocation }) => {
                 if (!response.ok) throw new Error("예산 조회 실패");
                 const data = await response.json();
                 console.log(data);
-
-                // business_location 정규화 함수
-                const normalizeLocation = (location) => {
-                    if (!location) return '';
-                    const normalized = location.toLowerCase().replace(/사업소/g, '').trim();
-                    return normalized;
-                };
 
                 // 전파트 월간보고서인 경우 부서별 예산 조회
                 if (reportType === "allPartMonthly") {
@@ -98,7 +93,7 @@ const Statement = ({ selectedBusinessLocation }) => {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            businessLocation: currentBusinessLocation,
+                            businessLocation: requestBusinessLocation,
                             year,
                             month,
                             budget: budgetData?.amount || 0,
@@ -134,7 +129,7 @@ const Statement = ({ selectedBusinessLocation }) => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        businessLocation: currentBusinessLocation,
+                        businessLocation: requestBusinessLocation,
                         department: user.department,
                         year,
                         month,
@@ -154,7 +149,7 @@ const Statement = ({ selectedBusinessLocation }) => {
         };
 
         fetchStatistics();
-    }, [user, year, month, reportType, budgetData, currentBusinessLocation]);
+    }, [user, year, month, reportType, budgetData, currentBusinessLocation, requestBusinessLocation]);
 
     const renderRow = (cat) => {
         // 하위 카테고리 합산 헬퍼 (UI 표시용)

@@ -1,3 +1,4 @@
+import { toApprovalLocation, normalizeLocation } from '../../utils/businessLocation';
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import User_info from "../User_info";
 
@@ -28,7 +29,7 @@ function StatementApprovalCenter({ selectedBusinessLocation, user: providedUser 
 
   const user = providedUser || loadedUser;
   const token = localStorage.getItem("authToken");
-  const businessLocation = selectedBusinessLocation || user?.business_location || "";
+  const businessLocation = normalizeLocation(selectedBusinessLocation || user?.business_location);
 
   const loadDocuments = useCallback(async () => {
     if (!token || !businessLocation) return;
@@ -37,7 +38,7 @@ function StatementApprovalCenter({ selectedBusinessLocation, user: providedUser 
 
     try {
       const params = new URLSearchParams({
-        businessLocation,
+        businessLocation: toApprovalLocation(businessLocation),
         status,
       });
 
@@ -83,7 +84,7 @@ function StatementApprovalCenter({ selectedBusinessLocation, user: providedUser 
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          businessLocation: doc.business_location,
+          businessLocation: toApprovalLocation(doc.business_location),
           department: doc.department,
           year: doc.report_year,
           month: doc.report_month,

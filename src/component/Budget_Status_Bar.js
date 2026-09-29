@@ -1,6 +1,7 @@
+import { normalizeLocation, reportLocation } from '../utils/businessLocation';
 import React, { useState, useEffect } from 'react';
 
-const Budget_Status_Bar = ({ businessLocation, department }) => {
+const Budget_Status_Bar = ({ businessLocation, department, requestLocation }) => {
     const [stats, setStats] = useState({
         budget: 0,
         used: 0,
@@ -17,14 +18,7 @@ const Budget_Status_Bar = ({ businessLocation, department }) => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // 1. 사업소 코드 -> 이름 매핑
-                const siteMap = {
-                    "GK": "GK사업소",
-                    "CM": "천마사업소",
-                    "ES": "을숙도사업소",
-                    "GN": "강남순환사업소"
-                };
-                const siteName = siteMap[businessLocation] || businessLocation;
+                const siteName = normalizeLocation(businessLocation);
 
                 // 2. 예산 조회
                 const budgetRes = await fetch(`${process.env.REACT_APP_API_URL}/api/budget?year=${currentYear}`);
@@ -32,7 +26,7 @@ const Budget_Status_Bar = ({ businessLocation, department }) => {
 
                 // 해당 사업소(siteName) + 부서(department)의 예산 찾기
                 const targetBudget = (budgetData.budget || []).find(
-                    item => item.site === siteName && item.department === department
+                    item => normalizeLocation(item.site) === siteName && item.department === department
                 );
                 const budgetAmount = targetBudget ? Number(targetBudget.amount) : 0;
 
@@ -49,10 +43,7 @@ const Budget_Status_Bar = ({ businessLocation, department }) => {
                         'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                     },
                     body: JSON.stringify({
-                        businessLocation: businessLocation, // statement API는 코드를 받는지 이름을 받는지 확인 필요. Dashboard.js에서는 department.replace('사업소', '')를 보냄. 
-                        // Product_list.js에서 businessLocation state는 "GK" 같은 코드임.
-                        // Dashboard.js에서는 department가 "GK사업소" -> replace -> "GK".
-                        // 따라서 여기서는 businessLocation 그대로 사용하면 됨.
+                        businessLocation: requestLocation || reportLocation(businessLocation),
                         department: department,
                         year: currentYear,
                         month: currentMonth,
@@ -79,7 +70,7 @@ const Budget_Status_Bar = ({ businessLocation, department }) => {
         };
 
         fetchData();
-    }, [businessLocation, department, currentYear, currentMonth]);
+    }, [businessLocation, department, requestLocation, currentYear, currentMonth]);
 
     if (!businessLocation || !department) return null;
 

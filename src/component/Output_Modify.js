@@ -1,3 +1,4 @@
+import { reportLocation } from '../utils/businessLocation';
 import React, { useState, useEffect, useCallback } from "react";
 import User_info from "./User_info";
 import ModifyFilters from "./output_modify/ModifyFilters";
@@ -138,7 +139,7 @@ const Modify = () => {
 
     try {
       console.log('Sending request with:', {
-        businessLocation: userInfo.business_location,
+        businessLocation: reportLocation(userInfo.business_location, userInfo?.apiBusinessLocation),
         department: userInfo.department
       });
 
@@ -149,7 +150,7 @@ const Modify = () => {
           "Authorization": `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
-          businessLocation: userInfo.business_location,
+          businessLocation: reportLocation(userInfo.business_location, userInfo?.apiBusinessLocation),
           department: userInfo.department,
         }),
       });
@@ -191,7 +192,7 @@ const Modify = () => {
         message: error.message,
         stack: error.stack,
         userInfo: {
-          business_location: userInfo?.business_location,
+          business_location: reportLocation(userInfo?.business_location, userInfo?.apiBusinessLocation),
           department: userInfo?.department
         }
       });
@@ -240,7 +241,7 @@ const Modify = () => {
           output_date: editedRow.output_date || target.output_date,
           user_id: editedRow.output_user || target.output_user,
           comment: editedRow.output_comment || target.output_comment,
-          business_location: user?.business_location,
+          business_location: reportLocation(user?.business_location, user?.apiBusinessLocation),
           department: user?.department
         }),
       });
@@ -270,7 +271,7 @@ const Modify = () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/materials/output/${target.material_id}/${target.output_id}`, {
         body: JSON.stringify({
-          business_location: user?.business_location,
+          business_location: reportLocation(user?.business_location, user?.apiBusinessLocation),
           department: user?.department
         }),
         headers: {
@@ -323,7 +324,7 @@ const Modify = () => {
         },
         body: JSON.stringify({
           splits: splitData,
-          business_location: user?.business_location,
+          business_location: reportLocation(user?.business_location, user?.apiBusinessLocation),
           department: user?.department
         }),
       });
@@ -432,7 +433,7 @@ const Modify = () => {
         },
         body: JSON.stringify({
           updates,
-          business_location: user.business_location,
+          business_location: reportLocation(user.business_location, user?.apiBusinessLocation),
           department: user.department
         })
       });

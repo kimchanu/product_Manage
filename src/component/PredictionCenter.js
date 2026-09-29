@@ -1,3 +1,4 @@
+import { businessLocations, normalizeLocation, reportLocation } from '../utils/businessLocation';
 import React, { useEffect, useMemo, useState } from "react";
 import {
   CartesianGrid,
@@ -10,13 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-const SITE_OPTIONS = [
-  "GK",
-  "\uCC9C\uB9C8\uC0AC\uC5C5\uC18C",
-  "\uC744\uC219\uB3C4\uC0AC\uC5C5\uC18C",
-  "\uAC15\uB0A8\uC0AC\uC5C5\uC18C",
-  "\uC218\uC6D0\uC0AC\uC5C5\uC18C",
-];
+const SITE_OPTIONS = businessLocations;
 
 const DEPARTMENT_OPTIONS = ["ITS", "\uAE30\uC804", "\uC2DC\uC124"];
 
@@ -36,7 +31,7 @@ function parseNotes(notes) {
 }
 
 function PredictionCenter() {
-  const [businessLocation, setBusinessLocation] = useState("GK");
+  const [businessLocation, setBusinessLocation] = useState("GK사업소");
   const [department, setDepartment] = useState("ITS");
   const [summary, setSummary] = useState([]);
   const [predictionList, setPredictionList] = useState([]);
@@ -55,7 +50,7 @@ function PredictionCenter() {
 
       try {
         const query = new URLSearchParams({
-          businessLocation,
+          businessLocation: reportLocation(businessLocation),
           department,
           limit: "100",
         });
@@ -67,7 +62,7 @@ function PredictionCenter() {
           fetch(`${apiBase}/api/predictions?${query.toString()}`),
           fetch(
             `${apiBase}/api/predictions/history?businessLocation=${encodeURIComponent(
-              businessLocation
+              reportLocation(businessLocation)
             )}&department=${encodeURIComponent(department)}&monthsBack=16`
           ),
           fetch(`${apiBase}/api/predictions/coverage?monthsBack=16`),
@@ -148,7 +143,7 @@ function PredictionCenter() {
     () =>
       coverage.find(
         (item) =>
-          item.businessLocation === businessLocation &&
+          normalizeLocation(item.businessLocation) === businessLocation &&
           item.department === department
       ) || null,
     [coverage, businessLocation, department]
@@ -288,7 +283,7 @@ function PredictionCenter() {
             <tbody>
               {coverage.map((item) => {
                 const isSelected =
-                  item.businessLocation === businessLocation &&
+                  normalizeLocation(item.businessLocation) === businessLocation &&
                   item.department === department;
 
                 return (
@@ -298,7 +293,7 @@ function PredictionCenter() {
                       isSelected ? "bg-blue-50" : ""
                     }`}
                   >
-                    <td className="px-3 py-3">{item.businessLocation}</td>
+                    <td className="px-3 py-3">{normalizeLocation(item.businessLocation)}</td>
                     <td className="px-3 py-3">{item.department}</td>
                     <td className="px-3 py-3">{item.hasData ? "있음" : "없음"}</td>
                     <td className="px-3 py-3">{item.activeMonths}</td>

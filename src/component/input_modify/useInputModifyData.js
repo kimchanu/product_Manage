@@ -1,3 +1,4 @@
+import { reportLocation } from '../../utils/businessLocation';
 import { useState, useEffect, useMemo } from "react";
 
 const useInputModifyData = (user) => {
@@ -20,7 +21,7 @@ const useInputModifyData = (user) => {
                     "Authorization": `Bearer ${localStorage.getItem('authToken')}`
                 },
                 body: JSON.stringify({
-                    businessLocation: userInfo.business_location,
+                    businessLocation: reportLocation(userInfo.business_location, userInfo?.apiBusinessLocation),
                     department: userInfo.department,
                 }),
             });

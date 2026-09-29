@@ -1,3 +1,4 @@
+import { toApprovalLocation } from '../utils/businessLocation';
 import React, { useCallback, useEffect, useState } from "react";
 
 const formatPeriod = (year, month) => `${year}년 ${String(month).padStart(2, "0")}월`;
@@ -25,7 +26,7 @@ function StatementApprovalPanel({ user, businessLocation, department, year, mont
 
     try {
       const params = new URLSearchParams({
-        businessLocation,
+        businessLocation: toApprovalLocation(businessLocation),
         department,
         year: String(year),
         month: String(month),
@@ -126,7 +127,7 @@ function StatementApprovalPanel({ user, businessLocation, department, year, mont
               disabled={saving || !meta?.permissions?.canSubmit || !meta?.setting}
               onClick={() =>
                 callAction("/api/statement/approval/submit", "POST", {
-                  businessLocation,
+                  businessLocation: toApprovalLocation(businessLocation),
                   department,
                   year,
                   month,
@@ -141,7 +142,7 @@ function StatementApprovalPanel({ user, businessLocation, department, year, mont
               disabled={saving || !meta?.permissions?.canApprove || currentStatus !== "submitted"}
               onClick={() =>
                 callAction("/api/statement/approval/approve", "POST", {
-                  businessLocation,
+                  businessLocation: toApprovalLocation(businessLocation),
                   department,
                   year,
                   month,

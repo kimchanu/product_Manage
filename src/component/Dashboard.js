@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiRefreshCw, FiArrowRight, FiTrendingUp, FiPieChart, FiBarChart2 } from 'react-icons/fi';
-import { locations, normalizeLocation } from './Approval/approvalApi';
+import { businessLocations, normalizeLocation } from '../utils/businessLocation';
 import useInventoryTrend from './Statistics/useInventoryTrend';
 import { FlowChart, CompareChart, DepartmentChart } from './Statistics/InventoryCharts';
 import { departments, monthlyTotals, total, changeLabel, comparisonRows, budgetPosition, won } from './Statistics/statisticsModel';
 import './Statistics/Statistics.css';
 
-export default function Dashboard({ department: site, onSiteChange }) {
+export default function Dashboard({ businessLocation: site, onSiteChange }) {
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
@@ -19,7 +19,7 @@ export default function Dashboard({ department: site, onSiteChange }) {
   const selectedMonth = Math.min(endMonth, year === currentYear ? currentMonth : 12);
   const partial = year === currentYear && selectedMonth === currentMonth;
   const selectedSite = normalizeLocation(site);
-  const siteName = locations.find(([code]) => code === selectedSite)?.[1] || site;
+  const siteName = selectedSite;
   const stats = useInventoryTrend(site, year, true);
   const rows = stats.current ? monthlyTotals(stats.current, dept, selectedMonth) : [];
   const previous = stats.previous ? monthlyTotals(stats.previous, dept, selectedMonth) : [];
@@ -48,9 +48,9 @@ export default function Dashboard({ department: site, onSiteChange }) {
     <div className="stats-filterbar">
       <div className="stats-title"><FiBarChart2 /><div><h2>입출고 통계</h2><span>{siteName} · {period}{partial ? ' · 당월 집계 중' : ''}</span></div></div>
       <div className="stats-filters">
-        <label>사업소<select aria-label="통계 사업소" value={selectedSite} onChange={(event) => onSiteChange(locations.find(([code]) => code === event.target.value)?.[1] || event.target.value)}>
-          {!locations.some(([code]) => code === selectedSite) && <option value={selectedSite}>{siteName}</option>}
-          {locations.map(([code, label]) => <option value={code} key={code}>{label}</option>)}
+        <label>사업소<select aria-label="통계 사업소" value={selectedSite} onChange={(event) => onSiteChange(event.target.value)}>
+          {!businessLocations.includes(selectedSite) && <option value={selectedSite}>{siteName}</option>}
+          {businessLocations.map(name => <option value={name} key={name}>{name}</option>)}
         </select></label>
         <label>연도<select aria-label="통계 연도" value={year} onChange={(event) => { const next = Number(event.target.value); setYear(next); setEndMonth((month) => Math.min(month, next === currentYear ? currentMonth : 12)); }}>{Array.from({ length: 6 }, (_, index) => currentYear - index).map((value) => <option key={value} value={value}>{value}년</option>)}</select></label>
         <label>집계 기간<select aria-label="집계 종료월" value={selectedMonth} onChange={(event) => setEndMonth(Number(event.target.value))}>{Array.from({ length: year === currentYear ? currentMonth : 12 }, (_, index) => index + 1).map((month) => <option key={month} value={month}>1~{month}월{year === currentYear && month === currentMonth ? ' (집계 중)' : ''}</option>)}</select></label>

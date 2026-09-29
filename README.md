@@ -57,7 +57,17 @@
 
 부서 키는 **`ITS`, `시설`, `기전`**입니다. 전기 관련 파트도 현재 데이터 구조에서는 `기전`으로 연결되므로 표시 문구와 DB 키를 임의로 바꾸지 않습니다.
 
-사업소 코드와 한글 이름이 기존 데이터에 함께 사용됩니다. 프런트엔드의 [approvalApi.js](src/component/Approval/approvalApi.js), 서버의 [statementApprovalService.js](server/services/statementApprovalService.js)에 정규화 함수가 있습니다. 보고서 API는 현재 GK를 제외한 사업소에 한글 이름을 사용하는 경로가 있으므로, 코드 값을 그대로 모든 API에 전달하지 않습니다.
+화면의 사업소 선택값·상태·표시명은 위 표의 **전체 사업소 이름**으로 통일합니다. 계정용 선택 항목에는 `본사`도 포함합니다. 사업소를 나타내는 변수는 `businessLocation` 또는 `selectedBusinessLocation`, ITS·시설·기전 파트는 `department`로 구분합니다.
+
+공통 목록과 변환은 [businessLocation.js](src/utils/businessLocation.js)에서 관리합니다.
+- `businessLocations`, `accountLocations`: 화면용 선택 목록
+- `normalizeLocation()`, `normalizeUserLocation()`: 기존 코드·별칭과 로그인 정보의 화면용 이름 정규화
+- `toApprovalLocation()`: 전자결재 API의 기존 코드로 변환
+- `reportLocation()`: 보고서·수동 입고 API용 값으로 변환 (GK만 코드, 나머지는 이름)
+- `importLocation()`: 최초 업로드와 자재 선택 API의 기존 값으로 변환 (GK·CM·ES 코드)
+- `legacyUserLocation()`: 사용자 정보 기반 API의 기존 테이블 키 유지. 화면용 이름과 별도로 보관하며 사용자에게 표시하지 않습니다.
+
+DB 테이블명·저장값·서버 코드·문서번호는 변경하지 않습니다. API별 기존 사업소 값이 다르므로 화면 이름을 그대로 요청하거나 모든 요청을 같은 코드로 변환하지 않습니다. 특히 자재목록의 로그인 초기 조회와 선택 메뉴 변경은 기존 테이블 선택 방식을 유지합니다. 서버 정규화는 [statementApprovalService.js](server/services/statementApprovalService.js)를 참고합니다.
 
 ## 실행
 
@@ -257,7 +267,7 @@ product_Manage/
 - 각 파트별 연간예산, 올해 1월부터 당월까지의 누적 구매액, 잔여 금액과 비율을 표시합니다. 당월 데이터는 집계 중입니다.
 - 대시보드는 사업소·연도·부서·종료월 필터, 월별 입출고, 전년 동기간 비교, 누적 보기, 부서별 실적과 예산 표를 제공합니다.
 - 대시보드의 초기 집계 종료월은 직전 완료 월입니다. 1월에는 전년도 12월로 시작합니다. 따라서 당월을 포함하는 메인과 기본 잔액이 다를 수 있습니다.
-- `/dashboard?site=GK`처럼 사업소를 지정한 상세 링크를 사용할 수 있습니다.
+- `/dashboard?site=GK사업소`처럼 전체 이름을 URL 인코딩하여 상세 링크를 만듭니다. 기존 `/dashboard?site=GK` 링크도 계속 지원합니다.
 
 ### 입고·출고와 파일 등록
 

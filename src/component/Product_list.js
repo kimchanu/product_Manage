@@ -1,3 +1,4 @@
+import { normalizeLocation, legacyUserLocation, importLocation } from '../utils/businessLocation';
 import { useState, useEffect, useRef, useCallback } from "react";
 import { jwtDecode } from "jwt-decode";
 import Search_select from "./Selector/Search_select";
@@ -8,6 +9,13 @@ import Budget_Status_Bar from "./Budget_Status_Bar";
 
 function Product_list() {
   const [businessLocation, setBusinessLocation] = useState("");
+  // Retain the legacy table key independently from the visible selection.
+  const requestLocation = useRef("");
+  const selectBusinessLocation = (name) => {
+    if (name === businessLocation) return;
+    requestLocation.current = importLocation(name);
+    setBusinessLocation(normalizeLocation(name));
+  };
   const [department, setDepartment] = useState("");
   const [loggedInUser, setLoggedInUser] = useState({ location: "", department: "" }); // 로그인한 사용자 정보 저장
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,20 +60,15 @@ function Product_list() {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
 
-    // 사업소 이름 -> 코드 매핑
-    const locationMap = {
-      "GK사업소": "GK",
-
-    };
 
     if (token) {
       try {
         const decoded = jwtDecode(token);
         if (decoded.business_location) {
-          // 매핑된 코드가 있으면 사용, 없으면 그대로 사용
-          const locationCode = locationMap[decoded.business_location] || decoded.business_location;
-          setBusinessLocation(locationCode);
-          setLoggedInUser(prev => ({ ...prev, location: locationCode })); // 로그인한 사용자 사업소 저장
+          const locationName = normalizeLocation(decoded.business_location);
+          requestLocation.current = legacyUserLocation(decoded.business_location);
+          setBusinessLocation(locationName);
+          setLoggedInUser(prev => ({ ...prev, location: locationName })); // 로그인한 사용자 사업소 저장
         }
         if (decoded.department) {
           setDepartment(decoded.department);
@@ -103,7 +106,7 @@ function Product_list() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ businessLocation, department }),
+            body: JSON.stringify({ businessLocation: requestLocation.current, department }),
           });
 
           if (ignore) return; // 컴포넌트가 언마운트되거나 훅이 재실행되었으면 무시
@@ -319,7 +322,7 @@ function Product_list() {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/materials/bulk-update`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ field, value, selectedRows, businessLocation, department })
+        body: JSON.stringify({ field, value, selectedRows, businessLocation: requestLocation.current, department })
       });
       if (!res.ok) throw new Error("저장 실패");
       setSaveSuccess("일괄 수정이 저장되었습니다.");
@@ -329,7 +332,7 @@ function Product_list() {
       const refreshed = await fetch(`${process.env.REACT_APP_API_URL}/api/materials`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ businessLocation, department })
+        body: JSON.stringify({ businessLocation: requestLocation.current, department })
       });
       const refreshedData = await refreshed.json();
       setMaterials(Array.isArray(refreshedData) ? refreshedData : []);
@@ -343,7 +346,7 @@ function Product_list() {
   return (
     <div>
       <Search_select
-        setBusinessLocation={setBusinessLocation}
+        setBusinessLocation={selectBusinessLocation}
         setDepartment={setDepartment}
         businessLocation={businessLocation}
         department={department}
@@ -842,7 +845,7 @@ function Product_list() {
         />
 
         {/* 예산 진행 현황 차트 */}
-        <Budget_Status_Bar
+        <Budget_Status_Bar requestLocation={requestLocation.current}
           businessLocation={businessLocation}
           department={department}
         />

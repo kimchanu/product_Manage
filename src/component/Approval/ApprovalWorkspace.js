@@ -1,3 +1,4 @@
+import { businessLocations, normalizeLocation } from '../../utils/businessLocation';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { FiEdit, FiInbox, FiSend, FiUsers, FiCheckCircle, FiFileText, FiSave, FiHome,
@@ -6,7 +7,7 @@ import { FiEdit, FiInbox, FiSend, FiUsers, FiCheckCircle, FiFileText, FiSave, Fi
 import ApprovalComposer, { ApprovalTemplates } from './ApprovalComposer';
 import ApprovalDialog from './ApprovalDialog';
 import ApprovalReport from './ApprovalReport';
-import { approvalApi, dateLabel, documentTitle, locations, normalizeLocation, periodLabel } from './approvalApi';
+import { approvalApi, dateLabel, documentTitle, periodLabel } from './approvalApi';
 
 const folders = [
   ['all', '대문', FiHome], ['pending', '미결문서', FiInbox], ['circulation', '회람문서', FiUsers],
@@ -128,7 +129,7 @@ export default function ApprovalWorkspace({ user }) {
       <div className="ap-brand"><FiEdit /><h1>전자결재</h1></div>
       <button className="ap-new-draft" onClick={() => setModal({ type: 'templates' })}><FiEdit /> 기안작성</button>
       <nav aria-label="전자결재 문서함">{folders.map(([key, label, Icon]) => <button key={key} className={`ap-folder ${folder === key ? 'active' : ''}`} aria-current={folder === key ? 'page' : undefined} onClick={() => changeFolder(key)}><Icon /><span>{label}</span><span className="ap-count">{loading ? '-' : counts[key]}</span></button>)}</nav>
-      <div className="ap-sidebar-bottom"><label>사업소<select aria-label="사업소" value={location} disabled={!isAdmin} onChange={(e) => { setLocation(e.target.value); setSelected(null); }}>{!locations.some(([code]) => code === location) && <option value={location}>{location}</option>}{locations.map(([code, name]) => <option key={code} value={code}>{name}</option>)}</select></label><Link to="/dashboard"><FiChevronLeft /> 자재관리로 돌아가기</Link></div>
+      <div className="ap-sidebar-bottom"><label>사업소<select aria-label="사업소" value={location} disabled={!isAdmin} onChange={(e) => { setLocation(e.target.value); setSelected(null); }}>{!businessLocations.includes(location) && <option value={location}>{location}</option>}{businessLocations.map(name => <option key={name} value={name}>{name}</option>)}</select></label><Link to="/dashboard"><FiChevronLeft /> 자재관리로 돌아가기</Link></div>
     </aside>
     <main className="ap-main">
       <div className="ap-toolbar">

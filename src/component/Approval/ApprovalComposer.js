@@ -1,3 +1,4 @@
+import { normalizeLocation } from '../../utils/businessLocation';
 import React, { useEffect, useState } from 'react';
 import { FiFolder, FiFileText, FiChevronRight, FiSave, FiSend } from 'react-icons/fi';
 import ApprovalDialog from './ApprovalDialog';
@@ -21,8 +22,8 @@ export function ApprovalTemplates({ onClose, onSelect }) {
 
 export default function ApprovalComposer({ user, businessLocation, initial, onClose, onSaved }) {
   const today = new Date();
-  const [form, setForm] = useState(() => initial || {
-    businessLocation, department: ['ITS', '시설', '기전'].includes(user.department) ? user.department : 'ITS',
+  const [form, setForm] = useState(() => initial ? { ...initial, businessLocation: normalizeLocation(initial.businessLocation) } : {
+    businessLocation: normalizeLocation(businessLocation), department: ['ITS', '시설', '기전'].includes(user.department) ? user.department : 'ITS',
     year: today.getFullYear(), month: today.getMonth() + 1, title: '', content: '', recipients: [],
   });
   const [users, setUsers] = useState([]);

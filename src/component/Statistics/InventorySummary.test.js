@@ -35,11 +35,11 @@ test('only the current site departments show their own budgets and purchase rati
 });
 test('fetches only the logged in site and updates when the site prop changes', async () => {
   await render();
-  expect(useInventoryTrend).toHaveBeenLastCalledWith('GK', expect.any(Number), false, true);
+  expect(useInventoryTrend).toHaveBeenLastCalledWith('GK사업소', expect.any(Number), false, true);
   await render('천마사업소');
-  expect(useInventoryTrend).toHaveBeenLastCalledWith('CM', expect.any(Number), false, true);
+  expect(useInventoryTrend).toHaveBeenLastCalledWith('천마사업소', expect.any(Number), false, true);
   expect(container.querySelector('h2').textContent).toBe('천마사업소 파트별 예산 현황');
-  expect(container.querySelector('a').getAttribute('href')).toBe('/dashboard?site=CM');
+  expect(container.querySelector('a').getAttribute('href')).toBe(`/dashboard?site=${encodeURIComponent('천마사업소')}`);
 });
 test('zero purchase leaves registered budget fully available', async () => {
   stats.current = normalizeTrend([]); await render();

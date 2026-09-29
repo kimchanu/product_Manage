@@ -1,11 +1,8 @@
-import { locations, normalizeLocation } from '../Approval/approvalApi';
-export const budgetSites = locations.map(([, label]) => label);
+import { businessLocations, normalizeLocation } from '../../utils/businessLocation';
+export const budgetSites = businessLocations;
 export const budgetDepartments = ['ITS', '기전', '시설'];
 export const budgetKey = (site, department) => `${site}:${department}`;
-export const normalizeBudgetSite = (site) => {
-  if (site === '강남순환사업소' || site === 'GN') return '강남사업소';
-  return locations.find(([code]) => code === normalizeLocation(site))?.[1] || site;
-};
+export const normalizeBudgetSite = normalizeLocation;
 export function parseAmount(value) {
   const text = String(value).trim();
   if (!/^(?:\d+|\d{1,3}(?:,\d{3})+)$/.test(text)) return null;

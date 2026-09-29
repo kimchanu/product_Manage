@@ -1,3 +1,4 @@
+import { accountLocations } from '../utils/businessLocation';
 import React, { useState } from "react";
 
 function Sign_up({ isOpen, toggleModal, onSuccess }) {
@@ -102,7 +103,7 @@ function Sign_up({ isOpen, toggleModal, onSuccess }) {
             name="business_location"
             value={formData.business_location}
             onChange={handleChange}
-            options={["GK사업소", "천마사업소", "을숙도사업소", "강남사업소", "수원사업소", "본사"]}
+            options={accountLocations}
           />
           <SelectField
             label="부서"

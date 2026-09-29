@@ -1,3 +1,4 @@
+import { businessLocations, accountLocations, normalizeLocation, toApprovalLocation, normalizeUserLocation } from '../../utils/businessLocation';
 import React, { useEffect, useState } from "react";
 
 const tabs = [
@@ -58,7 +59,7 @@ function AdminConsole() {
   const [selectedPopup, setSelectedPopup] = useState(null);
   const [noticeForm, setNoticeForm] = useState(emptyNoticeForm);
   const [popupForm, setPopupForm] = useState(emptyPopupForm);
-  const [approvalBusinessLocation, setApprovalBusinessLocation] = useState("GK");
+  const [approvalBusinessLocation, setApprovalBusinessLocation] = useState("GK사업소");
   const [approvalForms, setApprovalForms] = useState({});
 
   const approvalDepartments = ["ITS", "시설", "기전"];
@@ -107,7 +108,7 @@ function AdminConsole() {
 
   const loadApprovalSettings = async (businessLocation = approvalBusinessLocation) => {
     const data = await apiFetch(
-      `/api/statement/approval/settings?businessLocation=${encodeURIComponent(businessLocation)}`
+      `/api/statement/approval/settings?businessLocation=${encodeURIComponent(toApprovalLocation(businessLocation))}`
     );
     const settings = data.settings || [];
     setApprovalSettings(settings);
@@ -123,7 +124,7 @@ function AdminConsole() {
 
   const loadApprovalCandidates = async (businessLocation = approvalBusinessLocation) => {
     const data = await apiFetch(
-      `/api/statement/approval/approver-candidates?businessLocation=${encodeURIComponent(businessLocation)}`
+      `/api/statement/approval/approver-candidates?businessLocation=${encodeURIComponent(toApprovalLocation(businessLocation))}`
     );
     setApprovalCandidates(data.approverCandidates || []);
   };
@@ -138,8 +139,8 @@ function AdminConsole() {
         const results = await Promise.allSettled([
           loadOverview(),
           loadUsers(""),
-          loadApprovalSettings("GK"),
-          loadApprovalCandidates("GK"),
+          loadApprovalSettings("GK사업소"),
+          loadApprovalCandidates("GK사업소"),
           loadPosts(""),
           loadNotices(),
           loadPopups(),
@@ -193,7 +194,7 @@ function AdminConsole() {
           apiFetch("/api/statement/approval/approver", {
             method: "PUT",
             body: JSON.stringify({
-              businessLocation: approvalBusinessLocation,
+              businessLocation: toApprovalLocation(approvalBusinessLocation),
               department,
               approverUserId,
             }),
@@ -211,12 +212,18 @@ function AdminConsole() {
 
   const handleUserSave = async () => {
     if (!selectedUser) return;
+    const { storedBusinessLocation, ...updates } = selectedUser;
 
     try {
       setSaving(true);
       await apiFetch(`/api/admin/users/${selectedUser.id}`, {
         method: "PUT",
-        body: JSON.stringify(selectedUser),
+        body: JSON.stringify({
+          ...updates,
+          // Keep the stored alias when editing unrelated account fields.
+          business_location: normalizeLocation(storedBusinessLocation) === updates.business_location
+            ? storedBusinessLocation : updates.business_location,
+        }),
       });
       await Promise.all([loadUsers(userSearch), loadOverview()]);
       flashMessage("회원 정보를 저장했습니다.");
@@ -516,7 +523,7 @@ function OverviewTab({ overview, formatDate }) {
                   <div>
                     <p className="font-medium text-slate-900">{user.full_name}</p>
                     <p className="text-sm text-slate-500">
-                      {user.username} · {user.business_location} · {user.department}
+                      {user.username} · {normalizeLocation(user.business_location)} · {user.department}
                     </p>
                   </div>
                   <span className="rounded-full bg-slate-900 px-3 py-1 text-xs text-white">
@@ -561,13 +568,7 @@ function ApprovalsTab({
   saving,
 }) {
   const departments = ["ITS", "시설", "기전"];
-  const locationOptions = [
-    { value: "GK", label: "GK사업소" },
-    { value: "CM", label: "천마사업소" },
-    { value: "ES", label: "을숙도사업소" },
-    { value: "KN", label: "강남사업소" },
-    { value: "SW", label: "수원사업소" },
-  ];
+  const locationOptions = businessLocations.map(name => ({ value: name, label: name }));
 
   return (
     <section className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
@@ -705,14 +706,14 @@ function UsersTab({
               {users.map((user) => (
                 <tr
                   key={user.id}
-                  onClick={() => setSelectedUser({ ...user, password: "" })}
+                  onClick={() => setSelectedUser({ ...normalizeUserLocation(user), storedBusinessLocation: user.business_location, password: "" })}
                   className={`cursor-pointer border-b border-slate-100 hover:bg-slate-50 ${
                     selectedUser?.id === user.id ? "bg-cyan-50" : ""
                   }`}
                 >
                   <td className="px-3 py-3">{user.username}</td>
                   <td className="px-3 py-3">{user.full_name}</td>
-                  <td className="px-3 py-3">{user.business_location}</td>
+                  <td className="px-3 py-3">{normalizeLocation(user.business_location)}</td>
                   <td className="px-3 py-3">{user.department}</td>
                   <td className="px-3 py-3">{user.is_admin}</td>
                 </tr>
@@ -730,7 +731,14 @@ function UsersTab({
             <Field label="이름" value={selectedUser.full_name || ""} onChange={(value) => setSelectedUser((prev) => ({ ...prev, full_name: value }))} />
             <Field label="직급" value={selectedUser.position || ""} onChange={(value) => setSelectedUser((prev) => ({ ...prev, position: value }))} />
             <Field label="이메일" value={selectedUser.email || ""} onChange={(value) => setSelectedUser((prev) => ({ ...prev, email: value }))} />
-            <Field label="사업장" value={selectedUser.business_location || ""} onChange={(value) => setSelectedUser((prev) => ({ ...prev, business_location: value }))} />
+            <label className="block text-sm text-slate-600">사업소
+              <select aria-label="회원 사업소" className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm"
+                value={selectedUser.business_location}
+                onChange={(event) => setSelectedUser(prev => ({ ...prev, business_location: event.target.value }))}>
+                {!accountLocations.includes(selectedUser.business_location) && <option value={selectedUser.business_location}>{selectedUser.business_location || '사업소 선택'}</option>}
+                {accountLocations.map(name => <option key={name} value={name}>{name}</option>)}
+              </select>
+            </label>
             <Field label="부서" value={selectedUser.department || ""} onChange={(value) => setSelectedUser((prev) => ({ ...prev, department: value }))} />
             <Field label="새 비밀번호" type="password" value={selectedUser.password || ""} onChange={(value) => setSelectedUser((prev) => ({ ...prev, password: value }))} />
             <Field label="권한 숫자" type="number" value={selectedUser.is_admin} onChange={(value) => setSelectedUser((prev) => ({ ...prev, is_admin: Number(value || 0) }))} />

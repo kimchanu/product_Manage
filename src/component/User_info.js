@@ -1,3 +1,4 @@
+import { normalizeLocation, legacyUserLocation } from '../utils/businessLocation';
 import { useEffect } from 'react';
 import { jwtDecode } from "jwt-decode";
 
@@ -29,20 +30,11 @@ function User_info({ setUser }) {
         const decoded = jwtDecode(token);
         // console.log("Decoded token:", decoded);
 
-        // 사업소명을 코드로 변환
-        let business_location_code = "";
-        switch (decoded.business_location) {
-          case "GK사업소":
-            business_location_code = "GK";
-            break;
-          default:
-            business_location_code = decoded.business_location;
-        }
-
         const userData = {
           user_id: decoded.user_id || decoded.id,
           name: decoded.full_name,
-          business_location: business_location_code,
+          business_location: normalizeLocation(decoded.business_location),
+          apiBusinessLocation: legacyUserLocation(decoded.business_location),
           department: decoded.department,
           admin: decoded.admin
         };

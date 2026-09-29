@@ -1,3 +1,4 @@
+import { businessLocations, normalizeLocation, reportLocation } from '../../utils/businessLocation';
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -26,7 +27,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, o
   // 사용자 정보가 로드되면 기본 사업소 설정
   useEffect(() => {
     if (user?.business_location && !selectedBusinessLocation) {
-      setSelectedBusinessLocation(user.business_location);
+      setSelectedBusinessLocation(normalizeLocation(user.business_location));
     }
   }, [user]);
 
@@ -42,8 +43,8 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, o
     try {
       const currentYear = new Date().getFullYear();
 
-      // 사업소 코드를 전체 이름으로 변환 (GK만 변환, 나머지는 그대로 사용)
-      const businessLocationName = businessLocation === 'GK' ? 'GK사업소' : businessLocation;
+      // 예산 데이터와 화면의 사업소 이름을 같은 기준으로 비교
+      const businessLocationName = normalizeLocation(businessLocation);
 
       // 예산 조회
       const budgetResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/budget?year=${currentYear}`);
@@ -51,58 +52,11 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, o
       const budgetData = await budgetResponse.json();
 
       console.log('예산 데이터:', budgetData);
-      console.log('조회 조건 - 사업소 코드:', businessLocation, '사업소 이름:', businessLocationName, '부서:', department);
+      console.log('조회 조건 - 사업소:', businessLocation, '사업소 이름:', businessLocationName, '부서:', department);
 
       // 해당 사업소와 부서의 예산 찾기 (다양한 형식의 사업소 이름 매칭)
       const departmentBudget = budgetData.budget?.find(
-        item => {
-          // 부서 매칭 확인
-          if (item.department !== department) {
-            return false;
-          }
-
-          // 사업소 매칭 (다양한 형식 지원)
-          const site = item.site || '';
-          const siteLower = site.toLowerCase();
-          const businessLocationLower = businessLocation.toLowerCase();
-          const businessLocationNameLower = businessLocationName.toLowerCase();
-
-          // 정확한 매칭
-          if (site === businessLocationName || site === businessLocation) {
-            return true;
-          }
-
-          // 부분 매칭 (코드가 포함되어 있는지)
-          if (siteLower.includes(businessLocationLower) || businessLocationLower.includes(siteLower)) {
-            return true;
-          }
-
-          // 사업소 이름이 포함되어 있는지
-          if (siteLower.includes(businessLocationNameLower) || businessLocationNameLower.includes(siteLower)) {
-            return true;
-          }
-
-          // 사업소 코드 매핑으로 확인 (GK만 변환, 나머지는 그대로)
-          const reverseMap = {
-            'gk': ['gk', 'gk사업소']
-          };
-
-          const locationKeys = reverseMap[businessLocationLower] || [];
-          if (locationKeys.length > 0) {
-            for (const key of locationKeys) {
-              if (siteLower.includes(key)) {
-                return true;
-              }
-            }
-          } else {
-            // GK가 아닌 경우 원본 이름으로 직접 매칭
-            if (siteLower.includes(businessLocationLower) || businessLocationLower.includes(siteLower)) {
-              return true;
-            }
-          }
-
-          return false;
-        }
+        item => item.department === department && normalizeLocation(item.site) === businessLocationName
       );
 
       console.log('찾은 예산:', departmentBudget);
@@ -123,7 +77,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, o
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           },
           body: JSON.stringify({
-            businessLocation: businessLocation,
+            businessLocation: reportLocation(businessLocation),
             department: department,
             year: currentYear,
             month: new Date().getMonth() + 1,
@@ -379,11 +333,7 @@ function IntegratedInputForm({ data, onDataChange, onSaveAll, onSaveToApiMain, o
               disabled={loadingBudget}
             >
               <option value="">선택하세요</option>
-              <option value="GK">GK사업소</option>
-              <option value="천마사업소">천마사업소</option>
-              <option value="을숙도사업소">을숙도사업소</option>
-              <option value="강남사업소">강남사업소</option>
-              <option value="수원사업소">수원사업소</option>
+              {businessLocations.map(name => <option key={name} value={name}>{name}</option>)}
             </select>
             <label className="text-sm font-medium text-gray-700 ml-3">부서 선택:</label>
             <select

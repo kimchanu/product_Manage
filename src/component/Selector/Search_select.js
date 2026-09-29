@@ -1,3 +1,4 @@
+import { businessLocations } from '../../utils/businessLocation';
 function Search_select({ setBusinessLocation, setDepartment, businessLocation, department }) {
   return (
     <div className="ws-context-select">
@@ -8,11 +9,7 @@ function Search_select({ setBusinessLocation, setDepartment, businessLocation, d
         className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
         <option value="">사업소 선택</option>
-        <option value="GK">GK사업소</option>
-        <option value="CM">천마사업소</option>
-        <option value="ES">을숙도사업소</option>
-        <option value="강남사업소">강남사업소</option>
-        <option value="수원사업소">수원사업소</option>
+        {businessLocations.map((name) => <option key={name} value={name}>{name}</option>)}
       </select>
 
       <select

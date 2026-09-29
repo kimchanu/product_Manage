@@ -1,3 +1,4 @@
+import { reportLocation } from '../../utils/businessLocation';
 import { useState, useCallback } from 'react';
 
 function useManualInputData() {
@@ -64,7 +65,7 @@ function useManualInputData() {
           items: data,
           type: 'manual_input',
           department: department,
-          business_location: businessLocation,
+          business_location: reportLocation(businessLocation),
           date: inputDate || new Date().toISOString().split('T')[0]
         })
       });
@@ -145,7 +146,7 @@ function useManualInputData() {
           items: data,
           type: 'manual_input',
           department: department,
-          business_location: businessLocation,
+          business_location: reportLocation(businessLocation),
           date: inputDate || new Date().toISOString().split('T')[0]
         })
       });

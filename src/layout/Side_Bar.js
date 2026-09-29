@@ -1,3 +1,4 @@
+import { accountLocations, normalizeLocation } from '../utils/businessLocation';
 import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -5,7 +6,7 @@ import { FiBox, FiGrid, FiMessageSquare, FiDownload, FiUpload, FiFileText, FiEdi
   FiChevronDown, FiSettings, FiDollarSign, FiUser } from 'react-icons/fi';
 import './Side_Bar.css';
 
-export default function Sidebar({ onSelectDepartment, selectedDepartment, onSelectDept, selectedDept }) {
+export default function Sidebar({ onSelectBusinessLocation, selectedBusinessLocation, onSelectDept, selectedDept }) {
   const { pathname } = useLocation();
   const [expanded, setExpanded] = useState({ input: true, output: true });
   let user = {};
@@ -40,7 +41,7 @@ export default function Sidebar({ onSelectDepartment, selectedDepartment, onSele
       {item('/mypage', '마이페이지', FiUser)}
     </nav>
     <div className="ws-sidebar-context">
-      <label>사업소{onSelectDepartment ? <select aria-label="사업소" value={selectedDepartment || (user.business_location === 'GK' ? 'GK사업소' : user.business_location) || ''} onChange={(e) => { onSelectDepartment(e.target.value); onSelectDept?.(null); }}><option value="">사업소 선택</option>{['GK사업소', '천마사업소', '을숙도사업소', '강남사업소', '수원사업소', '본사'].map((site) => <option key={site}>{site}</option>)}</select> : <span>{user.business_location || '-'}</span>}</label>
+      <label>사업소{onSelectBusinessLocation ? <select aria-label="사업소" value={selectedBusinessLocation || normalizeLocation(user.business_location) || ''} onChange={(e) => { onSelectBusinessLocation(e.target.value); onSelectDept?.(null); }}><option value="">사업소 선택</option>{accountLocations.map((site) => <option key={site}>{site}</option>)}</select> : <span>{normalizeLocation(user.business_location) || '-'}</span>}</label>
       {onSelectDept ? <label>부서<select aria-label="부서" value={selectedDept || ''} onChange={(e) => onSelectDept(e.target.value || null)}><option value="">내 부서</option>{['ITS', '시설', '기전'].map((dept) => <option key={dept}>{dept}</option>)}</select></label> : <label>부서<span>{user.department || '-'}</span></label>}
     </div>
   </aside>;

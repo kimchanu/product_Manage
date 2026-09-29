@@ -1,3 +1,4 @@
+import { reportLocation, normalizeLocation } from '../utils/businessLocation';
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import DateSelector from "./Selector/DateSelector";
@@ -111,13 +112,6 @@ const YearlyStatement = () => {
                 const data = await response.json();
                 console.log(data);
 
-                // business_location 정규화 함수
-                const normalizeLocation = (location) => {
-                    if (!location) return '';
-                    const normalized = location.toLowerCase().replace(/사업소/g, '').trim();
-                    return normalized;
-                };
-
                 const userLocation = normalizeLocation(user.business_location);
 
                 if (reportType === "allPartYearly") {
@@ -192,7 +186,7 @@ const YearlyStatement = () => {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            businessLocation: user.business_location,
+                            businessLocation: reportLocation(user.business_location, user?.apiBusinessLocation),
                             department: dept,
                             year,
                             categories: deptCategories,
@@ -448,7 +442,7 @@ const YearlyStatement = () => {
         );
     };
 
-    const businessName = user?.business_location === 'GK' ? 'GK사업소' : user?.business_location;
+    const businessName = normalizeLocation(user?.business_location);
 
     return (
         <div className="p-4 print-root">
@@ -692,4 +686,4 @@ const YearlyStatement = () => {
     );
 };
 
-export default YearlyStatement; 
+export default YearlyStatement;

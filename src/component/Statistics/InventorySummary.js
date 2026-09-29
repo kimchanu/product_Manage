@@ -4,13 +4,13 @@ import { FiChevronRight, FiRefreshCw } from 'react-icons/fi';
 import { PieChart, Pie, Cell } from 'recharts';
 import useInventoryTrend from './useInventoryTrend';
 import { budgetPosition, departments, monthlyTotals, total, won } from './statisticsModel';
-import { locations, normalizeLocation } from '../Approval/approvalApi';
+import { normalizeLocation } from '../../utils/businessLocation';
 import './Statistics.css';
 
 export default function InventorySummary({ defaultSite }) {
   const now = new Date();
   const site = normalizeLocation(defaultSite);
-  const siteName = locations.find(([code]) => code === site)?.[1] || defaultSite;
+  const siteName = site;
   const stats = useInventoryTrend(site, now.getFullYear(), false, true);
   return <section className="portal-section stats-mini">
     <header><h2>{siteName} 파트별 예산 현황</h2><button className="ws-icon" title="예산 현황 새로고침" aria-label="예산 현황 새로고침" disabled={stats.loading} onClick={stats.refresh}><FiRefreshCw /></button><Link to={`/dashboard?site=${encodeURIComponent(site || '')}`}>상세 통계<FiChevronRight /></Link></header>

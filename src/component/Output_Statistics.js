@@ -1,3 +1,4 @@
+import { reportLocation } from '../utils/businessLocation';
 import React, { useState, useEffect } from "react";
 import User_info from "./User_info";
 
@@ -39,7 +40,7 @@ const Output_Statistics = ({ selectedBusinessLocation, selectedDept }) => {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
                 body: JSON.stringify({
-                    businessLocation: currentBusinessLocation,
+                    businessLocation: reportLocation(currentBusinessLocation, selectedBusinessLocation ? undefined : userInfo?.apiBusinessLocation),
                     department: currentDepartment,
                     year,
                     month,
@@ -74,7 +75,7 @@ const Output_Statistics = ({ selectedBusinessLocation, selectedDept }) => {
                     'Authorization': `Bearer ${localStorage.getItem('authToken')}`
                 },
                 body: JSON.stringify({
-                    businessLocation: currentBusinessLocation,
+                    businessLocation: reportLocation(currentBusinessLocation, selectedBusinessLocation ? undefined : userInfo?.apiBusinessLocation),
                     department: currentDepartment,
                     year,
                     month,

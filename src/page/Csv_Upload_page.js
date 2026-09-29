@@ -1,3 +1,4 @@
+import { normalizeLocation, importLocation } from '../utils/businessLocation';
 import WorkspaceLayout from "../layout/WorkspaceLayout";
 import React, { useEffect, useMemo, useState } from "react";
 import Search_select from "../component/Selector/Search_select";
@@ -22,13 +23,6 @@ function Csv_Upload() {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    const locationMap = {
-      GK사업소: "GK",
-      천마사업소: "CM",
-      을숙도사업소: "ES",
-      수원사업소: "수원사업소",
-      강남사업소: "강남사업소",
-    };
 
     if (!token) {
       console.warn("토큰이 없습니다. 로그인 상태를 확인하세요.");
@@ -40,7 +34,7 @@ function Csv_Upload() {
       setUsername(decodedToken.full_name || "");
 
       if (decodedToken.business_location) {
-        setBusinessLocation(locationMap[decodedToken.business_location] || decodedToken.business_location);
+        setBusinessLocation(normalizeLocation(decodedToken.business_location));
       }
       if (decodedToken.department) setDepartment(decodedToken.department);
     } catch (error) {
@@ -91,7 +85,7 @@ function Csv_Upload() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          businessLocation,
+          businessLocation: importLocation(businessLocation),
           department,
           username,
           selectedYear,

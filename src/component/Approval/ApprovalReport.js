@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { locations, normalizeLocation, periodLabel, reportLocation } from './approvalApi';
+import { periodLabel } from './approvalApi';
+import { normalizeLocation, reportLocation } from '../../utils/businessLocation';
 
 const departmentCategories = {
   ITS: ['TCS', 'FTMS', '전산', '기타', '합 계'],
@@ -55,7 +56,7 @@ export default function ApprovalReport({ businessLocation, department, year, mon
   if (!result) return <p role="status" className="ap-loading">보고서를 불러오는 중입니다.</p>;
   const hasRows = Object.keys(result.byCategory || {}).length > 0;
   const spent = Number(result.yearTotalInputAmount || 0);
-  const siteName = locations.find(([code]) => code === normalizeLocation(businessLocation))?.[1] || businessLocation;
+  const siteName = normalizeLocation(businessLocation);
   return <section className="ap-report" aria-label="자재수불명세서 월간보고서">
     <header className="ap-report-heading"><h3>자재수불명세서 월간보고서</h3><p>{periodLabel(year, month)} · {siteName} · {department}</p></header>
     <div className="ap-section-heading"><h3>자재수불 내역</h3><span>단위: 원</span></div>
